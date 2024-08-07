@@ -1,9 +1,23 @@
 import jQuery from 'jquery';
 import { escapeHtml } from "./StringTools.js";
 
-export function makeEditable(elementWithText: JQuery<HTMLElement>,
-    elementToReplace: JQuery<HTMLElement>,
-    renameDoneCallback: (newContent: string) => void, selectionRange: { start: number, end: number } = null) {
+export function makeEditable(elementWithText: JQuery<HTMLElement> | HTMLElement,
+    elementToReplace: JQuery<HTMLElement> | HTMLElement | undefined,
+    renameDoneCallback: (newContent: string) => void, selectionRange?: { start: number, end: number }) {
+
+    if(elementWithText instanceof HTMLElement){
+        elementWithText = jQuery(elementWithText);
+    }
+
+    if(elementToReplace instanceof HTMLElement){
+        elementToReplace = jQuery(elementToReplace);
+    }
+
+    let etr: JQuery<HTMLElement> = <any>elementToReplace;
+
+    if(elementToReplace && elementToReplace instanceof HTMLElement){
+        elementToReplace = jQuery(elementToReplace);
+    }
 
     let mousePointer = window.PointerEvent ? "pointer" : "mouse";
 
@@ -40,18 +54,18 @@ export function makeEditable(elementWithText: JQuery<HTMLElement>,
             $input.off("keydown.me");
             $input.off("focusout.me");
             $input.remove();
-            elementToReplace.show();
+            etr!.show();
             let newValue = escapeHtml(<string>$input.val());
             renameDoneCallback(newValue);
             return;
         }
     });
 
-    $input.on("focusout.me", (ev) => {
+    $input.on("focusout.me", (_ev) => {
         $input.off("keydown.me");
         $input.off("focusout.me");
         $input.remove();
-        elementToReplace.show();
+        etr!.show();
         let newValue = escapeHtml(<string>$input.val());
         renameDoneCallback(newValue);
         return;
@@ -73,15 +87,15 @@ export function openContextMenu(items: ContextMenuItem[], x: number, y: number):
 
     let $contextMenu = jQuery('<div class="jo_contextmenu"></div>');
 
-    let $openSubMenu: JQuery<HTMLElement> = null;
-    let parentMenuItem: ContextMenuItem = null;
+    let $openSubMenu: JQuery<HTMLElement> | undefined = undefined;
+    let parentMenuItem: ContextMenuItem | undefined = undefined;
 
     for (let mi of items) {
         let caption: string = mi.caption;
         if (mi.link != null) {
             caption = `<a href="${mi.link}" target="_blank" class="jo_menulink">${mi.caption}</a>`;
         }
-        let $item = jQuery('<div>' + caption + (mi.subMenu != null ? '<span style="float: right"> &nbsp; &nbsp; &gt;</span>' : "") + '</div>');
+        let $item: JQuery<HTMLElement> = jQuery('<div>' + caption + (mi.subMenu != null ? '<span style="float: right"> &nbsp; &nbsp; &gt;</span>' : "") + '</div>');
         if (mi.color != null) {
             $item.css('color', mi.color);
         }
@@ -114,18 +128,18 @@ export function openContextMenu(items: ContextMenuItem[], x: number, y: number):
         $item.on(mousePointer + 'move.contextmenu', () => {
             if (mi != parentMenuItem && $openSubMenu != null) {
                 $openSubMenu.remove();
-                parentMenuItem = null;
-                $openSubMenu = null;
+                parentMenuItem = undefined;
+                $openSubMenu = undefined;
             }
             if (mi.subMenu != null) {
-                $openSubMenu = openContextMenu(mi.subMenu, $item.offset().left + $item.width(), $item.offset().top);
+                $openSubMenu = openContextMenu(mi.subMenu, $item.offset()!.left + $item.width()!, $item.offset()!.top);
             }
         });
 
         $contextMenu.append($item);
     }
 
-    jQuery(document).on(mousePointer + "down.contextmenu", (e) => {
+    jQuery(document).on(mousePointer + "down.contextmenu", (_e) => {
         jQuery(document).off(mousePointer + "down.contextmenu");
         jQuery(document).off("keydown.contextmenu");
         jQuery('.jo_contextmenu').remove();
@@ -144,7 +158,7 @@ export function openContextMenu(items: ContextMenuItem[], x: number, y: number):
     let topBottom = y > window.innerHeight * 0.8 ? "bottom" : "top";
     let yp = y > window.innerHeight * 0.8 ? window.innerHeight - y : y;
 
-    let css = {};
+    let css: {[key: string]: any} = {};
     css[leftRight] = xp + "px";
     css[topBottom] = yp + "px";
 
@@ -282,7 +296,7 @@ export function downloadFile(obj: any, filename: string, isBlob: boolean = false
 }
 
 
-function fallbackCopyTextToClipboard(text) {
+function fallbackCopyTextToClipboard(text: string) {
     var textArea = document.createElement("textarea");
     textArea.value = text;
 
@@ -296,7 +310,7 @@ function fallbackCopyTextToClipboard(text) {
     textArea.select();
 
     try {
-        var successful = document.execCommand('copy');
+        document.execCommand('copy');
     } catch (err) {
         console.error('Fallback: Oops, unable to copy', err);
     }
@@ -304,7 +318,7 @@ function fallbackCopyTextToClipboard(text) {
     document.body.removeChild(textArea);
 }
 
-export function copyTextToClipboard(text) {
+export function copyTextToClipboard(text: string) {
     if (!navigator.clipboard) {
         fallbackCopyTextToClipboard(text);
         return;

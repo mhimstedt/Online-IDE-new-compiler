@@ -211,9 +211,9 @@ export class Main implements MainBase {
         //@ts-ignore
         window.UZIP = null; // needed by UPNG
 
-        this.correctPIXITransform();
+        // this.correctPIXITransform();
 
-        PIXI.settings.RENDER_OPTIONS.hello = false; // don't show PIXI-Message in browser console
+        // PIXI.settings.RENDER_OPTIONS.hello = false; // don't show PIXI-Message in browser console
 
         this.themeManager = new ThemeManager();
 

@@ -116,8 +116,8 @@ export class SoundTools {
     }
 
     public static play(name: string) {
-        let st: SoundType = SoundTools.soundMap.get(name);
-        if (st != null) {
+        let st: SoundType | undefined = SoundTools.soundMap.get(name);
+        if (st) {
             st.player.play();
         }
     }
@@ -135,7 +135,7 @@ export class SoundTools {
             navigator.getUserMedia({
                 audio: true
             },
-                function (stream) {
+                function (stream: any) {
                     let audioContext = new AudioContext();
                     let analyser = audioContext.createAnalyser();
                     let microphone = audioContext.createMediaStreamSource(stream);
@@ -157,7 +157,7 @@ export class SoundTools {
                         return volume;
                     };
                 },
-                function (err) {
+                function (err: any) {
                     console.log("The following error occured: " + err.name)
                 });
         } else {

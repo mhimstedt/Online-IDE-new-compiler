@@ -73,23 +73,23 @@ jQuery(function () {
         
     });
     
-    fetch(`${spritesheetjson}`)
-    .then((response) => response.json())
-    .then((spritesheetData: PixiSpritesheetData) => {
-        PIXI.Assets.load(`${spritesheetpng}`).then((texture: PIXI.Texture) => {
-            spritesheetData.meta.size.w = texture.width;
-            spritesheetData.meta.size.h = texture.height;
-            let spritesheet = new PIXI.Spritesheet(texture, spritesheetData);
-            spritesheet.parse().then(() => {
-                PIXI.Assets.cache.set('spritesheet', spritesheet);
-            });
-        })
-    });
+    // fetch(`${spritesheetjson}`)
+    // .then((response) => response.json())
+    // .then((spritesheetData: PixiSpritesheetData) => {
+    //     PIXI.Assets.load(`${spritesheetpng}`).then((texture: PIXI.Texture) => {
+    //         spritesheetData.meta.size.w = texture.width;
+    //         spritesheetData.meta.size.h = texture.height;
+    //         let spritesheet = new PIXI.Spritesheet(texture, spritesheetData);
+    //         spritesheet.parse().then(() => {
+    //             PIXI.Assets.cache.set('spritesheet', spritesheet);
+    //         });
+    //     })
+    // });
 
-    // PIXI.Assets.add("spritesheet", "assets/graphics/spritesheet.json", {scaleMode: PIXI.SCALE_MODES.NEAREST});
-    PIXI.Assets.add("steve", "assets/graphics/robot/minecraft_steve/scene.gltf");
+    // // PIXI.Assets.add("spritesheet", "assets/graphics/spritesheet.json", {scaleMode: PIXI.SCALE_MODES.NEAREST});
+    // PIXI.Assets.add("steve", "assets/graphics/robot/minecraft_steve/scene.gltf");
 
-    PIXI.Assets.load(["steve"]);
+    // PIXI.Assets.load(["steve"]);
     
     main.initGUI();
 

@@ -82,7 +82,6 @@ import { DirectionClass } from "../../runtimelibrary/graphics/Direction.js";
 import { Patcher } from "./Patcher.js";
 import { KeyEvent as KeyEventClass } from "../../runtimelibrary/graphics/KeyEvent.js";
 import { Formatter } from "../../main/gui/Formatter.js";
-import { RobotClass, RobotWorldClass } from "../../runtimelibrary/graphics/3d/Robot.js";
 import { ResultSetClass } from "../../runtimelibrary/database/ResultSet.js";
 import { DatabaseStatementClass } from "../../runtimelibrary/database/DatabaseStatement.js";
 import { ConnectionClass } from "../../runtimelibrary/database/Connection.js";
@@ -956,9 +955,6 @@ export class BaseModule extends Module {
     
         this.typeStore.addType(new WebSocketClientClass(this));
         this.typeStore.addType(new WebSocketClass(this));
-
-        this.typeStore.addType(new RobotWorldClass(this));
-        this.typeStore.addType(new RobotClass(this));
 
         this.typeStore.addType(new ResultSetClass(this));
         this.typeStore.addType(new DatabaseStatementClass(this));

@@ -1,4 +1,5 @@
 import jQuery from "jquery";
+import "/include/css/gutibutton.css";
 
 type Listener = (checked: boolean) => void;
 
@@ -9,7 +10,7 @@ export class GUIToggleButton {
     listeners: Listener[] = [];
     linkedToggleButtons: Set<GUIToggleButton> = new Set();
 
-    constructor(private _caption: string, public $parent: JQuery<HTMLElement>, private _isChecked){
+    constructor(private _caption: string, public $parent: JQuery<HTMLElement>, private _isChecked: boolean){
         this.$html = jQuery(`<div class='joe_toggleButton active${_isChecked ? " checked" : ""}'>${_caption}</div>`);        
         this.$parent?.append(this.$html);
         this.$html.on('pointerdown', (e) => {

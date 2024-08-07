@@ -1,5 +1,3 @@
-import { Main } from "../client/main/Main.js";
-
 export class GamepadTool {
 
     gamepads: Gamepad[] = [];
@@ -26,7 +24,7 @@ export class GamepadTool {
     }
 
     isGamepadButtonPressed(gamepadIndex: number, buttonIndex: number): boolean{
-        let gp: Gamepad = navigator.getGamepads()[gamepadIndex];
+        let gp: Gamepad | null = navigator.getGamepads()[gamepadIndex];
         if(gp == null) return false;
         let button = gp.buttons[buttonIndex];
         if(button){
@@ -36,7 +34,7 @@ export class GamepadTool {
     }
 
     getGamepadAxisValue(gamepadIndex: number, axisIndex: number): number {
-        let gp: Gamepad = navigator.getGamepads()[gamepadIndex];
+        let gp: Gamepad | null = navigator.getGamepads()[gamepadIndex];
         if(gp == null) return 0;
         return gp.axes[axisIndex];
     }
