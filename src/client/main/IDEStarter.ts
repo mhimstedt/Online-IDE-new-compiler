@@ -5,7 +5,6 @@ import { RepositorySettingsManager } from "../repository/update/RepositorySettin
 import { RepositoryCheckoutManager } from "../repository/update/RepositoryCheckoutManager.js";
 import { SpriteManager } from "../spritemanager/SpriteManager.js";
 import * as PIXI from 'pixi.js';
-import jQuery from 'jquery';
 
 // All css files for fullscreen online-ide:
 import "/include/css/editor.css";
@@ -25,34 +24,68 @@ import spritesheetjson from '/include/graphics/spritesheet.json.txt';
 import spritesheetpng from '/include/graphics/spritesheet.png';
 import { PixiSpritesheetData } from "../spritemanager/PixiSpritesheetData.js";
 
+function loadSpritesheet() {
+    fetch(`${spritesheetjson}`)
+        .then((response) => response.json())
+        .then((spritesheetData: PixiSpritesheetData) => {
+            PIXI.Assets.load(`${spritesheetpng}`).then((texture: PIXI.Texture) => {
+                let source: PIXI.ImageSource = texture.source;
+                source.minFilter = "nearest";
+                source.magFilter = "nearest";
+
+                spritesheetData.meta.size.w = texture.width;
+                spritesheetData.meta.size.h = texture.height;
+                let spritesheet = new PIXI.Spritesheet(texture, spritesheetData);
+                spritesheet.parse().then(() => {
+                    PIXI.Assets.cache.set('spritesheet', spritesheet);
+                });
+            })
+        });
+}
+
+async function initMonacoEditor(): Promise<void> {
+
+    return new Promise((resolve) => {
+        //@ts-ignore
+        window.AMDLoader.Configuration.ignoreDuplicateModules = ["jquery"];
+
+        //@ts-ignore
+        window.require.config({ paths: { 'vs': 'lib/monaco-editor/dev/vs' } });
+        //@ts-ignore
+        window.require.config({
+            'vs/nls': {
+                availableLanguages: {
+                    '*': 'de'
+                }
+            },
+            ignoreDuplicateModules: ["vs/editor/editor.main", 'jquery']
+        });
+
+        //@ts-ignore
+        window.require(['vs/editor/editor.main'], function () {
+
+            resolve();
+
+        });
+
+    })
 
 
-jQuery(function () {
+}
 
+
+window.onload = () => {
     let main = new Main();
+    loadSpritesheet();
 
-    //@ts-ignore
-    window.require.config({ paths: { 'vs': 'lib/monaco-editor/dev/vs' } });
-    //@ts-ignore
-    window.require.config({
-        'vs/nls': {
-            availableLanguages: {
-                '*': 'de'
-            }
-        },
-        ignoreDuplicateModules: ["vs/editor/editor.main"]
-    });
-
-    //@ts-ignore
-    window.require(['vs/editor/editor.main'], function () {
-
+    initMonacoEditor().then(() => {
         main.initEditor();
         main.getMonacoEditor().updateOptions({ readOnly: true });
 
         main.bottomDiv.initGUI();
         main.checkStartupComplete();
 
-        if(main.repositoryOn){
+        if (main.repositoryOn) {
             main.synchronizationManager = new SynchronizationManager(main);
             main.synchronizationManager.initGUI();
             main.repositoryCreateManager = new RepositoryCreateManager(main);
@@ -66,31 +99,11 @@ jQuery(function () {
 
         main.spriteManager = new SpriteManager(main);
         main.spriteManager.initGUI();
-        // main.loadWorkspace();
 
         //@ts-ignore
         p5.disableFriendlyErrors = true
-        
-    });
-    
-    // fetch(`${spritesheetjson}`)
-    // .then((response) => response.json())
-    // .then((spritesheetData: PixiSpritesheetData) => {
-    //     PIXI.Assets.load(`${spritesheetpng}`).then((texture: PIXI.Texture) => {
-    //         spritesheetData.meta.size.w = texture.width;
-    //         spritesheetData.meta.size.h = texture.height;
-    //         let spritesheet = new PIXI.Spritesheet(texture, spritesheetData);
-    //         spritesheet.parse().then(() => {
-    //             PIXI.Assets.cache.set('spritesheet', spritesheet);
-    //         });
-    //     })
-    // });
+    })
 
-    // // PIXI.Assets.add("spritesheet", "assets/graphics/spritesheet.json", {scaleMode: PIXI.SCALE_MODES.NEAREST});
-    // PIXI.Assets.add("steve", "assets/graphics/robot/minecraft_steve/scene.gltf");
-
-    // PIXI.Assets.load(["steve"]);
-    
     main.initGUI();
-
-});
+    // document.body.innerText = 'Hello World!';
+}
