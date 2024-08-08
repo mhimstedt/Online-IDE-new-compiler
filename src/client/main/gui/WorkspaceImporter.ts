@@ -1,5 +1,5 @@
-import { ExportedWorkspace, File, Module } from "../../compiler/parser/Module.js";
 import { Workspace } from "../../workspace/Workspace.js";
+import { ExportedWorkspace, WorkspaceImporterExporter } from "../../workspace/WorkspaceImporterExporter.js";
 import { Main } from "../Main.js";
 import { Dialog } from "./Dialog.js";
 import jQuery from "jquery";
@@ -114,13 +114,8 @@ export class WorkspaceImporter {
 
                     for(let wse of exportedWorkspaces){
 
-                        let ws: Workspace = new Workspace(wse.name, this.main, owner_id);
+                        let ws: Workspace = WorkspaceImporterExporter.importWorkspace(wse, this.path, this.main, owner_id);
                         if(firstWorkspace == null) firstWorkspace = ws;
-                        ws.isFolder = false;
-                        ws.path = this.path.join("/");
-                        ws.settings = wse.settings;
-                        this.main.workspaceList.push(ws);
-                        ws.alterAdditionalLibraries();
 
                         networkManager.sendCreateWorkspace(ws, owner_id, (error: string) => {
                             count--;
@@ -135,25 +130,10 @@ export class WorkspaceImporter {
                                     isPruefungFolder: false
                                 }, true);
 
-                                for(let mo of wse.modules){
-                                    let f: File = {
-                                        name: mo.name,
-                                        dirty: false,
-                                        saved: true,
-                                        text: mo.text,
-                                        text_before_revision: null,
-                                        submitted_date: null,
-                                        student_edited_after_revision: false,
-                                        version: 1,
-                                        is_copy_of_id: null,
-                                        repository_file_version: null,
-                                        identical_to_repository_version: true,
-                                    };
-                                    let m = new Module(f, this.main);
-                                    ws.moduleStore.putModule(m);
-                                    networkManager.sendCreateFile(m, ws, owner_id,
+                                for(let f of ws.files){
+                                    networkManager.sendCreateFile(f, ws, owner_id,
                                         (error: string) => {
-                                            count--;
+                                            count--; 
                                             if (error == null) {
                                                 projectExplorer.workspaceListPanel.sortElements();
                                                 this.dialog.close();

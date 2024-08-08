@@ -161,7 +161,7 @@ export class MainEmbedded implements MainBase {
             this.fileExplorer.setFirstFileActive();
             this.scriptList.filter((script) => script.title.endsWith(".md")).forEach((script) => this.fileExplorer.addHint(script));
         } else {
-            this.setModuleActive(this.currentWorkspace.moduleStore.getFirstModule());
+            this.setFileActive(this.currentWorkspace.moduleStore.getFirstModule());
         }
 
     }
@@ -203,7 +203,7 @@ export class MainEmbedded implements MainBase {
 
     }
 
-    setModuleActive(module: Module) {
+    setFileActive(module: Module) {
 
         if(module == null) return;
 
@@ -287,7 +287,7 @@ export class MainEmbedded implements MainBase {
                             that.fileExplorer?.setFirstFileActive();
                             if (that.fileExplorer == null) {
                                 let modules = that.currentWorkspace.moduleStore.getModules(false);
-                                if (modules.length > 0) that.setModuleActive(modules[0]);
+                                if (modules.length > 0) that.setFileActive(modules[0]);
                             }
                         }
                     })
@@ -352,7 +352,6 @@ export class MainEmbedded implements MainBase {
     initWorkspace(scriptList: JOScript[]) {
         this.currentWorkspace = new Workspace("Embedded-Workspace", this, 0);
         this.currentWorkspace.settings.libraries = this.config.libraries;
-        this.currentWorkspace.alterAdditionalLibraries();
 
         let i = 0;
         for (let script of scriptList) {
@@ -629,7 +628,7 @@ export class MainEmbedded implements MainBase {
             }
 
             if (fileData.module != this.getCurrentlyEditedModule()) {
-                this.setModuleActive(fileData.module);
+                this.setFileActive(fileData.module);
             }
 
             this.programPointerModule = fileData.module;
@@ -724,7 +723,6 @@ export class MainEmbedded implements MainBase {
 
                 if (startable &&
                     this.interpreter.state == InterpreterState.not_initialized) {
-                    this.copyExecutableModuleStoreToInterpreter();
                     this.interpreter.setState(InterpreterState.done);
                     if (this.config.hideStartPanel) {
                         this.actionManager.trigger('interpreter.start');
@@ -765,18 +763,6 @@ export class MainEmbedded implements MainBase {
         //     this.rightDiv?.classDiagram?.drawDiagram(this.currentWorkspace, onlyUpdateIdentifiers);
         // }, 500);
     }
-
-    copyExecutableModuleStoreToInterpreter() {
-        let ms = this.currentWorkspace.moduleStore.copy();
-        this.interpreter.moduleStore = ms;
-        this.interpreter.moduleStoreVersion = this.version;
-
-        if (this.interpreter.state == InterpreterState.not_initialized && this.programIsExecutable) {
-            this.interpreter.setState(InterpreterState.done);
-        }
-
-    }
-
 
     saveWorkspaceToFile() {
         let filename: string = prompt("Bitte geben Sie den Dateinamen ein", this.config.jsonFilename);
@@ -901,7 +887,7 @@ export class MainEmbedded implements MainBase {
                 ws.moduleStore.getModules(false).forEach(module => that.fileExplorer.addModule(module));
                 that.fileExplorer.setFirstFileActive();
             } else {
-                this.setModuleActive(this.currentWorkspace.moduleStore.getFirstModule());
+                this.setFileActive(this.currentWorkspace.moduleStore.getFirstModule());
             }
 
             that.saveScripts();

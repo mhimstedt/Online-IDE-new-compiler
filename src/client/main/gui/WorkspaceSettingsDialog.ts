@@ -54,7 +54,6 @@ export class WorkspaceSettingsDialog{
                     if(changed){
                         this.workspace.settings.libraries = newLibs;
                         this.workspace.saved = false;
-                        this.workspace.alterAdditionalLibraries();
                         this.main.networkManager.sendUpdates(null, true);
                     }
 

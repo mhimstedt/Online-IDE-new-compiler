@@ -1,13 +1,14 @@
+import jQuery from 'jquery';
 import { WorkspaceData, WorkspaceSettings } from "../communication/Data.js";
-import { ExportedWorkspace, Module, ModuleStore } from "../compiler/parser/Module.js";
-import { Evaluator } from "../interpreter/Evaluator.js";
 import { AccordionElement } from "../main/gui/Accordion.js";
 import { Main } from "../main/Main.js";
 import { MainBase } from "../main/MainBase.js";
-import jQuery from 'jquery';
+import { File } from "./File.js";
 
+import * as PIXI from 'pixi.js';
+import { CompilerWorkspace } from '../../compiler/common/module/CompilerWorkspace.js';
 
-export class Workspace {
+export class Workspace extends CompilerWorkspace {
     
     name: string;
     path: string;
@@ -30,42 +31,41 @@ export class Workspace {
     comment?: string;
     attended_exam?: boolean;
 
-    moduleStore: ModuleStore;
+    private files: File[] = [];
+
     panelElement: AccordionElement;
-    currentlyOpenModule: Module;
+    currentlyOpenFile: File;
     saved: boolean = true;
 
     pruefung_id: number;
 
-    compilerMessage: string;
+    userSpritesheet: PIXI.Spritesheet; // TODO!
 
-    evaluator: Evaluator;
 
     settings: WorkspaceSettings = {
         libraries: []
     };
     
     constructor(name: string, private main: MainBase, owner_id: number){
+        super(main);
         this.name = name;
         this.owner_id = owner_id;
         this.path = "";
-        this.moduleStore = new ModuleStore(main, true, this.settings.libraries);
-        this.evaluator = new Evaluator(this, main);
     }
 
-    toExportedWorkspace(): ExportedWorkspace {
-        return {
-            name: this.name,
-            modules: this.moduleStore.getModules(false).map(m => m.toExportedModule()),
-            settings: this.settings
-        }
+    getFiles(): File[] {
+        return this.files;
     }
 
-
-    alterAdditionalLibraries() {
-        this.moduleStore.setAdditionalLibraries(this.settings.libraries);
-        this.moduleStore.dirty = true;
+    addFile(file: File){
+        this.files.push(file);
     }
+
+    removeFile(file: File){
+        let index = this.files.indexOf(file);
+        if(index >= 0) this.files.splice(index, 1);
+    }
+
 
     getWorkspaceData(withFiles: boolean): WorkspaceData {
         let wd: WorkspaceData = {
@@ -74,7 +74,7 @@ export class Workspace {
             isFolder: this.isFolder,
             id: this.id,
             owner_id: this.owner_id,
-            currentFileId: this.currentlyOpenModule == null ? null : this.currentlyOpenModule.file.id,
+            currentFileId: this.currentlyOpenFile == null ? null : this.currentlyOpenFile.id,
             files: [],
             version: this.version,
             repository_id: this.repository_id,
@@ -90,10 +90,8 @@ export class Workspace {
         }
 
         if(withFiles){
-            for(let m of this.moduleStore.getModules(false)){
-    
-                wd.files.push(m.getFileData(this));
-    
+            for(let file of this.files){
+                wd.files.push(file.getFileData(this));
             }
         }
 
@@ -106,7 +104,7 @@ export class Workspace {
         if ($buttonDiv == null) return;
         
         let that = this;
-        let myMain: Main = <Main>this.main;
+        let myMain: Main = <Main><any>this.main;
 
         if (this.repository_id != null && this.owner_id == myMain.user.id) {
             let $button = jQuery('<div class="jo_startButton img_open-change jo_button jo_active" title="Workspace mit Repository synchronisieren"></div>');
@@ -132,7 +130,7 @@ export class Workspace {
     }
 
     synchronizeWithRepository(){
-        let myMain: Main = <Main>this.main;
+        let myMain: Main = <Main><any>this.main;
         if(this.repository_id != null && this.owner_id == myMain.user.id){
             myMain.networkManager.sendUpdates(() => {
                 myMain.synchronizationManager.synchronizeWithWorkspace(this);
@@ -140,7 +138,7 @@ export class Workspace {
         }
     }
 
-    static restoreFromData(wd: WorkspaceData, main: Main): Workspace {
+    static restoreFromData(wd: WorkspaceData, main: MainBase): Workspace {
 
         let settings: WorkspaceSettings = (wd.settings != null && wd.settings.startsWith("{")) ? JSON.parse(wd.settings) : {libraries: []}; 
 
@@ -173,17 +171,13 @@ export class Workspace {
             w.settings.libraries = [];
         }
 
-        if(w.settings.libraries.length > 0){
-            w.moduleStore.setAdditionalLibraries(w.settings.libraries);
-        }
-
         for(let f of wd.files){
 
-            let m: Module = Module.restoreFromData(f, main);
-            w.moduleStore.putModule(m);
+            let file = File.restoreFromData(f);
+            w.files.push(file);
 
             if(f.id == wd.currentFileId){
-                w.currentlyOpenModule = m;
+                w.currentlyOpenFile = file;
             }
 
         }
@@ -192,20 +186,12 @@ export class Workspace {
 
     }
 
-    hasErrors(): boolean {
-        
-        return this.moduleStore.hasErrors();
-        
+    findFileById(id: number): File {
+        return this.files.find(f => f.id == id);
     }
 
-    getModuleByMonacoModel(model: monaco.editor.ITextModel): Module {
-        for(let m of this.moduleStore.getModules(false)){
-            if(m.model == model){
-                return m;
-            }
-        }
-        
-        return null;
+    getCurrentlyEditedFile(): File | undefined {
+        return <File | undefined>(super.getCurrentlyEditedFile());    
     }
 }
 

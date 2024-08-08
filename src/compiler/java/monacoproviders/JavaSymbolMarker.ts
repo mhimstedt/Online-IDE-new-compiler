@@ -1,25 +1,32 @@
 import { IMain } from "../../common/IMain.ts";
+import { Range } from "../../common/range/Range.ts";
 import { JavaCompiledModule } from "../module/JavaCompiledModule.ts";
 
 export class JavaSymbolMarker {
 
     decorations?: monaco.editor.IEditorDecorationsCollection;
 
-    constructor(private editor: monaco.editor.IStandaloneCodeEditor,
-        private main: IMain) {
+    constructor(private main: IMain) {
+            if(!main.getMainEditor()){
+                console.error("Call construction of JavaSymbolMarker before creation of monaco editor.");
+                return;
+            }
 
-            editor.onDidChangeCursorPosition((event) => {
+            main.getMainEditor().onDidChangeCursorPosition((event) => {
                 this.onDidChangeCursorPosition(event);
             })
 
         }
 
     onDidChangeCursorPosition(event: monaco.editor.ICursorPositionChangedEvent) {
-        if(this.editor.getModel()?.getLanguageId() != 'myJava') return;
+        let editor = this.main.getMainEditor();
+        if(!editor) return;
+
+        if(editor.getModel()?.getLanguageId() != 'myJava') return;
 
         this.clearDecorations();
 
-        let module = <JavaCompiledModule>this.main.getModuleForMonacoModel(this.editor.getModel());
+        let module = <JavaCompiledModule>this.main.getCurrentWorkspace()?.getModuleForMonacoModel(editor.getModel());
         if(!module) return;
 
         let usagePosition = module.findSymbolAtPosition(event.position);
@@ -47,7 +54,26 @@ export class JavaSymbolMarker {
             })
         }
 
-        this.decorations = this.editor.createDecorationsCollection(decorations);
+        let methodRange = module.methodDeclarationRanges.find(range => Range.containsPosition(range, event.position));
+        if(methodRange){
+            decorations.push({
+                range: { startColumn: 0, startLineNumber: methodRange.startLineNumber, endColumn: 100, endLineNumber: methodRange.endLineNumber },
+                options: {
+                    className: 'jo_highlightMethod', isWholeLine: true, overviewRuler: {
+                        color: { id: "jo_highlightMethod" },
+                        darkColor: { id: "jo_highlightMethod" },
+                        position: monaco.editor.OverviewRulerLane.Left
+                    },
+                    minimap: {
+                        color: { id: 'jo_highlightMethod' },
+                        position: monaco.editor.MinimapPosition.Inline
+                    },
+                    zIndex: -100
+                }
+            })
+        }
+
+        this.decorations = editor.createDecorationsCollection(decorations);
 
     }
 

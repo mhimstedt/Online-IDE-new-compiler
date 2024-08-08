@@ -1,30 +1,23 @@
 import jQuery from 'jquery';
-import { NetworkManager } from "../../communication/NetworkManager.js";
-import { TextPosition } from "../../compiler/lexer/Token.js";
-import { File, Module } from "../../compiler/parser/Module.js";
-import { ProgramPrinter } from "../../compiler/parser/ProgramPrinter.js";
-import { InterpreterState } from "../../interpreter/Interpreter.js";
-import { downloadFile, makeEditable, openContextMenu } from "../../../tools/HtmlTools.js";
+import { DatabaseNewLongPollingListener } from '../../../tools/database/DatabaseNewLongPollingListener.js';
+import { downloadFile } from "../../../tools/HtmlTools.js";
+import { dateToString } from "../../../tools/StringTools.js";
+import { ajaxAsync } from '../../communication/AjaxHelper.js';
+import { ClassData, FileData, GetWorkspacesRequest, GetWorkspacesResponse, Pruefung, UserData } from "../../communication/Data.js";
+import { SpritesheetData } from "../../spritemanager/SpritesheetData.js";
 import { Workspace } from "../../workspace/Workspace.js";
 import { Main } from "../Main.js";
-import { AccordionPanel, Accordion, AccordionElement, AccordionContextMenuItem } from "./Accordion.js";
-import { Helper } from "./Helper.js";
-import { WorkspaceData, Workspaces, ClassData, UserData, GetWorkspacesRequest, GetWorkspacesResponse, Pruefung, FileData } from "../../communication/Data.js";
-import { dateToString } from "../../../tools/StringTools.js";
+import { Accordion, AccordionContextMenuItem, AccordionElement, AccordionPanel } from "./Accordion.js";
 import { DistributeToStudentsDialog } from "./DistributeToStudentsDialog.js";
-import { WorkspaceSettingsDialog } from "./WorkspaceSettingsDialog.js";
-import { SpritesheetData } from "../../spritemanager/SpritesheetData.js";
 import { FileTypeManager } from './FileTypeManager.js';
-import { ajax, ajaxAsync } from '../../communication/AjaxHelper.js';
+import { Helper } from "./Helper.js";
 import { TeacherExplorer } from './TeacherExplorer.js';
-import { DatabaseNewLongPollingListener } from '../../../tools/database/DatabaseNewLongPollingListener.js';
+import { WorkspaceSettingsDialog } from "./WorkspaceSettingsDialog.js";
+import { File } from '../../workspace/File.js';
+import { IPosition, Position } from '../../../compiler/common/range/Position.js';
 
 
 export class ProjectExplorer {
-
-    programPointerModule: Module = null;
-    programPointerPosition: TextPosition;
-    programPointerDecoration: string[] = [];
 
     accordion: Accordion;
     fileListPanel: AccordionPanel;
@@ -63,28 +56,22 @@ export class ProjectExplorer {
                     return null;
                 }
 
-                let f: File = {
-                    name: accordionElement.name,
-                    dirty: false,
-                    saved: true,
-                    text: "",
-                    text_before_revision: null,
-                    submitted_date: null,
-                    student_edited_after_revision: false,
-                    version: 1,
-                    panelElement: accordionElement,
-                    identical_to_repository_version: false,
-                };
+                let f = new File(accordionElement.name);
+                f.panelElement = accordionElement;
+                accordionElement.externalElement = f;
+
                 that.fileListPanel.setElementClass(accordionElement, FileTypeManager.filenameToFileType(accordionElement.name).iconclass)
-                let m = new Module(f, that.main);
-                let modulStore = that.main.currentWorkspace.moduleStore;
-                modulStore.putModule(m);
-                that.setModuleActive(m);
+
+                that.main.getCurrentWorkspace().addFile(f);
+
+                that.setFileActive(f);
+
                 that.fileListPanel.setCaption(that.main.currentWorkspace.name);
-                that.main.networkManager.sendCreateFile(m, that.main.currentWorkspace, that.main.workspacesOwnerId,
+
+                that.main.networkManager.sendCreateFile(f, that.main.currentWorkspace, that.main.workspacesOwnerId,
                     (error: string) => {
                         if (error == null) {
-                            successfulNetworkCommunicationCallback(m);
+                            successfulNetworkCommunicationCallback(f);
                         } else {
                             alert('Der Server ist nicht erreichbar!');
 
@@ -94,29 +81,26 @@ export class ProjectExplorer {
             };
 
         this.fileListPanel.renameCallback =
-            (module: Module, newName: string, ae: AccordionElement) => {
-                newName = newName.substr(0, 80);
-                let file = module.file;
-                
-                this.main.currentWorkspace.moduleStore.rename(file.name, newName);
+            (file: File, newName: string, ae: AccordionElement) => {
+                newName = newName.substring(0, 80);
 
                 file.name = newName;
-                file.saved = false;
+                file.setSaved(false);
                 let fileType = FileTypeManager.filenameToFileType(newName);
-                that.fileListPanel.setElementClass(ae, fileType.iconclass)
-                monaco.editor.setModelLanguage(module.model, fileType.language);
+                that.fileListPanel.setElementClass(ae, fileType.iconclass);
 
+                monaco.editor.setModelLanguage(file.getMonacoModel(), fileType.language);
 
                 that.main.networkManager.sendUpdates();
                 return newName;
             }
 
         this.fileListPanel.deleteCallback =
-            (module: Module, callbackIfSuccessful: () => void) => {
-                that.main.networkManager.sendDeleteWorkspaceOrFile("file", module.file.id, (error: string) => {
+            (file: File, callbackIfSuccessful: () => void) => {
+                that.main.networkManager.sendDeleteWorkspaceOrFile("file", file.id, (error: string) => {
                     if (error == null) {
-                        that.main.currentWorkspace.moduleStore.removeModule(module);
-                        if (that.main.currentWorkspace.moduleStore.getModules(false).length == 0) {
+                        that.main.getCurrentWorkspace().removeFile(file);
+                        if (that.main.getCurrentWorkspace().getFiles().length == 0) {
 
                             that.fileListPanel.setCaption("Keine Datei vorhanden");
                         }
@@ -128,90 +112,60 @@ export class ProjectExplorer {
                 });
             }
 
-
-
         this.fileListPanel.contextMenuProvider = (accordionElement: AccordionElement) => {
 
             let cmiList: AccordionContextMenuItem[] = [];
             let that = this;
 
-            // cmiList.push({
-            //     caption: "Dateityp",
-            //     callback: (element: AccordionElement) => { },
-            //     subMenu: FileTypeManager.filetypes.map((ft) => { return {
-            //         caption: ft.name,
-            //         callback: (element: AccordionElement) => {
-            //             that.fileListPanel.setElementClass(element, ft.iconclass);
-            //             let m: Module = element.externalElement;
-            //             m.file.saved = false;
-            //             that.main.networkManager.sendUpdates()
-            //         }
-            //     } })
-            // })
-
             cmiList.push({
                 caption: "Duplizieren",
                 callback: (element: AccordionElement) => {
 
-                    let module: Module = element.externalElement;
+                    let oldFile: File = element.externalElement;
+                    let newFile: File = new File(oldFile.name + " - Kopie");
+                    newFile.setText(oldFile.getText());
+                    newFile.version = oldFile.version;
 
-                    let f: File = {
-                        name: module.file.name + " - Kopie",
-                        dirty: true,
-                        saved: false,
-                        text: module.file.text,
-                        text_before_revision: null,
-                        submitted_date: null,
-                        student_edited_after_revision: false,
-                        version: module.file.version,
-                        panelElement: null,
-                        identical_to_repository_version: false,
-                    };
+                    let workspace = that.main.getCurrentWorkspace();
+                    workspace.addFile(newFile);
 
-                    let m = new Module(f, that.main);
-                    let workspace = that.main.currentWorkspace;
-                    let modulStore = workspace.moduleStore;
-                    modulStore.putModule(m);
-                    that.main.networkManager.sendCreateFile(m, workspace, that.main.workspacesOwnerId,
+                    that.main.networkManager.sendCreateFile(newFile, workspace, that.main.workspacesOwnerId,
                         (error: string) => {
                             if (error == null) {
                                 let element: AccordionElement = {
                                     isFolder: false,
-                                    name: f.name,
+                                    name: newFile.name,
                                     path: [],
-                                    externalElement: m,
-                                    iconClass: FileTypeManager.filenameToFileType(f.name).iconclass,
+                                    externalElement: newFile,
+                                    iconClass: FileTypeManager.filenameToFileType(newFile.name).iconclass,
                                     readonly: false,
                                     isPruefungFolder: false
                                 }
-                                f.panelElement = element;
+                                newFile.panelElement = element;
                                 that.fileListPanel.addElement(element, true);
                                 that.fileListPanel.sortElements();
-                                that.setModuleActive(m);
+                                that.setFileActive(newFile);
                                 that.fileListPanel.renameElement(element);
                             } else {
                                 alert('Der Server ist nicht erreichbar!');
 
                             }
                         });
-
-
                 }
             });
 
 
             if (!(that.main.user.is_teacher || that.main.user.is_admin || that.main.user.is_schooladmin)) {
-                let module: Module = <Module>accordionElement.externalElement;
-                let file = module.file;
+                let file = <File>accordionElement.externalElement;
 
                 if (file.submitted_date == null) {
                     cmiList.push({
                         caption: "Als Hausaufgabe markieren",
                         callback: (element: AccordionElement) => {
 
-                            let file = (<Module>element.externalElement).file;
+                            let file = <File>element.externalElement;
                             file.submitted_date = dateToString(new Date());
-                            file.saved = false;
+                            file.setSaved(false);
                             that.main.networkManager.sendUpdates(null, true);
                             that.renderHomeworkButton(file);
                         }
@@ -221,9 +175,9 @@ export class ProjectExplorer {
                         caption: "Hausaufgabenmarkierung entfernen",
                         callback: (element: AccordionElement) => {
 
-                            let file = (<Module>element.externalElement).file;
+                            let file = <File>element.externalElement;
                             file.submitted_date = null;
-                            file.saved = false;
+                            file.setSaved(false);
                             that.main.networkManager.sendUpdates(null, true);
                             that.renderHomeworkButton(file);
 
@@ -239,8 +193,8 @@ export class ProjectExplorer {
 
 
         this.fileListPanel.selectCallback =
-            (module: Module) => {
-                that.setModuleActive(module);
+            (file: File) => {
+                that.setFileActive(file);
             }
 
 
@@ -613,7 +567,7 @@ export class ProjectExplorer {
 
     onHomeButtonClicked() {
         this.workspaceListPanel.$buttonNew.show();
-        this.workspaceListPanel.$newFolderAction.show();                
+        this.workspaceListPanel.$newFolderAction.show();
 
         this.main.teacherExplorer.restoreOwnWorkspaces();
         this.main.networkManager.updateFrequencyInSeconds = this.main.networkManager.ownUpdateFrequencyInSeconds;
@@ -738,12 +692,12 @@ export class ProjectExplorer {
         if (w != null) {
             let nonSystemModules = w.moduleStore.getModules(false);
 
-            if (w.currentlyOpenModule != null) {
-                this.setModuleActive(w.currentlyOpenModule);
+            if (w.currentlyOpenFile != null) {
+                this.setFileActive(w.currentlyOpenFile);
             } else if (nonSystemModules.length > 0) {
-                this.setModuleActive(nonSystemModules[0]);
+                this.setFileActive(nonSystemModules[0]);
             } else {
-                this.setModuleActive(null);
+                this.setFileActive(null);
             }
 
             if (nonSystemModules.length == 0 && !this.main.user.settings.helperHistory.newFileHelperDone) {
@@ -761,31 +715,31 @@ export class ProjectExplorer {
                 }
             });
 
-            this.main.bottomDiv.gradingManager?.setValues(w); 
+            this.main.bottomDiv.gradingManager?.setValues(w);
 
         } else {
-            this.setModuleActive(null);
+            this.setFileActive(null);
         }
 
 
     }
 
     writeEditorTextToFile() {
-        let cem = this.getCurrentlyEditedModule();
+        let cem = this.getCurrentlyEditedFile();
         if (cem != null)
             cem.file.text = cem.getProgramTextFromMonacoModel(); // 29.03. this.main.monaco.getValue();
     }
 
 
-    lastOpenModule: Module = null;
-    setModuleActive(m: Module) {
+    lastOpenFile: Module = null;
+    setFileActive(m: Module) {
 
         this.main.bottomDiv.homeworkManager.hideRevision();
 
-        if (this.lastOpenModule != null) {
-            this.lastOpenModule.getBreakpointPositionsFromEditor();
-            this.lastOpenModule.file.text = this.lastOpenModule.getProgramTextFromMonacoModel(); // this.main.monaco.getValue();
-            this.lastOpenModule.editorState = this.main.getMonacoEditor().saveViewState();
+        if (this.lastOpenFile != null) {
+            this.lastOpenFile.getBreakpointPositionsFromEditor();
+            this.lastOpenFile.file.text = this.lastOpenFile.getProgramTextFromMonacoModel(); // this.main.monaco.getValue();
+            this.lastOpenFile.editorState = this.main.getMonacoEditor().saveViewState();
         }
 
         if (m == null) {
@@ -807,111 +761,51 @@ export class ProjectExplorer {
 
     }
 
-    setActiveAfterExternalModelSet(m: Module) {
-        this.fileListPanel.select(m, false);
+    setActiveAfterExternalModelSet(f: File) {   // MP Aug. 24: Ändern zu file: File!
+        this.fileListPanel.select(f, false);
 
-        this.lastOpenModule = m;
+        this.lastOpenFile = f;
 
-        if (m.editorState != null) {
-            this.main.editor.dontPushNextCursorMove++;
-            this.main.getMonacoEditor().restoreViewState(m.editorState);
-            this.main.editor.dontPushNextCursorMove--;
-        }
+        this.main.editor.dontPushNextCursorMove++;
+        f.restoreViewState(this.main.getMainEditor());
+        this.main.editor.dontPushNextCursorMove--;
 
-        m.renderBreakpointDecorators();
+        this.main.getInterpreter().breakpointManager.renderBreakpointDecorators();
 
-        this.setCurrentlyEditedModule(m);
+        this.setCurrentlyEditedFile(f);
 
-        this.showProgramPointer();
+        this.main.getInterpreter().showProgramPointer();
 
         setTimeout(() => {
-            if (!this.main.getMonacoEditor().getOptions().get(monaco.editor.EditorOption.readOnly)) {
-                this.main.getMonacoEditor().focus();
+            if (!this.main.getMainEditor().getOptions().get(monaco.editor.EditorOption.readOnly)) {
+                this.main.getMainEditor().focus();
             }
         }, 300);
 
     }
 
-
-    private showProgramPointer() {
-
-        if (this.programPointerModule == this.getCurrentlyEditedModule() && this.getCurrentlyEditedModule() != null) {
-            let position = this.programPointerPosition;
-            let range = {
-                startColumn: position.column, startLineNumber: position.line,
-                endColumn: position.column + position.length, endLineNumber: position.line
-            };
-
-            this.main.getMonacoEditor().revealRangeInCenterIfOutsideViewport(range);
-            this.programPointerDecoration = this.main.getMonacoEditor().deltaDecorations(this.programPointerDecoration, [
-                {
-                    range: range,
-                    options: {
-                        className: 'jo_revealProgramPointer', isWholeLine: true,
-                        overviewRuler: {
-                            color: "#6fd61b",
-                            position: monaco.editor.OverviewRulerLane.Center
-                        },
-                        minimap: {
-                            color: "#6fd61b",
-                            position: monaco.editor.MinimapPosition.Inline
-                        }
-                    }
-                },
-                {
-                    range: range,
-                    options: { beforeContentClassName: 'jo_revealProgramPointerBefore' }
-                }
-            ]);
-
-        }
-    }
-
-    showProgramPointerPosition(file: File, position: TextPosition) {
+    showProgramPointerPosition(file: File, position: IPosition) {
 
         // console statement execution:
         if (file == null) {
             return;
         }
 
-        let module = this.main.currentWorkspace.moduleStore.findModuleByFile(file);
-        if (module == null) {
-            return;
-        }
-
-        this.programPointerModule = module;
-        this.programPointerPosition = position;
-
-        if (module != this.getCurrentlyEditedModule()) {
-            this.setModuleActive(module);
+        if (file != this.main.getCurrentWorkspace().getCurrentlyEditedFile()) {
+            this.setFileActive(file);
         } else {
-            this.showProgramPointer();
+            this.main.getInterpreter().showProgramPointer();
         }
 
     }
 
-    hideProgramPointerPosition() {
-        if (this.getCurrentlyEditedModule() == this.programPointerModule) {
-            this.main.getMonacoEditor().deltaDecorations(this.programPointerDecoration, []);
-        }
-        this.programPointerModule = null;
-        this.programPointerDecoration = [];
-    }
-
-    getCurrentlyEditedModule(): Module {
+    setCurrentlyEditedFile(f: File) {
+        if (f == null) return;
         let ws = this.main.currentWorkspace;
-        if (ws == null) return null;
-
-        return ws.currentlyOpenModule;
-    }
-
-    setCurrentlyEditedModule(m: Module) {
-        if (m == null) return;
-        let ws = this.main.currentWorkspace;
-        if (ws.currentlyOpenModule != m) {
-            ws.currentlyOpenModule = m;
+        if (ws.currentlyOpenFile != f) {
+            ws.currentlyOpenFile = f;
             ws.saved = false;
-            m.file.dirty = true;
+            // file.dirty = true;    // Is this correct?
         }
     }
 
@@ -931,8 +825,8 @@ export class ProjectExplorer {
         this.workspaceListPanel.setCaption(caption);
     }
 
-    getNewModule(fileData: FileData): Module {
-        return Module.restoreFromData(fileData, this.main);
+    getNewFile(fileData: FileData): File {
+        return File.restoreFromData(fileData);
     }
 
     async fetchAndRenderOwnWorkspaces() {
@@ -961,16 +855,16 @@ export class ProjectExplorer {
             let isTeacherAndInPruefungMode = teacherExplorer?.classPanelMode == "tests";
 
             if (ae.id != this.main.user.id) {
-                
+
                 if (isTeacherAndInPruefungMode) {
                     response.workspaces.workspaces = response.workspaces.workspaces.filter(w => w.pruefung_id == pruefung.id);
                 }
 
             }
-                        
+
             this.main.workspacesOwnerId = ae.id;
             this.main.restoreWorkspaces(response.workspaces, false);
-            
+
             if (ae.id != this.main.user.id) {
                 this.main.projectExplorer.setExplorerColor("rgba(255, 0, 0, 0.2", ae.familienname + ", " + ae.rufname);
                 this.main.projectExplorer.$homeAction.show();
@@ -978,18 +872,18 @@ export class ProjectExplorer {
                 this.main.networkManager.updateFrequencyInSeconds = this.main.networkManager.teacherUpdateFrequencyInSeconds;
                 this.main.networkManager.secondsTillNextUpdate = this.main.networkManager.teacherUpdateFrequencyInSeconds;
 
-                if(!isTeacherAndInPruefungMode){
+                if (!isTeacherAndInPruefungMode) {
                     this.main.bottomDiv.homeworkManager.attachToWorkspaces(this.main.workspaceList);
                     this.main.bottomDiv.showHomeworkTab();
                 }
             }
 
-            if(pruefung != null){
+            if (pruefung != null) {
                 this.workspaceListPanel.$buttonNew.hide();
                 this.workspaceListPanel.$newFolderAction.hide();
             } else {
                 this.workspaceListPanel.$buttonNew.show();
-                this.workspaceListPanel.$newFolderAction.show();                
+                this.workspaceListPanel.$newFolderAction.show();
             }
         }
 

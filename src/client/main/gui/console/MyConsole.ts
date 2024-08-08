@@ -397,9 +397,9 @@ export class MyConsole {
     showError(m: Module, position: TextPosition) {
 
         if(this.main instanceof Main){
-            if (m?.file?.name != this.main.projectExplorer.getCurrentlyEditedModule()?.file?.name) {
+            if (m?.file?.name != this.main.projectExplorer.getCurrentlyEditedFile()?.file?.name) {
                 this.main.editor.dontDetectLastChange();
-                this.main.projectExplorer.setModuleActive(m);
+                this.main.projectExplorer.setFileActive(m);
             }
         }
 

@@ -5,7 +5,7 @@ export class CompilerFile {
     /**
      * filename == "" for test files
      */
-    public filename: string;
+    public name: string;
 
     /**
      * When running tests we don't have monaco as dependency. Therefore 
@@ -26,8 +26,8 @@ export class CompilerFile {
     // 
 
 
-    constructor(filename?: string){
-        this.filename = filename || "";
+    constructor(name?: string){
+        this.name = name || "";
     }
 
     getText(){
@@ -52,7 +52,7 @@ export class CompilerFile {
     }
 
     createMonacolModel(){
-        let path = this.filename;
+        let path = this.name;
 
         // a few lines later there's
         // monaco.Uri.from({ path: path, scheme: 'inmemory' });
@@ -87,8 +87,12 @@ export class CompilerFile {
         return this.lastSavedMonacoVersion == this.getMonacoVersion();
     }
 
-    setSaved() {
-        this.lastSavedMonacoVersion = this.getMonacoVersion();
+    setSaved(isSaved: boolean) {
+        if(isSaved){
+            this.lastSavedMonacoVersion = this.getMonacoVersion();
+        } else {
+            this.lastSavedMonacoVersion = -1;
+        }
     }
 
     onFileContentChanged(listener: FileContentChangedListener){

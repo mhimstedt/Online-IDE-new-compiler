@@ -183,7 +183,7 @@ export class HomeworkManager {
             that.$homeworkTabRight.append($div);
             $div.on("click", () => {
                     that.main.projectExplorer.setWorkspaceActive(moduleWithWorkspace.workspace, true);
-                    that.main.projectExplorer.setModuleActive(moduleWithWorkspace.module);
+                    that.main.projectExplorer.setFileActive(moduleWithWorkspace.module);
                     that.main.projectExplorer.fileListPanel.select(moduleWithWorkspace.module, false);
             });
         })

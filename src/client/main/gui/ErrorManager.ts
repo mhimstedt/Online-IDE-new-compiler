@@ -212,9 +212,9 @@ export class ErrorManager {
     showError(m: Module, error: Error) {
 
         if (this.main instanceof Main) {
-            if (m != this.main.projectExplorer.getCurrentlyEditedModule()) {
+            if (m != this.main.projectExplorer.getCurrentlyEditedFile()) {
                 this.main.editor.dontDetectLastChange();
-                this.main.projectExplorer.setModuleActive(m);
+                this.main.projectExplorer.setFileActive(m);
             }
         }
         let position = error.position;

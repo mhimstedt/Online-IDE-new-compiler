@@ -8,6 +8,7 @@ import { Workspace } from "../workspace/Workspace.js";
 import { ajax, csrfToken, PerformanceCollector } from "./AjaxHelper.js";
 import { ClassData, CreateOrDeleteFileOrWorkspaceRequest, CRUDResponse, DatabaseData, DistributeWorkspaceRequest, DistributeWorkspaceResponse, DuplicateWorkspaceRequest, DuplicateWorkspaceResponse, FileData, GetDatabaseRequest, getDatabaseResponse, GetTemplateRequest, JAddStatementRequest, JAddStatementResponse, JRollbackStatementRequest, JRollbackStatementResponse, ObtainSqlTokenRequest, ObtainSqlTokenResponse, SendUpdatesRequest, SendUpdatesResponse, SetRepositorySecretRequest, SetRepositorySecretResponse, UpdateUserSettingsRequest, UpdateUserSettingsResponse, WorkspaceData } from "./Data.js";
 import { PushClientManager } from "./pushclient/PushClientManager.js";
+import { File } from '../workspace/File.js';
 
 export class NetworkManager {
         
@@ -223,16 +224,16 @@ export class NetworkManager {
 
     }
 
-    sendCreateFile(m: Module, ws: Workspace, owner_id: number, callback: (error: string) => void) {
+    sendCreateFile(f: File, ws: Workspace, owner_id: number, callback: (error: string) => void) {
 
         if (this.main.user.is_testuser) {
-            m.file.id = Math.round(Math.random() * 10000000);
+            f.id = Math.round(Math.random() * 10000000);
             callback(null);
             return;
         }
 
 
-        let fd: FileData = m.getFileData(ws);
+        let fd: FileData = f.getFileData(ws);
         let request: CreateOrDeleteFileOrWorkspaceRequest = {
             type: "create",
             entity: "file",
@@ -242,7 +243,7 @@ export class NetworkManager {
         }
 
         ajax("createOrDeleteFileOrWorkspace", request, (response: CRUDResponse) => {
-            m.file.id = response.id;
+            f.id = response.id;
             callback(null);
         }, callback);
 
@@ -512,7 +513,7 @@ export class NetworkManager {
     }
 
     private createFile(workspace: Workspace, remoteFile: FileData) {
-        let m = this.main.projectExplorer.getNewModule(remoteFile); //new Module(f, this.main);
+        let m = this.main.projectExplorer.getNewFile(remoteFile); //new Module(f, this.main);
         let f = m.file;
 
         let ae: any = null; //AccordionElement

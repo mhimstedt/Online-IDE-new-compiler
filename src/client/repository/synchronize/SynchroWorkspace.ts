@@ -332,8 +332,8 @@ export class SynchroWorkspace {
                 this.files.splice(this.files.indexOf(synchroFile), 1);
                 workspace.moduleStore.removeModule(module);
                 main.projectExplorer.fileListPanel.removeElement(module);
-                if (main.currentWorkspace == workspace && main.projectExplorer.getCurrentlyEditedModule() == module) {
-                    main.projectExplorer.setModuleActive(null);
+                if (main.currentWorkspace == workspace && main.projectExplorer.getCurrentlyEditedFile() == module) {
+                    main.projectExplorer.setFileActive(null);
                 }
                 
             }
@@ -378,7 +378,7 @@ export class SynchroWorkspace {
 
             // if module hadn't been deleted while synchronizing:
             if(workspace.moduleStore.getModules(false).indexOf(cem) >= 0){
-                main.projectExplorer.setModuleActive(cem);
+                main.projectExplorer.setFileActive(cem);
                 main.projectExplorer.fileListPanel.select(cem, false);
             }
 

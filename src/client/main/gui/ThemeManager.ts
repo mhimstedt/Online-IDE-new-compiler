@@ -12,6 +12,7 @@ export class ThemeManager {
 
     constructor() {
         this.initThemes();
+        this.initEditorThemes();
     }
 
     switchTheme(name: string) {
@@ -22,6 +23,7 @@ export class ThemeManager {
             }
         }
     }
+
     internalSwitchTheme(theme: Theme) {
         monaco.editor.setTheme(theme.monacoTheme);
 
@@ -224,7 +226,68 @@ export class ThemeManager {
 
     }
 
+    initEditorThemes(){
+        monaco.editor.defineTheme('myCustomThemeDark', {
+            base: 'vs-dark', // can also be vs-dark or hc-black
+            inherit: true, // can also be false to completely replace the builtin rules
+            rules: [
+                { token: 'method', foreground: 'dcdcaa', fontStyle: 'italic' },
+                { token: 'print', foreground: 'dcdcaa', fontStyle: 'italic bold' },
+                { token: 'class', foreground: '3DC9B0' },
+                { token: 'number', foreground: 'b5cea8' },
+                { token: 'type', foreground: '499cd6' },
+                { token: 'identifier', foreground: '9cdcfe' },
+                { token: 'statement', foreground: 'bb96c0', fontStyle: 'bold' },
+                { token: 'keyword', foreground: '68bed4', fontStyle: 'bold' },
+                { token: 'string3', foreground: 'ff0000' },
 
+                // { token: 'comment.js', foreground: '008800', fontStyle: 'bold italic underline' },
+
+                // semantic tokens:
+                {token: 'property', foreground: 'ffffff' ,fontStyle: 'bold'},
+            ],
+            colors: {
+                "editor.background": "#1e1e1e",
+                "jo_highlightMethod": "#2b2b7d"
+            }
+        });
+
+        monaco.editor.defineTheme('myCustomThemeLight', {
+            base: 'vs', // can also be vs-dark or hc-black
+            inherit: true, // can also be false to completely replace the builtin rules
+            rules: [
+                { token: 'method', foreground: '694E16', fontStyle: 'italic bold' },
+                { token: 'print', foreground: '811f3f', fontStyle: 'italic bold' },
+                { token: 'class', foreground: 'a03030' },
+                { token: 'number', foreground: '404040' },
+                { token: 'type', foreground: '0000ff', fontStyle: 'bold' },
+                { token: 'identifier', foreground: '001080' },
+                { token: 'statement', foreground: '8000e0', fontStyle: 'bold' },
+                { token: 'keyword', foreground: '00a000', fontStyle: 'bold' },
+                { token: 'comment', foreground: '808080', fontStyle: 'italic' },
+            ],
+            colors: {
+                "editor.background": "#FFFFFF",
+                "editor.foreground": "#000000",
+                "editor.inactiveSelectionBackground": "#E5EBF1",
+                "editorIndentGuide.background": "#D3D3D3",
+                "editorIndentGuide.activeBackground": "#939393",
+                "editor.selectionHighlightBackground": "#ADD6FF80",
+                "editorSuggestWidget.background": "#F3F3F3",
+                "activityBarBadge.background": "#007ACC",
+                "sideBarTitle.foreground": "#6F6F6F",
+                "list.hoverBackground": "#E8E8E8",
+                "input.placeholderForeground": "#767676",
+                "searchEditor.textInputBorder": "#CECECE",
+                "settings.textInputBorder": "#CECECE",
+                "settings.numberInputBorder": "#CECECE",
+                "statusBarItem.remoteForeground": "#FFF",
+                "statusBarItem.remoteBackground": "#16825D",
+                "jo_highlightMethod": "#babaec"
+            }
+        });
+
+    }
 
 
 }

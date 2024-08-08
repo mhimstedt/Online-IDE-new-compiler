@@ -12,7 +12,7 @@
     "noEmit": true,
     "skipLibCheck": true,
     "allowJs": true,
-
+    "allowImportingTsExtensions": true,
     "noUnusedLocals": false,
     "noImplicitReturns": false,
     "noUnusedParameters": false

@@ -206,7 +206,7 @@ export class EmbeddedFileExplorer {
             case "java":
                 this.main.$hintDiv.hide();
                 this.main.$monacoDiv.show();
-                this.main.setModuleActive(fileData.module);
+                this.main.setFileActive(fileData.module);
                 if(focusEditorSubsequently)
                 {
                     this.main.getMonacoEditor().focus();

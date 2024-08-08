@@ -1,113 +1,45 @@
 import jQuery from 'jquery';
+import { Debugger } from '../../compiler/common/debugger/Debugger.js';
+import { Position } from '../../compiler/common/range/Position.js';
+import { IRange } from '../../compiler/common/range/Range.js';
+import { DatabaseNewLongPollingListener } from '../../tools/database/DatabaseNewLongPollingListener.js';
+import { checkIfMousePresent } from "../../tools/HtmlTools.js";
 import { ClassData, UserData, WorkspaceData, Workspaces } from "../communication/Data.js";
 import { NetworkManager } from "../communication/NetworkManager.js";
-import { Compiler, CompilerStatus } from "../compiler/Compiler.js";
-import { booleanPrimitiveType, charPrimitiveType, doublePrimitiveType, floatPrimitiveType, intPrimitiveType, stringPrimitiveType, voidPrimitiveType, IntegerType, DoubleType, CharacterType, BooleanType, FloatType, longPrimitiveType, LongType, shortPrimitiveType } from "../compiler/types/PrimitiveTypes.js";
-import { Debugger } from "../interpreter/Debugger.js";
-import { Interpreter, InterpreterState } from "../interpreter/Interpreter.js";
+import { PushClientManager } from '../communication/pushclient/PushClientManager.js';
+import { SynchronizationManager } from "../repository/synchronize/RepositorySynchronizationManager.js";
+import { RepositoryCheckoutManager } from "../repository/update/RepositoryCheckoutManager.js";
+import { RepositoryCreateManager } from "../repository/update/RepositoryCreateManager.js";
+import { RepositorySettingsManager } from "../repository/update/RepositorySettingsManager.js";
+import { SpriteManager } from "../spritemanager/SpriteManager.js";
+import { InconsistencyFixer } from "../workspace/InconsistencyFixer.js";
 import { Workspace } from "../workspace/Workspace.js";
 import { ActionManager } from "./gui/ActionManager.js";
 import { BottomDiv } from "./gui/BottomDiv.js";
 import { Editor } from "./gui/Editor.js";
-import { Formatter } from "./gui/Formatter.js";
 import { Helper } from "./gui/Helper.js";
 import { MainMenu } from "./gui/MainMenu.js";
-import { ProgramControlButtons } from "./gui/ProgramControlButtons.js";
 import { ProjectExplorer } from "./gui/ProjectExplorer.js";
 import { RightDiv } from "./gui/RightDiv.js";
 import { Sliders } from "./gui/Sliders.js";
 import { TeacherExplorer } from "./gui/TeacherExplorer.js";
 import { ThemeManager } from "./gui/ThemeManager.js";
-import { Login } from "./Login.js";
-import { MainBase } from "./MainBase.js"
-import { Module, File } from "../compiler/parser/Module.js";
-import { TextPosition } from "../compiler/lexer/Token.js";
 import { ViewModeController } from "./gui/ViewModeController.js";
-import { ErrorManager } from "./gui/ErrorManager.js";
-import { SemicolonAngel } from "../compiler/parser/SemicolonAngel.js";
-import { SynchronizationManager } from "../repository/synchronize/RepositorySynchronizationManager.js";
-import { RepositoryCreateManager } from "../repository/update/RepositoryCreateManager.js";
-import { RepositorySettingsManager } from "../repository/update/RepositorySettingsManager.js";
-import { RepositoryCheckoutManager } from "../repository/update/RepositoryCheckoutManager.js";
 import { WindowStateManager } from "./gui/WindowStateManager.js";
-import { TextPositionWithModule } from "../compiler/types/Types.js";
-import { checkIfMousePresent } from "../../tools/HtmlTools.js";
-import { InconsistencyFixer } from "../workspace/InconsistencyFixer.js";
-import { SpriteManager } from "../spritemanager/SpriteManager.js";
-import * as PIXI from 'pixi.js';
+import { Login } from "./Login.js";
+import { MainBase } from "./MainBase.js";
 import { PruefungManagerForStudents } from './pruefung/PruefungManagerForStudents.js';
-import { DatabaseNewLongPollingListener } from '../../tools/database/DatabaseNewLongPollingListener.js';
-import { PushClientManager } from '../communication/pushclient/PushClientManager.js';
+import { File } from '../workspace/File.js';
+import { Compiler } from '../../compiler/common/Compiler.js';
+import { Executable } from '../../compiler/common/Executable.js';
+import { Interpreter } from '../../compiler/common/interpreter/Interpreter.js';
+import { Language } from '../../compiler/common/Language.js';
+import { CompilerWorkspace } from '../../compiler/common/module/CompilerWorkspace.js';
+import { JavaRepl } from '../../compiler/java/parser/repl/JavaRepl.js';
 
 export class Main implements MainBase {
 
-    pixiApp: PIXI.Application;
-    userSpritesheet: PIXI.Spritesheet;
-
     repositoryOn: boolean = true;
-
-    isTest(): boolean {
-        return window.location.href.indexOf('online-ide') < 0;
-    }
-
-    isEmbedded(): boolean { return false; }
-
-    getInterpreter(): Interpreter {
-        return this.interpreter;
-    }
-    getCurrentWorkspace(): Workspace {
-        return this.currentWorkspace;
-    }
-    getDebugger(): Debugger {
-        return this.debugger;
-    }
-    getMonacoEditor(): monaco.editor.IStandaloneCodeEditor {
-        return this.editor.editor;
-    }
-
-    getRightDiv(): RightDiv {
-        return this.rightDiv;
-    }
-
-    getBottomDiv(): BottomDiv {
-        return this.bottomDiv;
-    }
-
-    // VORSICHT: ggf. Module -> any
-    getCurrentlyEditedModule(): Module {
-        return this.projectExplorer.getCurrentlyEditedModule();
-    }
-
-    getActionManager(): ActionManager {
-        return this.actionManager;
-    }
-
-    showProgramPointerPosition(file: File, position: TextPosition) {
-        this.projectExplorer.showProgramPointerPosition(file, position);
-    }
-    hideProgramPointerPosition() {
-        this.projectExplorer.hideProgramPointerPosition();
-    }
-
-    getCompiler(): Compiler {
-        return this.compiler;
-    }
-
-    setModuleActive(module: Module) {
-        this.projectExplorer.setModuleActive(module);
-    }
-
-    getSemicolonAngel(): SemicolonAngel {
-        return this.semicolonAngel;
-    }
-
-    jumpToDeclaration(module: Module, declaration: TextPositionWithModule) {
-        this.projectExplorer.setModuleActive(module);
-        this.editor.editor.revealLineInCenter(declaration.position.line);
-        this.editor.editor.setPosition({column: declaration.position.column, lineNumber: declaration.position.line});
-    }
-
-
     workspaceList: Workspace[] = [];
     workspacesOwnerId: number;
 
@@ -133,23 +65,12 @@ export class Main implements MainBase {
 
     login: Login;
 
-    compiler: Compiler;
-
-    interpreter: Interpreter;
-
     debugger: Debugger;
-
-    semicolonAngel: SemicolonAngel;
 
     bottomDiv: BottomDiv;
 
     startupComplete = 2;
     waitForGUICallback: () => void;
-
-    programIsExecutable = false;
-    version: number = 0;
-
-    timerHandle: any;
 
     user: UserData;
     userDataDirty: boolean = false;
@@ -161,6 +82,74 @@ export class Main implements MainBase {
     debounceDiagramDrawing: any;
 
     viewModeController: ViewModeController;
+
+    language: Language;
+    interpreter: Interpreter;
+
+    addWorkspace(ws: Workspace): void {
+        this.workspaceList.push(ws);   
+    }
+
+    getInterpreter(): Interpreter {
+        return this.interpreter;    
+    }
+
+    getLanguage(): Language {
+        return this.language;
+    }
+
+    getCompiler(): Compiler {
+        return this.language.getCompiler();    
+    }
+
+    getRepl(): JavaRepl {
+        return this.language.getRepl();
+    }
+
+    getMainEditor(): monaco.editor.IStandaloneCodeEditor {
+        return this.editor.editor;   
+    }
+
+    getReplEditor(): monaco.editor.IStandaloneCodeEditor {
+        return this.bottomDiv.console.editor;
+    }
+
+    isEmbedded(): boolean { return false; }
+
+    getDebugger(): Debugger {
+        return this.debugger;
+    }
+
+    getRightDiv(): RightDiv {
+        return this.rightDiv;
+    }
+
+    getBottomDiv(): BottomDiv {
+        return this.bottomDiv;
+    }
+
+    getActionManager(): ActionManager {
+        return this.actionManager;
+    }
+
+    showProgramPointerPosition(file: File, position: Position) {
+        this.projectExplorer.showProgramPointerPosition(file, position);
+    }
+
+    hideProgramPointerPosition() {
+        this.projectExplorer.hideProgramPointerPosition();
+    }
+
+    setFileActive(file: File) {
+        this.projectExplorer.setFileActive(module);
+    }
+
+    jumpToDeclaration(file: File, declaration: IRange) {
+        this.projectExplorer.setFileActive(file);
+        this.editor.editor.revealLineInCenter(declaration.startLineNumber);
+        this.editor.editor.setPosition({column: declaration.startColumn, lineNumber: declaration.startLineNumber});
+    }
+
 
     initGUI() {
 
@@ -178,8 +167,6 @@ export class Main implements MainBase {
         } else {
             this.login.initGUI(false);
         }
-    
-
 
         this.actionManager = new ActionManager(null, this);
         this.actionManager.init();
@@ -188,6 +175,7 @@ export class Main implements MainBase {
 
         let sliders = new Sliders(this);
         sliders.initSliders();
+
         this.mainMenu = new MainMenu(this);
         this.projectExplorer = new ProjectExplorer(this, jQuery('#leftpanel>.jo_projectexplorer'));
         this.projectExplorer.initGUI();
@@ -197,73 +185,21 @@ export class Main implements MainBase {
         this.rightDiv = new RightDiv(this, jQuery('#rightdiv-inner'));
         this.rightDiv.initGUI();
 
-        this.debugger = new Debugger(this, jQuery('#leftpanel>.jo_debugger'), jQuery('#leftpanel>.jo_projectexplorer'));
-
-        this.interpreter = new Interpreter(this, this.debugger,
-            new ProgramControlButtons(jQuery('#controls'), jQuery('#editor')),
-            jQuery('#rightdiv-inner .jo_run'));
-        this.interpreter.initGUI();
-
-        this.initTypes();
+        this.debugger = new Debugger(<HTMLDivElement>jQuery('#leftpanel>.jo_debugger')[0], this);
 
         this.checkStartupComplete();
 
         //@ts-ignore
         window.UZIP = null; // needed by UPNG
 
-        // this.correctPIXITransform();
-
-        // PIXI.settings.RENDER_OPTIONS.hello = false; // don't show PIXI-Message in browser console
-
         this.themeManager = new ThemeManager();
 
         this.viewModeController = new ViewModeController(jQuery("#view-mode"), this);
-
-        this.semicolonAngel = new SemicolonAngel(this);
-
-    }
-
-    correctPIXITransform() {
-
-        PIXI.Transform.prototype.updateTransform = function (parentTransform) {
-            var lt = this.localTransform;
-            if (this._localID !== this._currentLocalID) {
-                // get the matrix values of the displayobject based on its transform properties..
-                // lt.a = this._cx * this.scale.x;
-                // lt.b = this._sx * this.scale.x;
-                // lt.c = this._cy * this.scale.y;
-                // lt.d = this._sy * this.scale.y;
-                // lt.tx = this.position.x - ((this.pivot.x * lt.a) + (this.pivot.y * lt.c));
-                // lt.ty = this.position.y - ((this.pivot.x * lt.b) + (this.pivot.y * lt.d));
-                this._currentLocalID = this._localID;
-                // force an update..
-                this._parentID = -1;
-            }
-            //@ts-ignore
-            if (this._parentID !== parentTransform._worldID) {
-                // concat the parent matrix with the objects transform.
-                var pt = parentTransform.worldTransform;
-                var wt = this.worldTransform;
-                wt.a = (lt.a * pt.a) + (lt.b * pt.c);
-                wt.b = (lt.a * pt.b) + (lt.b * pt.d);
-                wt.c = (lt.c * pt.a) + (lt.d * pt.c);
-                wt.d = (lt.c * pt.b) + (lt.d * pt.d);
-                wt.tx = (lt.tx * pt.a) + (lt.ty * pt.c) + pt.tx;
-                wt.ty = (lt.tx * pt.b) + (lt.ty * pt.d) + pt.ty;
-                //@ts-ignore
-                this._parentID = parentTransform._worldID;
-                // update the id of the transform..
-                this._worldID++;
-            }
-        };
-
 
     }
 
     initEditor() {
         this.editor = new Editor(this, true, false);
-        new Formatter().init();
-        // this.monaco_editor = 
         this.editor.initGUI(jQuery('#editor'));
 
         let that = this;
@@ -277,7 +213,6 @@ export class Main implements MainBase {
 
         jQuery(window).trigger('resize');
 
-//        this.checkStartupComplete();
     }
 
     initTeacherExplorer(classdata: ClassData[]) {
@@ -289,39 +224,11 @@ export class Main implements MainBase {
     }
 
 
-    // loadWorkspace() {
-    //     this.workspaceList.push(getMockupWorkspace(this));
-    //     this.projectExplorer.renderWorkspaces(this.workspaceList);
-    //     this.projectExplorer.setWorkspaceActive(this.workspaceList[0]);
-    //     this.checkStartupComplete();
-
-    // }
-
     checkStartupComplete() {
         this.startupComplete--;
         if (this.startupComplete == 0) {
             this.start();
         }
-    }
-
-    initTypes() {
-        voidPrimitiveType.init();
-        intPrimitiveType.init();
-        longPrimitiveType.init();
-        shortPrimitiveType.init();
-        floatPrimitiveType.init();
-        doublePrimitiveType.init();
-        booleanPrimitiveType.init();
-        stringPrimitiveType.init();
-        charPrimitiveType.init();
-
-        IntegerType.init();
-        LongType.init();
-        FloatType.init();
-        DoubleType.init();
-        CharacterType.init();
-        BooleanType.init();
-
     }
 
     start() {
@@ -332,19 +239,15 @@ export class Main implements MainBase {
 
         let that = this;
         setTimeout(() => {
-            that.getMonacoEditor().layout();
+            that.getMainEditor().layout();
         }, 200);
-
-        this.compiler = new Compiler(this);
-
-        this.startTimer();
 
         jQuery(window).on('unload', function() {
             
             if(navigator.sendBeacon && that.user != null){
                 that.networkManager.sendUpdates(null, false, true);
                 that.networkManager.sendUpdateUserSettings(() => {});
-                that.interpreter.closeAllWebsockets();
+                that.interpreter.eventManager.fire("resetRuntime");
                 
                 DatabaseNewLongPollingListener.close();
                 PushClientManager.getInstance().close();
@@ -354,71 +257,16 @@ export class Main implements MainBase {
 
     }
 
-    startTimer() {
-        if (this.timerHandle != null) {
-            clearInterval(this.timerHandle);
-        }
-
-        let that = this;
-        this.timerHandle = setInterval(() => {
-
-            that.compileIfDirty();
-
-        }, 500);
-
-
+    onCompilationFinished(executable: Executable | undefined): void {
+        this.printProgram();
+        this.drawClassDiagrams(!this.rightDiv.isClassDiagramEnabled());
+        
     }
 
-    compileIfDirty() {
 
-        if (this.currentWorkspace == null) return;
-
-        if (this.currentWorkspace.moduleStore.isDirty() &&
-            this.compiler.compilerStatus != CompilerStatus.compiling
-            && this.interpreter.state != InterpreterState.running
-            && this.interpreter.state != InterpreterState.paused) {
-            try {
-
-                this.compiler.compile(this.currentWorkspace.moduleStore);
-
-                let errors = this.bottomDiv?.errorManager?.showErrors(this.currentWorkspace);
-                this.projectExplorer.renderErrorCount(this.currentWorkspace, errors);
-
-                this.editor.onDidChangeCursorPosition(null); // mark occurrencies of symbol under cursor
-
-                this.printProgram();
-
-                if (this.projectExplorer) {
-                    this.version++;
-                }
-
-                let startable = this.interpreter.getStartableModule(this.currentWorkspace.moduleStore) != null;
-
-                if (startable &&
-                    this.interpreter.state == InterpreterState.not_initialized) {
-                    this.copyExecutableModuleStoreToInterpreter();
-                    this.interpreter.setState(InterpreterState.done);
-                    // this.interpreter.init();
-                }
-
-                if (!startable &&
-                    (this.interpreter.state == InterpreterState.done || this.interpreter.state == InterpreterState.error)) {
-                    this.interpreter.setState(InterpreterState.not_initialized);
-                }
-
-                this.drawClassDiagrams(!this.rightDiv.isClassDiagramEnabled());
-
-            } catch (e) {
-                console.error(e);
-                this.compiler.compilerStatus = CompilerStatus.error;
-            }
-
-        }
-
-    }
     printProgram() {
 
-        this.bottomDiv.printModuleToBottomDiv(this.currentWorkspace, this.projectExplorer.getCurrentlyEditedModule());
+        this.bottomDiv.printModuleToBottomDiv(this.currentWorkspace, this.projectExplorer.getCurrentlyEditedFile());
 
     }
 
@@ -427,17 +275,6 @@ export class Main implements MainBase {
         this.debounceDiagramDrawing = setTimeout(() => {
             this.rightDiv?.classDiagram?.drawDiagram(this.currentWorkspace, onlyUpdateIdentifiers);
         }, 500);
-    }
-
-    copyExecutableModuleStoreToInterpreter() {
-        let ms = this.currentWorkspace.moduleStore.copy();
-        this.interpreter.moduleStore = ms;
-        this.interpreter.moduleStoreVersion = this.version;
-
-        if (this.interpreter.state == InterpreterState.not_initialized && this.programIsExecutable) {
-            this.interpreter.setState(InterpreterState.done);
-        }
-
     }
 
     removeWorkspace(w: Workspace) {
@@ -449,7 +286,7 @@ export class Main implements MainBase {
         this.workspaceList = [];
         this.currentWorkspace = null;
         // this.monaco.setModel(monaco.editor.createModel("Keine Datei vorhanden." , "text"));
-        this.getMonacoEditor().updateOptions({ readOnly: true });
+        this.getMainEditor().updateOptions({ readOnly: true });
 
         for (let ws of workspaces.workspaces) {
 
@@ -476,7 +313,7 @@ export class Main implements MainBase {
         if (this.currentWorkspace != null) {
             this.projectExplorer.setWorkspaceActive(this.currentWorkspace, true);
         } else {
-            this.projectExplorer.setModuleActive(null);
+            this.projectExplorer.setFileActive(null);
         }
 
         if (this.workspaceList.length == 0) {
@@ -495,6 +332,11 @@ export class Main implements MainBase {
         return Workspace.restoreFromData(workspaceData, this);
     }
 
+    getCurrentWorkspace(): Workspace {
+        return this.currentWorkspace;
+    }
+
+    
 
 }
 
