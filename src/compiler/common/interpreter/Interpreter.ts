@@ -22,10 +22,6 @@ import { IFilesManager as IFileManager } from "./IFilesManager.ts";
 
 type InterpreterEvents = "stop" | "done" | "resetRuntime";
 
-
-
-export type ShowProgramPointerCallback = (showHide: "show" | "hide", _textPositionWithModule?: ProgramPointerPositionInfo) => void;
-
 export class Interpreter {
 
     loadController: LoadController;
@@ -176,7 +172,14 @@ export class Interpreter {
 
     showProgramPointer(_textPositionWithModule?: ProgramPointerPositionInfo, tag?: string) {
         if (this.programPointerManager) {
-            if (!_textPositionWithModule) _textPositionWithModule = this.scheduler.getNextStepPosition();
+            if (!_textPositionWithModule){
+
+                _textPositionWithModule = this.scheduler.getNextStepPosition();
+
+                if(!this.programPointerManager.fileIsCurrentlyShownInEditor(_textPositionWithModule?.module.file)){
+                    _textPositionWithModule = undefined;
+                }
+            }  
             if (_textPositionWithModule?.range) {
                 if (_textPositionWithModule.range.startLineNumber >= 0) {
 

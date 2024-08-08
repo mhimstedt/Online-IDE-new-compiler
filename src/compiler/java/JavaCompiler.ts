@@ -63,6 +63,7 @@ export class JavaCompiler implements Compiler {
         let time = performance.now();
 
         if (this.main?.getInterpreter().isRunningOrPaused()) return;
+        if(!this.main?.getCurrentWorkspace()) return;
 
         /**
          * if no module has changed, return as fast as possible

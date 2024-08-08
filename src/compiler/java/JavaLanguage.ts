@@ -11,7 +11,7 @@ import { JavaOnDidTypeProvider } from "./monacoproviders/JavaOnDidTypeProvider";
 import { JavaReferenceProvider } from "./monacoproviders/JavaReferenceProvider";
 import { JavaRenameProvider } from "./monacoproviders/JavaRenameProvider";
 import { JavaSignatureHelpProvider } from "./monacoproviders/JavaSignatureHelpProvider";
-import { JavaSymbolMarker } from "./monacoproviders/JavaSymbolMarker";
+import { JavaSymbolAndMethodMarker } from "./monacoproviders/JavaSymbolAndMethodMarker";
 import { JavaRepl as JavaRepl } from "./parser/repl/JavaRepl";
 
 export class JavaLanguage extends Language {
@@ -43,7 +43,7 @@ export class JavaLanguage extends Language {
         monaco.languages.registerReferenceProvider('myJava', new JavaReferenceProvider(this.main));
         monaco.languages.registerSignatureHelpProvider('myJava', new JavaSignatureHelpProvider(this.main));
         monaco.languages.registerColorProvider('myJava', new ColorProvider(this.main));
-        new JavaSymbolMarker(this.main);
+        new JavaSymbolAndMethodMarker(this.main);
 
         let formatter = new JavaFormatter();
         monaco.languages.registerDocumentFormattingEditProvider('myJava', formatter);
