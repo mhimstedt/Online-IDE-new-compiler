@@ -1,10 +1,9 @@
-import { Repository } from "../../communication/Data.js";
+import { ajax } from "../../communication/AjaxHelper.js";
+import { CommitFilesRequest, CommitFilesResponse, Repository, RepositoryFileEntry, RepositoryHistoryEntry } from "../../communication/Data.js";
 import { Main } from "../../main/Main.js";
+import { File } from "../../workspace/File.js";
 import { Workspace } from "../../workspace/Workspace.js";
 import { HistoryElement } from "./HistoryElement.js";
-import { RepositoryHistoryEntry, RepositoryFileEntry, CommitFilesResponse, CommitFilesRequest } from "../../communication/Data.js";
-import { ajax } from "../../communication/AjaxHelper.js";
-import { File, Module } from "../../compiler/parser/Module.js";
 import { SynchronizationManager } from "./RepositorySynchronizationManager.js";
 
 
@@ -56,12 +55,7 @@ export class SynchroWorkspace {
     copyFromWorkspace(workspace: Workspace):SynchroWorkspace {
 
         this.files = [];
-        workspace.moduleStore.getModules(false).forEach(module => {
-            let file = module.file;
-
-            if (module.model != null) {
-                module.file.text = module.getProgramTextFromMonacoModel();
-            }
+        workspace.getFiles().forEach(file => {
 
             this.files.push({
                 name: file.name,
@@ -70,13 +64,13 @@ export class SynchroWorkspace {
                 idInsideRepository: file.is_copy_of_id,
                 idInsideWorkspace: file.id,
                 workspaceFile: file,
-                text: file.text.replace(/\r\n/g, "\n"),
+                text: file.getText().replace(/\r\n/g, "\n"),
                 synchroWorkspace: this,
                 
                 state: "original",
                 markedAsMerged: false,
 
-                originalText: file.text,
+                originalText: file.getText(),
                 monacoModel: null
             })
         });
@@ -193,7 +187,7 @@ export class SynchroWorkspace {
                 if(cff != null){
                     cff.repository_file_version = oldFile.version;
                     cff.workspaceFile.repository_file_version = oldFile.version;
-                    cff.workspaceFile.saved = false;                    
+                    cff.workspaceFile.setSaved(false);                    
                 }
 
             } else if (oldFile.filename != file.name) {
@@ -238,22 +232,22 @@ export class SynchroWorkspace {
 
         let that = this;
         ajax("commitFiles", commitFilesRequest, (cfr: CommitFilesResponse) => {
-            workspace.moduleStore.getModules(false).map(m => m.file).forEach((file) => {
+            workspace.getFiles().forEach((file) => {
                 if (newlyVersionedFileIds.indexOf(file.id) >= 0) {
                     file.is_copy_of_id = file.id;
                     file.repository_file_version = 1;
                     file.identical_to_repository_version = true;
-                    file.saved = false;
+                    file.setSaved(false);
                 }
             });
             that.manager.currentUserSynchroWorkspace.files.forEach(synchroFile => {
                 let workspaceFile = synchroFile.workspaceFile;
                 if(workspaceFile != null){
-                    if(synchroFile.text == workspaceFile.text && 
+                    if(synchroFile.text == workspaceFile.getText() && 
                         (synchroFile.repository_file_version != workspaceFile.repository_file_version  || synchroFile.identical_to_repository_version != workspaceFile.identical_to_repository_version)){
                             workspaceFile.identical_to_repository_version = synchroFile.identical_to_repository_version;
                             workspaceFile.repository_file_version = synchroFile.repository_file_version;
-                            workspaceFile.saved = false;
+                            workspaceFile.setSaved(false);
                     }
                 }
                 if(workspaceFile.is_copy_of_id != null){
@@ -292,11 +286,11 @@ export class SynchroWorkspace {
 
     writeChangesToWorkspace() {
         let workspace = this.copiedFromWorkspace;
-        let oldIdToModuleMap: { [id: number]: Module } = {};
+        let oldIdToFileMap: { [id: number]: File } = {};
         let newIdToFileMap: { [id: number]: SynchroFile } = {};
 
-        workspace.moduleStore.getModules(false).forEach(m => {
-            if (m.file.is_copy_of_id != null) oldIdToModuleMap[m.file.is_copy_of_id] = m;
+        workspace.getFiles().forEach(file => {
+            if (file.is_copy_of_id != null) oldIdToFileMap[file.is_copy_of_id] = file;
         });
 
         this.files.forEach(file => {
@@ -304,25 +298,24 @@ export class SynchroWorkspace {
         });
 
         let main = this.manager.main;
-        for (let module of workspace.moduleStore.getModules(false)) {
+        for (let file of workspace.getFiles()) {
 
-            let synchroFile = newIdToFileMap[module.file.id];
+            let synchroFile = newIdToFileMap[file.id];
             if (synchroFile != null && synchroFile.state != 'deleted') {
-                module.file.text = synchroFile.monacoModel.getValue(monaco.editor.EndOfLinePreference.LF, false);
-                synchroFile.text = module.file.text;
-                module.file.is_copy_of_id = synchroFile.idInsideRepository;
-                module.file.repository_file_version = synchroFile.repository_file_version;
-                module.model.setValue(synchroFile.text);
-                module.file.identical_to_repository_version = synchroFile.identical_to_repository_version;
-                module.file.saved = false;
-                module.file.dirty = true;
-                module.file.name = synchroFile.name;
-                if(module.file.panelElement != null){
-                    module.file.panelElement.$htmlFirstLine.find('.jo_filename');
+                file.setText(synchroFile.monacoModel.getValue(monaco.editor.EndOfLinePreference.LF, false));
+                synchroFile.text = file.getText();
+                file.is_copy_of_id = synchroFile.idInsideRepository;
+                file.repository_file_version = synchroFile.repository_file_version;
+                file.identical_to_repository_version = synchroFile.identical_to_repository_version;
+                file.setSaved(false);
+                this.manager.main.getCompiler().setFileDirty(file);
+                file.name = synchroFile.name;
+                if(file.panelElement != null){
+                    file.panelElement.$htmlFirstLine.find('.jo_filename');
                 }
             } else {
 
-                main.networkManager.sendDeleteWorkspaceOrFile("file", module.file.id, (error: string) => {
+                main.networkManager.sendDeleteWorkspaceOrFile("file", file.id, (error: string) => {
                     if (error == null) {
                     } else {
                         alert('Der Server ist nicht erreichbar!');
@@ -330,9 +323,9 @@ export class SynchroWorkspace {
                 });
 
                 this.files.splice(this.files.indexOf(synchroFile), 1);
-                workspace.moduleStore.removeModule(module);
-                main.projectExplorer.fileListPanel.removeElement(module);
-                if (main.currentWorkspace == workspace && main.projectExplorer.getCurrentlyEditedFile() == module) {
+                workspace.removeFile(file);
+                main.projectExplorer.fileListPanel.removeElement(file);
+                if (main.currentWorkspace == workspace && main.getCurrentWorkspace()?.getCurrentlyEditedFile() == file) {
                     main.projectExplorer.setFileActive(null);
                 }
                 
@@ -341,24 +334,16 @@ export class SynchroWorkspace {
         }
 
         for (let synchroFile of this.files) {
-            if (synchroFile.idInsideRepository != null && oldIdToModuleMap[synchroFile.idInsideRepository] == null) {
+            if (synchroFile.idInsideRepository != null && oldIdToFileMap[synchroFile.idInsideRepository] == null) {
 
-                let f: File = {
-                    name: synchroFile.name,
-                    dirty: true,
-                    saved: true,
-                    text: synchroFile.text,
-                    text_before_revision: null,
-                    submitted_date: null,
-                    student_edited_after_revision: false,
-                    version: 1,
-                    is_copy_of_id: synchroFile.idInsideRepository,
-                    repository_file_version: synchroFile.repository_file_version,
-                    identical_to_repository_version: synchroFile.identical_to_repository_version,
-                };
-                let m = new Module(f, main);
-                workspace.moduleStore.putModule(m);
-                main.networkManager.sendCreateFile(m, workspace, main.user.id,
+                let f = new File(synchroFile.name, synchroFile.text);
+                f.is_copy_of_id = synchroFile.idInsideRepository;
+                f.repository_file_version = synchroFile.repository_file_version;
+                f.identical_to_repository_version = synchroFile.identical_to_repository_version;
+
+                workspace.addFile(f);
+
+                main.networkManager.sendCreateFile(f, workspace, main.user.id,
                     (error: string) => {
                         if (error == null) {
                         } else {
@@ -373,18 +358,18 @@ export class SynchroWorkspace {
         main.networkManager.sendUpdates(null, true);
 
         if (main.currentWorkspace == workspace) {
-            let cem = main.getCurrentlyEditedModule();
+            let currentlyEditedFile = main.getCurrentWorkspace()?.getCurrentlyEditedFile();
             main.projectExplorer.setWorkspaceActive(workspace, true);
 
             // if module hadn't been deleted while synchronizing:
-            if(workspace.moduleStore.getModules(false).indexOf(cem) >= 0){
-                main.projectExplorer.setFileActive(cem);
-                main.projectExplorer.fileListPanel.select(cem, false);
+            if(workspace.getFiles().indexOf(currentlyEditedFile) >= 0){
+                main.projectExplorer.setFileActive(currentlyEditedFile);
+                main.projectExplorer.fileListPanel.select(currentlyEditedFile, false);
             }
 
         }
 
-        workspace.moduleStore.dirty = true;
+        workspace.getFiles().forEach(f => main.getCompiler().setFileDirty(f));
 
     }
 

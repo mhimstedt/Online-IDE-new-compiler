@@ -75,7 +75,7 @@ export class ViewModeController {
         }
 
         setTimeout(()=>{
-            this.main.getMonacoEditor().layout();
+            this.main.getMainEditor().layout();
         }, 800);
 
         this.editorHasFullWidth = !this.editorHasFullWidth;
@@ -99,7 +99,7 @@ export class ViewModeController {
         this.main.editor.setFontSize(viewMode.fontSize);
 
         if (this.highContrast != viewMode.highContrast) {
-            let editor = this.main.getMonacoEditor();
+            let editor = this.main.getMainEditor();
             editor.getAction("editor.action.toggleHighContrast").run();
             this.highContrast = !this.highContrast;
         }
@@ -124,7 +124,7 @@ export class ViewModeController {
     toggleHighContrast() {
         let viewMode = this.getChosenViewMode();
         viewMode.highContrast = !viewMode.highContrast;
-        let editor = this.main.getMonacoEditor();
+        let editor = this.main.getMainEditor();
         editor.getAction("editor.action.toggleHighContrast").run();
         this.saveSettings();
     }

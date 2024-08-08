@@ -1,11 +1,10 @@
-import { InterpreterState } from "../../interpreter/Interpreter.js";
-import { WorldHelper } from "../../runtimelibrary/graphics/World.js";
+import jQuery from 'jquery';
 import { makeTabs } from "../../../tools/HtmlTools.js";
-import { Main } from "../Main.js";
+import { MainBase } from "../MainBase.js";
 import { ClassDiagram } from "./diagrams/classdiagram/ClassDiagram.js";
 import { ObjectDiagram } from "./diagrams/objectdiagram/ObjectDiagram.js";
-import { MainBase } from "../MainBase.js";
-import jQuery from 'jquery';
+import { IWorld } from '../../../compiler/java/runtime/graphics/IWorld.js';
+import { SchedulerState } from '../../../compiler/common/interpreter/Scheduler.js';
 
 export class RightDiv {
 
@@ -67,11 +66,11 @@ export class RightDiv {
     }
 
     adjustWidthToWorld() {
-        let worldHelper: WorldHelper = this.main.getInterpreter().worldHelper;
-        if (worldHelper != null && this.isWholePage) {
+        let world: IWorld = this.main.getInterpreter().retrieveObject("WorldClass");
+        if (world != null && this.isWholePage) {
             let screenHeight = window.innerHeight - this.$headings.height() - 6;
             let screenWidthToHeight = window.innerWidth / (screenHeight);
-            let worldWidthToHeight = worldHelper.width / worldHelper.height;
+            let worldWidthToHeight = world.width / world.height;
             if (worldWidthToHeight <= screenWidthToHeight) {
                 let newWidth = worldWidthToHeight * screenHeight;
                 this.$tabs.find('.jo_run').css('width', newWidth + "px");
@@ -109,7 +108,8 @@ export class RightDiv {
 
     onObjectDiagramEnabled() {
         this.objectDiagram.updateSettings();
-        if (this.main.getInterpreter().state == InterpreterState.paused || this.main.getInterpreter().state == InterpreterState.running) {
+        let state = this.main.getInterpreter().scheduler.state;
+        if (state == SchedulerState.paused || state == SchedulerState.running) {
             this.objectDiagram.updateDiagram();
         }
     }

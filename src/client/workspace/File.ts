@@ -19,9 +19,10 @@ export class File extends CompilerFile {
     version: number = 1;
     panelElement?: AccordionElement;
 
-    constructor(filename?: string) {
+    constructor(filename?: string, text?: string) {
         super(filename);
         this.createMonacolModel();
+        if(text) this.setText(text);
     }
 
     getFileData(workspace: Workspace): FileData {

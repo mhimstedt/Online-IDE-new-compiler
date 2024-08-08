@@ -288,7 +288,7 @@ export class Login {
         jQuery('#bitteWarten').css('display', 'none');
         jQuery('#login-message').empty();
         this.main.interpreter.setState(InterpreterState.not_initialized);
-        this.main.getMonacoEditor().setModel(monaco.editor.createModel("", "myJava"));
+        this.main.getMainEditor().setModel(monaco.editor.createModel("", "myJava"));
         this.main.projectExplorer.fileListPanel.clear();
         this.main.projectExplorer.fileListPanel.setCaption('');
         this.main.projectExplorer.workspaceListPanel.clear();

@@ -409,8 +409,8 @@ export class MyConsole {
             endColumn: position.column + position.length, endLineNumber: position.line
         };
 
-        this.main.getMonacoEditor().revealRangeInCenter(range);
-        this.errorDecoration = this.main.getMonacoEditor().deltaDecorations(this.errorDecoration, [
+        this.main.getMainEditor().revealRangeInCenter(range);
+        this.errorDecoration = this.main.getMainEditor().deltaDecorations(this.errorDecoration, [
             {
                 range: range,
                 options: { className: 'jo_revealError' }
@@ -427,7 +427,7 @@ export class MyConsole {
     }
 
     clearErrors(){
-        this.errorDecoration = this.main.getMonacoEditor().deltaDecorations(this.errorDecoration, [
+        this.errorDecoration = this.main.getMainEditor().deltaDecorations(this.errorDecoration, [
         ]);
     }
 

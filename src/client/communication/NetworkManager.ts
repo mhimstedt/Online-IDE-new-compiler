@@ -1,5 +1,4 @@
 import jQuery from 'jquery';
-import { Module } from "../compiler/parser/Module.js";
 import { AccordionElement } from "../main/gui/Accordion.js";
 import { Main } from "../main/Main.js";
 import { SqlIdeUrlHolder } from "../main/SqlIdeUrlHolder.js";
@@ -107,9 +106,7 @@ export class NetworkManager {
             if (callback != null) callback();
             return;
         }
-        
-        this.main.projectExplorer.writeEditorTextToFile();
-        
+                
         let classDiagram = this.main.rightDiv?.classDiagram;
         let userSettings = this.main.user.settings;
 
@@ -134,13 +131,12 @@ export class NetworkManager {
                 this.forcedUpdatesInARow = 0;
             }
 
-            for (let m of ws.moduleStore.getModules(false)) {
-                if (!m.file.saved) {
+            for (let file of ws.getFiles()) {
+                if (!file.isSaved()) {
                     this.forcedUpdatesInARow = 0;
-                    m.file.text = m.getProgramTextFromMonacoModel();
-                    fdList.push(m.getFileData(ws));
-                    // console.log("Save file " + m.file.name);
-                    m.file.saved = true;
+                    fdList.push(file.getFileData(ws));
+                    // console.log("Save file " + file.name);
+                    file.setSaved(true);
                 }
             }
         }
@@ -244,6 +240,7 @@ export class NetworkManager {
 
         ajax("createOrDeleteFileOrWorkspace", request, (response: CRUDResponse) => {
             f.id = response.id;
+            f.setSaved(true);
             callback(null);
         }, callback);
 
@@ -318,9 +315,9 @@ export class NetworkManager {
             }
 
             ajax("createRepository", request, (response: { success: boolean, message?: string, repository_id?: number }) => {
-                ws.moduleStore.getModules(false).forEach(m => {
-                    m.file.is_copy_of_id = m.file.id;
-                    m.file.repository_file_version = 1;
+                ws.getFiles().forEach(file => {
+                    file.is_copy_of_id = file.id;
+                    file.repository_file_version = 1;
                 })
                 ws.repository_id = response.repository_id;
                 ws.has_write_permission_to_repository = true;
@@ -418,31 +415,28 @@ export class NetworkManager {
                 let idToRemoteFileDataMap: Map<number, FileData> = new Map();
                 remoteWorkspace.files.forEach(fd => idToRemoteFileDataMap.set(fd.id, fd));
 
-                let idToModuleMap: Map<number, Module> = new Map();
+                let idToFileMap: Map<number, File> = new Map();
                 // update/delete files if necessary
-                for (let module of workspace.moduleStore.getModules(false)) {
-                    let fileId = module.file.id;
-                    idToModuleMap.set(fileId, module);
+                for (let file of workspace.getFiles()) {
+                    let fileId = file.id;
+                    idToFileMap.set(fileId, file);
                     let remoteFileData = idToRemoteFileDataMap.get(fileId);
                     if (remoteFileData == null) {
-                        this.main.projectExplorer.fileListPanel.removeElement(module);
-                        this.main.currentWorkspace.moduleStore.removeModule(module);
+                        this.main.projectExplorer.fileListPanel.removeElement(file);
+                        this.main.getCurrentWorkspace()?.removeFile(file);
                     } else {
-                        if (fileIdsSended.indexOf(fileId) < 0 && module.file.text != remoteFileData.text) {
-                            module.file.text = remoteFileData.text;
-                            module.model.setValue(remoteFileData.text);
-    
-                            module.file.saved = true;
-                            module.lastSavedVersionId = module.model.getAlternativeVersionId()
+                        if (fileIdsSended.indexOf(fileId) < 0 && file.getText() != remoteFileData.text) {
+                            file.setText(remoteFileData.text);
+                            file.setSaved(true);
                         }
-                        module.file.version = remoteFileData.version;
+                        file.version = remoteFileData.version;
                     } 
                 }
 
 
                 // add files if necessary
                 for (let remoteFile of remoteWorkspace.files) {
-                    if (idToModuleMap.get(remoteFile.id) == null) {
+                    if (idToFileMap.get(remoteFile.id) == null) {
                         this.createFile(workspace, remoteFile);
                     }
                 }
@@ -461,22 +455,20 @@ export class NetworkManager {
     }
 
     private updateFiles(filesFromServer: FileData[]) {
-        let fileIdToLocalModuleMap: Map<number, Module> = new Map();
+        let fileIdToLocalFileMap: Map<number, File> = new Map();
 
         for (let workspace of this.main.workspaceList) {
-            for (let module of workspace.moduleStore.getModules(false)) {
-                fileIdToLocalModuleMap[module.file.id] = module;
+            for (let file of workspace.getFiles()) {
+                fileIdToLocalFileMap[file.id] = file;
             }
         }
 
         for (let remoteFile of filesFromServer) {
-            let module = fileIdToLocalModuleMap[remoteFile.id];
-            if (module != null && module.file.text != remoteFile.text) {
-                module.file.text = remoteFile.text;
-                module.model.setValue(remoteFile.text); // Hier passierts!
-                module.file.saved = true;
-                module.lastSavedVersionId = module.model.getAlternativeVersionId()
-                module.file.version = remoteFile.version;
+            let file = fileIdToLocalFileMap.get(remoteFile.id);
+            if (file != null && file.getText() != remoteFile.text) {
+                file.setText(remoteFile.text);
+                file.setSaved(true);
+                file.version = remoteFile.version;
             }
         }
     }
@@ -513,11 +505,10 @@ export class NetworkManager {
     }
 
     private createFile(workspace: Workspace, remoteFile: FileData) {
-        let m = this.main.projectExplorer.getNewFile(remoteFile); //new Module(f, this.main);
-        let f = m.file;
+        let f = this.main.projectExplorer.getNewFile(remoteFile); //new Module(f, this.main);
 
         let ae: any = null; //AccordionElement
-        if (workspace == this.main.currentWorkspace) {
+        if (workspace == this.main.getCurrentWorkspace()) {
             ae = {
                 name: remoteFile.name,
                 externalElement: null
@@ -525,11 +516,10 @@ export class NetworkManager {
 
             this.main.projectExplorer.fileListPanel.addElement(ae, true);
             f.panelElement = ae;
-            ae.externalElement = m;
+            ae.externalElement = f;
         }
 
-        let modulStore = workspace.moduleStore;
-        modulStore.putModule(m);
+        workspace.addFile(f);
 
     }
 

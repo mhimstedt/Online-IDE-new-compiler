@@ -15,6 +15,8 @@ import { TeacherExplorer } from './TeacherExplorer.js';
 import { WorkspaceSettingsDialog } from "./WorkspaceSettingsDialog.js";
 import { File } from '../../workspace/File.js';
 import { IPosition, Position } from '../../../compiler/common/range/Position.js';
+import { WorkspaceImporterExporter } from '../../workspace/WorkspaceImporterExporter.js';
+import { SchedulerState } from '../../../compiler/common/interpreter/Scheduler.js';
 
 
 export class ProjectExplorer {
@@ -122,8 +124,7 @@ export class ProjectExplorer {
                 callback: (element: AccordionElement) => {
 
                     let oldFile: File = element.externalElement;
-                    let newFile: File = new File(oldFile.name + " - Kopie");
-                    newFile.setText(oldFile.getText());
+                    let newFile: File = new File(oldFile.name + " - Kopie", oldFile.getText());
                     newFile.version = oldFile.version;
 
                     let workspace = that.main.getCurrentWorkspace();
@@ -298,7 +299,7 @@ export class ProjectExplorer {
                     if (error == null) {
                         that.main.removeWorkspace(workspace);
                         that.fileListPanel.clear();
-                        that.main.getMonacoEditor().setModel(null);
+                        that.main.getMainEditor().setModel(null);
                         that.fileListPanel.setCaption('Bitte Workspace selektieren');
                         this.$synchronizeAction.hide();
                         successfulNetworkCommunicationCallback();
@@ -356,35 +357,23 @@ export class ProjectExplorer {
 
         this.workspaceListPanel.dropElementCallback = (dest: AccordionElement, droppedElement: AccordionElement, dropEffekt: "copy" | "move") => {
             let workspace: Workspace = dest.externalElement;
-            let module: Module = droppedElement.externalElement;
+            let file: File = droppedElement.externalElement;
 
-            if (workspace.moduleStore.getModules(false).indexOf(module) >= 0) return; // module is already in destination workspace
+            if (workspace.getFiles().indexOf(file) >= 0) return; // module is already in destination workspace
 
-            let f: File = {
-                name: module.file.name,
-                dirty: true,
-                saved: false,
-                text: module.file.text,
-                text_before_revision: null,
-                submitted_date: null,
-                student_edited_after_revision: false,
-                version: module.file.version,
-                panelElement: null,
-                identical_to_repository_version: false,
-            };
+            let newFile: File = new File(file.name, file.getText());
+            newFile.version = file.version;
 
             if (dropEffekt == "move") {
                 // move file
                 let oldWorkspace = that.main.currentWorkspace;
-                oldWorkspace.moduleStore.removeModule(module);
-                that.fileListPanel.removeElement(module);
-                that.main.networkManager.sendDeleteWorkspaceOrFile("file", module.file.id, () => { });
+                oldWorkspace.removeFile(file);
+                that.fileListPanel.removeElement(file);
+                that.main.networkManager.sendDeleteWorkspaceOrFile("file", file.id, () => { });
             }
 
-            let m = new Module(f, that.main);
-            let modulStore = workspace.moduleStore;
-            modulStore.putModule(m);
-            that.main.networkManager.sendCreateFile(m, workspace, that.main.workspacesOwnerId,
+            workspace.addFile(newFile);
+            that.main.networkManager.sendCreateFile(newFile, workspace, that.main.workspacesOwnerId,
                 (error: string) => {
                     if (error == null) {
                     } else {
@@ -455,7 +444,7 @@ export class ProjectExplorer {
                     callback: (element: AccordionElement) => {
                         let ws: Workspace = <Workspace>element.externalElement;
                         let name: string = ws.name.replace(/\//g, "_");
-                        downloadFile(ws.toExportedWorkspace(), name + ".json")
+                        downloadFile(WorkspaceImporterExporter.exportWorkspace(ws), name + ".json")
                     }
                 }
             );
@@ -583,34 +572,30 @@ export class ProjectExplorer {
         this.fileListPanel.clear();
 
         if (this.main.getCurrentWorkspace() != null) {
-            for (let module of this.main.getCurrentWorkspace().moduleStore.getModules(false)) {
-                module.file.panelElement = null;
+            for (let file of this.main.getCurrentWorkspace().getFiles()) {
+                file.panelElement = null;
             }
         }
 
         if (workspace != null) {
-            let moduleList: Module[] = [];
+            let files: File[] = workspace.getFiles().slice();
 
-            for (let m of workspace.moduleStore.getModules(false)) {
-                moduleList.push(m);
-            }
+            files.sort((a, b) => { return a.name > b.name ? 1 : a.name < b.name ? -1 : 0 });
 
-            moduleList.sort((a, b) => { return a.file.name > b.file.name ? 1 : a.file.name < b.file.name ? -1 : 0 });
+            for (let file of files) {
 
-            for (let m of moduleList) {
-
-                m.file.panelElement = {
-                    name: m.file.name,
-                    externalElement: m,
+                file.panelElement = {
+                    name: file.name,
+                    externalElement: file,
                     isFolder: false,
                     path: [],
-                    iconClass: FileTypeManager.filenameToFileType(m.file.name).iconclass,
+                    iconClass: FileTypeManager.filenameToFileType(file.name).iconclass,
                     readonly: workspace.readonly,
                     isPruefungFolder: false
                 };
 
-                this.fileListPanel.addElement(m.file.panelElement, true);
-                this.renderHomeworkButton(m.file);
+                this.fileListPanel.addElement(file.panelElement, true);
+                this.renderHomeworkButton(file);
             }
 
             this.fileListPanel.sortElements();
@@ -649,13 +634,13 @@ export class ProjectExplorer {
 
     }
 
-    renderErrorCount(workspace: Workspace, errorCountMap: Map<Module, number>) {
+    renderErrorCount(workspace: Workspace, errorCountMap: Map<File, number>) {
         if (errorCountMap == null) return;
-        for (let m of workspace.moduleStore.getModules(false)) {
-            let errorCount: number = errorCountMap.get(m);
+        for (let f of workspace.getFiles()) {
+            let errorCount: number = errorCountMap.get(f);
             let errorCountS: string = ((errorCount == null || errorCount == 0) ? "" : "(" + errorCount + ")");
 
-            this.fileListPanel.setTextAfterFilename(m.file.panelElement, errorCountS, 'jo_errorcount');
+            this.fileListPanel.setTextAfterFilename(f.panelElement, errorCountS, 'jo_errorcount');
         }
     }
 
@@ -682,25 +667,25 @@ export class ProjectExplorer {
 
         this.workspaceListPanel.select(w, false, scrollIntoView);
 
-        if (this.main.interpreter.state == InterpreterState.running) {
-            this.main.interpreter.stop();
+        if (this.main.interpreter.scheduler.state == SchedulerState.running) {
+            this.main.interpreter.stop(false);
         }
 
         this.main.currentWorkspace = w;
         this.renderFiles(w);
 
         if (w != null) {
-            let nonSystemModules = w.moduleStore.getModules(false);
+            let files = w.getFiles();
 
             if (w.currentlyOpenFile != null) {
                 this.setFileActive(w.currentlyOpenFile);
-            } else if (nonSystemModules.length > 0) {
-                this.setFileActive(nonSystemModules[0]);
+            } else if (files.length > 0) {
+                this.setFileActive(files[0]);
             } else {
                 this.setFileActive(null);
             }
 
-            if (nonSystemModules.length == 0 && !this.main.user.settings.helperHistory.newFileHelperDone) {
+            if (files.length == 0 && !this.main.user.settings.helperHistory.newFileHelperDone) {
 
                 Helper.showHelper("newFileHelper", this.main, this.fileListPanel.$captionElement);
 
@@ -710,8 +695,8 @@ export class ProjectExplorer {
 
             let spritesheet = new SpritesheetData();
             spritesheet.initializeSpritesheetForWorkspace(w, this.main).then(() => {
-                for (let m of nonSystemModules) {
-                    m.file.dirty = true;
+                for (let file of files) {
+                    this.main.getCompiler().setFileDirty(file);
                 }
             });
 
@@ -724,34 +709,24 @@ export class ProjectExplorer {
 
     }
 
-    writeEditorTextToFile() {
-        let cem = this.getCurrentlyEditedFile();
-        if (cem != null)
-            cem.file.text = cem.getProgramTextFromMonacoModel(); // 29.03. this.main.monaco.getValue();
-    }
-
-
-    lastOpenFile: Module = null;
-    setFileActive(m: Module) {
+    lastOpenFile: File = null;
+    setFileActive(file: File) {
 
         this.main.bottomDiv.homeworkManager.hideRevision();
 
-        if (this.lastOpenFile != null) {
-            this.lastOpenFile.getBreakpointPositionsFromEditor();
-            this.lastOpenFile.file.text = this.lastOpenFile.getProgramTextFromMonacoModel(); // this.main.monaco.getValue();
-            this.lastOpenFile.editorState = this.main.getMonacoEditor().saveViewState();
-        }
+        let editor = this.main.getMainEditor();
 
-        if (m == null) {
-            this.main.getMonacoEditor().setModel(monaco.editor.createModel("Keine Datei vorhanden.", "text"));
-            this.main.getMonacoEditor().updateOptions({ readOnly: true });
+        this.lastOpenFile?.saveViewState(editor);
+
+        if (file == null) {
+            editor.setModel(monaco.editor.createModel("Keine Datei vorhanden.", "text"));
+            editor.updateOptions({ readOnly: true });
             this.fileListPanel.setCaption('Keine Datei vorhanden');
         } else {
-            this.main.getMonacoEditor().updateOptions({ readOnly: this.main.currentWorkspace.readonly && !this.main.user.is_teacher });
-            this.main.getMonacoEditor().setModel(m.model);
-            if (this.main.getBottomDiv() != null) this.main.getBottomDiv().errorManager.showParenthesisWarning(m.bracketError);
+            editor.updateOptions({ readOnly: this.main.getCurrentWorkspace()?.readonly && !this.main.user.is_teacher });
+            editor.setModel(file.getMonacoModel());
 
-            if (m.file.text_before_revision != null) {
+            if (file.text_before_revision != null) {
                 this.main.bottomDiv.homeworkManager.showHomeWorkRevisionButton();
             } else {
                 this.main.bottomDiv.homeworkManager.hideHomeworkRevisionButton();
@@ -784,28 +759,13 @@ export class ProjectExplorer {
 
     }
 
-    showProgramPointerPosition(file: File, position: IPosition) {
-
-        // console statement execution:
-        if (file == null) {
-            return;
-        }
-
-        if (file != this.main.getCurrentWorkspace().getCurrentlyEditedFile()) {
-            this.setFileActive(file);
-        } else {
-            this.main.getInterpreter().showProgramPointer();
-        }
-
-    }
-
     setCurrentlyEditedFile(f: File) {
         if (f == null) return;
         let ws = this.main.currentWorkspace;
         if (ws.currentlyOpenFile != f) {
             ws.currentlyOpenFile = f;
             ws.saved = false;
-            // file.dirty = true;    // Is this correct?
+            this.main.getCompiler().setFileDirty(f);   // is this necessary?
         }
     }
 

@@ -3,8 +3,8 @@ import { Executable } from "../Executable.ts";
 import { CodeReachedAssertions } from "./CodeReachedAssertions.ts";
 import { EventManager } from "./EventManager";
 import { LoadController } from "./LoadController";
-import { DummyPrintManager, PrintManager } from "./PrintManager";
-import { Scheduler, SchedulerState } from "./Scheduler";
+import { DummyPrintManager, IPrintManager } from "./PrintManager";
+import { Scheduler, SchedulerExitState, SchedulerState } from "./Scheduler";
 import { GraphicsManager } from "./GraphicsManager.ts";
 import { IWorld } from "../../java/runtime/graphics/IWorld.ts";
 import { KeyboardManager } from "./KeyboardManager.ts";
@@ -14,7 +14,7 @@ import { Debugger } from "../debugger/Debugger.ts";
 import { ProgramPointerManager, ProgramPointerPositionInfo } from "../monacoproviders/ProgramPointerManager.ts";
 import { Program } from "./Program.ts";
 import { TestManager } from "./TestManager.ts";
-import { ActionManager } from "./IActionManager.ts";
+import { ActionManager } from "./ActionManager.ts";
 import { JavaRepl } from "../../java/parser/repl/JavaRepl.ts";
 import { IInputManager } from "./IInputManager.ts";
 import { IFilesManager as IFileManager } from "./IFilesManager.ts";
@@ -41,11 +41,11 @@ export class Interpreter {
     // keyboardTool: KeyboardTool;
     // gamepadTool: GamepadTool;
 
-    public printManager: PrintManager;
+    public printManager: IPrintManager;
 
     eventManager: EventManager<InterpreterEvents> = new EventManager();
 
-    objectStore: { [key: string]: any } = {};
+    private objectStore: Map<string, any> = new Map();
 
     actions: string[] = ["start", "pause", "stop", "stepOver",
         "stepInto", "stepOut", "restart"];
@@ -71,7 +71,7 @@ export class Interpreter {
     public stepsPerSecondGoal: number = 1e8;
     public isMaxSpeed: boolean = true;
 
-    constructor(printManager?: PrintManager, private actionManager?: ActionManager,
+    constructor(printManager?: IPrintManager, private actionManager?: ActionManager,
         public graphicsManager?: GraphicsManager, public keyboardManager?: KeyboardManager,
         public breakpointManager?: BreakpointManager, public _debugger?: Debugger,
         public programPointerManager?: ProgramPointerManager, public testManager?: TestManager,
@@ -281,7 +281,9 @@ export class Interpreter {
         this.scheduler.setState(SchedulerState.running);
         try {
             while (this.scheduler.state == SchedulerState.running) {
-                this.scheduler.run(100);
+                if(this.scheduler.run(100) == SchedulerExitState.nothingMoreToDo){
+                    break;
+                };
             }
         } finally {
             this.scheduler.runsSynchronously = false;
@@ -471,9 +473,9 @@ export class Interpreter {
 
     hasActorsOrPApplet(): boolean {
 
-        if (this.objectStore["PApplet"]) return true;
+        if (this.retrieveObject("PAppletClass")) return true;
 
-        let world: IWorld = this.objectStore["World"];
+        let world: IWorld = this.retrieveObject("WorldClass");
         if (!world) return false;
         return world.hasActors();
     }
@@ -500,4 +502,15 @@ export class Interpreter {
         return false; // TODO
     }
 
+    public storeObject(classIdentifier: string, object: any){
+        this.objectStore.set(classIdentifier, object);
+    }
+
+    public retrieveObject(classIdentifier: string){
+        return this.objectStore.get(classIdentifier);
+    }
+
+    public deleteObject(classIdentifier: string){
+        this.objectStore.delete(classIdentifier);
+    }
 }

@@ -79,8 +79,8 @@ window.onload = () => {
     loadSpritesheet();
 
     initMonacoEditor().then(() => {
-        main.initEditor();
-        main.getMonacoEditor().updateOptions({ readOnly: true });
+        main.startupAfterMonacoEditorIsLoaded();
+        main.getMainEditor().updateOptions({ readOnly: true });
 
         main.bottomDiv.initGUI();
         main.checkStartupComplete();
@@ -104,6 +104,6 @@ window.onload = () => {
         p5.disableFriendlyErrors = true
     })
 
-    main.initGUI();
+    main.startupBeforeMonacoEditorIsLoaded();
     // document.body.innerText = 'Hello World!';
 }

@@ -5,8 +5,8 @@ import { ImageFile, SpriteData } from "./ImageFile.js";
 import { EditableSpritesheet } from "./EditableSpritesheet.js";
 import { SpritesheetData } from "./SpritesheetData.js";
 import { UploadSpriteResponse } from "../communication/Data.js";
-import {SpriteLibrary} from  "../runtimelibrary/graphics/SpriteLibrary.js";
 import { csrfToken } from '../communication/AjaxHelper.js';
+import { SpriteLibrary } from '../../compiler/java/runtime/graphics/SpriteLibrary.js';
 
 type SpriteLibraryEntry = {
     filename: string,
@@ -265,7 +265,7 @@ export class SpriteManager {
             $indexInput.addClass('jo_sm_index');
     
             $seriesInput.on("input", () => { imageData.series = <string>$seriesInput.val(); that.checkSeriesAndIndexesAndSetNextSpriteIndex(); })
-            $indexInput.on("input", () => { imageData.index = <number>$indexInput.val(); that.checkSeriesAndIndexesAndSetNextSpriteIndex(); })
+            $indexInput.on("input", () => { imageData.index = <number><any>$indexInput.val(); that.checkSeriesAndIndexesAndSetNextSpriteIndex(); })
         }
         
         let $infoDiv = makeDiv(null, "jo_sm_infoDiv", "Breite: " + imageData.width + " px, Höhe: " + imageData.height + " px", null, $inputInfoDiv);

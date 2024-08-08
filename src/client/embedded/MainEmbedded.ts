@@ -1,8 +1,3 @@
-import { Compiler, CompilerStatus } from "../compiler/Compiler.js";
-import { Module, File, ExportedWorkspace } from "../compiler/parser/Module.js";
-import { Debugger } from "../interpreter/Debugger.js";
-import { Interpreter, InterpreterState } from "../interpreter/Interpreter.js";
-import { ActionManager } from "../main/gui/ActionManager.js";
 import { BottomDiv } from "../main/gui/BottomDiv.js";
 import { Editor } from "../main/gui/Editor.js";
 import { ProgramControlButtons } from "../main/gui/ProgramControlButtons.js";
@@ -13,15 +8,33 @@ import { JOScript } from "./EmbeddedStarter.js";
 import { downloadFile, makeDiv, makeTabs, openContextMenu } from "../../tools/HtmlTools.js";
 import { EmbeddedSlider } from "./EmbeddedSlider.js";
 import { EmbeddedFileExplorer } from "./EmbeddedFileExplorer.js";
-import { TextPosition } from "../compiler/lexer/Token.js";
 import { EmbeddedIndexedDB } from "./EmbeddedIndexedDB.js";
-import { SemicolonAngel } from "../compiler/parser/SemicolonAngel.js";
-import { TextPositionWithModule } from "../compiler/types/Types.js";
-import { HitPolygonStore } from "../runtimelibrary/graphics/PolygonStore.js";
 import { SpritesheetData } from "../spritemanager/SpritesheetData.js";
 import * as PIXI from 'pixi.js';
 import jQuery from "jquery";
 import { FileTypeManager } from "../main/gui/FileTypeManager.js";
+import { Executable } from "../../compiler/common/Executable.js";
+import { Language } from "../../compiler/common/Language.js";
+import { CompilerWorkspace } from "../../compiler/common/module/CompilerWorkspace.js";
+import { JavaRepl } from "../../compiler/java/parser/repl/JavaRepl.js";
+import { IRange } from "../../compiler/common/range/Range.js";
+import { File } from "../workspace/File.js";
+import Module from "module";
+import { Compiler } from "../../compiler/common/Compiler.js";
+import { Debugger } from "../../compiler/common/debugger/Debugger.js";
+import { ActionManager } from "../../compiler/common/interpreter/ActionManager.js";
+import { Interpreter } from "../../compiler/common/interpreter/Interpreter.js";
+import { ExportedWorkspace, WorkspaceImporterExporter } from "../workspace/WorkspaceImporterExporter.js";
+import { BreakpointManager } from "../../compiler/common/BreakpointManager.js";
+import { InputManager } from "../main/gui/InputManager.js";
+import { PrintManager } from "../main/gui/PrintManager.js";
+import { FileManager } from "../main/gui/FileManager.js";
+import { GraphicsManager } from "../../compiler/common/interpreter/GraphicsManager.js";
+import { KeyboardManager } from "../../compiler/common/interpreter/KeyboardManager.js";
+import { ProgramPointerManager } from "../../compiler/common/monacoproviders/ProgramPointerManager.js";
+import { ErrorMarker } from "../../compiler/common/monacoproviders/ErrorMarker.js";
+import { JavaLanguage } from "../../compiler/java/JavaLanguage.js";
+import { EditorOpenerProvider } from "../../compiler/common/monacoproviders/EditorOpenerProvider.js";
 
 
 type JavaOnlineConfig = {
@@ -41,14 +54,54 @@ type JavaOnlineConfig = {
 
 export class MainEmbedded implements MainBase {
 
-    pixiApp: PIXI.Application;
+    config: JavaOnlineConfig;
+
+    editor: Editor;
+
+    currentWorkspace: Workspace;
+    actionManager: ActionManager;
+
+    language: Language;
+
+    interpreter: Interpreter;
+    $runDiv: JQuery<HTMLElement>;
+
+    debugger: Debugger;
+    $debuggerDiv: JQuery<HTMLElement>;
+
+    bottomDiv: BottomDiv;
+    $filesListDiv: JQuery<HTMLElement>;
+
+    $hintDiv: JQuery<HTMLElement>;
+    $monacoDiv: JQuery<HTMLElement>;
+    $resetButton: JQuery<HTMLElement>;
+
+    rightDiv: RightDiv;
+    $rightDivInner: JQuery<HTMLElement>;
+
+    fileExplorer: EmbeddedFileExplorer;
+
+    debounceDiagramDrawing: any;
+
+    indexedDB: EmbeddedIndexedDB;
+
+    programControlButtons: ProgramControlButtons;
+
+    breakpointManager: BreakpointManager;
+
+    compileRunsAfterCodeReset: number = 0;
+
 
     isEmbedded(): boolean { return true; }
 
-    jumpToDeclaration(module: Module, declaration: TextPositionWithModule) { };
+    jumpToDeclaration(file: File, declaration: IRange): void {
+        this.fileExplorer.selectFile(file);
+        this.editor.editor.revealLineInCenter(declaration.startLineNumber);
+        this.editor.editor.setPosition({ column: declaration.startColumn, lineNumber: declaration.startLineNumber });
+    };
 
     getCompiler(): Compiler {
-        return this.compiler;
+        return this.language.getCompiler();
     }
     getInterpreter(): Interpreter {
         return this.interpreter;
@@ -75,58 +128,39 @@ export class MainEmbedded implements MainBase {
         return this.actionManager;
     }
 
-    getCurrentlyEditedModule(): Module {
-        if (this.config.withFileList) {
-            return this.fileExplorer.currentFile?.module;
-        } else {
-            return this.currentWorkspace.moduleStore.getFirstModule();
-        }
+    addWorkspace(ws: CompilerWorkspace): void {
+        // not used
     }
 
-    config: JavaOnlineConfig;
+    getLanguage(): Language {
+        return this.language;
+    }
 
-    editor: Editor;
-    programPointerDecoration: string[] = [];
-    programPointerModule: Module;
+    getRepl(): JavaRepl {
+        return this.language.getRepl();
+    }
 
-    currentWorkspace: Workspace;
-    actionManager: ActionManager;
+    getMainEditor(): monaco.editor.IStandaloneCodeEditor {
+        return this.editor.editor;
+    }
 
-    compiler: Compiler;
+    getReplEditor(): monaco.editor.IStandaloneCodeEditor {
+        return this.bottomDiv.console.editor;
+    }
 
-    interpreter: Interpreter;
-    $runDiv: JQuery<HTMLElement>;
+    onCompilationFinished(executable: Executable | undefined): void {
+        this.bottomDiv?.errorManager?.showErrors(this.currentWorkspace);
+        this.printProgram();
+    }
 
-    debugger: Debugger;
-    $debuggerDiv: JQuery<HTMLElement>;
+    adjustWidthToWorld(): void {
+        this.rightDiv.adjustWidthToWorld();
+    }
 
-    bottomDiv: BottomDiv;
-    $filesListDiv: JQuery<HTMLElement>;
 
-    $hintDiv: JQuery<HTMLElement>;
-    $monacoDiv: JQuery<HTMLElement>;
-    $resetButton: JQuery<HTMLElement>;
 
-    programIsExecutable = false;
-    version: number = 0;
 
-    timerHandle: any;
 
-    rightDiv: RightDiv;
-    $rightDivInner: JQuery<HTMLElement>;
-
-    fileExplorer: EmbeddedFileExplorer;
-
-    debounceDiagramDrawing: any;
-
-    indexedDB: EmbeddedIndexedDB;
-
-    compileRunsAfterCodeReset: number = 0;
-
-    semicolonAngel: SemicolonAngel;
-
-    userSpritesheet: PIXI.Spritesheet;
-    
     constructor($div: JQuery<HTMLElement>, private scriptList: JOScript[]) {
 
         this.readConfig($div);
@@ -146,9 +180,10 @@ export class MainEmbedded implements MainBase {
             });
         }
 
-        this.semicolonAngel = new SemicolonAngel(this);
 
     }
+
+
 
     initScripts() {
 
@@ -157,11 +192,11 @@ export class MainEmbedded implements MainBase {
         this.initWorkspace(this.scriptList);
 
         if (this.config.withFileList) {
-            this.fileExplorer = new EmbeddedFileExplorer(this.currentWorkspace.moduleStore, this.$filesListDiv, this);
+            this.fileExplorer = new EmbeddedFileExplorer(this.currentWorkspace, this.$filesListDiv, this);
             this.fileExplorer.setFirstFileActive();
             this.scriptList.filter((script) => script.title.endsWith(".md")).forEach((script) => this.fileExplorer.addHint(script));
         } else {
-            this.setFileActive(this.currentWorkspace.moduleStore.getFirstModule());
+            this.setFileActive(this.currentWorkspace.getFirstFile());
         }
 
     }
@@ -199,21 +234,19 @@ export class MainEmbedded implements MainBase {
 
         if (this.config.speed == null) this.config.speed = "max";
         if (this.config.libraries == null) this.config.libraries = [];
-        if(this.config.jsonFilename == null) this.config.jsonFilename = "workspace.json";
+        if (this.config.jsonFilename == null) this.config.jsonFilename = "workspace.json";
 
     }
 
-    setFileActive(module: Module) {
+    setFileActive(file: File) {
 
-        if(module == null) return;
-
-        if (this.config.withFileList && this.fileExplorer.currentFile != null) {
-            this.fileExplorer.currentFile.module.editorState = this.getMonacoEditor().saveViewState();
-        }
+        if (!file) return;
 
         if (this.config.withFileList) {
-            this.fileExplorer.markFile(module);
+            this.fileExplorer.currentFileData?.file?.saveViewState(this.getMainEditor());
+            this.fileExplorer.markFile(file);
         }
+
 
         /**
          * WICHTIG: Die Reihenfolge der beiden Operationen ist extrem wichtig.
@@ -221,18 +254,14 @@ export class MainEmbedded implements MainBase {
          * nicht und die Lightbulbs werden nicht angezeigt, selbst dann, wenn
          * später readonly = false gesetzt wird.
          */
-        this.getMonacoEditor().updateOptions({
+        this.getMainEditor().updateOptions({
             readOnly: false,
             lineNumbersMinChars: 4
         });
-        this.editor.editor.setModel(module.model);
 
+        this.editor.editor.setModel(file.getMonacoModel());
 
-        if (module.editorState != null) {
-            this.getMonacoEditor().restoreViewState(module.editorState);
-        }
-
-        module.renderBreakpointDecorators();
+        file.restoreViewState(this.getMainEditor());
 
     }
 
@@ -242,7 +271,7 @@ export class MainEmbedded implements MainBase {
 
     readScripts() {
 
-        let modules = this.currentWorkspace.moduleStore.getModules(false);
+        let files = this.currentWorkspace.getFiles();
 
         let that = this;
 
@@ -256,9 +285,8 @@ export class MainEmbedded implements MainBase {
                 let scriptList: string[] = JSON.parse(scriptListJSon);
                 let countDown = scriptList.length;
 
-                for (let module of modules) {
-                    that.fileExplorer?.removeModule(module, false);
-                    that.removeModule(module);
+                for (let file of files) {
+                    that.fileExplorer?.removeFile(file, false);  // calls MainEmbedded.removeFile subsequently
                 }
 
                 for (let name of scriptList) {
@@ -269,12 +297,9 @@ export class MainEmbedded implements MainBase {
 
                             script = this.eraseDokuwikiSearchMarkup(script);
 
-                            let module = that.addModule({
-                                title: name,
-                                text: script
-                            });
+                            let file = new File(name, script);
 
-                            that.fileExplorer?.addModule(module);
+                            that.fileExplorer?.addFile(file);
                             that.$resetButton.fadeIn(1000);
 
                             // console.log("Retrieving script " + scriptId);
@@ -286,8 +311,8 @@ export class MainEmbedded implements MainBase {
                             }, 1000);
                             that.fileExplorer?.setFirstFileActive();
                             if (that.fileExplorer == null) {
-                                let modules = that.currentWorkspace.moduleStore.getModules(false);
-                                if (modules.length > 0) that.setFileActive(modules[0]);
+                                let files = that.currentWorkspace.getFiles();
+                                if (files.length > 0) that.setFileActive(files[0]);
                             }
                         }
                     })
@@ -304,20 +329,20 @@ export class MainEmbedded implements MainBase {
 
     saveScripts() {
 
-        let modules = this.currentWorkspace.moduleStore.getModules(false);
+        let files = this.currentWorkspace.getFiles();
 
         let scriptList: string[] = [];
         let oneNotSaved: boolean = false;
 
-        modules.forEach(m => oneNotSaved = oneNotSaved || !m.file.saved);
+        files.forEach(file => oneNotSaved = oneNotSaved || !file.isSaved());
 
         if (oneNotSaved) {
 
-            for (let module of modules) {
-                scriptList.push(module.file.name);
-                let scriptId = this.config.id + module.file.name;
-                this.indexedDB.writeScript(scriptId, module.getProgramTextFromMonacoModel());
-                module.file.saved = true;
+            for (let file of files) {
+                scriptList.push(file.name);
+                let scriptId = this.config.id + file.name;
+                this.indexedDB.writeScript(scriptId, file.getText());
+                file.setSaved(true);
                 // console.log("Saving script " + scriptId);
             }
 
@@ -356,43 +381,33 @@ export class MainEmbedded implements MainBase {
         let i = 0;
         for (let script of scriptList) {
 
-            
 
-                this.addModule(script);
+
+            this.addFile(script);
 
         }
 
     }
 
-    addModule(script: JOScript): Module {
+    addFile(script: JOScript): File {
         let fileType = FileTypeManager.filenameToFileType(script.title);
 
-        let module: Module = Module.restoreFromData({
-            id: this.currentWorkspace.moduleStore.getModules(true).length,
-            name: script.title,
-            text: script.text,
-            text_before_revision: null,
-            submitted_date: null,
-            student_edited_after_revision: false,
-            version: 1,
-            workspace_id: 0,
-            forceUpdate: false,
-            identical_to_repository_version: false,
-        }, this);
+        let file = new File(script.title, script.text);
+        file.id = this.currentWorkspace.getFiles().length;
 
-        this.currentWorkspace.moduleStore.putModule(module);
+        this.currentWorkspace.addFile(file);
 
         let that = this;
 
-        module.model.onDidChangeContent(() => {
+        file.getMonacoModel().onDidChangeContent(() => {
             that.considerShowingCodeResetButton();
         });
 
-        return module;
+        return file;
     }
 
-    removeModule(module: Module) {
-        this.currentWorkspace.moduleStore.removeModule(module);
+    removeFile(file: File) {
+        this.currentWorkspace.removeFile(file);
     }
 
 
@@ -499,7 +514,8 @@ export class MainEmbedded implements MainBase {
         this.$monacoDiv.find('.monaco-editor').css('z-index', '10');
 
         if ($div.attr('tabindex') == null) $div.attr('tabindex', "0");
-        this.actionManager = new ActionManager($div, this);
+
+        this.actionManager = new ActionManager($div);
         this.actionManager.init();
 
         this.bottomDiv = new BottomDiv(this, $bottomDivInner, $div);
@@ -513,11 +529,37 @@ export class MainEmbedded implements MainBase {
         this.$rightDivInner.append($rightSideContainer);
         $rightSideContainer.append($coordinates);
 
-        this.debugger = new Debugger(this, this.$debuggerDiv, null);
 
-        this.interpreter = new Interpreter(this, this.debugger,
-            new ProgramControlButtons($controlsDiv, $editorDiv),
-            this.$runDiv);
+        this.debugger = new Debugger(<HTMLDivElement>this.$debuggerDiv[0], this);
+        let breakpointManager = new BreakpointManager(this);
+        let inputManager = new InputManager(this.$runDiv, this);
+        let printManager = new PrintManager(this.$runDiv, this);
+        let fileManager = new FileManager(this);
+        let graphicsManager = new GraphicsManager(printManager.getGraphicsDiv()[0], this);
+
+        let keyboardManager = new KeyboardManager(jQuery('html'), this);
+        let programPointerManager = new ProgramPointerManager(this);
+
+        this.interpreter = new Interpreter(
+            printManager, this.actionManager,
+            graphicsManager, keyboardManager,
+            breakpointManager, this.debugger,
+            programPointerManager, undefined,
+            inputManager, fileManager);
+
+
+        /**
+         * Compiler and Repl are fields of language!
+        */
+        let errorMarker = new ErrorMarker();
+        this.language = new JavaLanguage(this, errorMarker);
+        this.language.registerLanguageAtMonacoEditor(this);
+        this.language.getCompiler().setFiles(this.currentWorkspace.getFiles());
+
+
+        this.programControlButtons = new ProgramControlButtons(jQuery('#controls'), this.interpreter, this.actionManager);
+
+        new EditorOpenerProvider(this);
 
         let $infoButton = jQuery('<div class="jo_button jo_active img_ellipsis-dark" style="margin-left: 16px"></div>');
         $controlsDiv.append($infoButton);
@@ -535,12 +577,9 @@ export class MainEmbedded implements MainBase {
         });
 
         setTimeout(() => {
-            this.interpreter.initGUI();
             this.editor.editor.layout();
             this.loadUserSpritesheet().then(() => {
-                this.compiler = new Compiler(this);
-                this.interpreter.controlButtons.speedControl.setSpeedInStepsPerSecond(this.config.speed);
-                this.startTimer();
+                this.programControlButtons.speedControl.setSpeedInStepsPerSecond(this.config.speed);
             });
         }, 200);
 
@@ -615,56 +654,6 @@ export class MainEmbedded implements MainBase {
         return $window;
     }
 
-    showProgramPointerPosition(file: File, position: TextPosition) {
-
-        if (file == null) {
-            return;
-        }
-
-        if (this.config.withFileList) {
-            let fileData = this.fileExplorer.files.find((fileData) => fileData.module.file == file);
-            if (fileData == null) {
-                return;
-            }
-
-            if (fileData.module != this.getCurrentlyEditedModule()) {
-                this.setFileActive(fileData.module);
-            }
-
-            this.programPointerModule = fileData.module;
-        } else {
-            this.programPointerModule = this.currentWorkspace.moduleStore.getFirstModule();
-        }
-
-        let range = {
-            startColumn: position.column, startLineNumber: position.line,
-            endColumn: position.column + position.length, endLineNumber: position.line
-        };
-
-        this.getMonacoEditor().revealRangeInCenterIfOutsideViewport(range);
-        this.programPointerDecoration = this.getMonacoEditor().deltaDecorations(this.programPointerDecoration, [
-            {
-                range: range,
-                options: { className: 'jo_revealProgramPointer', isWholeLine: true }
-            },
-            {
-                range: range,
-                options: { beforeContentClassName: 'jo_revealProgramPointerBefore' }
-            }
-        ]);
-
-
-
-    }
-
-    hideProgramPointerPosition() {
-        if (this.getCurrentlyEditedModule() == this.programPointerModule) {
-            this.getMonacoEditor().deltaDecorations(this.programPointerDecoration, []);
-        }
-        this.programPointerModule = null;
-        this.programPointerDecoration = [];
-    }
-
     makeFilesDiv(): JQuery<HTMLElement> {
 
 
@@ -683,77 +672,16 @@ export class MainEmbedded implements MainBase {
         return $filesDiv;
     }
 
-    startTimer() {
-        if (this.timerHandle != null) {
-            clearInterval(this.timerHandle);
-        }
-
-        let that = this;
-        this.timerHandle = setInterval(() => {
-
-            that.compileIfDirty();
-
-        }, 500);
-
-
-    }
-
-    compileIfDirty() {
-
-        if (this.currentWorkspace == null) return;
-
-        if (this.currentWorkspace.moduleStore.isDirty() &&
-            this.compiler.compilerStatus != CompilerStatus.compiling
-            && this.interpreter.state != InterpreterState.running
-            && this.interpreter.state != InterpreterState.paused) {
-            try {
-
-                this.compiler.compile(this.currentWorkspace.moduleStore);
-
-                let errors = this.
-                    bottomDiv?.errorManager?.showErrors(this.currentWorkspace);
-
-                this.editor.onDidChangeCursorPosition(null); // mark occurrencies of symbol under cursor
-
-                this.printProgram();
-
-                this.version++;
-
-                let startable = this.interpreter.getStartableModule(this.currentWorkspace.moduleStore) != null;
-
-                if (startable &&
-                    this.interpreter.state == InterpreterState.not_initialized) {
-                    this.interpreter.setState(InterpreterState.done);
-                    if (this.config.hideStartPanel) {
-                        this.actionManager.trigger('interpreter.start');
-                    }
-                    // this.interpreter.init();
-                }
-
-                if (!startable &&
-                    (this.interpreter.state == InterpreterState.done || this.interpreter.state == InterpreterState.error)) {
-                    this.interpreter.setState(InterpreterState.not_initialized);
-                }
-
-                // this.drawClassDiagrams(!this.rightDiv.isClassDiagramEnabled());
-
-            } catch (e) {
-                console.error(e);
-                this.compiler.compilerStatus = CompilerStatus.error;
-            }
-
-        }
-
-    }
     considerShowingCodeResetButton() {
         this.compileRunsAfterCodeReset++;
         if (this.compileRunsAfterCodeReset == 3) {
             this.$resetButton.fadeIn(1000);
         }
     }
-    printProgram() {
 
-        this.bottomDiv.printModuleToBottomDiv(this.currentWorkspace, this.getCurrentlyEditedModule());
+    printProgram() {
+        // TODO!
+        //this.bottomDiv.printModuleToBottomDiv(this.currentWorkspace, this.getCurrentlyEditedModule());
 
     }
 
@@ -773,7 +701,7 @@ export class MainEmbedded implements MainBase {
         if (!filename.endsWith(".json")) filename = filename + ".json";
         let ws = this.currentWorkspace;
         let name: string = ws.name.replace(/\//g, "_");
-        downloadFile(ws.toExportedWorkspace(), filename)
+        downloadFile(WorkspaceImporterExporter.exportWorkspace(ws), filename)
     }
 
 
@@ -840,6 +768,7 @@ export class MainEmbedded implements MainBase {
         $bottomDiv.append($tabs);
 
     }
+
     loadWorkspaceFromFile(file: globalThis.File) {
         let that = this;
         if (file == null) return;
@@ -860,34 +789,20 @@ export class MainEmbedded implements MainBase {
 
             let ws: Workspace = new Workspace(ew.name, this, 0);
             ws.settings = ew.settings;
-            ws.alterAdditionalLibraries();
 
             for (let mo of ew.modules) {
-                let f: File = {
-                    name: mo.name,
-                    dirty: false,
-                    saved: true,
-                    text: mo.text,
-                    text_before_revision: null,
-                    submitted_date: null,
-                    student_edited_after_revision: false,
-                    version: 1,
-                    is_copy_of_id: null,
-                    repository_file_version: null,
-                    identical_to_repository_version: null,
-                };
-
-                let m = new Module(f, this);
-                ws.moduleStore.putModule(m);
+                let f = new File(mo.name, mo.text);
+                ws.addFile(f);
             }
+
             that.currentWorkspace = ws;
 
-            if(that.fileExplorer != null){
+            if (that.fileExplorer != null) {
                 that.fileExplorer.removeAllFiles();
-                ws.moduleStore.getModules(false).forEach(module => that.fileExplorer.addModule(module));
+                ws.getFiles().forEach(file => that.fileExplorer.addFile(file));
                 that.fileExplorer.setFirstFileActive();
             } else {
-                this.setFileActive(this.currentWorkspace.moduleStore.getFirstModule());
+                this.setFileActive(this.currentWorkspace.getFirstFile());
             }
 
             that.saveScripts();
@@ -965,17 +880,13 @@ export class MainEmbedded implements MainBase {
         return $rightDiv;
     }
 
-    getSemicolonAngel(): SemicolonAngel {
-        return this.semicolonAngel;
-    }
-
-    async loadUserSpritesheet(){
-        if(this.config.spritesheetURL != null){
+    async loadUserSpritesheet() {
+        if (this.config.spritesheetURL != null) {
 
             let spritesheet = new SpritesheetData();
 
             await spritesheet.initializeSpritesheetForWorkspace(this.currentWorkspace, this, this.config.spritesheetURL);
-    
+
         }
     }
 

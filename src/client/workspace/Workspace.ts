@@ -193,5 +193,10 @@ export class Workspace extends CompilerWorkspace {
     getCurrentlyEditedFile(): File | undefined {
         return <File | undefined>(super.getCurrentlyEditedFile());    
     }
+
+    getFirstFile(): File | undefined {
+        if(this.files.length > 0) return this.files[0];
+        return undefined;
+    }
 }
 

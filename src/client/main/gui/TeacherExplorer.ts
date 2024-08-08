@@ -68,7 +68,7 @@ export class TeacherExplorer {
     restoreOwnWorkspaces() {
         let main = this.main;
 
-        main.getMonacoEditor().updateOptions({ readOnly: true });
+        main.getMainEditor().updateOptions({ readOnly: true });
 
         main.workspaceList = this.ownWorkspaces;
         main.currentWorkspace = this.currentOwnWorkspace;
@@ -164,7 +164,7 @@ export class TeacherExplorer {
             projectExplorer.fileListPanel.setCaption("---");
             projectExplorer.workspaceListPanel.clear();
             this.studentPanel.clear();
-            this.main.getMonacoEditor().setModel(monaco.editor.createModel("Keine Datei vorhanden.", "text"));
+            this.main.getMainEditor().setModel(monaco.editor.createModel("Keine Datei vorhanden.", "text"));
 
 
         } else {

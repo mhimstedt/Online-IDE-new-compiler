@@ -1,7 +1,19 @@
 import jQuery from 'jquery';
+import { BreakpointManager } from '../../compiler/common/BreakpointManager.js';
+import { Compiler } from '../../compiler/common/Compiler.js';
 import { Debugger } from '../../compiler/common/debugger/Debugger.js';
-import { Position } from '../../compiler/common/range/Position.js';
+import { Executable } from '../../compiler/common/Executable.js';
+import { ActionManager } from '../../compiler/common/interpreter/ActionManager.js';
+import { GraphicsManager } from '../../compiler/common/interpreter/GraphicsManager.js';
+import { Interpreter } from '../../compiler/common/interpreter/Interpreter.js';
+import { KeyboardManager } from '../../compiler/common/interpreter/KeyboardManager.js';
+import { Language } from '../../compiler/common/Language.js';
+import { EditorOpenerProvider } from '../../compiler/common/monacoproviders/EditorOpenerProvider.js';
+import { ErrorMarker } from '../../compiler/common/monacoproviders/ErrorMarker.js';
+import { ProgramPointerManager } from '../../compiler/common/monacoproviders/ProgramPointerManager.js';
 import { IRange } from '../../compiler/common/range/Range.js';
+import { JavaLanguage } from '../../compiler/java/JavaLanguage.js';
+import { JavaRepl } from '../../compiler/java/parser/repl/JavaRepl.js';
 import { DatabaseNewLongPollingListener } from '../../tools/database/DatabaseNewLongPollingListener.js';
 import { checkIfMousePresent } from "../../tools/HtmlTools.js";
 import { ClassData, UserData, WorkspaceData, Workspaces } from "../communication/Data.js";
@@ -12,13 +24,17 @@ import { RepositoryCheckoutManager } from "../repository/update/RepositoryChecko
 import { RepositoryCreateManager } from "../repository/update/RepositoryCreateManager.js";
 import { RepositorySettingsManager } from "../repository/update/RepositorySettingsManager.js";
 import { SpriteManager } from "../spritemanager/SpriteManager.js";
+import { File } from '../workspace/File.js';
 import { InconsistencyFixer } from "../workspace/InconsistencyFixer.js";
 import { Workspace } from "../workspace/Workspace.js";
-import { ActionManager } from "./gui/ActionManager.js";
 import { BottomDiv } from "./gui/BottomDiv.js";
 import { Editor } from "./gui/Editor.js";
+import { FileManager } from './gui/FileManager.js';
 import { Helper } from "./gui/Helper.js";
+import { InputManager } from './gui/InputManager.js';
 import { MainMenu } from "./gui/MainMenu.js";
+import { PrintManager } from './gui/PrintManager.js';
+import { ProgramControlButtons } from './gui/ProgramControlButtons.js';
 import { ProjectExplorer } from "./gui/ProjectExplorer.js";
 import { RightDiv } from "./gui/RightDiv.js";
 import { Sliders } from "./gui/Sliders.js";
@@ -29,13 +45,7 @@ import { WindowStateManager } from "./gui/WindowStateManager.js";
 import { Login } from "./Login.js";
 import { MainBase } from "./MainBase.js";
 import { PruefungManagerForStudents } from './pruefung/PruefungManagerForStudents.js';
-import { File } from '../workspace/File.js';
-import { Compiler } from '../../compiler/common/Compiler.js';
-import { Executable } from '../../compiler/common/Executable.js';
-import { Interpreter } from '../../compiler/common/interpreter/Interpreter.js';
-import { Language } from '../../compiler/common/Language.js';
-import { CompilerWorkspace } from '../../compiler/common/module/CompilerWorkspace.js';
-import { JavaRepl } from '../../compiler/java/parser/repl/JavaRepl.js';
+import { CompilerFile } from '../../compiler/common/module/CompilerFile.js';
 
 export class Main implements MainBase {
 
@@ -78,6 +88,7 @@ export class Main implements MainBase {
     themeManager: ThemeManager;
 
     rightDiv: RightDiv;
+    programControlButtons: ProgramControlButtons;
 
     debounceDiagramDrawing: any;
 
@@ -87,11 +98,11 @@ export class Main implements MainBase {
     interpreter: Interpreter;
 
     addWorkspace(ws: Workspace): void {
-        this.workspaceList.push(ws);   
+        this.workspaceList.push(ws);
     }
 
     getInterpreter(): Interpreter {
-        return this.interpreter;    
+        return this.interpreter;
     }
 
     getLanguage(): Language {
@@ -99,7 +110,7 @@ export class Main implements MainBase {
     }
 
     getCompiler(): Compiler {
-        return this.language.getCompiler();    
+        return this.language.getCompiler();
     }
 
     getRepl(): JavaRepl {
@@ -107,7 +118,7 @@ export class Main implements MainBase {
     }
 
     getMainEditor(): monaco.editor.IStandaloneCodeEditor {
-        return this.editor.editor;   
+        return this.editor.editor;
     }
 
     getReplEditor(): monaco.editor.IStandaloneCodeEditor {
@@ -132,43 +143,35 @@ export class Main implements MainBase {
         return this.actionManager;
     }
 
-    showProgramPointerPosition(file: File, position: Position) {
-        this.projectExplorer.showProgramPointerPosition(file, position);
-    }
-
-    hideProgramPointerPosition() {
-        this.projectExplorer.hideProgramPointerPosition();
-    }
-
     setFileActive(file: File) {
-        this.projectExplorer.setFileActive(module);
-    }
-
-    jumpToDeclaration(file: File, declaration: IRange) {
         this.projectExplorer.setFileActive(file);
+    }
+
+    jumpToDeclaration(file: CompilerFile, declaration: IRange) {
+        this.projectExplorer.setFileActive(<File>file);
         this.editor.editor.revealLineInCenter(declaration.startLineNumber);
-        this.editor.editor.setPosition({column: declaration.startColumn, lineNumber: declaration.startLineNumber});
+        this.editor.editor.setPosition({ column: declaration.startColumn, lineNumber: declaration.startLineNumber });
     }
 
 
-    initGUI() {
+    startupBeforeMonacoEditorIsLoaded() {
 
         checkIfMousePresent();
-        
+
         this.login = new Login(this);
         let hashIndex: number = window.location.href.indexOf('#');
-        if(hashIndex > 0){
-    
-            var ticket = window.location.href.substr(hashIndex + 1);
-            window.history.replaceState({}, "Online-IDE", window.location.href.substr(0, hashIndex));
+        if (hashIndex > 0) {
+
+            var ticket = window.location.href.substring(hashIndex + 1);
+            window.history.replaceState({}, "Online-IDE", window.location.href.substring(0, hashIndex));
             this.login.initGUI(true);
             this.login.loginWithTicket(ticket);
-    
+
         } else {
             this.login.initGUI(false);
         }
 
-        this.actionManager = new ActionManager(null, this);
+        this.actionManager = new ActionManager(null);
         this.actionManager.init();
 
         this.networkManager = new NetworkManager(this, jQuery('#bottomdiv-outer .jo_updateTimerDiv'));
@@ -185,8 +188,6 @@ export class Main implements MainBase {
         this.rightDiv = new RightDiv(this, jQuery('#rightdiv-inner'));
         this.rightDiv.initGUI();
 
-        this.debugger = new Debugger(<HTMLDivElement>jQuery('#leftpanel>.jo_debugger')[0], this);
-
         this.checkStartupComplete();
 
         //@ts-ignore
@@ -198,7 +199,7 @@ export class Main implements MainBase {
 
     }
 
-    initEditor() {
+    startupAfterMonacoEditorIsLoaded() {
         this.editor = new Editor(this, true, false);
         this.editor.initGUI(jQuery('#editor'));
 
@@ -213,10 +214,41 @@ export class Main implements MainBase {
 
         jQuery(window).trigger('resize');
 
+        let breakpointManager = new BreakpointManager(this);
+        this.debugger = new Debugger(<HTMLDivElement>jQuery('#leftpanel>.jo_debugger')[0], this);
+        let inputManager = new InputManager(jQuery('#rightdiv-inner .jo_run'), this);
+        let printManager = new PrintManager(jQuery('#rightdiv-inner .jo_run'), this);
+        let fileManager = new FileManager(this);
+        let graphicsManager = new GraphicsManager(printManager.getGraphicsDiv()[0], this);
+        this.actionManager = new ActionManager();
+        let keyboardManager = new KeyboardManager(jQuery(window), this);
+        let programPointerManager = new ProgramPointerManager(this);
+
+        this.interpreter = new Interpreter(
+            printManager, this.actionManager,
+            graphicsManager, keyboardManager,
+            breakpointManager, this.debugger,
+            programPointerManager, undefined,
+            inputManager, fileManager);
+
+        let errorMarker = new ErrorMarker();
+
+        /**
+         * Compiler and Repl are fields of language!
+        */
+        this.language = new JavaLanguage(this, errorMarker);
+        this.language.registerLanguageAtMonacoEditor(this);
+        this.language.getCompiler().setFiles(this.currentWorkspace.getFiles());
+
+
+        this.programControlButtons = new ProgramControlButtons(jQuery('#controls'), this.interpreter, this.actionManager);
+
+        new EditorOpenerProvider(this);
+
     }
 
     initTeacherExplorer(classdata: ClassData[]) {
-        if(this.teacherExplorer != null){
+        if (this.teacherExplorer != null) {
             this.teacherExplorer.removePanels();
         }
         this.teacherExplorer = new TeacherExplorer(this, classdata);
@@ -242,31 +274,35 @@ export class Main implements MainBase {
             that.getMainEditor().layout();
         }, 200);
 
-        jQuery(window).on('unload', function() {
-            
-            if(navigator.sendBeacon && that.user != null){
+        jQuery(window).on('unload', function () {
+
+            if (navigator.sendBeacon && that.user != null) {
                 that.networkManager.sendUpdates(null, false, true);
-                that.networkManager.sendUpdateUserSettings(() => {});
+                that.networkManager.sendUpdateUserSettings(() => { });
                 that.interpreter.eventManager.fire("resetRuntime");
-                
+
                 DatabaseNewLongPollingListener.close();
                 PushClientManager.getInstance().close();
             }
-            
+
         });
 
     }
 
     onCompilationFinished(executable: Executable | undefined): void {
+
+        let errors = this.bottomDiv?.errorManager?.showErrors(this.currentWorkspace);
+        this.projectExplorer.renderErrorCount(this.currentWorkspace, errors);
         this.printProgram();
         this.drawClassDiagrams(!this.rightDiv.isClassDiagramEnabled());
-        
+
     }
 
 
     printProgram() {
 
-        this.bottomDiv.printModuleToBottomDiv(this.currentWorkspace, this.projectExplorer.getCurrentlyEditedFile());
+        // TODO!
+        // this.bottomDiv.printModuleToBottomDiv(this.currentWorkspace, this.getCurrentWorkspace()?.getCurrentlyEditedFile());
 
     }
 
@@ -300,7 +336,7 @@ export class Main implements MainBase {
         /**
          * Find inconsistencies and fix them
          */
-        if(fixInconsistencies){
+        if (fixInconsistencies) {
             new InconsistencyFixer().start(this.workspaceList, this.networkManager, this);
         }
 
@@ -322,7 +358,7 @@ export class Main implements MainBase {
 
         }
 
-        if(Math.random() < 0.9){
+        if (Math.random() < 0.9) {
             Helper.showHelper("spritesheetHelper", this);
         }
 
@@ -336,7 +372,9 @@ export class Main implements MainBase {
         return this.currentWorkspace;
     }
 
-    
+    adjustWidthToWorld(): void {
+        this.rightDiv.adjustWidthToWorld();
+    }
 
 }
 

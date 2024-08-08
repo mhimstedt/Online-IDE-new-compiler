@@ -1,16 +1,15 @@
 import jQuery from 'jquery';
+import { makeDiv } from "../../../tools/HtmlTools.js";
 import { ajax } from "../../communication/AjaxHelper.js";
-import { GetRepositoryRequest, GetRepositoryResponse, Repository, GainRepositoryLockRequest, GainRepositoryLockResponse, LeaseRepositoryLockRequest, LeaseRepositoryLockResponse } from "../../communication/Data.js";
+import { GainRepositoryLockRequest, GainRepositoryLockResponse, GetRepositoryRequest, GetRepositoryResponse, LeaseRepositoryLockRequest, LeaseRepositoryLockResponse, Repository } from "../../communication/Data.js";
 import { EmbeddedSlider } from "../../embedded/EmbeddedSlider.js";
 import { Main } from "../../main/Main.js";
-import { makeDiv } from "../../../tools/HtmlTools.js";
+import { SpritesheetData } from "../../spritemanager/SpritesheetData.js";
 import { Workspace } from "../../workspace/Workspace.js";
 import { HistoryElement } from "./HistoryElement.js";
 import { RepositoryTool } from "./RepositoryTool.js";
 import { LeftRight, SynchronizationListElement } from "./SynchronizationListElement.js";
 import { SynchroFile, SynchroWorkspace } from "./SynchroWorkspace.js";
-import { Dialog } from "../../main/gui/Dialog.js";
-import { SpritesheetData } from "../../spritemanager/SpritesheetData.js";
 
 
 type FileElement = {
@@ -134,8 +133,8 @@ export class SynchronizationManager {
                     workspace.spritesheetId = response.repository.spritesheet_id;
                     let spritesheet = new SpritesheetData();
                     spritesheet.initializeSpritesheetForWorkspace(workspace, this.main).then(() => {
-                        for (let m of workspace.moduleStore.getModules(false)) {
-                            m.file.dirty = true;
+                        for (let file of workspace.getFiles()) {
+                            this.main.getCompiler().setFileDirty(file);
                         }
                     });
                 }

@@ -1,9 +1,9 @@
 import jQuery from 'jquery';
+import { copyTextToClipboard, getSelectedObject, makeDiv, openContextMenu, SelectItem, setSelectItems } from "../../../tools/HtmlTools.js";
+import { ajax } from "../../communication/AjaxHelper.js";
+import { DeleteRepositoryRequest, GetRepositoryListRequest, GetRepositoryListResponse, GetRepositoryUserListRequest, GetRepositoryUserListResponse, RepositoryInfo, RepositoryUser, RepositoryUserWriteAccessData, UpdateRepositoryRequest, UpdateRepositoryResponse, UpdateRepositoryUserWriteAccessRequest, UpdateRepositoryUserWriteAccessResponse } from "../../communication/Data.js";
 import { Main } from "../../main/Main.js";
 import { Workspace } from "../../workspace/Workspace.js";
-import { makeDiv, SelectItem, setSelectItems, getSelectedObject, openContextMenu, copyTextToClipboard } from "../../../tools/HtmlTools.js";
-import { RepositoryUser, GetRepositoryRequest, GetRepositoryResponse, GetRepositoryUserListRequest, GetRepositoryUserListResponse, UserData, GetRepositoryListRequest, GetRepositoryListResponse, RepositoryInfo, UpdateRepositoryRequest, UpdateRepositoryResponse, RepositoryUserWriteAccessData, UpdateRepositoryUserWriteAccessRequest, UpdateRepositoryUserWriteAccessResponse, DeleteRepositoryRequest } from "../../communication/Data.js";
-import { ajax } from "../../communication/AjaxHelper.js";
 
 
 export class RepositorySettingsManager {

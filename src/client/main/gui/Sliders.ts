@@ -149,7 +149,7 @@ export class Sliders {
         let mewidth = Number.parseInt($editor.css('width').replace('px', ''));
         $editor.css('width', (mewidth + dx) + "px");
         
-        this.main.getMonacoEditor().layout();
+        this.main.getMainEditor().layout();
         if(this.main.bottomDiv.homeworkManager.diffEditor != null){
             this.main.bottomDiv.homeworkManager.diffEditor.layout();
         }
@@ -167,7 +167,7 @@ export class Sliders {
         let meheight = Number.parseInt($editor.css('height').replace('px', ''));
         $editor.css('height', (meheight + dy) + "px");
 
-        this.main.getMonacoEditor().layout();
+        this.main.getMainEditor().layout();
         if(this.main.bottomDiv.homeworkManager.diffEditor != null){
             this.main.bottomDiv.homeworkManager.diffEditor.layout();
         }
@@ -182,7 +182,7 @@ export class Sliders {
 
         let mewidth = Number.parseInt($editor.css('width').replace('px', ''));
         $editor.css('width', (mewidth - dx) + "px");
-        this.main.getMonacoEditor().layout();
+        this.main.getMainEditor().layout();
         if(this.main.bottomDiv.homeworkManager.diffEditor != null){
             this.main.bottomDiv.homeworkManager.diffEditor.layout();
         }

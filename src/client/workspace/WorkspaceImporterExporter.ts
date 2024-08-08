@@ -1,5 +1,4 @@
 import { WorkspaceSettings } from "../communication/Data";
-import { Main } from "../main/Main";
 import { MainBase } from "../main/MainBase";
 import { File } from "./File";
 import { Workspace } from "./Workspace";
@@ -26,7 +25,7 @@ export class WorkspaceImporterExporter {
     static exportWorkspace(workspace: Workspace): ExportedWorkspace {
         return {
             name: workspace.name,
-            modules: workspace.files.map(file => WorkspaceImporterExporter.exportFile(file)),
+            modules: workspace.getFiles().map(file => WorkspaceImporterExporter.exportFile(file)),
             settings: workspace.settings
         }
     }
@@ -50,7 +49,7 @@ export class WorkspaceImporterExporter {
         ws.settings = wse.settings;
         main.addWorkspace(ws);
         for(let exportedFile of wse.modules){
-            ws.files.push(WorkspaceImporterExporter.importFile(exportedFile));           
+            ws.addFile(WorkspaceImporterExporter.importFile(exportedFile));           
         }
 
         return ws;

@@ -1,5 +1,7 @@
 import jQuery from 'jquery';
 import { MainBase } from "../MainBase.js";
+import { IPrintManager } from '../../../compiler/common/interpreter/PrintManager.js';
+import { InputManager } from './InputManager.js';
 
 type PrintCommand = {
     text: string;
@@ -7,7 +9,7 @@ type PrintCommand = {
     newLine: boolean;
 }
 
-export class PrintManager {
+export class PrintManager implements IPrintManager{
 
     color: string = "";
     lastSpan: string = "";
@@ -40,7 +42,7 @@ export class PrintManager {
 
             setInterval(() => {
                 if (that.printCommands.length > 0) {
-                    that.doPrinting();
+                    that.flush();
                     if (performance.now() - lastPrinting > 200) {
                         that.$outputDiv[0].scrollTop = that.$outputDiv[0].scrollHeight;
                     } else {
@@ -76,7 +78,7 @@ export class PrintManager {
         }, 3000);
     }
 
-    doPrinting() {
+    flush() {
 
         // If there are more than maxLines in next output batch: 
         // Delete surplus lines before printing them and empty output-div
@@ -151,7 +153,7 @@ export class PrintManager {
 
                 this.$lastDiv = jQuery('<div></div>');
 
-                let $input = this.main.getInterpreter().inputManager.$input;
+                let $input = (<InputManager>this.main.getInterpreter().inputManager).$input;
                 if($input != null){
                     this.$lastDiv.insertBefore($input);
                 } else {
@@ -196,8 +198,10 @@ export class PrintManager {
         this.printCommands = [];
     }
 
-    print(text: string | null, color?: string|number) {
+    print(text: string | null, withNewline: boolean, color: string|number|undefined) {
         if (text == null) return;
+
+        if(withNewline) text += "\n";
 
         if(typeof color == "number"){
             color = color.toString(16);
@@ -226,11 +230,6 @@ export class PrintManager {
                 newLine: false
             });
         }
-    }
-
-    println(text: string | null, color?: string|number) {
-        if (text == null) text = "";
-        this.print(text + "\n", color);
     }
 
 }

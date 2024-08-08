@@ -1,14 +1,15 @@
-import { Interface, Klass } from "../../../../compiler/types/Class.js";
+import jQuery from 'jquery';
+import { openContextMenu } from "../../../../../tools/HtmlTools.js";
 import { Workspace } from "../../../../workspace/Workspace.js";
-import { Main } from "../../../Main.js";
+import { MainBase } from "../../../MainBase.js";
 import { Diagram, DiagramUnitCm } from "../Diagram.js";
 import { ClassBox, SerializedClassBox } from "./ClassBox.js";
 import { DiagramArrow } from "./DiagramArrow.js";
 import { RoutingInput, RoutingOutput } from "./Router.js";
-import { MainBase } from "../../../MainBase.js";
-import { openContextMenu } from "../../../../../tools/HtmlTools.js";
-import { TeachersWithClassesMI } from "../../../../administration/TeachersWithClasses.js";
-import jQuery from 'jquery';
+import { JavaClass } from '../../../../../compiler/java/types/JavaClass.js';
+import { JavaInterface } from '../../../../../compiler/java/types/JavaInterface.js';
+import { JavaCompiledModule } from '../../../../../compiler/java/module/JavaCompiledModule.js';
+import { ClassDiagramHelper } from '../../../../../compiler/java/types/ClassDiagramHelper.js';
 
 type ClassBoxes = {
     active: ClassBox[],
@@ -193,39 +194,46 @@ export class ClassDiagram extends Diagram {
         this.currentWorkspace = workspace;
         this.currentClassBoxes = this.switchToWorkspace(workspace);
 
-        let moduleStore = workspace.moduleStore;
-
         let newClassBoxes: ClassBox[] = [];
 
         let anyTypelistThere: boolean = false;
-        let newClassesToDraw: (Klass | Interface)[] = [];
-        let usedSystemClasses: (Klass | Interface)[] = [];
+        let newClassesToDraw: (JavaClass | JavaInterface)[] = [];
+        let usedSystemClasses: Set<JavaClass | JavaInterface> = new Set();
+        let classDiagramHelper = new ClassDiagramHelper();
 
-        for (let module of moduleStore.getModules(false)) {
-            let typeList = module?.typeStore?.typeList;
+        for (let file of workspace.getFiles()) {
+            let module = <JavaCompiledModule>this.main.getCompiler().findModuleByFile(file);
+            if(!module) return;
+
+            let typeList = module.types;
             if (typeList == null) continue;
             anyTypelistThere = true;
 
 
+
             typeList.filter((type) => {
-                return type instanceof Klass ||
-                    type instanceof Interface
-            }).forEach((klass: Klass | Interface) => {
+                return type instanceof JavaClass ||
+                    type instanceof JavaInterface
+            }).forEach((klass: JavaClass | JavaInterface) => {
                 let cb: ClassBox = this.findAndEnableClass(klass, this.currentClassBoxes, newClassesToDraw);
                 if (cb != null) newClassBoxes.push(cb);
-                if (klass instanceof Klass) {
-                    klass.registerUsedSystemClasses(usedSystemClasses);
+                if (klass instanceof JavaClass) {
+                    classDiagramHelper.registerUsedSystemClasses(klass, usedSystemClasses);
                 }
             });
         }
 
         // recursively register system classes that are used by other system classes
-        let uscList1: (Klass | Interface)[] = [];
-        while (uscList1.length < usedSystemClasses.length) {
-            uscList1 = usedSystemClasses.slice(0);
-            for (let usc of uscList1) {
-                if (usc instanceof Klass) {
-                    usc.registerUsedSystemClasses(usedSystemClasses);
+        let inspectedUsedSystemClasses: Set<JavaClass | JavaInterface>;
+        inspectedUsedSystemClasses = new Set();  
+         
+        while (inspectedUsedSystemClasses.size < usedSystemClasses.size) {
+            let typesToInspect = usedSystemClasses.difference(inspectedUsedSystemClasses);
+            inspectedUsedSystemClasses = new Set(usedSystemClasses);
+
+            for (let usc of typesToInspect) {
+                if (usc instanceof JavaClass) {
+                    classDiagramHelper.registerUsedSystemClasses(usc, usedSystemClasses);
                 }
             }
         }
@@ -362,22 +370,23 @@ export class ClassDiagram extends Diagram {
             routingInput.rectangles.push(cb.getRoutingRectangle());
         });
 
+        let classDiagramHelper = new ClassDiagramHelper();
         classBoxes.active.forEach((cb) => {
 
-            if (cb.klass instanceof Klass) {
-                if (cb.klass.baseClass != null) {
-                    let cb1 = this.findClassbox(cb.klass.baseClass, classBoxes.active);
+            if (cb.klass instanceof JavaClass) {
+                if (cb.klass.getExtends() != null) {
+                    let cb1 = this.findClassbox(classDiagramHelper.getTypeWithoutGenerics(cb.klass.getExtends()), classBoxes.active);
                     if (cb1 != null) {
                         this.drawArrwow(cb, cb1, "inheritance", routingInput);
                     }
                 }
-                for (let intf of cb.klass.implements) {
-                    let cb1 = this.findClassbox(intf, classBoxes.active);
+                for (let intf of cb.klass.getImplements()) {
+                    let cb1 = this.findClassbox(classDiagramHelper.getTypeWithoutGenerics(intf), classBoxes.active);
                     if (cb1 != null) {
                         this.drawArrwow(cb, cb1, "realization", routingInput);
                     }
                 }
-                for (let cd of cb.klass.getCompositeData()) {
+                for (let cd of classDiagramHelper.getCompositeData(cb.klass)) {
                     let cb1 = this.findClassbox(cd.klass, classBoxes.active);
                     if (cb1 != null) {
                         this.drawArrwow(cb1, cb, "composition", routingInput);
@@ -413,7 +422,7 @@ export class ClassDiagram extends Diagram {
 
     }
 
-    findClassbox(klass: Klass | Interface, classBoxes: ClassBox[]): ClassBox {
+    findClassbox(klass: JavaClass | JavaInterface, classBoxes: ClassBox[]): ClassBox {
 
         for (let cb of classBoxes) {
             if (cb.klass == klass) return cb;
@@ -423,7 +432,7 @@ export class ClassDiagram extends Diagram {
 
     }
 
-    findAndEnableClass(klass: Klass | Interface, classBoxes: ClassBoxes, newClassesToDraw: (Klass | Interface)[]): ClassBox {
+    findAndEnableClass(klass: JavaClass | JavaInterface, classBoxes: ClassBoxes, newClassesToDraw: (JavaClass | JavaInterface)[]): ClassBox {
         let i = 0;
         while (i < classBoxes.active.length) {
             let k = classBoxes.active[i];

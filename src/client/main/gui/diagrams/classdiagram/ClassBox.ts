@@ -1,13 +1,15 @@
-import { DiagramElement, Alignment } from "../DiagramElement.js";
-import { Klass, Visibility, Interface } from "../../../../compiler/types/Class.js";
-import { getDeclarationAsString, getTypeIdentifier } from "../../../../compiler/types/DeclarationHelper.js";
-import { Diagram } from "../Diagram.js";
-import { Point } from "./Router.js";
-import { ClassDiagram } from "./ClassDiagram.js";
-import { TextLine } from "../DiagramElement.js";
-import { hash } from "../../../../../tools/StringTools.js";
-import { Method, Attribute } from "../../../../compiler/types/Types.js";
 import jQuery from 'jquery';
+import { hash } from "../../../../../tools/StringTools.js";
+import { Diagram } from "../Diagram.js";
+import { Alignment, DiagramElement } from "../DiagramElement.js";
+import { ClassDiagram } from "./ClassDiagram.js";
+import { JavaClass } from '../../../../../compiler/java/types/JavaClass.js';
+import { JavaInterface } from '../../../../../compiler/java/types/JavaInterface.js';
+import { SystemModule } from '../../../../../compiler/java/runtime/system/SystemModule.js';
+import { JavaMethod } from '../../../../../compiler/java/types/JavaMethod.js';
+import { JavaField } from '../../../../../compiler/java/types/JavaField.js';
+import { Visibility } from '../../../../../compiler/java/types/Visibility.js';
+import { TokenType } from '../../../../../compiler/java/TokenType.js';
 
 export type SerializedClassBox = {
     className: string,
@@ -24,13 +26,13 @@ export type SerializedClassBox = {
 export class ClassBox extends DiagramElement {
 
     className: string;
-    klass: Klass | Interface;
+    klass: JavaClass | JavaInterface;
     filename: string;
     hashedSignature: number;
     documentation: string;
     active: boolean = true;
     withMethods: boolean = true;
-    withAttributes: boolean = true;
+    withFields: boolean = true;
 
     inDebounce: any;
 
@@ -38,15 +40,15 @@ export class ClassBox extends DiagramElement {
 
     $dropdownTriangle: JQuery<Element>;
 
-    constructor(public diagram: Diagram, leftCm: number, topCm: number, klass: Klass | Interface) {
+    constructor(public diagram: Diagram, leftCm: number, topCm: number, klass: JavaClass | JavaInterface) {
         super(diagram.svgElement);
 
         this.klass = klass;
 
         if (klass != null) {
             this.attachToClass(this.klass);
-            this.isSystemClass = klass.module.isSystemModule;
-            this.withAttributes = false; //!this.isSystemClass;
+            this.isSystemClass = klass.module instanceof SystemModule;
+            this.withFields = false; //!this.isSystemClass;
             this.withMethods = false; // !this.isSystemClass;
         }
 
@@ -62,7 +64,7 @@ export class ClassBox extends DiagramElement {
         cb1.documentation = this.documentation;
         cb1.active = false;
         cb1.withMethods = this.withMethods;
-        cb1.withAttributes = this.withAttributes;
+        cb1.withFields = this.withFields;
         
         cb1.isSystemClass = this.isSystemClass;
         return cb1;
@@ -73,7 +75,7 @@ export class ClassBox extends DiagramElement {
             className: this.className,
             filename: this.filename,
             hashedSignature: this.hashedSignature,
-            withAttributes: this.withAttributes,
+            withAttributes: this.withFields,
             withMethods: this.withMethods,
             isSystemClass: this.isSystemClass,
             leftCm: this.leftCm,
@@ -87,7 +89,7 @@ export class ClassBox extends DiagramElement {
         cb.hashedSignature = scb.hashedSignature;
         cb.className = scb.className;
         cb.filename = scb.filename;
-        cb.withAttributes = scb.withAttributes;
+        cb.withFields = scb.withAttributes;
         cb.withMethods = scb.withMethods;
         cb.isSystemClass = scb.isSystemClass;
 
@@ -95,13 +97,19 @@ export class ClassBox extends DiagramElement {
 
     }
 
-    attachToClass(klass: Klass | Interface) {
+    documentationToString(documentation: string | (() => string)){
+        if(!documentation) return "";
+        if(typeof documentation == "string") return documentation;
+        return documentation();
+    }
+
+    attachToClass(klass: JavaClass | JavaInterface) {
 
         this.klass = klass;
         let klassSignature: number = this.getSignature(klass);
 
         if (this.className != klass.identifier || this.hashedSignature != klassSignature || this.widthCm < 0.7 || this.documentation != klass.documentation) {
-            this.isSystemClass = klass.module.isSystemModule;
+            this.isSystemClass = klass.module instanceof SystemModule;
             this.renderLines();
         } else {
             this.addMouseEvents();
@@ -110,11 +118,11 @@ export class ClassBox extends DiagramElement {
         this.className = klass.identifier;
         this.filename = klass.module.file.name;
         this.hashedSignature = klassSignature;
-        this.documentation = klass.documentation;
+        this.documentation = this.documentationToString(klass.documentation);
     }
 
-    jumpToDeclaration(element: Klass | Interface | Method | Attribute) {
-        this.diagram.main.jumpToDeclaration(this.klass.module, element.declaration);
+    jumpToDeclaration(element: JavaClass | JavaInterface | JavaMethod | JavaField) {
+        this.diagram.main.jumpToDeclaration(this.klass.module.file, element.identifierRange);
     }
 
 
@@ -126,29 +134,29 @@ export class ClassBox extends DiagramElement {
 
         this.addTextLine({
             type: "text",
-            text: (this.klass instanceof Interface ? "<<interface>> " : ( this.klass.isAbstract ? "<<abstract>> " : "")) + this.klass.identifier,
-            tooltip: getDeclarationAsString(this.klass, "", true),
+            text: (this.klass instanceof JavaInterface ? "<<interface>> " : ( this.klass.isAbstract() ? "<<abstract>> " : "")) + this.klass.identifier,
+            tooltip: this.klass.getDeclaration(),
             alignment: Alignment.center,
             bold: true,
-            italics: this.klass instanceof Interface || this.klass.isAbstract,
+            italics: this.klass instanceof JavaInterface || this.klass.isAbstract(),
             onClick: this.isSystemClass ? undefined : () => { this.jumpToDeclaration(this.klass) }
         });
 
-        if (this.klass instanceof Klass && this.withAttributes) {
+        if (this.klass instanceof JavaClass && this.withFields) {
             this.addTextLine({
                 type: "line",
                 thicknessCm: 0.05
             });
-            for (let a of this.klass.attributes) {
+            for (let field of this.klass.getFields()) {
 
-                let text: string = this.getVisibilityText(a.visibility) + getTypeIdentifier(a.type) + " " +  a.identifier;
+                let text: string = this.getVisibilityText(field.visibility) + field.type.toString() + " " +  field.identifier;
 
                 this.addTextLine({
                     type: "text",
                     text: text,
-                    tooltip: getDeclarationAsString(a),
+                    tooltip: field.getDeclaration(),
                     alignment: Alignment.left,
-                    onClick: this.isSystemClass ? undefined : () => { this.jumpToDeclaration(a) }
+                    onClick: this.isSystemClass ? undefined : () => { this.jumpToDeclaration(field) }
                 });
             }
         }
@@ -158,22 +166,22 @@ export class ClassBox extends DiagramElement {
                 type: "line",
                 thicknessCm: 0.05
             });
-            this.klass.methods.filter(m => m.signature != "toJson()").forEach(m => {
+            this.klass.getOwnMethods().filter(m => m.getSignature() != "toJson()").forEach(m => {
                 let text: string = this.getVisibilityText(m.visibility) + m.identifier + "()";
 
                 if (parametersWithTypes) {
                     let returnType: string = m.isConstructor ? "" :
-                        (m.returnType == null ? "void " : getTypeIdentifier(m.returnType) + " ");
+                        (m.returnParameterType == null ? "void " : m.returnParameterType.toString() + " ");
                     text = this.getVisibilityText(m.visibility) + returnType + m.identifier + "(" +
-                        m.parameterlist.parameters.map((p) => { return getTypeIdentifier(p.type) + " " + p.identifier }).join(", ") + ")";
+                        m.parameters.map((p) => { return p.type.toString() + " " + p.identifier }).join(", ") + ")";
                 }
 
                 this.addTextLine({
                     type: "text",
                     text: text,
-                    tooltip: getDeclarationAsString(m),
+                    tooltip: m.getDeclaration(),
                     alignment: Alignment.left,
-                    italics: this.klass instanceof Interface || m.isAbstract,
+                    italics: this.klass instanceof JavaInterface || m.isAbstract,
                     onClick: this.isSystemClass ? undefined : () => { this.jumpToDeclaration(m) }
                 });
 
@@ -226,7 +234,7 @@ export class ClassBox extends DiagramElement {
         this.$dropdownTriangle.on("mouseup.dropdowntriangle", (e) => {
             e.stopPropagation();
             this.withMethods = !this.withMethods;
-            this.withAttributes = !this.withAttributes;
+            this.withFields = !this.withFields;
             this.$dropdownTriangle.attr("d", this.getTrianglePath());
             this.renderLines();
             (<ClassDiagram><any>this.diagram).adjustClassDiagramSize();
@@ -283,26 +291,27 @@ export class ClassBox extends DiagramElement {
 
     getVisibilityText(visibility: Visibility) {
         switch (visibility) {
-            case Visibility.private: return "-";
-            case Visibility.protected: return "#";
-            case Visibility.public: return "+";
+            case TokenType.keywordPrivate: return "-";
+            case TokenType.keywordProtected: return "#";
+            case TokenType.keywordPublic: return "+";
         }
     }
 
-    getSignature(klass: Klass | Interface): number {
+    getSignature(klass: JavaClass | JavaInterface): number {
 
         let s: string = "";
 
-        if (klass instanceof Klass && this.withAttributes && klass.attributes.length > 0) {
-            for (let a of klass.attributes) s += this.getVisibilityText(a.visibility) + a.type.identifier + " " + a.identifier;
+        if (klass instanceof JavaClass && this.withFields && klass.fields.length > 0) {
+            for (let f of klass.fields) s += this.getVisibilityText(f.visibility) + f.type.toString() + " " + f.identifier;
         }
 
-        if (this.withMethods && klass.methods.length > 0) {
-            for (let m of klass.methods) {
+        let methods = klass.getOwnMethods();
+        if (this.withMethods && methods.length > 0) {
+            for (let m of methods) {
                 if (m.isConstructor) continue;
-                let rt: string = m.returnType == null ? "void" : m.returnType.identifier;
+                let rt: string = m.returnParameterType == null ? "void" : m.returnParameterType.toString();
                 s += this.getVisibilityText(m.visibility) + rt + " " + m.identifier + "(" +
-                    m.parameterlist.parameters.map((p) => { return p.type.identifier + " " + p.identifier }).join(", ") + ")";
+                    m.parameters.map((p) => { return p.type.toString() + " " + p.identifier }).join(", ") + ")";
             }
         }
 
@@ -310,7 +319,7 @@ export class ClassBox extends DiagramElement {
 
     }
 
-    hasSignatureAndFileOf(klass: Klass | Interface) {
+    hasSignatureAndFileOf(klass: JavaClass | JavaInterface) {
         return klass.module.file.name == this.filename &&
             this.getSignature(klass) == this.hashedSignature;
     }

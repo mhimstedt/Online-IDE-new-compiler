@@ -1,8 +1,8 @@
-import { RepositoryHistoryEntry, Repository, RepositoryHistoryFileEntry, RepositoryFileEntry } from "../../communication/Data.js";
-import { SynchronizationManager } from "./RepositorySynchronizationManager.js";
-import { makeDiv, openContextMenu } from "../../../tools/HtmlTools.js";
-import { SynchroWorkspace } from "./SynchroWorkspace.js";
 import jQuery from "jquery";
+import { makeDiv, openContextMenu } from "../../../tools/HtmlTools.js";
+import { Repository, RepositoryFileEntry, RepositoryHistoryEntry, RepositoryHistoryFileEntry } from "../../communication/Data.js";
+import { SynchronizationManager } from "./RepositorySynchronizationManager.js";
+import { SynchroWorkspace } from "./SynchroWorkspace.js";
 
 export class HistoryElement {
 

@@ -37,7 +37,7 @@ export class KeyboardTool {
             }
 
             // prevent <html>-Element from scrolling in embedded mode
-            if(this.main.isEmbedded() && this.main.getInterpreter().state == InterpreterState.running && !this.main.getMonacoEditor().hasTextFocus()){
+            if(this.main.isEmbedded() && this.main.getInterpreter().state == InterpreterState.running && !this.main.getMainEditor().hasTextFocus()){
                 if(["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].indexOf(e.key) >= 0)
                 e.preventDefault();
             }

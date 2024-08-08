@@ -6,6 +6,7 @@ import { WorkspaceImporter } from "./WorkspaceImporter.js";
 import jQuery from 'jquery';
 import { Workspace } from "../../workspace/Workspace.js";
 import { downloadFile } from "../../../tools/HtmlTools.js";
+import { WorkspaceImporterExporter } from "../../workspace/WorkspaceImporterExporter.js";
 
 declare var BUILD_DATE: string;
 declare var APP_VERSION: string;
@@ -40,7 +41,7 @@ export class MainMenu {
     initGUI(user: UserData, serverURL: string) {
 
         let that = this;
-        let editor = this.main.getMonacoEditor();
+        let editor = this.main.getMainEditor();
 
         let mainMenu: Menu = {
             items: [
@@ -65,7 +66,7 @@ export class MainMenu {
                                     if(pruefung != null){
                                         name = pruefung.name.replace(/\//g, "_") + " (" + user.familienname + " " + user.rufname + "; " + user.username + ")";
                                     }
-                                    downloadFile(ws.toExportedWorkspace(), name + ".json");
+                                    downloadFile(WorkspaceImporterExporter.exportWorkspace(ws), name + ".json");
                                  }
                             },
                             {
@@ -237,7 +238,7 @@ export class MainMenu {
                                 identifier: "Befehlspalette (F1)",
                                 action: () => {
                                     setTimeout(() => {
-                                        that.main.getMonacoEditor().focus();
+                                        that.main.getMainEditor().focus();
                                         editor.getAction("editor.action.quickCommand").run();
                                     }, 500);
                                 }

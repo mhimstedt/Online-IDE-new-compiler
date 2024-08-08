@@ -1,13 +1,12 @@
 import jQuery from 'jquery';
-import { convertPxToNumber } from "../../../tools/HtmlTools.js";
-import { Interpreter, InterpreterState } from "../../interpreter/Interpreter.js";
-
+import { Interpreter } from '../../../compiler/common/interpreter/Interpreter.js';
+import { convertPxToNumber } from '../../../tools/HtmlTools.js';
 
 
 export class SpeedControl {
 
     position: number = 0;
-    xMax: number;
+    xMax: number = 0;
     $grip: JQuery<HTMLElement>;
     $bar: JQuery<HTMLElement>;
     $display: JQuery<HTMLElement>;
@@ -16,7 +15,9 @@ export class SpeedControl {
     gripWidth: number = 10;
     overallWidth: number = 100;
 
-    interpreter: Interpreter
+    intervalBorders = [1, 10, 100, 1e3, 5e4, 1e6, 5e7];
+    maxSpeed = this.intervalBorders[this.intervalBorders.length - 1];
+    initialSpeed = this.maxSpeed;
 
 // <div id="speedcontrol-outer" title="Geschwindigkeitsregler" draggable="false">
 //     <div id="speedcontrol-bar" draggable="false"></div>
@@ -26,7 +27,7 @@ export class SpeedControl {
 // </div>
 
 
-    constructor($container: JQuery<HTMLElement>){
+    constructor($container: JQuery<HTMLElement>, private interpreter: Interpreter){
 
         this.$outer = jQuery('<div class="jo_speedcontrol-outer" title="Geschwindigkeitsregler" draggable="false"></div>');
         this.$bar = jQuery('<div class="jo_speedcontrol-bar" draggable="false"></div>');
@@ -56,10 +57,8 @@ export class SpeedControl {
         let mousePointer = window.PointerEvent ? "pointer" : "mouse";
         
         that.$outer.on(mousePointer + 'down', (e) => {
-            
-            
 
-            let x = e.pageX - that.$outer.offset().left - 4;
+            let x = e.pageX! - that.$outer.offset()!.left - 4;
             that.setSpeed(x);
             that.$grip.css('left', x + 'px');
             //@ts-ignore
@@ -82,7 +81,7 @@ export class SpeedControl {
             that.$display.show();
 
             jQuery(document).on(mousePointer + 'move.speedcontrol', (e)=>{
-                let deltaX = e.clientX - mousedownX;
+                let deltaX = e.clientX! - mousedownX;
                 that.setSpeed(oldPosition + deltaX);
             });
 
@@ -97,24 +96,32 @@ export class SpeedControl {
 
         });
 
+        this.setSpeed(this.initialSpeed);
+
     }
 
     getSpeedInStepsPerSecond(): number {
-        return this.interpreter.stepsPerSecond;
+        return this.interpreter.getStepsPerSecond();
     }
 
     setSpeedInStepsPerSecond(stepsPerSecond: number | "max"){
-        let intervalBorders = [1, 10, 100, 1000, 10000, 100000, this.interpreter.maxStepsPerSecond];
 
-        if(stepsPerSecond == "max") stepsPerSecond = this.interpreter.maxStepsPerSecond;
-        stepsPerSecond = Math.min(stepsPerSecond, this.interpreter.maxStepsPerSecond);
+        if(stepsPerSecond == "max"){
+            stepsPerSecond = this.maxSpeed;;
+        } 
+
+        if(stepsPerSecond > this.intervalBorders[this.intervalBorders.length - 1]){
+            this.$grip.css('left', this.xMax + 'px');
+            return;
+        }
+
         stepsPerSecond = Math.max(stepsPerSecond, 1);
 
-        for(let i = 0; i < intervalBorders.length - 1; i++){
-            let left = intervalBorders[i];
-            let right = intervalBorders[i+1];
+        for(let i = 0; i < this.intervalBorders.length - 1; i++){
+            let left = this.intervalBorders[i];
+            let right = this.intervalBorders[i+1];
             if(stepsPerSecond >= left && stepsPerSecond <= right){
-                let gripIntervalLength = this.xMax/(intervalBorders.length - 1);
+                let gripIntervalLength = this.xMax/(this.intervalBorders.length - 1);
                 let gripPosition = Math.round(gripIntervalLength * i + gripIntervalLength * (stepsPerSecond - left)/(right - left));
                 this.$grip.css('left', gripPosition + 'px');
                 this.position = gripPosition;
@@ -140,18 +147,19 @@ export class SpeedControl {
 
         this.$grip.css('left', newPosition + "px");
 
-        // in steps/s
-        let intervalBorders = [1, 10, 100, 1000, 10000, 100000, this.interpreter.maxStepsPerSecond];
-
-        let intervalDelta = this.xMax / (intervalBorders.length - 1);
+        let intervalDelta = this.xMax / (this.intervalBorders.length - 1);
         let intervalIndex = Math.floor(newPosition/intervalDelta);
-        if(intervalIndex == intervalBorders.length - 1) intervalIndex--;
+        if(intervalIndex == this.intervalBorders.length - 1) intervalIndex--;
         let factorInsideInterval = (newPosition - intervalIndex*intervalDelta)/intervalDelta;
 
-        let intervalMin = intervalBorders[intervalIndex];
-        let intervalMax = intervalBorders[intervalIndex + 1];
+        let intervalMin = this.intervalBorders[intervalIndex];
+        let intervalMax = this.intervalBorders[intervalIndex + 1];
 
         let speed = intervalMin + (intervalMax - intervalMin) * factorInsideInterval;
+
+        if(speed >= this.intervalBorders[this.intervalBorders.length - 1] - 10){
+            speed = 1e11;
+        }
 
         this.setInterpreterSpeed(speed);
         
@@ -160,17 +168,27 @@ export class SpeedControl {
     }
     
     setInterpreterSpeed(stepsPerSecond: number){
-        this.interpreter.setStepsPerSecond(stepsPerSecond);
+        
+        let isMaxSpeed: boolean = false;
+        let speedString = "" + SpeedControl.printMillions(stepsPerSecond);
+        if(stepsPerSecond >= this.intervalBorders[this.intervalBorders.length - 1] - 10 - 10){
+            speedString = "maximum speed";
+            isMaxSpeed = true;
+        }
+        
+        this.$display.html(speedString + " steps/s");
+
+        this.interpreter.setStepsPerSecond(stepsPerSecond, isMaxSpeed);
 
         this.interpreter.hideProgrampointerPosition();
-
-        let speedString = "" + Math.ceil(stepsPerSecond);
-        if(stepsPerSecond >= this.interpreter.maxStepsPerSecond - 10){
-            speedString = "Maximale Geschwindigkeit";
-        }
-
-        this.$display.html(speedString + " Schritte/s");
     }
 
+    static printMillions(n: number): string {
+        if(n < 1e6) return "" + Math.trunc(n);
+
+        n = Math.trunc(n/1e3)*1e3/1e6;
+
+        return n + " million";
+    }
 
 }

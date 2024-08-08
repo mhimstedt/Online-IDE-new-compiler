@@ -5,6 +5,7 @@ import { PixiSpritesheetData } from "./PixiSpritesheetData.js";
 import * as PIXI from 'pixi.js';
 import jQuery from 'jquery';
 import { csrfToken } from "../communication/AjaxHelper.js";
+import { JavaEnum } from "../../compiler/java/types/JavaEnum.js";
 
 
 export class SpritesheetData {
@@ -21,15 +22,25 @@ export class SpritesheetData {
         if (workspace.spritesheetId != null || spritesheetURL != null) {
             await this.load(workspace.spritesheetId != null ? workspace.spritesheetId : spritesheetURL);
 
-            if (main.userSpritesheet != null) {
-                main.userSpritesheet.destroy();
-                main.userSpritesheet = null;
+            let graphicsManager = main.getInterpreter().graphicsManager;
+
+            if (graphicsManager.userSpritesheet != null) {
+                graphicsManager.userSpritesheet.destroy();
+                graphicsManager.userSpritesheet = null;
             }
 
             if (this.pngImageData != null && this.pixiSpritesheetData != null) {
-                let baseTexture = PIXI.BaseTexture.fromBuffer(this.pngImageData, this.pixiSpritesheetData.meta.size.w, this.pixiSpritesheetData.meta.size.h);
-                main.userSpritesheet = new PIXI.Spritesheet(baseTexture, this.pixiSpritesheetData);
-                main.userSpritesheet.parse().then(() => { });
+
+                // see https://pixijs.com/8.x/guides/migrations/v8
+                let textureNew = PIXI.Texture.from(new PIXI.BufferImageSource({
+                    resource: this.pngImageData,
+                    width: this.pixiSpritesheetData.meta.size.w,
+                    height: this.pixiSpritesheetData.meta.size.h
+                }))
+
+                graphicsManager.userSpritesheet = new PIXI.Spritesheet(textureNew, this.pixiSpritesheetData);
+                graphicsManager.userSpritesheet.parse().then(() => { });
+                
                 for (let identifier in this.pixiSpritesheetData.frames) {
                     let hashIndex = identifier.indexOf('#');
                     spriteIdentifiers.add(identifier.substring(0, hashIndex));
@@ -38,12 +49,12 @@ export class SpritesheetData {
 
         }
 
-        let spriteLibrary = workspace.moduleStore.getBaseModule().typeStore.getType("SpriteLibrary");
-
-        let identifierList: string[] = Array.from(spriteIdentifiers);
-
-        //@ts-ignore
-        spriteLibrary.includeUserSpritesheet(identifierList);
+        let spriteLibraryEnum = <JavaEnum>main.getCompiler().getType("SpriteLibraryEnum");
+        let id = spriteLibraryEnum.id;
+        
+        let klass = spriteLibraryEnum.runtimeClass;
+        klass.removeUserSpritesheets(id);
+        spriteIdentifiers.forEach(identifier => klass.addEntry(identifier, id));
 
     }
 

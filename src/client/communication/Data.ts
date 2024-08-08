@@ -1,4 +1,3 @@
-import { Klass } from "../compiler/types/Class.js"
 import { SerializedClassDiagram } from "../main/gui/diagrams/classdiagram/ClassDiagram.js"
 
 export interface BaseResponse {
