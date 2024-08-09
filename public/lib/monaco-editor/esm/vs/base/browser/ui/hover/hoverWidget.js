@@ -3,9 +3,11 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import * as dom from '../../dom.js';
+import { StandardKeyboardEvent } from '../../keyboardEvent.js';
 import { DomScrollableElement } from '../scrollbar/scrollableElement.js';
 import { Disposable } from '../../../common/lifecycle.js';
 import './hover.css';
+import { localize } from '../../../../nls.js';
 const $ = dom.$;
 export class HoverWidget extends Disposable {
     constructor() {
@@ -16,21 +18,24 @@ export class HoverWidget extends Disposable {
         this.containerDomNode.setAttribute('role', 'tooltip');
         this.contentsDomNode = document.createElement('div');
         this.contentsDomNode.className = 'monaco-hover-content';
-        this._scrollbar = this._register(new DomScrollableElement(this.contentsDomNode, {
+        this.scrollbar = this._register(new DomScrollableElement(this.contentsDomNode, {
             consumeMouseWheelIfScrollbarIsNeeded: true
         }));
-        this.containerDomNode.appendChild(this._scrollbar.getDomNode());
+        this.containerDomNode.appendChild(this.scrollbar.getDomNode());
     }
     onContentsChanged() {
-        this._scrollbar.scanDomNode();
+        this.scrollbar.scanDomNode();
     }
 }
 export class HoverAction extends Disposable {
+    static render(parent, actionOptions, keybindingLabel) {
+        return new HoverAction(parent, actionOptions, keybindingLabel);
+    }
     constructor(parent, actionOptions, keybindingLabel) {
         super();
         this.actionContainer = dom.append(parent, $('div.action-container'));
+        this.actionContainer.setAttribute('tabindex', '0');
         this.action = dom.append(this.actionContainer, $('a.action'));
-        this.action.setAttribute('href', '#');
         this.action.setAttribute('role', 'button');
         if (actionOptions.iconClass) {
             dom.append(this.action, $(`span.icon.${actionOptions.iconClass}`));
@@ -42,10 +47,15 @@ export class HoverAction extends Disposable {
             e.preventDefault();
             actionOptions.run(this.actionContainer);
         }));
+        this._register(dom.addDisposableListener(this.actionContainer, dom.EventType.KEY_DOWN, e => {
+            const event = new StandardKeyboardEvent(e);
+            if (event.equals(3 /* KeyCode.Enter */) || event.equals(10 /* KeyCode.Space */)) {
+                e.stopPropagation();
+                e.preventDefault();
+                actionOptions.run(this.actionContainer);
+            }
+        }));
         this.setEnabled(true);
-    }
-    static render(parent, actionOptions, keybindingLabel) {
-        return new HoverAction(parent, actionOptions, keybindingLabel);
     }
     setEnabled(enabled) {
         if (enabled) {
@@ -57,4 +67,7 @@ export class HoverAction extends Disposable {
             this.actionContainer.setAttribute('aria-disabled', 'true');
         }
     }
+}
+export function getHoverAccessibleViewHint(shouldHaveHint, keybinding) {
+    return shouldHaveHint && keybinding ? localize('acessibleViewHint', "Inspect this in the accessible view with {0}.", keybinding) : shouldHaveHint ? localize('acessibleViewHintNoKbOpen', "Inspect this in the accessible view via the command Open Accessible View which is currently not triggerable via keybinding.") : '';
 }

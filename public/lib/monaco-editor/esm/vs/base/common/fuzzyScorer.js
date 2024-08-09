@@ -30,12 +30,13 @@ function doScoreFuzzy2Multiple(target, query, patternStart, wordStart) {
     return [totalScore, normalizeMatches(totalMatches)];
 }
 function doScoreFuzzy2Single(target, query, patternStart, wordStart) {
-    const score = fuzzyScore(query.original, query.originalLowercase, patternStart, target, target.toLowerCase(), wordStart, true);
+    const score = fuzzyScore(query.original, query.originalLowercase, patternStart, target, target.toLowerCase(), wordStart, { firstMatchCanBeWeak: true, boostFullMatch: true });
     if (!score) {
         return NO_SCORE2;
     }
     return [score[0], createFuzzyMatches(score)];
 }
+const NO_ITEM_SCORE = Object.freeze({ score: 0 });
 function normalizeMatches(matches) {
     // sort matches by start to be able to normalize
     const sortedMatches = matches.sort((matchA, matchB) => {

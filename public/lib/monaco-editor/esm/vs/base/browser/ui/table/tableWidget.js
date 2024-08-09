@@ -3,9 +3,10 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import { $, append, clearNode, createStyleSheet } from '../../dom.js';
-import { List } from '../list/listWidget.js';
+import { List, unthemedListStyles } from '../list/listWidget.js';
 import { SplitView } from '../splitview/splitview.js';
 import { Emitter, Event } from '../../../common/event.js';
+import { DisposableStore } from '../../../common/lifecycle.js';
 import './table.css';
 class TableListRenderer {
     constructor(columns, renderers, getColumnSize) {
@@ -78,6 +79,9 @@ function asListVirtualDelegate(delegate) {
     };
 }
 class ColumnHeader {
+    get minimumSize() { var _a; return (_a = this.column.minimumWidth) !== null && _a !== void 0 ? _a : 120; }
+    get maximumSize() { var _a; return (_a = this.column.maximumWidth) !== null && _a !== void 0 ? _a : Number.POSITIVE_INFINITY; }
+    get onDidChange() { var _a; return (_a = this.column.onDidChangeWidthConstraints) !== null && _a !== void 0 ? _a : Event.None; }
     constructor(column, index) {
         this.column = column;
         this.index = index;
@@ -85,17 +89,27 @@ class ColumnHeader {
         this.onDidLayout = this._onDidLayout.event;
         this.element = $('.monaco-table-th', { 'data-col-index': index, title: column.tooltip }, column.label);
     }
-    get minimumSize() { var _a; return (_a = this.column.minimumWidth) !== null && _a !== void 0 ? _a : 120; }
-    get maximumSize() { var _a; return (_a = this.column.maximumWidth) !== null && _a !== void 0 ? _a : Number.POSITIVE_INFINITY; }
-    get onDidChange() { var _a; return (_a = this.column.onDidChangeWidthConstraints) !== null && _a !== void 0 ? _a : Event.None; }
     layout(size) {
         this._onDidLayout.fire([this.index, size]);
     }
 }
 export class Table {
+    get onDidChangeFocus() { return this.list.onDidChangeFocus; }
+    get onDidChangeSelection() { return this.list.onDidChangeSelection; }
+    get onDidScroll() { return this.list.onDidScroll; }
+    get onMouseDblClick() { return this.list.onMouseDblClick; }
+    get onPointer() { return this.list.onPointer; }
+    get onDidFocus() { return this.list.onDidFocus; }
+    get scrollTop() { return this.list.scrollTop; }
+    set scrollTop(scrollTop) { this.list.scrollTop = scrollTop; }
+    get scrollHeight() { return this.list.scrollHeight; }
+    get renderHeight() { return this.list.renderHeight; }
+    get onDidDispose() { return this.list.onDidDispose; }
     constructor(user, container, virtualDelegate, columns, renderers, _options) {
         this.virtualDelegate = virtualDelegate;
         this.domId = `table_id_${++Table.InstanceCount}`;
+        this.disposables = new DisposableStore();
+        this.cachedWidth = 0;
         this.cachedHeight = 0;
         this.domNode = append(container, $(`.monaco-table.${this.domId}`));
         const headers = columns.map((c, i) => new ColumnHeader(c, i));
@@ -103,26 +117,25 @@ export class Table {
             size: headers.reduce((a, b) => a + b.column.weight, 0),
             views: headers.map(view => ({ size: view.column.weight, view }))
         };
-        this.splitview = new SplitView(this.domNode, {
-            orientation: 1 /* HORIZONTAL */,
-            scrollbarVisibility: 2 /* Hidden */,
+        this.splitview = this.disposables.add(new SplitView(this.domNode, {
+            orientation: 1 /* Orientation.HORIZONTAL */,
+            scrollbarVisibility: 2 /* ScrollbarVisibility.Hidden */,
             getSashOrthogonalSize: () => this.cachedHeight,
             descriptor
-        });
+        }));
         this.splitview.el.style.height = `${virtualDelegate.headerRowHeight}px`;
         this.splitview.el.style.lineHeight = `${virtualDelegate.headerRowHeight}px`;
         const renderer = new TableListRenderer(columns, renderers, i => this.splitview.getViewSize(i));
-        this.list = new List(user, this.domNode, asListVirtualDelegate(virtualDelegate), [renderer], _options);
-        this.columnLayoutDisposable = Event.any(...headers.map(h => h.onDidLayout))(([index, size]) => renderer.layoutColumn(index, size));
+        this.list = this.disposables.add(new List(user, this.domNode, asListVirtualDelegate(virtualDelegate), [renderer], _options));
+        Event.any(...headers.map(h => h.onDidLayout))(([index, size]) => renderer.layoutColumn(index, size), null, this.disposables);
+        this.splitview.onDidSashReset(index => {
+            const totalWeight = columns.reduce((r, c) => r + c.weight, 0);
+            const size = columns[index].weight / totalWeight * this.cachedWidth;
+            this.splitview.resizeView(index, size);
+        }, null, this.disposables);
         this.styleElement = createStyleSheet(this.domNode);
-        this.style({});
+        this.style(unthemedListStyles);
     }
-    get onDidChangeFocus() { return this.list.onDidChangeFocus; }
-    get onDidChangeSelection() { return this.list.onDidChangeSelection; }
-    get onMouseDblClick() { return this.list.onMouseDblClick; }
-    get onPointer() { return this.list.onPointer; }
-    get onDidFocus() { return this.list.onDidFocus; }
-    get onDidDispose() { return this.list.onDidDispose; }
     updateOptions(options) {
         this.list.updateOptions(options);
     }
@@ -151,9 +164,7 @@ export class Table {
         return this.list.getFocus();
     }
     dispose() {
-        this.splitview.dispose();
-        this.list.dispose();
-        this.columnLayoutDisposable.dispose();
+        this.disposables.dispose();
     }
 }
 Table.InstanceCount = 0;

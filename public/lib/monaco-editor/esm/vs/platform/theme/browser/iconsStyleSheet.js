@@ -4,48 +4,65 @@
  *--------------------------------------------------------------------------------------------*/
 import { asCSSPropertyValue, asCSSUrl } from '../../../base/browser/dom.js';
 import { Emitter } from '../../../base/common/event.js';
+import { DisposableStore } from '../../../base/common/lifecycle.js';
+import { ThemeIcon } from '../../../base/common/themables.js';
 import { getIconRegistry } from '../common/iconRegistry.js';
-import { ThemeIcon } from '../common/themeService.js';
-export function getIconsStyleSheet() {
-    const onDidChangeEmmiter = new Emitter();
+export function getIconsStyleSheet(themeService) {
+    const disposable = new DisposableStore();
+    const onDidChangeEmmiter = disposable.add(new Emitter());
     const iconRegistry = getIconRegistry();
-    iconRegistry.onDidChange(() => onDidChangeEmmiter.fire());
+    disposable.add(iconRegistry.onDidChange(() => onDidChangeEmmiter.fire()));
+    if (themeService) {
+        disposable.add(themeService.onDidProductIconThemeChange(() => onDidChangeEmmiter.fire()));
+    }
     return {
+        dispose: () => disposable.dispose(),
         onDidChange: onDidChangeEmmiter.event,
         getCSS() {
+            const productIconTheme = themeService ? themeService.getProductIconTheme() : new UnthemedProductIconTheme();
             const usedFontIds = {};
             const formatIconRule = (contribution) => {
-                let definition = contribution.defaults;
-                while (ThemeIcon.isThemeIcon(definition)) {
-                    const c = iconRegistry.getIcon(definition.id);
-                    if (!c) {
-                        return undefined;
-                    }
-                    definition = c.defaults;
+                const definition = productIconTheme.getIcon(contribution);
+                if (!definition) {
+                    return undefined;
                 }
-                const fontId = definition.fontId;
-                if (fontId) {
-                    const fontContribution = iconRegistry.getIconFont(fontId);
-                    if (fontContribution) {
-                        usedFontIds[fontId] = fontContribution;
-                        return `.codicon-${contribution.id}:before { content: '${definition.fontCharacter}'; font-family: ${asCSSPropertyValue(fontId)}; }`;
-                    }
+                const fontContribution = definition.font;
+                if (fontContribution) {
+                    usedFontIds[fontContribution.id] = fontContribution.definition;
+                    return `.codicon-${contribution.id}:before { content: '${definition.fontCharacter}'; font-family: ${asCSSPropertyValue(fontContribution.id)}; }`;
                 }
+                // default font (codicon)
                 return `.codicon-${contribution.id}:before { content: '${definition.fontCharacter}'; }`;
             };
             const rules = [];
-            for (let contribution of iconRegistry.getIcons()) {
+            for (const contribution of iconRegistry.getIcons()) {
                 const rule = formatIconRule(contribution);
                 if (rule) {
                     rules.push(rule);
                 }
             }
-            for (let id in usedFontIds) {
-                const fontContribution = usedFontIds[id];
-                const src = fontContribution.definition.src.map(l => `${asCSSUrl(l.location)} format('${l.format}')`).join(', ');
-                rules.push(`@font-face { src: ${src}; font-family: ${asCSSPropertyValue(id)}; font-display: block; }`);
+            for (const id in usedFontIds) {
+                const definition = usedFontIds[id];
+                const fontWeight = definition.weight ? `font-weight: ${definition.weight};` : '';
+                const fontStyle = definition.style ? `font-style: ${definition.style};` : '';
+                const src = definition.src.map(l => `${asCSSUrl(l.location)} format('${l.format}')`).join(', ');
+                rules.push(`@font-face { src: ${src}; font-family: ${asCSSPropertyValue(id)};${fontWeight}${fontStyle} font-display: block; }`);
             }
             return rules.join('\n');
         }
     };
+}
+export class UnthemedProductIconTheme {
+    getIcon(contribution) {
+        const iconRegistry = getIconRegistry();
+        let definition = contribution.defaults;
+        while (ThemeIcon.isThemeIcon(definition)) {
+            const c = iconRegistry.getIcon(definition.id);
+            if (!c) {
+                return undefined;
+            }
+            definition = c.defaults;
+        }
+        return definition;
+    }
 }

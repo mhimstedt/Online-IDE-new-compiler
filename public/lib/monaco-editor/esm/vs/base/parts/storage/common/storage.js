@@ -12,10 +12,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { ThrottledDelayer } from '../../../common/async.js';
-import { Emitter, Event } from '../../../common/event.js';
+import { Event, PauseableEmitter } from '../../../common/event.js';
 import { Disposable } from '../../../common/lifecycle.js';
-import { isUndefinedOrNull } from '../../../common/types.js';
-var StorageState;
+import { stringify } from '../../../common/marshalling.js';
+import { isObject, isUndefinedOrNull } from '../../../common/types.js';
+export var StorageHint;
+(function (StorageHint) {
+    // A hint to the storage that the storage
+    // does not exist on disk yet. This allows
+    // the storage library to improve startup
+    // time by not checking the storage for data.
+    StorageHint[StorageHint["STORAGE_DOES_NOT_EXIST"] = 0] = "STORAGE_DOES_NOT_EXIST";
+    // A hint to the storage that the storage
+    // is backed by an in-memory storage.
+    StorageHint[StorageHint["STORAGE_IN_MEMORY"] = 1] = "STORAGE_IN_MEMORY";
+})(StorageHint || (StorageHint = {}));
+export var StorageState;
 (function (StorageState) {
     StorageState[StorageState["None"] = 0] = "None";
     StorageState[StorageState["Initialized"] = 1] = "Initialized";
@@ -26,11 +38,11 @@ export class Storage extends Disposable {
         super();
         this.database = database;
         this.options = options;
-        this._onDidChangeStorage = this._register(new Emitter());
+        this._onDidChangeStorage = this._register(new PauseableEmitter());
         this.onDidChangeStorage = this._onDidChangeStorage.event;
         this.state = StorageState.None;
         this.cache = new Map();
-        this.flushDelayer = new ThrottledDelayer(Storage.DEFAULT_FLUSH_DELAY);
+        this.flushDelayer = this._register(new ThrottledDelayer(Storage.DEFAULT_FLUSH_DELAY));
         this.pendingDeletes = new Set();
         this.pendingInserts = new Map();
         this.whenFlushedCallbacks = [];
@@ -41,13 +53,19 @@ export class Storage extends Disposable {
     }
     onDidChangeItemsExternal(e) {
         var _a, _b;
-        // items that change external require us to update our
-        // caches with the values. we just accept the value and
-        // emit an event if there is a change.
-        (_a = e.changed) === null || _a === void 0 ? void 0 : _a.forEach((value, key) => this.accept(key, value));
-        (_b = e.deleted) === null || _b === void 0 ? void 0 : _b.forEach(key => this.accept(key, undefined));
+        this._onDidChangeStorage.pause();
+        try {
+            // items that change external require us to update our
+            // caches with the values. we just accept the value and
+            // emit an event if there is a change.
+            (_a = e.changed) === null || _a === void 0 ? void 0 : _a.forEach((value, key) => this.acceptExternal(key, value));
+            (_b = e.deleted) === null || _b === void 0 ? void 0 : _b.forEach(key => this.acceptExternal(key, undefined));
+        }
+        finally {
+            this._onDidChangeStorage.resume();
+        }
     }
-    accept(key, value) {
+    acceptExternal(key, value) {
         if (this.state === StorageState.Closed) {
             return; // Return early if we are already closed
         }
@@ -66,7 +84,7 @@ export class Storage extends Disposable {
         }
         // Signal to outside listeners
         if (changed) {
-            this._onDidChangeStorage.fire(key);
+            this._onDidChangeStorage.fire({ key, external: true });
         }
     }
     get(key, fallbackValue) {
@@ -90,17 +108,17 @@ export class Storage extends Disposable {
         }
         return parseInt(value, 10);
     }
-    set(key, value) {
+    set(key, value, external = false) {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.state === StorageState.Closed) {
                 return; // Return early if we are already closed
             }
             // We remove the key for undefined/null values
             if (isUndefinedOrNull(value)) {
-                return this.delete(key);
+                return this.delete(key, external);
             }
             // Otherwise, convert to String and store
-            const valueStr = String(value);
+            const valueStr = isObject(value) || Array.isArray(value) ? stringify(value) : String(value);
             // Return early if value already set
             const currentValue = this.cache.get(key);
             if (currentValue === valueStr) {
@@ -111,12 +129,12 @@ export class Storage extends Disposable {
             this.pendingInserts.set(key, valueStr);
             this.pendingDeletes.delete(key);
             // Event
-            this._onDidChangeStorage.fire(key);
+            this._onDidChangeStorage.fire({ key, external });
             // Accumulate work by scheduling after timeout
-            return this.flushDelayer.trigger(() => this.flushPending());
+            return this.doFlush();
         });
     }
-    delete(key) {
+    delete(key, external = false) {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.state === StorageState.Closed) {
                 return; // Return early if we are already closed
@@ -131,9 +149,9 @@ export class Storage extends Disposable {
             }
             this.pendingInserts.delete(key);
             // Event
-            this._onDidChangeStorage.fire(key);
+            this._onDidChangeStorage.fire({ key, external });
             // Accumulate work by scheduling after timeout
-            return this.flushDelayer.trigger(() => this.flushPending());
+            return this.doFlush();
         });
     }
     get hasPending() {
@@ -161,9 +179,13 @@ export class Storage extends Disposable {
             });
         });
     }
-    dispose() {
-        this.flushDelayer.dispose();
-        super.dispose();
+    doFlush(delay) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.options.hint === StorageHint.STORAGE_IN_MEMORY) {
+                return this.flushPending(); // return early if in-memory
+            }
+            return this.flushDelayer.trigger(() => this.flushPending(), delay);
+        });
     }
 }
 Storage.DEFAULT_FLUSH_DELAY = 100;
@@ -173,13 +195,10 @@ export class InMemoryStorageDatabase {
         this.items = new Map();
     }
     updateItems(request) {
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
-            if (request.insert) {
-                request.insert.forEach((value, key) => this.items.set(key, value));
-            }
-            if (request.delete) {
-                request.delete.forEach(key => this.items.delete(key));
-            }
+            (_a = request.insert) === null || _a === void 0 ? void 0 : _a.forEach((value, key) => this.items.set(key, value));
+            (_b = request.delete) === null || _b === void 0 ? void 0 : _b.forEach(key => this.items.delete(key));
         });
     }
 }

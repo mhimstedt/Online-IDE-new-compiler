@@ -11,7 +11,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-import { IMarkerDecorationsService } from '../../common/services/markersDecorationService.js';
+import { IMarkerDecorationsService } from '../../common/services/markerDecorations.js';
 import { registerEditorContribution } from '../editorExtensions.js';
 let MarkerDecorationsContribution = class MarkerDecorationsContribution {
     constructor(_editor, _markerDecorationsService) {
@@ -25,4 +25,4 @@ MarkerDecorationsContribution = __decorate([
     __param(1, IMarkerDecorationsService)
 ], MarkerDecorationsContribution);
 export { MarkerDecorationsContribution };
-registerEditorContribution(MarkerDecorationsContribution.ID, MarkerDecorationsContribution);
+registerEditorContribution(MarkerDecorationsContribution.ID, MarkerDecorationsContribution, 0 /* EditorContributionInstantiation.Eager */); // eager because it instantiates IMarkerDecorationsService which is responsible for rendering squiggles

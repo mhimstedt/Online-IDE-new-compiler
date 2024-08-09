@@ -75,6 +75,10 @@ async function initMonacoEditor(): Promise<void> {
 
 
 window.onload = () => {
+    //@ts-ignore
+    p5.disableFriendlyErrors = true
+
+
     let main = new Main();
     loadSpritesheet();
 

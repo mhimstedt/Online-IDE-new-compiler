@@ -193,8 +193,6 @@ export class Main implements MainBase {
         //@ts-ignore
         window.UZIP = null; // needed by UPNG
 
-        this.themeManager = new ThemeManager();
-
         this.viewModeController = new ViewModeController(jQuery("#view-mode"), this);
 
     }
@@ -213,6 +211,8 @@ export class Main implements MainBase {
         });
 
         jQuery(window).trigger('resize');
+
+        this.themeManager = new ThemeManager();
 
         let breakpointManager = new BreakpointManager(this);
         this.debugger = new Debugger(<HTMLDivElement>jQuery('#leftpanel>.jo_debugger')[0], this);
@@ -238,7 +238,7 @@ export class Main implements MainBase {
         */
         this.language = new JavaLanguage(this, errorMarker);
         this.language.registerLanguageAtMonacoEditor(this);
-        this.language.getCompiler().setFiles(this.currentWorkspace.getFiles());
+        // this.language.getCompiler().setFiles(this.currentWorkspace.getFiles());
 
 
         this.programControlButtons = new ProgramControlButtons(jQuery('#controls'), this.interpreter, this.actionManager);

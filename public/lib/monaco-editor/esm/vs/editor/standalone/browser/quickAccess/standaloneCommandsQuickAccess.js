@@ -24,8 +24,7 @@ import { Registry } from '../../../../platform/registry/common/platform.js';
 import { Extensions } from '../../../../platform/quickinput/common/quickAccess.js';
 import { QuickCommandNLS } from '../../../common/standaloneStrings.js';
 import { ICodeEditorService } from '../../../browser/services/codeEditorService.js';
-import { AbstractEditorCommandsQuickAccessProvider } from '../../../contrib/quickAccess/commandsQuickAccess.js';
-import { withNullAsUndefined } from '../../../../base/common/types.js';
+import { AbstractEditorCommandsQuickAccessProvider } from '../../../contrib/quickAccess/browser/commandsQuickAccess.js';
 import { IInstantiationService } from '../../../../platform/instantiation/common/instantiation.js';
 import { IKeybindingService } from '../../../../platform/keybinding/common/keybinding.js';
 import { ICommandService } from '../../../../platform/commands/common/commands.js';
@@ -35,14 +34,22 @@ import { EditorAction, registerEditorAction } from '../../../browser/editorExten
 import { EditorContextKeys } from '../../../common/editorContextKeys.js';
 import { IQuickInputService } from '../../../../platform/quickinput/common/quickInput.js';
 let StandaloneCommandsQuickAccessProvider = class StandaloneCommandsQuickAccessProvider extends AbstractEditorCommandsQuickAccessProvider {
+    get activeTextEditorControl() { var _a; return (_a = this.codeEditorService.getFocusedCodeEditor()) !== null && _a !== void 0 ? _a : undefined; }
     constructor(instantiationService, codeEditorService, keybindingService, commandService, telemetryService, dialogService) {
         super({ showAlias: false }, instantiationService, keybindingService, commandService, telemetryService, dialogService);
         this.codeEditorService = codeEditorService;
     }
-    get activeTextEditorControl() { return withNullAsUndefined(this.codeEditorService.getFocusedCodeEditor()); }
     getCommandPicks() {
         return __awaiter(this, void 0, void 0, function* () {
             return this.getCodeEditorCommandPicks();
+        });
+    }
+    hasAdditionalCommandPicks() {
+        return false;
+    }
+    getAdditionalCommandPicks() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return [];
         });
     }
 };
@@ -55,22 +62,17 @@ StandaloneCommandsQuickAccessProvider = __decorate([
     __param(5, IDialogService)
 ], StandaloneCommandsQuickAccessProvider);
 export { StandaloneCommandsQuickAccessProvider };
-Registry.as(Extensions.Quickaccess).registerQuickAccessProvider({
-    ctor: StandaloneCommandsQuickAccessProvider,
-    prefix: StandaloneCommandsQuickAccessProvider.PREFIX,
-    helpEntries: [{ description: QuickCommandNLS.quickCommandHelp, needsEditor: true }]
-});
 export class GotoLineAction extends EditorAction {
     constructor() {
         super({
-            id: 'editor.action.quickCommand',
+            id: GotoLineAction.ID,
             label: QuickCommandNLS.quickCommandActionLabel,
             alias: 'Command Palette',
             precondition: undefined,
             kbOpts: {
                 kbExpr: EditorContextKeys.focus,
-                primary: 59 /* F1 */,
-                weight: 100 /* EditorContrib */
+                primary: 59 /* KeyCode.F1 */,
+                weight: 100 /* KeybindingWeight.EditorContrib */
             },
             contextMenuOpts: {
                 group: 'z_commands',
@@ -82,4 +84,10 @@ export class GotoLineAction extends EditorAction {
         accessor.get(IQuickInputService).quickAccess.show(StandaloneCommandsQuickAccessProvider.PREFIX);
     }
 }
+GotoLineAction.ID = 'editor.action.quickCommand';
 registerEditorAction(GotoLineAction);
+Registry.as(Extensions.Quickaccess).registerQuickAccessProvider({
+    ctor: StandaloneCommandsQuickAccessProvider,
+    prefix: StandaloneCommandsQuickAccessProvider.PREFIX,
+    helpEntries: [{ description: QuickCommandNLS.quickCommandHelp, commandId: GotoLineAction.ID }]
+});

@@ -1,5 +1,3 @@
-import { Main } from "../Main";
-
 export type Theme = {
     name: string,
     monacoTheme: string,
