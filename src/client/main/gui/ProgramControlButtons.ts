@@ -9,6 +9,7 @@ type ButtonData = {
     actionIdentifier: string,
     title: string,
     iconClass: string,
+    $button?: JQuery<HTMLElement>
 }
 
 export class ProgramControlButtons {
@@ -43,6 +44,7 @@ export class ProgramControlButtons {
 
         for (let bd of this.buttonData) {
             let $button = jQuery(`<div title="${bd.title}" class="${bd.iconClass}"></div>`);
+            bd.$button = $button;
             $buttonsContainer.append($button);
             actionManager.registerButton(bd.actionIdentifier, $button);
             if (bd.actionIdentifier == 'interpreter.pause') $button.hide();
@@ -51,6 +53,10 @@ export class ProgramControlButtons {
         this.speedControl = new SpeedControl($buttonsContainer, interpreter);
         this.speedControl.initGUI();
 
+    }
+
+    getButton(actionIdentifier: string): JQuery<HTMLElement>{
+        return this.buttonData.find(bd => bd.actionIdentifier == actionIdentifier)?.$button;
     }
 
 }

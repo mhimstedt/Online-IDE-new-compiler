@@ -1,14 +1,7 @@
-import { AdhocCompiler } from "../../../compiler/AdhocCompiler.js";
-import { Error } from "../../../compiler/lexer/Lexer.js";
-import { Heap, Value } from "../../../compiler/types/Types.js";
-import { InterpreterState, Interpreter } from "../../../interpreter/Interpreter.js";
 import { ConsoleEntry } from "./ConsoleEntry.js";
 import { Main } from "../../Main.js";
-import { Module } from "../../../compiler/parser/Module.js";
-import { TextPosition, TokenType } from "../../../compiler/lexer/Token.js";
-import { Program } from "../../../compiler/parser/Program.js";
-import { Helper } from "../Helper.js";
 import { MainBase } from "../../MainBase.js";
+import { Helper } from "../Helper.js";
 
 export class MyConsole {
 
@@ -18,24 +11,20 @@ export class MyConsole {
 
     timerHandle: any;
     isDirty: boolean = false;
-    readyToExecute: boolean = false;
-
-    compiler: AdhocCompiler;
 
     consoleEntries: ConsoleEntry[] = [];
 
-    errorDecoration: string[] = [];
     $consoleTabHeading: JQuery<HTMLElement>;
     $consoleTab: JQuery<HTMLElement>;
 
-    constructor(private main: MainBase, public $bottomDiv: JQuery<HTMLElement>){
-        if($bottomDiv == null) return; // Console is only used to highlight exceptions
+    constructor(private main: MainBase, public $bottomDiv: JQuery<HTMLElement>) {
+        if ($bottomDiv == null) return; // Console is only used to highlight exceptions
 
         this.$consoleTabHeading = $bottomDiv.find('.jo_tabheadings>.jo_console-tab');
         this.$consoleTab = $bottomDiv.find('.jo_tabs>.jo_consoleTab');
     }
 
-    initConsoleClearButton(){
+    initConsoleClearButton() {
 
         let that = this;
 
@@ -59,7 +48,7 @@ export class MyConsole {
 
     initGUI() {
 
-        if(this.$bottomDiv == null) return;
+        if (this.$bottomDiv == null) return;
 
         this.initConsoleClearButton();
 
@@ -92,7 +81,7 @@ export class MyConsole {
             fontWeight: "500",
             roundedSelection: true,
             occurrencesHighlight: false,
-            suggest: { 
+            suggest: {
                 localityBonus: true,
                 snippetsPreventQuickSuggestions: false
             },
@@ -109,33 +98,37 @@ export class MyConsole {
         );
 
         this.editor.layout();
-        
+
         let that = this;
 
-        this.editor.addCommand(monaco.KeyCode.Enter, () => {
+        let lastStatement: string = "";
 
-            that.compileIfDirty();
+        this.editor.onKeyUp((e) => {
+            let statement = this.editor.getModel()?.getValue();
+            if (!statement) return;
 
-            if (that.readyToExecute) {
-                let command = that.editor.getModel().getValue(monaco.editor.EndOfLinePreference.LF, false);
+            if (e.code == 'Enter') {
+                setTimeout(async () => {
+                    let command = that.editor.getModel().getValue(monaco.editor.EndOfLinePreference.LF, false);
 
-                if(command == ""){
-                    return;
-                }
+                    if (!command || command == "") return;
 
-                that.history.push(command);
-                that.historyPos = 0;
+                    that.history.push(command);
+                    that.historyPos = 0;
 
-                that.execute();
+                    let returnValue = await that.main.getRepl().executeAsync(command!, false);
+                    that.writeConsoleEntry(command, returnValue);
 
-                that.editor.setValue("");
 
+                    this.editor.getModel()?.setValue('');
+                }, 10);
             } else {
-                // TODO: Fehlermeldung!
+                if (statement != lastStatement) {
+                    that.main.getRepl().compileAndShowErrors(statement);
+                    lastStatement = statement;
+                }
             }
-
-
-        }, "!suggestWidgetVisible");
+        })
 
         this.editor.addCommand(monaco.KeyCode.UpArrow, () => {
 
@@ -170,7 +163,6 @@ export class MyConsole {
 
         }, "!suggestWidgetVisible");
 
-        this.compiler = new AdhocCompiler(this.main);
 
         let model = this.editor.getModel();
         let lastVersionId = 0;
@@ -184,9 +176,7 @@ export class MyConsole {
             }
         });
 
-        this.startTimer();
-
-        this.$consoleTabHeading.on("mousedown", ()=>{
+        this.$consoleTabHeading.on("mousedown", () => {
             Helper.showHelper("consoleHelper", this.main);
 
             setTimeout(() => {
@@ -196,186 +186,34 @@ export class MyConsole {
 
     }
 
-    startTimer() {
-        this.stopTimer();
-
-        let that = this;
-        this.timerHandle = setInterval(() => {
-
-            that.compileIfDirty();
-
-        }, 500);
-
-    }
-
-    stopTimer() {
-        if (this.timerHandle != null) {
-            clearInterval(this.timerHandle);
-            this.timerHandle = null;
-        }
-
-    }
-
-
-    compileIfDirty() {
-
-        if (this.isDirty) {
-
-            let command = this.editor.getModel().getValue(monaco.editor.EndOfLinePreference.LF, false);
-            let moduleStore = this.main.getCurrentWorkspace().moduleStore;
-            let symbolTable = this.main.getDebugger().lastSymboltable;
-            let heap = this.main.getInterpreter().heap;
-
-            if (command.length > 0 && moduleStore != null) {
-
-                let compilation = this.compiler.compile(command, moduleStore, heap, symbolTable);
-
-                this.readyToExecute = compilation.errors.find(e => e.level == "error") == null;
-
-                this.showErrors(compilation.errors);
-
-                this.isDirty = false;
-
-            } else {
-                this.showErrors([]);
-            }
-
-        }
-
-    }
-
-    showErrors(errors: Error[]) {
-
-        let markers: monaco.editor.IMarkerData[] = [];
-        let errorLevelToMonacoSeverityMap: {[errorlevel: string]: monaco.MarkerSeverity} = {
-            "info": monaco.MarkerSeverity.Info,
-            "warning": monaco.MarkerSeverity.Warning,
-            "error": monaco.MarkerSeverity.Error
-        }
-
-        for (let error of errors) {
-            markers.push({
-                startLineNumber: error.position.line,
-                startColumn: error.position.column,
-                endLineNumber: error.position.line,
-                endColumn: error.position.column + error.position.length,
-                message: error.text,
-                severity: errorLevelToMonacoSeverityMap[error.level]
-            });
-
-        }
-
-        monaco.editor.setModelMarkers(this.editor.getModel(), 'Fehler', markers);
-
-    }
 
     execute() {
 
-        let interpreter = this.main.getInterpreter();
-        let module = this.compiler.module;
-        let command = this.editor.getModel().getValue(monaco.editor.EndOfLinePreference.LF, false);
-        let program = module.mainProgram;
+        // monaco.editor.colorize(command, 'myJava', { tabSize: 3 }).then((command) => {
 
-        monaco.editor.colorize(command, 'myJava', { tabSize: 3 }).then((command) => {
-
-            // if(this.programHasMethodCalls(program)){
-                // this.executeInStepMode(interpreter, program, command);
-            // } else {
-                this.executeRapidly(interpreter, program, command);
-                interpreter.showProgramPointerAndVariables();
-            // }
-
-        });
-
-    }
-    programHasMethodCalls(program: Program): boolean {
-        
-        for(let statement of program.statements){
-            if(statement.type == TokenType.callMethod && statement.method.invoke == null){
-                return true;
-            }
-        }
-        
-        return false;
+        // });
 
     }
 
-    executeInStepMode(interpreter: Interpreter, program: Program, command: string ){
-
-        interpreter.pushCurrentProgram();
-
-        interpreter.currentProgram = program;
-        interpreter.currentProgramPosition = 0;
-
-        let stacksizeBefore = interpreter.stack.length;
-        let oldInterpreterState = interpreter.state;
-
-        interpreter.setState(InterpreterState.paused);
-
-        interpreter.start(() => {
-
-            let stackTop: Value;
-            if (interpreter.stack.length > stacksizeBefore) {
-                stackTop = interpreter.stack.pop();
-
-                while (interpreter.stack.length > stacksizeBefore) {
-                    interpreter.stack.pop();
-                }
-
-            }
-
-            this.writeConsoleEntry(command, stackTop);
-
-            interpreter.setState(oldInterpreterState);
-            if (oldInterpreterState == InterpreterState.paused) {
-                interpreter.showProgramPointerAndVariables();
-            }
-
-        });
-
-    }
-
-    executeRapidly(interpreter: Interpreter, program: Program, command: string ){
-
-        let result = interpreter.evaluate(program);
-
-        if(result.error == null){
-            
-            this.writeConsoleEntry(command, result.value);
-
-        } else {
-
-            let $entry = jQuery('<div><div>' + command + '</div></div>');
-            $entry.append(jQuery('<div class="jo_console-error"> ' + result.error + '</div>'));
-
-            this.writeConsoleEntry($entry, null)
-
-        }
-
-
-    }
-
-    showTab(){
+    showTab() {
         let mousePointer = window.PointerEvent ? "pointer" : "mouse";
         this.$consoleTabHeading.trigger(mousePointer + "down");
     }
 
-    writeConsoleEntry(command: string|JQuery<HTMLElement>, stackTop: Value, color: string = null) {
+    writeConsoleEntry(command: string | JQuery<HTMLElement>, value: any, color: string = null) {
 
-        if(this.$consoleTab == null){
+        if (this.$consoleTab == null) {
             return;
         }
         let consoleTop = this.$consoleTab.find('.jo_console-top');
 
-        let commandEntry = new ConsoleEntry(command, null, null, null, stackTop == null, color);
+        let commandEntry = new ConsoleEntry(command, null, null, null, value == null, color);
         this.consoleEntries.push(commandEntry);
         consoleTop.append(commandEntry.$consoleEntry);
 
-        if(stackTop != null){
-            let resultEntry = new ConsoleEntry(null, stackTop, null, null, true, color);
-            this.consoleEntries.push(resultEntry);
-            consoleTop.append(resultEntry.$consoleEntry);
-        }
+        let resultEntry = new ConsoleEntry(null, value, null, null, true, color);
+        this.consoleEntries.push(resultEntry);
+        consoleTop.append(resultEntry.$consoleEntry);
 
         var height = consoleTop[0].scrollHeight;
         consoleTop.scrollTop(height);
@@ -389,50 +227,14 @@ export class MyConsole {
     }
 
     detachValues() {
-        for(let ce of this.consoleEntries){
+        for (let ce of this.consoleEntries) {
             ce.detachValue();
         }
     }
 
-    showError(m: Module, position: TextPosition) {
 
-        if(this.main instanceof Main){
-            if (m?.file?.name != this.main.projectExplorer.getCurrentlyEditedFile()?.file?.name) {
-                this.main.editor.dontDetectLastChange();
-                this.main.projectExplorer.setFileActive(m);
-            }
-        }
-
-
-        let range = {
-            startColumn: position.column, startLineNumber: position.line,
-            endColumn: position.column + position.length, endLineNumber: position.line
-        };
-
-        this.main.getMainEditor().revealRangeInCenter(range);
-        this.errorDecoration = this.main.getMainEditor().deltaDecorations(this.errorDecoration, [
-            {
-                range: range,
-                options: { className: 'jo_revealError' }
-
-            },
-            {
-                range: range,
-                options: { className: 'jo_revealErrorWholeLine', isWholeLine: true }
-
-            }
-        ]);
-
-
-    }
-
-    clearErrors(){
-        this.errorDecoration = this.main.getMainEditor().deltaDecorations(this.errorDecoration, [
-        ]);
-    }
-
-    clearExceptions(){
-        if(this.$bottomDiv == null) return;
+    clearExceptions() {
+        if (this.$bottomDiv == null) return;
         let $consoleTop = this.$consoleTab.find('.jo_console-top');
         $consoleTop.find('.jo_exception').parents('.jo_consoleEntry').remove();
     }

@@ -1,12 +1,15 @@
-import { booleanPrimitiveType, charPrimitiveType, doublePrimitiveType, floatPrimitiveType, intPrimitiveType, longPrimitiveType, shortPrimitiveType, stringPrimitiveType, voidPrimitiveType } from "../compiler/types/PrimitiveTypes.js";
-import { BaseModule } from "../compiler/parser/Module.js";
-import { Klass, Interface, Visibility } from "../compiler/types/Class.js";
-import { Method, Type } from "../compiler/types/Types.js";
-import { Enum } from "../compiler/types/Enum.js";
-import { getDeclarationAsString } from "../compiler/types/DeclarationHelper.js";
-import { defineMyJava } from "../main/gui/MyJava.js";
 import jQuery from 'jquery';
 import { extractCsrfTokenFromGetRequest } from "../communication/AjaxHelper.js";
+import { JavaLanguage } from '../../compiler/java/JavaLanguage.js';
+import { SystemModule } from '../../compiler/java/runtime/system/SystemModule.js';
+import { JavaLibraryModuleManager } from '../../compiler/java/module/libraries/JavaLibraryModuleManager.js';
+import { BaseType } from '../../compiler/common/BaseType.js';
+import { JavaClass } from '../../compiler/java/types/JavaClass.js';
+import { JavaInterface } from '../../compiler/java/types/JavaInterface.js';
+import { JavaEnum } from '../../compiler/java/types/JavaEnum.js';
+import { NonPrimitiveType } from '../../compiler/java/types/NonPrimitiveType.js';
+import { JavaMethod } from '../../compiler/java/types/JavaMethod.js';
+import { TokenType } from '../../compiler/java/TokenType.js';
 
 export class ApiDoc {
     async start() {
@@ -14,13 +17,12 @@ export class ApiDoc {
         await extractCsrfTokenFromGetRequest(true);
 
         this.initEditor();
-        this.initTypes();
         this.initClassDocumentation();
     }
 
     initEditor(){
 
-        defineMyJava();
+        JavaLanguage.registerLanguage();
 
         monaco.editor.defineTheme('myCustomThemeDark', {
             base: 'vs-dark', // can also be vs-dark or hc-black
@@ -51,68 +53,61 @@ export class ApiDoc {
     }
 
     initClassDocumentation() {
-        let b = booleanPrimitiveType;
-        let basemodule: BaseModule = new BaseModule(null);
-        let that = this;
 
-        let typeList = basemodule.typeStore.typeList.filter((a: Type) => a.identifier != null)
-            .sort(
-                (a: Type, b: Type) => a.identifier.localeCompare(b.identifier));
+        let mm = new JavaLibraryModuleManager();
+
+        let typeList = mm.javaTypes
+        .sort(
+            (a, b) => a.identifier.localeCompare(b.identifier));
 
 
-        typeList.filter((type) => type instanceof Klass && !(type instanceof Enum)).forEach((type: Type, index) => {
+        typeList.filter((type) => type instanceof JavaClass).forEach((type, index) => {
             let $menuItem = jQuery('<div class="jo_menu-class">' + type.identifier + '</div>');
             jQuery('#classes').append($menuItem)
             $menuItem.on('click', () => {
-                that.showAPIHelp(type);
+                this.showAPIHelp(type);
             })
         });
 
-        typeList.filter((type) => type instanceof Interface).forEach((type: Type, index) => {
+        typeList.filter((type) => type instanceof JavaInterface).forEach((type, index) => {
             let $menuItem = jQuery('<div class="jo_menu-class">' + type.identifier + '</div>');
             jQuery('#interfaces').append($menuItem)
             $menuItem.on('click', () => {
-                that.showAPIHelp(type);
+                this.showAPIHelp(type);
             })
         });
 
-        typeList.filter((type) => type instanceof Enum).forEach((type: Type, index) => {
+        typeList.filter((type) => type instanceof JavaEnum).forEach((type, index) => {
             let $menuItem = jQuery('<div class="jo_menu-class">' + type.identifier + '</div>');
             jQuery('#enums').append($menuItem)
             $menuItem.on('click', () => {
-                that.showAPIHelp(type);
+                this.showAPIHelp(type);
             })
         });
 
 
     }
 
-    showAPIHelp(type: Type) {
+    showAPIHelp(type: NonPrimitiveType) {
         let $main = jQuery('#main');
         $main.empty();
 
-        let t = <Klass | Interface | Enum>type;
         let $caption = jQuery('<div class="jo_type"></div>');
         $main.append($caption);
-        monaco.editor.colorize(getDeclarationAsString(t, "", true), "myJava", {}).then(
+        monaco.editor.colorize(type.getDeclaration(), "myJava", {}).then(
             (html) => {$caption.append(jQuery(html))}
         );
 
-        if(t instanceof Klass) this.showConstructors(t);
-        this.showMethods(t);
-        if(t instanceof Klass) this.showAttributes(t);
+        if(type instanceof JavaClass) this.showConstructors(type);
+        this.showMethods(type);
+        if(type instanceof JavaClass || type instanceof JavaEnum) this.showAttributes(type);
 
     }
 
-    showConstructors(t: Klass){
+    showConstructors(t: JavaClass){
         let $main = jQuery('#main');
         $main.append(jQuery('<div class="jo_constructor-heading">Konstruktoren:</div>'));
-        let methods = t.methods.filter((m) => m.isConstructor);
-
-        while(methods.length == 0 && t.baseClass != null){
-            t = t.baseClass;
-            methods = methods.concat(t.getMethods(Visibility.protected).filter((m) => m.isConstructor));
-        }
+        let methods = t.getOwnMethods().filter((m) => m.isConstructor);
 
         methods.sort((a, b) => a.identifier.localeCompare(b.identifier));
 
@@ -122,7 +117,7 @@ export class ApiDoc {
             for(let method of methods){
                 let $caption = jQuery(jQuery('<div class="jo_method"></div>'));
                 $main.append($caption);
-                monaco.editor.colorize(getDeclarationAsString(method, "", true), "myJava", {}).then(
+                monaco.editor.colorize(method.getDeclaration(), "myJava", {}).then(
                     (html) => {$caption.append(jQuery(html))}
                 );
 
@@ -133,17 +128,14 @@ export class ApiDoc {
         }     
     }
 
-    showMethods(t: Klass | Interface | Enum){
+    showMethods(t: NonPrimitiveType){
         let $main = jQuery('#main');
         $main.append(jQuery('<div class="jo_method-heading">Methoden:</div>'));
-        let methods: Method[];
-        if(t instanceof Interface){
-            methods = t.methods.slice(0);
+        let methods: JavaMethod[];
+        if(t instanceof JavaInterface){
+            methods = t.getAllMethods().slice(0);
         } else {
-            methods = t.getMethods(Visibility.protected).filter((m) => !m.isConstructor);
-        }
-        if(t instanceof Klass && t.staticClass != null){
-            methods = methods.concat(t.staticClass.getMethods(Visibility.protected).filter((m) => !m.isConstructor));
+            methods = t.getAllMethods().filter((m) => !m.isConstructor && m.visibility != TokenType.keywordPrivate);
         }
 
         methods.sort((a, b) => a.identifier.localeCompare(b.identifier));
@@ -154,7 +146,7 @@ export class ApiDoc {
             for(let method of methods){
                 let $caption = jQuery(jQuery('<div class="jo_method"></div>'));
                 $main.append($caption);
-                monaco.editor.colorize(getDeclarationAsString(method, "", true), "myJava", {}).then(
+                monaco.editor.colorize(method.getDeclaration(), "myJava", {}).then(
                     (html) => {$caption.append(jQuery(html))}
                 );
 
@@ -165,13 +157,16 @@ export class ApiDoc {
         }     
     }
 
-    showAttributes(t: Klass){
+    docToString(documentation: string | (() => string) | undefined): string {
+        if(!documentation) return "";
+        if(typeof documentation == "string") return documentation;
+        return documentation();
+    }
+
+    showAttributes(t: JavaClass | JavaEnum){
         let $main = jQuery('#main');
         $main.append(jQuery('<div class="jo_attribute-heading">Attribute:</div>'));
-        let attributes = t.getAttributes(Visibility.protected);
-        if(t instanceof Klass && t.staticClass != null){
-            attributes = attributes.concat(t.staticClass.getAttributes(Visibility.protected));
-        }
+        let attributes = t.getFields().filter(field => field.visibility != TokenType.keywordPrivate);
 
         attributes.sort((a, b) => a.identifier.localeCompare(b.identifier));
 
@@ -181,7 +176,7 @@ export class ApiDoc {
             for(let attribute of attributes){
                 let $caption = jQuery(jQuery('<div class="jo_method"></div>'));
                 $main.append($caption);
-                monaco.editor.colorize(getDeclarationAsString(attribute, "", true), "myJava", {}).then(
+                monaco.editor.colorize(attribute.getDeclaration(), "myJava", {}).then(
                     (html) => {$caption.append(jQuery(html))}
                 );
 
@@ -190,18 +185,6 @@ export class ApiDoc {
                 }
             }
         }     
-    }
-
-    initTypes() {
-        voidPrimitiveType.init();
-        intPrimitiveType.init();
-        longPrimitiveType.init();
-        shortPrimitiveType.init();
-        floatPrimitiveType.init();
-        doublePrimitiveType.init();
-        booleanPrimitiveType.init();
-        stringPrimitiveType.init();
-        charPrimitiveType.init();
     }
 
 }

@@ -150,7 +150,7 @@ export class Editor {
                 }
                 if(file != _main.getCurrentWorkspace()?.getCurrentlyEditedFile()){
                     that.dontPushNextCursorMove++;
-                    _main.projectExplorer.setFileActive(module);
+                    _main.projectExplorer.setFileActive(file);
                     that.dontPushNextCursorMove--;
                 } 
                 that.dontPushNextCursorMove++;
@@ -323,9 +323,6 @@ export class Editor {
 
         document.documentElement.style.setProperty('--breakpoint-size', fontSizePx + 'px');
         document.documentElement.style.setProperty('--breakpoint-radius', fontSizePx / 2 + 'px');
-
-
-        this.main.getBottomDiv().errorManager.registerLightbulbOnClickFunctions();
 
     }
 

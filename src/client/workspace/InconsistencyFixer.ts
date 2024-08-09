@@ -8,7 +8,7 @@ export class InconsistencyFixer {
 
         // is there a folder which contains files?
         for (let ws of workspaceList) {
-            if (ws.isFolder && ws.files.length > 0) {
+            if (ws.isFolder && ws.getFiles().length > 0) {
 
                 console.log("Folder " + ws.path + "/" + ws.name + " contains files. -> Make new folder and transforming existing one to workspace.")
 

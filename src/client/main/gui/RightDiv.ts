@@ -2,14 +2,12 @@ import jQuery from 'jquery';
 import { makeTabs } from "../../../tools/HtmlTools.js";
 import { MainBase } from "../MainBase.js";
 import { ClassDiagram } from "./diagrams/classdiagram/ClassDiagram.js";
-import { ObjectDiagram } from "./diagrams/objectdiagram/ObjectDiagram.js";
 import { IWorld } from '../../../compiler/java/runtime/graphics/IWorld.js';
 import { SchedulerState } from '../../../compiler/common/interpreter/Scheduler.js';
 
 export class RightDiv {
 
     classDiagram: ClassDiagram;
-    objectDiagram: ObjectDiagram;
     isWholePage: boolean = false;
 
     $tabs: JQuery<HTMLElement>;
@@ -21,16 +19,10 @@ export class RightDiv {
         this.$headings = $rightDiv.find('.jo_tabheadings');
         
         let withClassDiagram = this.$headings.find('.jo_classDiagramTabHeading').length > 0;
-        let withObjectDiagram = this.$headings.find('.jo_objectDiagramTabHeading').length > 0;
 
         if(withClassDiagram){
             this.classDiagram = new ClassDiagram(this.$tabs.find('.jo_classdiagram'), main);
             this.$headings.find('.jo_classDiagramTabHeading').on("click", () => { that.main.drawClassDiagrams(false) });
-        }
-
-        if(withObjectDiagram){
-            this.objectDiagram = new ObjectDiagram(this.main, this.$tabs.find('.jo_objectdiagram'));
-            this.$headings.find('.jo_objectDiagramTabHeading').on("click", () => { that.onObjectDiagramEnabled() });
         }
 
         let that = this;
@@ -92,26 +84,6 @@ export class RightDiv {
         let heading = this.$headings.find('.jo_classDiagramTabHeading');
         if(heading.length == 0) return false;
         return heading.hasClass("jo_active");
-    }
-
-    isObjectDiagramEnabled(): boolean {
-        let heading = this.$headings.find('.jo_objectDiagramTabHeading');
-        if(heading.length == 0) return false;
-        return heading.hasClass("jo_active");
-    }
-
-    updateObjectDiagramSettings() {
-        if (this.isObjectDiagramEnabled) {
-            this.objectDiagram.updateSettings();
-        }
-    }
-
-    onObjectDiagramEnabled() {
-        this.objectDiagram.updateSettings();
-        let state = this.main.getInterpreter().scheduler.state;
-        if (state == SchedulerState.paused || state == SchedulerState.running) {
-            this.objectDiagram.updateDiagram();
-        }
     }
 
 

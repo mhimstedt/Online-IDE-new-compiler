@@ -1,7 +1,6 @@
 import jQuery from 'jquery';
-import { ThemeManager } from "./ThemeManager";
+import { ViewMode } from "../../communication/Data";
 import { Main } from "../Main";
-import { ViewModes, ViewMode } from "../../communication/Data";
 
 export class ViewModeController {
 
@@ -34,17 +33,20 @@ export class ViewModeController {
         am.registerAction("editor.fullwidth", [],
             () => {
                 this.toggleEditorFullwidth();
-            }, "Editor auf die volle Breite erweitern", this.$buttonEditorFullscreen);
+            }, "Editor auf die volle Breite erweitern");
+        am.registerButton("editor.fullwidth", this.$buttonEditorFullscreen)
 
         am.registerAction("viewmode.presentation", [],
             () => {
                 this.setMode("presentation");
-            }, "Präsentationsansicht", this.$buttonPresentationMode);
+            }, "Präsentationsansicht");
+        am.registerButton("viewmode.presentation", this.$buttonPresentationMode);
 
         am.registerAction("viewmode.monitor", [],
             () => {
                 this.setMode("monitor");
-            }, "Monitoransicht", this.$buttonMonitorMode);
+            }, "Monitoransicht");
+            am.registerButton("viewmode.monitor", this.$buttonMonitorMode);
 
     }
 
@@ -71,7 +73,7 @@ export class ViewModeController {
             jQuery('#rightdiv').hide(600);
             jQuery('#leftpanel').hide(600);
             jQuery('#controls').hide();
-            this.main.getInterpreter().stop();
+            this.main.getInterpreter().stop(false);
         }
 
         setTimeout(()=>{

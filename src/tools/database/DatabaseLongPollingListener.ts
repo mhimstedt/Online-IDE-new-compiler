@@ -1,10 +1,8 @@
-import { csrfToken } from "../../client/communication/AjaxHelper.js";
-import { DatabaseLongPollingListenerRequest, JMessageFromServer, JWebSocketMessageConnect, JWebSocketMessageDisconnect, JWebSocketMessageExecuteStatement, LongPollingListenerResponse, SendingStatementsMessageFromServer, WebSocketRequestConnect } from "../../client/communication/Data.js";
-import { NetworkManager } from "../../client/communication/NetworkManager.js";
-import { Interpreter } from "../../client/interpreter/Interpreter.js";
-import { SqlIdeUrlHolder } from "../../client/main/SqlIdeUrlHolder.js";
-import { ConnectionHelper } from "../../client/runtimelibrary/database/Connection.js";
 import jQuery from 'jquery';
+import { csrfToken } from "../../client/communication/AjaxHelper.js";
+import { DatabaseLongPollingListenerRequest, LongPollingListenerResponse } from "../../client/communication/Data.js";
+import { NetworkManager } from "../../client/communication/NetworkManager.js";
+import { SqlIdeUrlHolder } from "../../client/main/SqlIdeUrlHolder.js";
 
 export class DatabaseOldLongPollingListener {
 

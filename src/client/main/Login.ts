@@ -3,7 +3,6 @@ import { ajax } from "../communication/AjaxHelper.js";
 import { LoginRequest, LoginResponse, LogoutRequest, TicketLoginRequest, UserData } from "../communication/Data.js";
 import { Main } from "./Main.js";
 import { Helper } from "./gui/Helper.js";
-import { InterpreterState } from "../interpreter/Interpreter.js";
 import { SoundTools } from "../../tools/SoundTools.js";
 import { UserMenu } from "./gui/UserMenu.js";
 import { escapeHtml } from "../../tools/StringTools.js";
@@ -12,6 +11,7 @@ import { PushClientManager } from '../communication/pushclient/PushClientManager
 import { DatabaseNewLongPollingListener } from '../../tools/database/DatabaseNewLongPollingListener.js';
 import { SqlIdeUrlHolder } from './SqlIdeUrlHolder.js';
 import { AutoLogout } from './AutoLogout.js';
+import { SchedulerState } from '../../compiler/common/interpreter/Scheduler.js';
 
 export class Login {
 
@@ -105,7 +105,7 @@ export class Login {
             return;
         }
 
-        this.main.interpreter.closeAllWebsockets();
+        this.main.interpreter.eventManager.fire("resetRuntime");
 
         jQuery('#bitteWartenText').html('Bitte warten, der letzte Bearbeitungsstand wird noch gespeichert ...');
         jQuery('#bitteWarten').css('display', 'flex');
@@ -287,7 +287,7 @@ export class Login {
         jQuery('#main').css('visibility', 'hidden');
         jQuery('#bitteWarten').css('display', 'none');
         jQuery('#login-message').empty();
-        this.main.interpreter.setState(InterpreterState.not_initialized);
+        this.main.interpreter.setState(SchedulerState.not_initialized);
         this.main.getMainEditor().setModel(monaco.editor.createModel("", "myJava"));
         this.main.projectExplorer.fileListPanel.clear();
         this.main.projectExplorer.fileListPanel.setCaption('');

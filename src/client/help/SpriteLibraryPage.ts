@@ -1,8 +1,8 @@
 import '/include/css/imagesprites.css';
 import '/include/css/spriteLibrary.css';
 import jQuery from 'jquery';
-import {SpriteLibrary} from '../runtimelibrary/graphics/SpriteLibrary.js';
 import { extractCsrfTokenFromGetRequest } from '../communication/AjaxHelper.js';
+import { SpriteLibrary } from '../../compiler/java/runtime/graphics/SpriteLibrary.js';
 
 // type SpriteLibraryEntry = {
 //     filename: string,

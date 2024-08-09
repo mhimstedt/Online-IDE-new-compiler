@@ -113,7 +113,7 @@ export class Helper {
                             und die Anzeige der Variablen auf der linken 
                             Seite stets aktualisiert.`;
                     direction = "top";
-                    $element = main.interpreter.controlButtons.speedControl.$grip;
+                    $element = main.programControlButtons.speedControl.$grip;
                     break;
                 case "newFileHelper":
                     text = `Es gibt noch keine Programmdatei im Workspace. <br> Nutzen Sie den Button 
@@ -146,7 +146,7 @@ export class Helper {
                         </ul>
                         `;
                     direction = "top";
-                    $element = main.interpreter.controlButtons.$buttonStepOver;
+                    $element = main.programControlButtons.getButton("interpreter.stepOver");
                     break;
                 case "consoleHelper": 
                     text=`

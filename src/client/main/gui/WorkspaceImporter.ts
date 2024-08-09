@@ -130,7 +130,7 @@ export class WorkspaceImporter {
                                     isPruefungFolder: false
                                 }, true);
 
-                                for(let f of ws.files){
+                                for(let f of ws.getFiles()){
                                     networkManager.sendCreateFile(f, ws, owner_id,
                                         (error: string) => {
                                             count--; 

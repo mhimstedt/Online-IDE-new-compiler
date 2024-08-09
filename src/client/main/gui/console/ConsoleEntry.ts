@@ -1,10 +1,5 @@
-import { Value } from "../../../compiler/types/Types.js";
-import { ArrayType } from "../../../compiler/types/Array.js";
-import { Klass, Visibility, StaticClass, Interface } from "../../../compiler/types/Class.js";
-import { Enum } from "../../../compiler/types/Enum.js";
-import { RuntimeObject } from "../../../interpreter/RuntimeObject.js";
-import { stringPrimitiveType } from "../../../compiler/types/PrimitiveTypes.js";
 import jQuery from 'jquery';
+import { ValueTool } from '../../../../compiler/common/debugger/ValueTool';
 
 export class ConsoleEntry {
 
@@ -18,11 +13,11 @@ export class ConsoleEntry {
     isOpen: boolean = false;
 
     identifier: string;
-    value: Value;
+    value: any;
 
     $consoleEntry: JQuery<HTMLElement>;
 
-    constructor(caption: string|JQuery<HTMLElement>, value: Value, identifier: string, parent: ConsoleEntry, 
+    constructor(caption: string|JQuery<HTMLElement>, value: any, identifier: string, parent: ConsoleEntry, 
         private withBottomBorder: boolean, private color: string = null ) {
         this.caption = caption;
         this.parent = parent;
@@ -64,16 +59,13 @@ export class ConsoleEntry {
         this.$consoleEntry.append($deFirstLine);
 
 
-        if (this.value != null && this.value.type != null && (this.value.type instanceof ArrayType ||
-            (this.value.type instanceof Klass && !(this.value.type instanceof Enum) && !(this.value.type == stringPrimitiveType))
-            || this.value.type instanceof Interface
-            )) {
+        if (ValueTool.hasChildren(this.value)) {
             this.canOpen = true;
             this.$consoleEntry.addClass('jo_canOpen');
             this.$consoleEntry.append(jQuery('<div class="jo_ceChildContainer"></div>'));
 
             this.$consoleEntry.find('.jo_ceFirstline').on('mousedown', (event) => {
-                if (this.value != null && this.value.value != null) {
+                if (this.value != null) {
                     if (this.children == null) {
                         this.onFirstOpening();
                     }
@@ -101,58 +93,10 @@ export class ConsoleEntry {
 
         this.children = [];
 
-        let type = this.value.type;
-
-        if (type instanceof Klass) {
-
-            for (let a of (<Klass>this.value.type).getAttributes(Visibility.private)) {
-                let ro = <RuntimeObject>this.value.value;
-                let de = new ConsoleEntry(null, ro.getValue(a.index), a.identifier, this, false);
-                de.render();
-                this.$consoleEntry.find('.jo_ceChildContainer').append(de.$consoleEntry);
-            }
-
-        } else if (type instanceof ArrayType) {
-
-            let a = <Value[]>this.value.value;
-
-            let $childContainer = this.$consoleEntry.find('.jo_ceChildContainer');
-            for (let i = 0; i < a.length && i < 100; i++) {
-
-                let de = new ConsoleEntry(null, a[i], "[" + i + "]", this, false);
-                de.render();
-                $childContainer.append(de.$consoleEntry);
-
-            }
-
-        } else if (type instanceof StaticClass) {
-
-            let $childContainer = this.$consoleEntry.find('.jo_ceChildContainer');
-            for (let a of type.getAttributes(Visibility.private)) {
-                let ro = type.classObject;
-                let de = new ConsoleEntry(null, ro.getValue(a.index), a.identifier, this, false);
-                de.render();
-                $childContainer.append(de.$consoleEntry);
-            }
-
-        } else if (type instanceof Interface) {
-
-            if(this.value.value != null && this.value.value instanceof RuntimeObject){
-
-                let $childContainer = this.$consoleEntry.find('.jo_ceChildContainer');
-
-                let ro: RuntimeObject = this.value.value;
-
-                for (let a of (<Klass>ro.class).getAttributes(Visibility.private)) {
-                    let de = new ConsoleEntry(null, ro.getValue(a.index), a.identifier, this, false);
-                    de.render();
-                    $childContainer.append(de.$consoleEntry);
-                }
-
-            } else {
-                this.children == null;
-            }
-
+        for(let iv of ValueTool.getChildren(this.value)){
+            let de = new ConsoleEntry(null, iv.value, iv.identifier, this, false);
+            de.render();
+            this.$consoleEntry.find('.jo_ceChildContainer').append(de.$consoleEntry);
         }
 
     }
@@ -178,17 +122,14 @@ export class ConsoleEntry {
             return;
         }
         
-        let valueString = "";
-        if (v.value == null) {
-            valueString = "null";
-        } else {
-            valueString = v.type.debugOutput(v, 400);
-        }
+        let valueString = ValueTool.renderValue(v);
         
         if(this.identifier != null){
             $firstLine.append(jQuery('<span class="jo_ceIdentifier">' + this.identifier + ":&nbsp;</span>"));
         }
-        $firstLine.append(jQuery('<span class="jo_ceValue">' + valueString + "</span>"));
+        let $span = jQuery('<span class="jo_ceValue"></span>')
+        $span.text(valueString);
+        $firstLine.append();
     }
 
     detachValue() {
