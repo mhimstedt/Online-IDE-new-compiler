@@ -108,13 +108,12 @@ export class EmbeddedStarter {
 
     startupComplete = 2;
 
-    themeManager: ThemeManager;
 
     initGUI() {
 
         this.checkStartupComplete();
 
-        this.themeManager = new ThemeManager();
+        new ThemeManager();
     }
 
     initEditor() {
