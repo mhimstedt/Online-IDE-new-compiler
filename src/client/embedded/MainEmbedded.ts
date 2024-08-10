@@ -33,6 +33,7 @@ import { EmbeddedFileExplorer } from "./EmbeddedFileExplorer.js";
 import { EmbeddedIndexedDB } from "./EmbeddedIndexedDB.js";
 import { EmbeddedSlider } from "./EmbeddedSlider.js";
 import { JOScript } from "./EmbeddedStarter.js";
+import { SchedulerState } from "../../compiler/common/interpreter/Scheduler.js";
 
 
 type JavaOnlineConfig = {
@@ -66,6 +67,7 @@ export class MainEmbedded implements MainBase {
 
     debugger: Debugger;
     $debuggerDiv: JQuery<HTMLElement>;
+    $alternativeDebuggerDiv: JQuery<HTMLElement>;
 
     bottomDiv: BottomDiv;
     $filesListDiv: JQuery<HTMLElement>;
@@ -593,6 +595,17 @@ export class MainEmbedded implements MainBase {
             }
         }
 
+        this.interpreter.eventManager.on("stateChanged", (oldState: SchedulerState, newState: SchedulerState) => {
+            if(newState == SchedulerState.paused){
+                this.$debuggerDiv.show();
+                this.$alternativeDebuggerDiv.hide();
+                return;
+            } else if(!(oldState == SchedulerState.paused && newState == SchedulerState.running))
+            {
+                this.$debuggerDiv.hide();
+                this.$alternativeDebuggerDiv.show();
+            }
+        })
 
     }
 
@@ -854,7 +867,7 @@ export class MainEmbedded implements MainBase {
             this.$rightDivInner.append($tabheadings);
             let $vd = jQuery('<div class="jo_scrollable jo_editorFontSize jo_variablesTab"></div>');
 
-            let $alternativeText = jQuery(`
+            this.$alternativeDebuggerDiv = jQuery(`
             <div class="jo_alternativeText jo_scrollable">
             <div style="font-weight: bold">Tipp:</div>
             Die Variablen sind nur dann sichtbar, wenn das Programm
@@ -867,7 +880,8 @@ export class MainEmbedded implements MainBase {
                 </div>
                 `);
 
-            $vd.append(this.$debuggerDiv, $alternativeText);
+            this.$debuggerDiv.hide();
+            $vd.append(this.$debuggerDiv, this.$alternativeDebuggerDiv);
             let $tabs = jQuery('<div class="jo_tabs jo_scrollable"></div>');
             $tabs.append(this.$runDiv, $vd);
             this.$rightDivInner.append($tabs);
