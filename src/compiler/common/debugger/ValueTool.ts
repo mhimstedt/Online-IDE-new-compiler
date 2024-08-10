@@ -25,13 +25,12 @@ export class ValueTool {
     }
     
     static isEnum(value: any): boolean {
-        if(typeof value != "object") return false;
-        if(value instanceof EnumClass) return true;
-        return value.constructor.isPrimitiveTypeWrapper == true;
+        return value instanceof EnumClass;
     }
     
     static isPrimitiveTypeOrNull(value: any): boolean {
-        if(typeof value != "object") return false;
+        if(value === null) return true;
+        if(typeof value == "object") return false;
         if(Array.isArray(value)) return false;
         return true;
     }
@@ -111,30 +110,36 @@ export class ValueTool {
     }
 
     // TODO: Invoke toString()-Method of objects...
-    static renderValue(value: any, repl?: JavaRepl){
+    static renderValue(value: any, maxLength: number = 20, typeHint?: JavaType, repl?: JavaRepl){
         if(value == null) return 'null';
         if(typeof value == 'object'){
             let type = <NonPrimitiveType>value.constructor.type;
             
             if(value instanceof EnumClass){
-                return ValueTool.renderEnum(value, <JavaEnum>type);
+                return ValueTool.renderEnum(value, <JavaEnum>type).substring(0, maxLength);
             }
             
             if(type.isPrimitiveTypeWrapper){
-                return (<IPrimitiveTypeWrapper>value).debugOutput();
+                return (<IPrimitiveTypeWrapper>value).debugOutput().substring(0, maxLength);
             }
 
             return type.toString() + "-object";
 
         } else {
-            return ValueTool.renderPrimitiveValue(value);
+            return ValueTool.renderPrimitiveValue(value, typeHint).substring(0, maxLength);
         }    
     }
 
     //TODO: Type hint...
-    static renderPrimitiveValue(value: any){
+    static renderPrimitiveValue(value: any, typeHint?: JavaType){
         switch(typeof value){
-            case "string": return JSON.stringify(value);
+            case "string": 
+                let ret = JSON.stringify(value);
+                if(typeHint && typeHint.identifier == 'char'){
+                    if(ret.startsWith('"') && ret.endsWith('"')) ret = ret.substring(1, ret.length - 2);
+                    ret = "'" + ret + "'";
+                };
+                return ret;
             default: return "" + value;
         }
     }

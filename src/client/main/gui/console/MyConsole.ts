@@ -2,6 +2,7 @@ import { ConsoleEntry } from "./ConsoleEntry.js";
 import { Main } from "../../Main.js";
 import { MainBase } from "../../MainBase.js";
 import { Helper } from "../Helper.js";
+import { ReplReturnValue } from "../../../../compiler/java/parser/repl/ReplReturnValue.js";
 
 export class MyConsole {
 
@@ -120,7 +121,7 @@ export class MyConsole {
 
                     let returnValue = await that.main.getRepl().executeAsync(command!, false);
                     if(typeof returnValue !== "undefined"){
-                        that.writeConsoleEntry(command, returnValue.text);
+                        that.writeConsoleEntry(command, returnValue);
                         this.editor.getModel()?.setValue('');
                     }
                 }, 10);
@@ -203,7 +204,38 @@ export class MyConsole {
         this.$consoleTabHeading.trigger(mousePointer + "down");
     }
 
-    writeConsoleEntry(command: string | JQuery<HTMLElement>, value: any, color: string = null) {
+
+    replReturnValueToOutput(replReturnValue: ReplReturnValue): string {
+        if (typeof replReturnValue == "undefined") return "---";
+        let type: string = replReturnValue.type ? replReturnValue.type.toString() + " " : "";
+        let text = replReturnValue.text;
+        //@ts-ignore#
+        if(text["value"]) text = text.value;
+        switch (type) {
+            case "string ":
+            case "String ": 
+            if(replReturnValue.value){
+                text = '"' + text + '"';
+            } else {
+                text = "null";
+            }
+                break;
+            case "char ":
+            case "Character ":
+                text = "'" + text + "'";
+                break;
+        }
+
+        if(text.length > 200){
+            text = text.substring(0, 200) + " ...";
+        }
+
+        return text;
+
+    }
+
+
+    writeConsoleEntry(command: string | JQuery<HTMLElement>, value: ReplReturnValue, color: string = null) {
 
         if (this.$consoleTab == null) {
             return;
@@ -214,7 +246,7 @@ export class MyConsole {
         this.consoleEntries.push(commandEntry);
         consoleTop.append(commandEntry.$consoleEntry);
 
-        let resultEntry = new ConsoleEntry(false, null, value, null, null, true, color);
+        let resultEntry = new ConsoleEntry(false, this.replReturnValueToOutput(value), value.value,  null, null, true, color);
         this.consoleEntries.push(resultEntry);
         consoleTop.append(resultEntry.$consoleEntry);
 

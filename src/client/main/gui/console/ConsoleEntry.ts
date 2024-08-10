@@ -1,5 +1,6 @@
 import jQuery from 'jquery';
 import { ValueTool } from '../../../../compiler/common/debugger/ValueTool';
+import { ReplReturnValue } from '../../../../compiler/java/parser/repl/ReplReturnValue';
 
 export class ConsoleEntry {
 
@@ -13,6 +14,7 @@ export class ConsoleEntry {
     isOpen: boolean = false;
 
     identifier: string;
+
     value: any;
 
     $consoleEntry: JQuery<HTMLElement>;
@@ -104,13 +106,14 @@ export class ConsoleEntry {
     renderValue() {
 
         let $firstLine = this.$consoleEntry.find('.jo_ceFirstline');
-
-        let v = this.value;
         
         if (this.isCommand) {
             if(this.caption != null){
                 if(typeof this.caption == "string" ){
-                    $firstLine.append(jQuery('<span class="jo_ceCaption">' + this.caption + "</span>"));
+                    monaco.editor.colorize(this.caption, 'myJava', { tabSize: 3 }).then((html) => { 
+                        $firstLine.append(jQuery(html));
+                    });
+                    // $firstLine.append(jQuery('<span class="jo_ceCaption">' + this.caption + "</span>"));
                 } else {
                     let span = jQuery('<span class="jo_ceCaption"></span>');
                     span.append(this.caption);
@@ -121,13 +124,12 @@ export class ConsoleEntry {
             }
             return;
         } else {
-            let valueString = ValueTool.renderValue(v);
             
             if(this.identifier != null){
                 $firstLine.append(jQuery('<span class="jo_ceIdentifier">' + this.identifier + ":&nbsp;</span>"));
             }
             let $span = jQuery('<span class="jo_ceValue"></span>')
-            $span.text(valueString);
+            $span.text(<string>this.caption);
             $firstLine.append($span);
         }    }
 
