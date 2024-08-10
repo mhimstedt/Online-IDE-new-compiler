@@ -147,6 +147,7 @@ export class MainEmbedded implements MainBase {
     }
 
     onCompilationFinished(executable: Executable | undefined): void {
+        this.interpreter.setExecutable(executable);
         this.bottomDiv?.errorManager?.showErrors(this.currentWorkspace);
         this.printProgram();
     }
@@ -172,7 +173,7 @@ export class MainEmbedded implements MainBase {
             this.indexedDB.open(() => {
 
                 if (this.config.id != null) {
-                    this.readScripts();
+                    this.readScripts(() => {});
                 }
 
             });
@@ -180,7 +181,6 @@ export class MainEmbedded implements MainBase {
 
 
     }
-
 
 
     initScripts() {
@@ -267,7 +267,7 @@ export class MainEmbedded implements MainBase {
         return text.replace(/<span class="search\whit">(.*?)<\/span>/g, "$1");
     }
 
-    readScripts() {
+    readScripts(callback: () => void) {
 
         let files = this.currentWorkspace.getFiles();
 
@@ -275,15 +275,17 @@ export class MainEmbedded implements MainBase {
 
         this.indexedDB.getScript(this.config.id, (scriptListJSon) => {
             if (scriptListJSon == null) {
-                setInterval(() => {
-                    that.saveScripts();
-                }, 1000);
+                setTimeout(() => {
+                    setInterval(() => {
+                        that.saveScripts();
+                    }, 1000);                    
+                }, 2000);
             } else {
 
                 let scriptList: string[] = JSON.parse(scriptListJSon);
                 let countDown = scriptList.length;
 
-                for (let file of files) {
+                for (let file of files.slice()) {
                     that.fileExplorer?.removeFile(file, false);  // calls MainEmbedded.removeFile subsequently
                 }
 
@@ -296,8 +298,10 @@ export class MainEmbedded implements MainBase {
                             script = this.eraseDokuwikiSearchMarkup(script);
 
                             let file = new File(name, script);
+                            file.setSaved(true);
 
                             that.fileExplorer?.addFile(file);
+                            that.currentWorkspace.addFile(file);
                             that.$resetButton.fadeIn(1000);
 
                             // console.log("Retrieving script " + scriptId);
@@ -312,6 +316,7 @@ export class MainEmbedded implements MainBase {
                                 let files = that.currentWorkspace.getFiles();
                                 if (files.length > 0) that.setFileActive(files[0]);
                             }
+                            callback();
                         }
                     })
 
@@ -378,11 +383,7 @@ export class MainEmbedded implements MainBase {
 
         let i = 0;
         for (let script of scriptList) {
-
-
-
             this.addFile(script);
-
         }
 
     }
@@ -502,7 +503,6 @@ export class MainEmbedded implements MainBase {
 
         if (!this.config.hideEditor) {
             new EmbeddedSlider($rightDiv, true, false, () => {
-                jQuery('.jo_graphics').trigger('sizeChanged');
                 this.editor.editor.layout();
             });
         }
@@ -552,10 +552,10 @@ export class MainEmbedded implements MainBase {
         let errorMarker = new ErrorMarker();
         this.language = new JavaLanguage(this, errorMarker);
         this.language.registerLanguageAtMonacoEditor(this);
-        this.language.getCompiler().setFiles(this.currentWorkspace.getFiles());
+        this.getCompiler().startCompilingPeriodically();
 
 
-        this.programControlButtons = new ProgramControlButtons(jQuery('#controls'), this.interpreter, this.actionManager);
+        this.programControlButtons = new ProgramControlButtons($controlsDiv, this.interpreter, this.actionManager);
 
         new EditorOpenerProvider(this);
 
@@ -641,6 +641,7 @@ export class MainEmbedded implements MainBase {
         jQuery(".joe_codeResetModalOK").on("click", () => {
 
             this.initScripts();
+            this.currentWorkspace.getFiles().forEach(f => f.setSaved(true));
             this.deleteScriptsInDB();
 
             $window.hide();

@@ -113,15 +113,10 @@ export class EmbeddedStarter {
 
         this.checkStartupComplete();
 
-        new ThemeManager();
+        new ThemeManager().switchTheme("dark");
     }
 
     initEditor() {
-        let formatter = new JavaFormatter();
-
-        monaco.languages.registerDocumentFormattingEditProvider('myJava', formatter);
-        monaco.languages.registerOnTypeFormattingEditProvider('myJava', formatter);
-
         this.checkStartupComplete();
     }
 

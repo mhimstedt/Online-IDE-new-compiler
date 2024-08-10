@@ -92,7 +92,9 @@ export class MyConsole {
                 vertical: 'hidden',
                 horizontal: 'hidden'
             },
-            theme: "myCustomThemeDark"
+            theme: "myCustomThemeDark", 
+
+            acceptSuggestionOnEnter: "off"
 
         }
         );
@@ -103,7 +105,7 @@ export class MyConsole {
 
         let lastStatement: string = "";
 
-        this.editor.onKeyUp((e) => {
+        this.editor.onKeyDown((e) => {
             let statement = this.editor.getModel()?.getValue();
             if (!statement) return;
 
@@ -117,11 +119,12 @@ export class MyConsole {
                     that.historyPos = 0;
 
                     let returnValue = await that.main.getRepl().executeAsync(command!, false);
-                    that.writeConsoleEntry(command, returnValue);
-
-
-                    this.editor.getModel()?.setValue('');
+                    if(typeof returnValue !== "undefined"){
+                        that.writeConsoleEntry(command, returnValue.text);
+                        this.editor.getModel()?.setValue('');
+                    }
                 }, 10);
+                e.preventDefault();
             } else {
                 if (statement != lastStatement) {
                     that.main.getRepl().compileAndShowErrors(statement);
@@ -130,38 +133,38 @@ export class MyConsole {
             }
         })
 
-        this.editor.addCommand(monaco.KeyCode.UpArrow, () => {
+        // this.editor.addCommand(monaco.KeyCode.UpArrow, () => {
 
-            let nextHistoryPos = that.history.length - (that.historyPos + 1);
-            if (nextHistoryPos >= 0) {
-                that.historyPos++;
-                let text = that.history[nextHistoryPos];
-                that.editor.setValue(text);
-                that.editor.setPosition({
-                    lineNumber: 1,
-                    column: text.length + 1
-                })
-            }
+        //     let nextHistoryPos = that.history.length - (that.historyPos + 1);
+        //     if (nextHistoryPos >= 0) {
+        //         that.historyPos++;
+        //         let text = that.history[nextHistoryPos];
+        //         that.editor.setValue(text);
+        //         that.editor.setPosition({
+        //             lineNumber: 1,
+        //             column: text.length + 1
+        //         })
+        //     }
 
-        }, "!suggestWidgetVisible");
+        // }, "!suggestWidgetVisible");
 
-        this.editor.addCommand(monaco.KeyCode.DownArrow, () => {
+        // this.editor.addCommand(monaco.KeyCode.DownArrow, () => {
 
-            let nextHistoryPos = that.history.length - (that.historyPos - 1);
-            if (nextHistoryPos <= that.history.length - 1) {
-                that.historyPos--;
-                let text = that.history[nextHistoryPos];
-                that.editor.setValue(text);
-                that.editor.setPosition({
-                    lineNumber: 1,
-                    column: text.length + 1
-                })
-            } else {
-                that.editor.setValue("");
-                that.historyPos = 0;
-            }
+        //     let nextHistoryPos = that.history.length - (that.historyPos - 1);
+        //     if (nextHistoryPos <= that.history.length - 1) {
+        //         that.historyPos--;
+        //         let text = that.history[nextHistoryPos];
+        //         that.editor.setValue(text);
+        //         that.editor.setPosition({
+        //             lineNumber: 1,
+        //             column: text.length + 1
+        //         })
+        //     } else {
+        //         that.editor.setValue("");
+        //         that.historyPos = 0;
+        //     }
 
-        }, "!suggestWidgetVisible");
+        // }, "!suggestWidgetVisible");
 
 
         let model = this.editor.getModel();
@@ -207,11 +210,11 @@ export class MyConsole {
         }
         let consoleTop = this.$consoleTab.find('.jo_console-top');
 
-        let commandEntry = new ConsoleEntry(command, null, null, null, value == null, color);
+        let commandEntry = new ConsoleEntry(true, command, null, null, null, value == null, color);
         this.consoleEntries.push(commandEntry);
         consoleTop.append(commandEntry.$consoleEntry);
 
-        let resultEntry = new ConsoleEntry(null, value, null, null, true, color);
+        let resultEntry = new ConsoleEntry(false, null, value, null, null, true, color);
         this.consoleEntries.push(resultEntry);
         consoleTop.append(resultEntry.$consoleEntry);
 

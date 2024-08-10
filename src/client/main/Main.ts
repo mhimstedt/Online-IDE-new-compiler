@@ -213,6 +213,7 @@ export class Main implements MainBase {
         jQuery(window).trigger('resize');
 
         this.themeManager = new ThemeManager();
+        this.themeManager.switchTheme("dark");
 
         let breakpointManager = new BreakpointManager(this);
         this.debugger = new Debugger(<HTMLDivElement>jQuery('#leftpanel>.jo_debugger')[0], this);
@@ -238,6 +239,7 @@ export class Main implements MainBase {
         */
         this.language = new JavaLanguage(this, errorMarker);
         this.language.registerLanguageAtMonacoEditor(this);
+        this.getCompiler().startCompilingPeriodically();
         // this.language.getCompiler().setFiles(this.currentWorkspace.getFiles());
 
 
@@ -291,6 +293,7 @@ export class Main implements MainBase {
 
     onCompilationFinished(executable: Executable | undefined): void {
 
+        this.interpreter.setExecutable(executable);
         let errors = this.bottomDiv?.errorManager?.showErrors(this.currentWorkspace);
         this.projectExplorer.renderErrorCount(this.currentWorkspace, errors);
         this.printProgram();

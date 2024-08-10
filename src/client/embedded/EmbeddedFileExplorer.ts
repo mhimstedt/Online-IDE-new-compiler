@@ -16,7 +16,7 @@ type FileData = {
 export class EmbeddedFileExplorer {
 
     currentFileData: FileData;
-    files: FileData[] = [];
+    private fileDataList: FileData[] = [];
 
     constructor(private workspace: Workspace, private $fileListDiv: JQuery<HTMLElement>, private main: MainEmbedded) {
 
@@ -50,7 +50,7 @@ export class EmbeddedFileExplorer {
     }
 
     removeAllFiles() {
-        this.files.forEach(f => this.removeFileData(f));
+        this.fileDataList.forEach(f => this.removeFileData(f));
     }
 
 
@@ -67,7 +67,7 @@ export class EmbeddedFileExplorer {
             hint: script.text
         };
 
-        this.files.push(fileData);
+        this.fileDataList.push(fileData);
 
         $fileDiv.on("click", (event) => {
             that.selectFileData(fileData);
@@ -94,7 +94,7 @@ export class EmbeddedFileExplorer {
             type: "java"
         };
 
-        this.files.push(fileData);
+        this.fileDataList.push(fileData);
 
         file.panelElement = {
             name: file.name,
@@ -157,10 +157,10 @@ export class EmbeddedFileExplorer {
     removeFileData(fileData: FileData, focusFirstFileSubsequently: boolean = true) {
         fileData.$fileDiv.remove();
         this.main.removeFile(fileData.file);
-        this.files = this.files.filter((fd) => fd != fileData);
+        this.fileDataList = this.fileDataList.filter((fd) => fd != fileData);
         if (this.currentFileData == fileData) {
-            if (this.files.length > 0) {
-                this.selectFileData(this.files[0], focusFirstFileSubsequently);
+            if (this.fileDataList.length > 0) {
+                this.selectFileData(this.fileDataList[0], focusFirstFileSubsequently);
             } else {
                 let editor = this.main.getMainEditor();
                 editor.setValue("Keine Datei vorhanden.");
@@ -168,7 +168,7 @@ export class EmbeddedFileExplorer {
             }
         }
 
-        this.files.forEach((fileData) => fileData.file?.setSaved(false));
+        this.fileDataList.forEach((fileData) => fileData.file?.setSaved(false));
     }
 
 
@@ -190,13 +190,13 @@ export class EmbeddedFileExplorer {
     }
 
     setFirstFileActive() {
-        if (this.files.length > 0) {
-            this.selectFileData(this.files[0], false);
+        if (this.fileDataList.length > 0) {
+            this.selectFileData(this.fileDataList[0], false);
         }
     }
 
     getFileDataFromFile(file: File): FileData | undefined {
-        let fileData = this.files.find(fd => fd.file == file);
+        let fileData = this.fileDataList.find(fd => fd.file == file);
         return fileData;
     }
 
@@ -285,12 +285,15 @@ export class EmbeddedFileExplorer {
         if (this.$fileListDiv == null) return;
         this.$fileListDiv.find('.jo_file').removeClass('jo_active');
 
-        this.currentFileData = this.files.find((fileData) => fileData.file == file);
+        this.currentFileData = this.fileDataList.find((fileData) => fileData.file == file);
 
         if (this.currentFileData != null) this.currentFileData.$fileDiv.addClass('jo_active');
 
     }
 
+    getFiles(){
+        return this.fileDataList.map(f => f.file);
+    }
 
 
 }

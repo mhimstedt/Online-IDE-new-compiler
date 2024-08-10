@@ -17,7 +17,7 @@ export class ConsoleEntry {
 
     $consoleEntry: JQuery<HTMLElement>;
 
-    constructor(caption: string|JQuery<HTMLElement>, value: any, identifier: string, parent: ConsoleEntry, 
+    constructor(private isCommand: boolean, caption: string|JQuery<HTMLElement>, value: any, identifier: string, parent: ConsoleEntry, 
         private withBottomBorder: boolean, private color: string = null ) {
         this.caption = caption;
         this.parent = parent;
@@ -94,7 +94,7 @@ export class ConsoleEntry {
         this.children = [];
 
         for(let iv of ValueTool.getChildren(this.value)){
-            let de = new ConsoleEntry(null, iv.value, iv.identifier, this, false);
+            let de = new ConsoleEntry(false, null, iv.value, iv.identifier, this, false);
             de.render();
             this.$consoleEntry.find('.jo_ceChildContainer').append(de.$consoleEntry);
         }
@@ -107,7 +107,7 @@ export class ConsoleEntry {
 
         let v = this.value;
         
-        if (v == null) {
+        if (this.isCommand) {
             if(this.caption != null){
                 if(typeof this.caption == "string" ){
                     $firstLine.append(jQuery('<span class="jo_ceCaption">' + this.caption + "</span>"));
@@ -120,17 +120,16 @@ export class ConsoleEntry {
                 $firstLine.append(jQuery('<span class="jo_ceNoValue">Kein Wert zurückgegeben.</span>'));
             }
             return;
-        }
-        
-        let valueString = ValueTool.renderValue(v);
-        
-        if(this.identifier != null){
-            $firstLine.append(jQuery('<span class="jo_ceIdentifier">' + this.identifier + ":&nbsp;</span>"));
-        }
-        let $span = jQuery('<span class="jo_ceValue"></span>')
-        $span.text(valueString);
-        $firstLine.append();
-    }
+        } else {
+            let valueString = ValueTool.renderValue(v);
+            
+            if(this.identifier != null){
+                $firstLine.append(jQuery('<span class="jo_ceIdentifier">' + this.identifier + ":&nbsp;</span>"));
+            }
+            let $span = jQuery('<span class="jo_ceValue"></span>')
+            $span.text(valueString);
+            $firstLine.append($span);
+        }    }
 
     detachValue() {
         this.value = undefined;

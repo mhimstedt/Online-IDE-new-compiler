@@ -57,6 +57,10 @@ export class Workspace extends CompilerWorkspace {
         return this.files;
     }
 
+    removeAllFiles(){
+        this.files = [];
+    }
+
     addFile(file: File){
         this.files.push(file);
     }

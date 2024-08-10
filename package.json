@@ -18,7 +18,7 @@
     "monaco-editor": "^0.50.0",
     "spritesmith": "^3.4.1",
     "typescript": "^5.5.4",
-    "vite": "^5.3.5"
+    "vite": "^4.5.2"
   },
   "dependencies": {
     "@types/chart.js": "^2.9.41",

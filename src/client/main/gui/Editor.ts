@@ -117,7 +117,7 @@ export class Editor {
             }
         });
 
-        let that = this;
+        let that: Editor = this;
 
         let mouseWheelListener = (event: WheelEvent) => {
             if (event.ctrlKey === true) {
@@ -224,9 +224,6 @@ export class Editor {
         }, 2000);
 
         JavaAddEditorShortcuts.addActions(this.editor);
-
-        //@ts-ignore
-        this.editor.onDidType((text) => { that.onDidType(text) });
 
         // console.log(this.editor.getSupportedActions().map(a => a.id));
 

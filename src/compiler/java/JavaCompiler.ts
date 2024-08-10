@@ -50,7 +50,6 @@ export class JavaCompiler implements Compiler {
     constructor(public main?: IMain, private errorMarker?: ErrorMarker) {
         this.libraryModuleManager = new JavaLibraryModuleManager();
         this.moduleManager = new JavaModuleManager();
-        this.startCompilingPeriodically();
     }
 
     getType(identifier: string): BaseType | undefined {
@@ -65,8 +64,13 @@ export class JavaCompiler implements Compiler {
 
         let time = performance.now();
 
-        if (this.main?.getInterpreter().isRunningOrPaused()) return;
-        if (!this.main?.getCurrentWorkspace()) return;
+        // if we're not in test mode:
+        if(this.main){
+            if (this.main.getInterpreter().isRunningOrPaused()) return;
+            let currentWorkspace = this.main?.getCurrentWorkspace();
+            if (!currentWorkspace) return;
+            this.files = currentWorkspace.getFiles();
+        }
 
         /**
          * if no module has changed, return as fast as possible
