@@ -44,7 +44,7 @@ export class JavaReplCodeGenerator extends StatementCodeGenerator {
             if (snippet.type != this.voidType) {
 
 
-                let snippetWithValueOnStack = new CodeSnippetContainer(snippet, snippet.range, snippet.type);
+                let snippetWithValueOnStack = snippet instanceof CodeSnippetContainer ? snippet : new CodeSnippetContainer(snippet, snippet.range, snippet.type);
                 snippetWithValueOnStack.ensureFinalValueIsOnStack();
                 snippets.pop();
                 snippets.push(snippetWithValueOnStack);
@@ -59,6 +59,8 @@ export class JavaReplCodeGenerator extends StatementCodeGenerator {
         snippets.push(new StringCodeSnippet(`${Helpers.returnFromReplProgram}();\n`))
 
         new SnippetLinker().link(snippets, program);
+
+        program.logAllSteps();
 
         return program;
     }
