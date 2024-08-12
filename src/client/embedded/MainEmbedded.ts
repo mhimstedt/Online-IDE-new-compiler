@@ -34,6 +34,8 @@ import { EmbeddedIndexedDB } from "./EmbeddedIndexedDB.js";
 import { EmbeddedSlider } from "./EmbeddedSlider.js";
 import { JOScript } from "./EmbeddedStarter.js";
 import { SchedulerState } from "../../compiler/common/interpreter/Scheduler.js";
+import { CompilerFile } from "../../compiler/common/module/CompilerFile.js";
+import { Disassembler } from "../../compiler/common/disassembler/Disassembler.js";
 
 
 type JavaOnlineConfig = {
@@ -52,44 +54,47 @@ type JavaOnlineConfig = {
 }
 
 export class MainEmbedded implements MainBase {
-
+    
     config: JavaOnlineConfig;
-
+    
     editor: Editor;
-
+    
     currentWorkspace: Workspace;
     actionManager: ActionManager;
-
+    
     language: Language;
-
+    
     interpreter: Interpreter;
     $runDiv: JQuery<HTMLElement>;
-
+    
     debugger: Debugger;
     $debuggerDiv: JQuery<HTMLElement>;
     $alternativeDebuggerDiv: JQuery<HTMLElement>;
-
+    
     bottomDiv: BottomDiv;
     $filesListDiv: JQuery<HTMLElement>;
-
+    $disassemblerDiv: JQuery<HTMLElement>;
+    disassembler?: Disassembler;
+    
     $hintDiv: JQuery<HTMLElement>;
     $monacoDiv: JQuery<HTMLElement>;
     $resetButton: JQuery<HTMLElement>;
-
+    
     rightDiv: RightDiv;
     $rightDivInner: JQuery<HTMLElement>;
-
+    
     fileExplorer: EmbeddedFileExplorer;
-
+    
     debounceDiagramDrawing: any;
-
+    
     indexedDB: EmbeddedIndexedDB;
-
+    
     programControlButtons: ProgramControlButtons;
-
+    
     breakpointManager: BreakpointManager;
 
     compileRunsAfterCodeReset: number = 0;
+    
 
 
     isEmbedded(): boolean { return true; }
@@ -263,6 +268,7 @@ export class MainEmbedded implements MainBase {
 
         file.restoreViewState(this.getMainEditor());
 
+        this.disassembler?.disassemble();
     }
 
     eraseDokuwikiSearchMarkup(text: string): string {
@@ -556,6 +562,9 @@ export class MainEmbedded implements MainBase {
         this.language.registerLanguageAtMonacoEditor(this);
         this.getCompiler().startCompilingPeriodically();
 
+        if(this.config.withPCode){
+            this.disassembler = new Disassembler(this.$disassemblerDiv[0], this);
+        }
 
         this.programControlButtons = new ProgramControlButtons($controlsDiv, this.interpreter, this.actionManager);
 
@@ -743,7 +752,7 @@ export class MainEmbedded implements MainBase {
         }
 
         if (this.config.withPCode) {
-            let $thPCode = jQuery('<div class="jo_tabheading" data-target="jo_pcodeTab" style="line-height: 24px">PCode</div>');
+            let $thPCode = jQuery('<div class="jo_tabheading" data-target="jo_pcodeTab" style="line-height: 24px">Disassembler </div>');
             $tabheadings.append($thPCode);
         }
 
@@ -773,8 +782,8 @@ export class MainEmbedded implements MainBase {
         }
 
         if (this.config.withPCode) {
-            let $tabPCode = jQuery('<div class="jo_scrollable jo_pcodeTab">PCode</div>');
-            $tabs.append($tabPCode);
+            this.$disassemblerDiv = jQuery('<div class="jo_scrollable jo_pcodeTab">PCode</div>');
+            $tabs.append(this.$disassemblerDiv);
         }
 
         $bottomDiv.append($tabs);
@@ -901,6 +910,10 @@ export class MainEmbedded implements MainBase {
             await spritesheet.initializeSpritesheetForWorkspace(this.currentWorkspace, this, this.config.spritesheetURL);
 
         }
+    }
+
+    showFile(file: CompilerFile): void {
+        this.fileExplorer.selectFile(<File>file, false);
     }
 
 }
