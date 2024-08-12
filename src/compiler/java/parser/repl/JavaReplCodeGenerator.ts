@@ -9,7 +9,6 @@ import { StatementCodeGenerator } from "../../codegenerator/StatementCodeGenerat
 import { JavaCompiledModule } from "../../module/JavaCompiledModule.ts";
 import { JavaTypeStore } from "../../module/JavaTypeStore.ts";
 import { JavaType } from "../../types/JavaType.ts";
-import { NonPrimitiveType } from "../../types/NonPrimitiveType.ts";
 import { ASTAnonymousClassNode, ASTLambdaFunctionDeclarationNode } from "../AST.ts";
 
 
@@ -60,7 +59,7 @@ export class JavaReplCodeGenerator extends StatementCodeGenerator {
 
         new SnippetLinker().link(snippets, program);
 
-        program.logAllSteps();
+        // program.logAllSteps();
 
         return program;
     }

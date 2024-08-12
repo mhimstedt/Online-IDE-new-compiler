@@ -126,10 +126,10 @@ export class MyConsole {
                 }, 10);
                 e.preventDefault();
             } else {
-                if (statement != lastStatement) {
-                    that.main.getRepl().compileAndShowErrors(statement);
-                    lastStatement = statement;
-                }
+                // if (statement != lastStatement) {
+                //     that.main.getRepl().compileAndShowErrors(statement);
+                //     lastStatement = statement;
+                // }
             }
         })
 
