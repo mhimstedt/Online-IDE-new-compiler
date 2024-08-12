@@ -10,7 +10,7 @@
     overflow-y: auto;
     display: block;
     margin-left: 5px;
-    line-height: 17px;
+    line-height: normal;
     user-select: none;
 }
 
@@ -73,4 +73,8 @@
     width: 10px;
     display: inline-block;
     height: 14px;
+}
+
+.jo_revealDisassemblerException {
+    background-color: #d61bd056 !important;
 }

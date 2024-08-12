@@ -145,8 +145,9 @@ export abstract class BinopCastCodeGenerator {
         if (assignmentOperators.indexOf(operator) >= 0) return this.compileAssignment(leftSnippet, rightSnippet, lTypeIndex, rTypeIndex, lIdentifier, rIdentifier, <AssignmentOperator>operator, operatorRange, wholeRange);
 
         // unbox if necessary
-        if (lWrapperIndex) leftSnippet = this.unbox(leftSnippet);
-        if (rWrapperIndex) rightSnippet = this.unbox(rightSnippet);
+        // don't unbox when comparing boxed value to null.
+        if (lWrapperIndex && rightSnippet.getConstantValue() !== null) leftSnippet = this.unbox(leftSnippet);
+        if (rWrapperIndex && leftSnippet.getConstantValue() !== null) rightSnippet = this.unbox(rightSnippet);
 
         if (operator == TokenType.equal || operator == TokenType.notEqual) {
             return new BinaryOperatorTemplate(operatorIdentifier, true).applyToSnippet(this.booleanType, wholeRange, leftSnippet, rightSnippet);
@@ -237,9 +238,11 @@ export abstract class BinopCastCodeGenerator {
         // pure Term without pop => javascript interpreter does lazy evaluation for us:
         if (leftSnippet.isPureTermWithoutPop() && rightSnippet.isPureTermWithoutPop()) return new BinaryOperatorTemplate(TokenTypeReadable[operator], false).applyToSnippet(this.booleanType, wholeRange, leftSnippet, rightSnippet);
 
+        // ... otherwise we have to model lazy evaluation ourselves:
         let snippetContainer = new CodeSnippetContainer([], wholeRange, this.booleanType);
 
-        snippetContainer.addParts(leftSnippet.allButLastPart());
+        leftSnippet.ensureFinalValueIsOnStack();
+        snippetContainer.addParts(leftSnippet);
 
         let label = new LabelCodeSnippet();
         if (operator == TokenType.and) {
@@ -249,7 +252,7 @@ export abstract class BinopCastCodeGenerator {
         }
 
         snippetContainer.addParts(label.getJumpToSnippet());
-        snippetContainer.addStringPart('\n}', EmptyRange.instance);
+        snippetContainer.addStringPart('}', EmptyRange.instance);
 
         snippetContainer.addNextStepMark();
 
@@ -319,6 +322,19 @@ export abstract class BinopCastCodeGenerator {
                 return SnippetFramer.frame(leftSnippet, `new ${Helpers.classes}["String"](§1)`, this.stringType);
             } else {
                 return leftSnippet;
+            }
+        }
+
+        if(leftSnippet.isConstant()){
+            let value = leftSnippet.getConstantValue();
+            if(primitiveOrClassNeeded == "string"){
+                return new StringCodeSnippet('', leftSnippet.range, this.stringType, value );
+            } else {
+                if(value === null){
+                    leftSnippet.type = this.stringNonPrimitiveType;
+                    return leftSnippet;
+                }
+                return new StringCodeSnippet(`new ${Helpers.classes}["String"]("${"" + value}")`, leftSnippet.range, this.stringNonPrimitiveType );
             }
         }
 
@@ -445,7 +461,8 @@ export abstract class BinopCastCodeGenerator {
         if (!castTo.isPrimitive) {
             if(castTo == this.stringNonPrimitiveType){
                 let templ = type == this.stringType ? '§1' : '"" + (§1)'
-                return SnippetFramer.frame(snippet, `new ${Helpers.classes}["String"](${templ})`, this.stringNonPrimitiveType);
+                let sn1 = SnippetFramer.frame(snippet, `new ${Helpers.classes}["String"](${templ})`, this.stringNonPrimitiveType);
+                return sn1;
             }
             // snippet has primitive type. boxing?
             // let boxedTypeIndex = boxedTypesMap[castTo.identifier];

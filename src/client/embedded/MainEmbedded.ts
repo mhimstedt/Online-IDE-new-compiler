@@ -36,6 +36,7 @@ import { JOScript } from "./EmbeddedStarter.js";
 import { SchedulerState } from "../../compiler/common/interpreter/Scheduler.js";
 import { CompilerFile } from "../../compiler/common/module/CompilerFile.js";
 import { Disassembler } from "../../compiler/common/disassembler/Disassembler.js";
+import { ExceptionMarker } from "../../compiler/common/interpreter/ExceptionMarker.js";
 
 
 type JavaOnlineConfig = {
@@ -188,7 +189,6 @@ export class MainEmbedded implements MainBase {
 
 
     }
-
 
     initScripts() {
 
@@ -551,7 +551,7 @@ export class MainEmbedded implements MainBase {
             graphicsManager, keyboardManager,
             breakpointManager, this.debugger,
             programPointerManager, undefined,
-            inputManager, fileManager);
+            inputManager, fileManager, new ExceptionMarker(this));
 
 
         /**
@@ -560,6 +560,9 @@ export class MainEmbedded implements MainBase {
         let errorMarker = new ErrorMarker();
         this.language = new JavaLanguage(this, errorMarker);
         this.language.registerLanguageAtMonacoEditor(this);
+
+        this.getCompiler().eventManager.on("compilationFinished", this.onCompilationFinished, this);
+
         this.getCompiler().startCompilingPeriodically();
 
         if(this.config.withPCode){
@@ -914,6 +917,10 @@ export class MainEmbedded implements MainBase {
 
     showFile(file: CompilerFile): void {
         this.fileExplorer.selectFile(<File>file, false);
+    }
+
+    getDisassembler(): Disassembler | undefined {
+        return this.disassembler;
     }
 
 }
