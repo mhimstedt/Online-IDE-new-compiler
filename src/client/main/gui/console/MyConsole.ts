@@ -1,8 +1,7 @@
-import { ConsoleEntry } from "./ConsoleEntry.js";
-import { Main } from "../../Main.js";
+import { ReplReturnValue } from "../../../../compiler/java/parser/repl/ReplReturnValue.js";
 import { MainBase } from "../../MainBase.js";
 import { Helper } from "../Helper.js";
-import { ReplReturnValue } from "../../../../compiler/java/parser/repl/ReplReturnValue.js";
+import { ConsoleEntry } from "./ConsoleEntry.js";
 
 export class MyConsole {
 

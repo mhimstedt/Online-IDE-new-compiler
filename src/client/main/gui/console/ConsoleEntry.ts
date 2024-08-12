@@ -1,6 +1,5 @@
 import jQuery from 'jquery';
 import { ValueTool } from '../../../../compiler/common/debugger/ValueTool';
-import { ReplReturnValue } from '../../../../compiler/java/parser/repl/ReplReturnValue';
 
 export class ConsoleEntry {
 

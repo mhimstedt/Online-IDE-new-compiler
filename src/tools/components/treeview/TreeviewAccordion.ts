@@ -121,6 +121,9 @@ class TreeviewSplitter {
         this.div.style.display = '';
         
         this.div.onpointerdown = (ev) => {
+            
+            this.div.style.backgroundColor = '#800000';
+
             this.yStart = ev.pageY;
             let treeviewList: Treeview<any>[] = this.accordion.treeviewList;
             
@@ -131,18 +134,20 @@ class TreeviewSplitter {
                 tv.outerDiv.style.height = height + "px";
                 tv.outerDiv.style.flex = "none";
             }
-            
+
             this.transparentOverlay = DOM.makeDiv(document.body, 'jo_treeview_splitter_overlay');
+            this.transparentOverlay.style.cursor = 'ns-resize';
             
-            this.transparentOverlay.onpointermove = (ev) => {
+            this.transparentOverlay!.onpointermove = (ev) => {
                 this.onPointerMove(ev.pageY);
                 ev.stopPropagation();
             }
             
-            this.transparentOverlay.onmousemove = (ev) => {ev.stopPropagation()};
+            this.transparentOverlay!.onmousemove = (ev) => {ev.stopPropagation()};
             
-            this.transparentOverlay.onpointerup = () => {
+            this.transparentOverlay!.onpointerup = () => {
                 this.transparentOverlay!.remove();
+                this.div.style.backgroundColor = '';
             }
             
         }

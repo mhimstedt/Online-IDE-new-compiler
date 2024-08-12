@@ -156,7 +156,7 @@ export class Treeview<E> {
             contextMenu: {
                 messageNewNode: "Neues Element anlegen..."
             },
-            minHeight: 200,
+            minHeight: 150,
             initialExpandCollapseState: "expanded",
             buttonAddFolders: true,
             buttonAddElements: true,
@@ -404,7 +404,7 @@ export class Treeview<E> {
         let ghosts = document.getElementsByClassName('jo_treeview_drag_ghost');
         for (let index = 0; index < ghosts.length; index++) {
             let ghost = ghosts.item(index);
-            ghost.remove();
+            ghost?.remove();
         }
     }
 

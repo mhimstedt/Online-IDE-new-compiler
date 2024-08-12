@@ -75,7 +75,6 @@ import { LocalDateTimeClass } from "./javalang/LocalDateTimeClass.ts";
 import { DayOfWeekEnum } from "./DayOfWeekEnum.ts";
 import { RoundedRectangleClass } from "../graphics/RoundedRectangleClass.ts";
 import { TurtleClass } from "../graphics/TurtleClass.ts";
-import { PAppletClass } from "../graphics/PAppletClass.ts";
 import { PositionClass } from "../graphics/PositionClass.ts";
 import { JavaKaraClass, JavaKaraWorldClass } from "../graphics/JavaKaraClass.ts";
 import { JavaHamsterClass, JavaHamsterWorldClass } from "../graphics/JavaHamsterClass.ts";
@@ -127,6 +126,9 @@ import { EmptyStackExceptionClass } from "./collections/EmptyStackException.ts";
 import { VectorClass } from "./collections/VectorClass.ts";
 import { StackClass } from "./collections/StackClass.ts";
 import { BiConsumerInterface } from "./functional/BiConsumerInterface.ts";
+import { PAppletClass } from "../graphics/processing/PAppletClass.ts";
+import { World3dClass } from "../graphics/3d/World3dClass.ts";
+import { CodeFragment } from "../../../common/disassembler/CodeFragment.ts";
 
 export class SystemModule extends JavaLibraryModule {
 
@@ -208,6 +210,9 @@ export class SystemModule extends JavaLibraryModule {
             PolygonClass, TriangleClass, LineClass, BitmapClass, TextClass, RoundedRectangleClass,
             TurtleClass,
 
+            // Graphics 3D
+            World3dClass,
+
             // Processing
             PAppletClass,
 
@@ -237,4 +242,7 @@ export class SystemModule extends JavaLibraryModule {
         return false;
     }
 
+    getCodeFragments(): CodeFragment[] {
+        return [];
+    }
 }
