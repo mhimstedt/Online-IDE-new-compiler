@@ -64,10 +64,6 @@ export class PrintManager implements IPrintManager{
         });
     }
 
-    getGraphicsDiv():JQuery<HTMLElement> {
-        return this.$runDiv.find('.jo_graphics');
-    }
-
     showProgramEnd() {
         let $programEndDiv = this.$runDiv.find('.jo_run-programend');
         $programEndDiv.show();

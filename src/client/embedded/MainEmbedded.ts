@@ -535,6 +535,9 @@ export class MainEmbedded implements MainBase {
         this.$rightDivInner.append($rightSideContainer);
         $rightSideContainer.append($coordinates);
 
+        let graphicsDiv = this.$runDiv.find('.jo_graphics')[0]!;
+        
+    
 
         this.debugger = new Debugger(<HTMLDivElement>this.$debuggerDiv[0], this);
         let breakpointManager = new BreakpointManager(this);
@@ -547,7 +550,7 @@ export class MainEmbedded implements MainBase {
 
         this.interpreter = new Interpreter(
             printManager, this.actionManager,
-            keyboardManager,
+            new GraphicsManager(graphicsDiv),  keyboardManager,
             breakpointManager, this.debugger,
             programPointerManager, undefined,
             inputManager, fileManager, new ExceptionMarker(this));

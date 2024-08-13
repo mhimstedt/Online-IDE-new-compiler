@@ -15,8 +15,6 @@ export class ErrorManager {
 
     minimapColor: {[key: string]:string } = {};
 
-    lightBulbOnClickFunctionList: {class: string, onClickFunction: () => void, title: string}[] = [];
-
     constructor(private main: MainBase, private $bottomDiv: JQuery<HTMLElement>, $mainDiv: JQuery<HTMLElement>) {
         this.minimapColor["error"] = "#bc1616";
         this.minimapColor["warning"] = "#cca700";
@@ -44,8 +42,6 @@ export class ErrorManager {
     }
 
     showErrors(workspace: Workspace): Map<File, number> {
-
-        this.lightBulbOnClickFunctionList = [];
 
         let errorCountMap: Map<File, number> = new Map();
 
