@@ -199,9 +199,11 @@ export class PrintManager implements IPrintManager{
     }
 
     print(text: string | null, withNewline: boolean, color: string|number|undefined) {
-        if (text == null) return;
+        if (text == null) text = "";
 
         if(withNewline) text += "\n";
+
+        if(text == '') return;
 
         if(typeof color == "number"){
             color = color.toString(16);
