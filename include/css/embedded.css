@@ -109,6 +109,10 @@
     height: 100%;
 }
 
+.joe_debuggerDiv {
+    height: 100%;
+}
+
 .joe_resetButton {
     z-index: 10;
     position: absolute;
