@@ -4,6 +4,7 @@ import { MainBase } from "../MainBase.js";
 import jQuery from 'jquery';
 import { File } from "../../workspace/File.js";
 import { Error } from "../../../compiler/common/Error.js";
+import { MainEmbedded } from "../../embedded/MainEmbedded.js";
 
 export class ErrorManager {
 
@@ -115,6 +116,10 @@ export class ErrorManager {
                 this.main.editor.dontDetectLastChange();
                 this.main.projectExplorer.setFileActive(f);
             }
+        }
+
+        if(this.main instanceof MainEmbedded){
+            this.main.setFileActive(f);
         }
 
         this.main.getMainEditor().revealRangeInCenter(error.range);
