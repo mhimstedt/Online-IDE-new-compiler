@@ -54,7 +54,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
         let interpreter = t.scheduler.interpreter;
 
-        interpreter.graphicsManager.registerGraphicSystem(this);
+        interpreter.graphicsManager?.registerGraphicSystem(this);
 
         let existingWorld = <World3dClass>interpreter.retrieveObject("World3dClass");
         if (existingWorld) {

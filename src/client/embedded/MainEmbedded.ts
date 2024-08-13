@@ -55,47 +55,47 @@ type JavaOnlineConfig = {
 }
 
 export class MainEmbedded implements MainBase {
-    
+
     config: JavaOnlineConfig;
-    
+
     editor: Editor;
-    
+
     currentWorkspace: Workspace;
     actionManager: ActionManager;
-    
+
     language: Language;
-    
+
     interpreter: Interpreter;
     $runDiv: JQuery<HTMLElement>;
-    
+
     debugger: Debugger;
     $debuggerDiv: JQuery<HTMLElement>;
     $alternativeDebuggerDiv: JQuery<HTMLElement>;
-    
+
     bottomDiv: BottomDiv;
     $filesListDiv: JQuery<HTMLElement>;
     $disassemblerDiv: JQuery<HTMLElement>;
     disassembler?: Disassembler;
-    
+
     $hintDiv: JQuery<HTMLElement>;
     $monacoDiv: JQuery<HTMLElement>;
     $resetButton: JQuery<HTMLElement>;
-    
+
     rightDiv: RightDiv;
     $rightDivInner: JQuery<HTMLElement>;
-    
+
     fileExplorer: EmbeddedFileExplorer;
-    
+
     debounceDiagramDrawing: any;
-    
+
     indexedDB: EmbeddedIndexedDB;
-    
+
     programControlButtons: ProgramControlButtons;
-    
+
     breakpointManager: BreakpointManager;
 
     compileRunsAfterCodeReset: number = 0;
-    
+
 
 
     isEmbedded(): boolean { return true; }
@@ -181,7 +181,7 @@ export class MainEmbedded implements MainBase {
             this.indexedDB.open(() => {
 
                 if (this.config.id != null) {
-                    this.readScripts(() => {});
+                    this.readScripts(() => { });
                 }
 
             });
@@ -286,7 +286,7 @@ export class MainEmbedded implements MainBase {
                 setTimeout(() => {
                     setInterval(() => {
                         that.saveScripts();
-                    }, 1000);                    
+                    }, 1000);
                 }, 2000);
             } else {
 
@@ -541,18 +541,18 @@ export class MainEmbedded implements MainBase {
         let inputManager = new InputManager(this.$runDiv, this);
         let printManager = new PrintManager(this.$runDiv, this);
         let fileManager = new FileManager(this);
-        let graphicsManager = new GraphicsManager(printManager.getGraphicsDiv()[0], this);
 
         let keyboardManager = new KeyboardManager(jQuery('html'), this);
         let programPointerManager = new ProgramPointerManager(this);
 
         this.interpreter = new Interpreter(
             printManager, this.actionManager,
-            graphicsManager, keyboardManager,
+            keyboardManager,
             breakpointManager, this.debugger,
             programPointerManager, undefined,
             inputManager, fileManager, new ExceptionMarker(this));
 
+        
 
         /**
          * Compiler and Repl are fields of language!
@@ -565,7 +565,7 @@ export class MainEmbedded implements MainBase {
 
         this.getCompiler().startCompilingPeriodically();
 
-        if(this.config.withPCode){
+        if (this.config.withPCode) {
             this.disassembler = new Disassembler(this.$disassemblerDiv[0], this);
         }
 
@@ -608,12 +608,11 @@ export class MainEmbedded implements MainBase {
         }
 
         this.interpreter.eventManager.on("stateChanged", (oldState: SchedulerState, newState: SchedulerState) => {
-            if(newState == SchedulerState.paused){
+            if (newState == SchedulerState.paused) {
                 this.$debuggerDiv.show();
                 this.$alternativeDebuggerDiv.hide();
                 return;
-            } else if(!(oldState == SchedulerState.paused && newState == SchedulerState.running))
-            {
+            } else if (!(oldState == SchedulerState.paused && newState == SchedulerState.running)) {
                 this.$debuggerDiv.hide();
                 this.$alternativeDebuggerDiv.show();
             }
