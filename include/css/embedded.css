@@ -111,6 +111,7 @@
 
 .joe_debuggerDiv {
     height: 100%;
+    line-height: normal;
 }
 
 .joe_resetButton {
