@@ -94,7 +94,7 @@ export class Editor {
                 horizontal: 'auto'
             },
             theme: "myCustomThemeDark",
-            wrappingIndent: "same"
+            wrappingIndent: "same",
             // automaticLayout: true
 
         }

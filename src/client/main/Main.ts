@@ -46,6 +46,7 @@ import { Login } from "./Login.js";
 import { MainBase } from "./MainBase.js";
 import { PruefungManagerForStudents } from './pruefung/PruefungManagerForStudents.js';
 import { CompilerFile } from '../../compiler/common/module/CompilerFile.js';
+import { Disassembler } from '../../compiler/common/disassembler/Disassembler.js';
 
 export class Main implements MainBase {
 
@@ -77,6 +78,8 @@ export class Main implements MainBase {
 
     debugger: Debugger;
 
+    disassembler: Disassembler;
+
     bottomDiv: BottomDiv;
 
     startupComplete = 2;
@@ -96,6 +99,14 @@ export class Main implements MainBase {
 
     language: Language;
     interpreter: Interpreter;
+
+    showFile(file: CompilerFile): void {
+        this.projectExplorer.setCurrentlyEditedFile(<File>file);
+    }
+
+    getDisassembler(): Disassembler | undefined {
+        return this.disassembler;
+    }
 
     addWorkspace(ws: Workspace): void {
         this.workspaceList.push(ws);
@@ -220,7 +231,7 @@ export class Main implements MainBase {
         let inputManager = new InputManager(jQuery('#rightdiv-inner .jo_run'), this);
         let printManager = new PrintManager(jQuery('#rightdiv-inner .jo_run'), this);
         let fileManager = new FileManager(this);
-        let graphicsManager = new GraphicsManager(printManager.getGraphicsDiv()[0], this);
+        let graphicsManager = new GraphicsManager(jQuery('#rightdiv-inner .jo_graphics')[0]);
         this.actionManager = new ActionManager();
         let keyboardManager = new KeyboardManager(jQuery(window), this);
         let programPointerManager = new ProgramPointerManager(this);
@@ -239,10 +250,12 @@ export class Main implements MainBase {
         */
         this.language = new JavaLanguage(this, errorMarker);
         this.language.registerLanguageAtMonacoEditor(this);
+
+        this.getCompiler().eventManager.on('compilationFinished', this.onCompilationFinished, this);
         this.getCompiler().startCompilingPeriodically();
-        // this.language.getCompiler().setFiles(this.currentWorkspace.getFiles());
 
-
+        this.disassembler = new Disassembler(this.bottomDiv.getDisassemblerDiv(), this);
+        
         this.programControlButtons = new ProgramControlButtons(jQuery('#controls'), this.interpreter, this.actionManager);
 
         new EditorOpenerProvider(this);
@@ -379,7 +392,7 @@ export class Main implements MainBase {
         this.rightDiv.adjustWidthToWorld();
     }
 
-    
+
 
 }
 

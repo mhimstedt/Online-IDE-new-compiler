@@ -7,6 +7,7 @@ import { ErrorManager } from "./ErrorManager.js";
 import { MainBase } from "../MainBase.js";
 import { HomeworkManager } from "./HomeworkManager.js";
 import { GradingManager } from './GradingManager.js';
+import { Disassembler } from '../../../compiler/common/disassembler/Disassembler.js';
 
 export class BottomDiv {
 
@@ -53,6 +54,10 @@ export class BottomDiv {
             // that.printCurrentlyExecutedModule();
         });
 
+    }
+
+    getDisassemblerDiv(): HTMLElement {
+        return this.$bottomDiv.find('.jo_tabs>.jo_pcodeTab')[0];
     }
 
     // printCurrentlyExecutedModule() {

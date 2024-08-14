@@ -286,7 +286,7 @@ export class SynchronizationManager {
             this.initGUI();
         }
         let $synchroDiv = jQuery('#synchronize-div');
-        $synchroDiv.css('visibility', 'visible');
+        $synchroDiv.css('display', 'flex');
         let $mainDiv = jQuery('#main');
         $mainDiv.css('visibility', 'hidden');
 
@@ -301,7 +301,7 @@ export class SynchronizationManager {
 
     hide() {
         let $synchroDiv = jQuery('#synchronize-div');
-        $synchroDiv.css('visibility', 'hidden');
+        $synchroDiv.css('display', 'none');
         let $mainDiv = jQuery('#main');
         $mainDiv.css('visibility', 'visible');
 

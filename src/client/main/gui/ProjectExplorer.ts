@@ -663,6 +663,17 @@ export class ProjectExplorer {
 
     setWorkspaceActive(w: Workspace, scrollIntoView: boolean = false) {
 
+        /*
+        * monaco editor counts LanguageChangedListeners and issues ugly warnings in console if more than
+        * 200, 300, ... are created. Unfortunately it creates one each time a monaco.editor.ITextModel is created.
+        * To keep monaco.editor.ITextModel instance count low we instantiate it only when needed and dispose of it
+        * when switching to another workspace. 
+        */
+
+        this.main.editor.editor.setModel(null); // detach current model from editor
+        this.main.getCurrentWorkspace()?.disposeMonacoModels();
+        w.createMonacoModels();
+
         DatabaseNewLongPollingListener.close();
 
         this.workspaceListPanel.select(w, false, scrollIntoView);

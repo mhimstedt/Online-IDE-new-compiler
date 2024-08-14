@@ -21,7 +21,6 @@ export class File extends CompilerFile {
 
     constructor(filename?: string, text?: string) {
         super(filename);
-        this.createMonacolModel();
         if(text) this.setText(text);
     }
 

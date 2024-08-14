@@ -49,7 +49,7 @@ export class SpritesheetData {
 
         }
 
-        let spriteLibraryEnum = <JavaEnum>main.getCompiler().getType("SpriteLibraryEnum");
+        let spriteLibraryEnum = <JavaEnum>main.getCompiler().getType("SpriteLibrary");
         let id = spriteLibraryEnum.id;
         
         let klass = spriteLibraryEnum.runtimeClass;
