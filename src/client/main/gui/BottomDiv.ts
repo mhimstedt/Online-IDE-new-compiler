@@ -19,10 +19,6 @@ export class BottomDiv {
 
     constructor(private main: MainBase, public $bottomDiv: JQuery<HTMLElement>, public $mainDiv: JQuery<HTMLElement>) {
 
-        if (this.$bottomDiv.find('.jo_tabs>.jo_pcodeTab').length > 0) {
-            // this.programPrinter = new ProgramPrinter(main, $bottomDiv);
-        }
-
         if (this.$bottomDiv.find('.jo_tabheadings>.jo_console-tab').length > 0) {
             this.console = new MyConsole(main, $bottomDiv);
         } else {

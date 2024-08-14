@@ -228,6 +228,7 @@ export class Main implements MainBase {
 
         let breakpointManager = new BreakpointManager(this);
         this.debugger = new Debugger(<HTMLDivElement>jQuery('#leftpanel>.jo_debugger')[0], this);
+        this.debugger.hide();
         let inputManager = new InputManager(jQuery('#rightdiv-inner .jo_run'), this);
         let printManager = new PrintManager(jQuery('#rightdiv-inner .jo_run'), this);
         let fileManager = new FileManager(this);
@@ -255,7 +256,7 @@ export class Main implements MainBase {
         this.getCompiler().startCompilingPeriodically();
 
         this.disassembler = new Disassembler(this.bottomDiv.getDisassemblerDiv(), this);
-        
+
         this.programControlButtons = new ProgramControlButtons(jQuery('#controls'), this.interpreter, this.actionManager);
 
         new EditorOpenerProvider(this);
