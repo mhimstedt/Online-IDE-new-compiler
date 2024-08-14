@@ -91,7 +91,7 @@ window.onload = () => {
 
         if (main.repositoryOn) {
             main.synchronizationManager = new SynchronizationManager(main);
-            main.synchronizationManager.initGUI();
+            // main.synchronizationManager.initGUI();
             main.repositoryCreateManager = new RepositoryCreateManager(main);
             main.repositoryCreateManager.initGUI();
             main.repositoryUpdateManager = new RepositorySettingsManager(main);

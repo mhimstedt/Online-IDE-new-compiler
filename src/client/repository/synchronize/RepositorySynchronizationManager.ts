@@ -282,13 +282,14 @@ export class SynchronizationManager {
     }
 
     show() {
-        if (!this.guiReady) {
-            this.initGUI();
-        }
         let $synchroDiv = jQuery('#synchronize-div');
         $synchroDiv.css('display', 'flex');
         let $mainDiv = jQuery('#main');
         $mainDiv.css('visibility', 'hidden');
+
+        if (!this.guiReady) {
+            this.initGUI();
+        }
 
         this.$writeWorkspaceChangesButton.hide();
         this.$writeRepositoryChangesButton.hide();
@@ -440,16 +441,18 @@ export class SynchronizationManager {
             $dropZoneDiv.removeClass('jo_synchro_dragZone');
         });
         $dropZoneDiv.on("drop", (e) => {
-            let sw = new SynchroWorkspace(that).copyFromHistoryElement(HistoryElement.currentlyDragged);
-            switch (leftRight) {
-                case "left":
-                    that.leftSynchroWorkspace = sw;
-                    break;
-                case "right":
-                    that.rightSynchroWorkspace = sw;
-                    break;
+            if(HistoryElement.currentlyDragged){
+                let sw = new SynchroWorkspace(that).copyFromHistoryElement(HistoryElement.currentlyDragged);
+                switch (leftRight) {
+                    case "left":
+                        that.leftSynchroWorkspace = sw;
+                        break;
+                    case "right":
+                        that.rightSynchroWorkspace = sw;
+                        break;
+                }
+                that.setupSynchronizationListElements();
             }
-            that.setupSynchronizationListElements();
             $dropZoneDiv.removeClass('jo_synchro_dragZone');
         })
 
@@ -524,7 +527,8 @@ export class SynchronizationManager {
         this.diffEditor = monaco.editor.createDiffEditor(document.getElementById("jo_synchro_editor"), {
             originalEditable: true, // for left pane
             readOnly: true,         // for right pane
-            automaticLayout: true
+            automaticLayout: true,
+            renderSideBySide: true,
         });
     }
 

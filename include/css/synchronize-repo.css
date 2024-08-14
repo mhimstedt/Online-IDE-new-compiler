@@ -30,7 +30,6 @@
 }
 
 #synchronize-div {
-    visibility: hidden;
     overflow: hidden;
     display: flex;
     flex-direction: column;
