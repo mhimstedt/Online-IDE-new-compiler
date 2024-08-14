@@ -47,6 +47,7 @@ import { MainBase } from "./MainBase.js";
 import { PruefungManagerForStudents } from './pruefung/PruefungManagerForStudents.js';
 import { CompilerFile } from '../../compiler/common/module/CompilerFile.js';
 import { Disassembler } from '../../compiler/common/disassembler/Disassembler.js';
+import { ExceptionMarker } from '../../compiler/common/interpreter/ExceptionMarker.js';
 
 export class Main implements MainBase {
 
@@ -236,13 +237,14 @@ export class Main implements MainBase {
         this.actionManager = new ActionManager();
         let keyboardManager = new KeyboardManager(jQuery(window), this);
         let programPointerManager = new ProgramPointerManager(this);
+        let exceptionMarker = new ExceptionMarker(this);
 
         this.interpreter = new Interpreter(
             printManager, this.actionManager,
             graphicsManager, keyboardManager,
             breakpointManager, this.debugger,
             programPointerManager, undefined,
-            inputManager, fileManager);
+            inputManager, fileManager, exceptionMarker);
 
         let errorMarker = new ErrorMarker();
 

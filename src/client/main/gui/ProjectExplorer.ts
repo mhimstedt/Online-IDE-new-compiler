@@ -776,7 +776,6 @@ export class ProjectExplorer {
         if (ws.currentlyOpenFile != f) {
             ws.currentlyOpenFile = f;
             ws.saved = false;
-            this.main.getCompiler().setFileDirty(f);   // is this necessary?
         }
     }
 
