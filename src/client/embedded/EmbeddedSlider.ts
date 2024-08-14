@@ -66,15 +66,37 @@ export class EmbeddedSlider {
             let x = md.clientX;
             let y = md.clientY;
 
+            let ownRectangle = this.$container[0].getBoundingClientRect();
+            let ownStartHeight = ownRectangle.height;
+            let ownStartWidth = ownRectangle.width;
+            let otherRectangle = this.$otherDiv[0].getBoundingClientRect();
+            let otherStartHeight = otherRectangle.height;
+            let otherStartWidth = otherRectangle.width;
+
+
             jQuery(document).on(mousePointer + "move.slider", (mm: JQuery.MouseMoveEvent) => {
                 let dx = mm.clientX - x;
                 let dy = mm.clientY - y;
 
-                that.slide(dx, dy);
-                
-                x = mm.clientX;
-                y = mm.clientY;
-
+                if(this.horVert){
+                    let newHeight = ownStartHeight + (this.firstLast ? -dy : dy);
+                    let newOtherHeight = otherStartHeight + (this.firstLast ? dy : -dy);
+                    this.$container.css('height', newHeight + "px");
+                    this.$otherDiv.css('height', newOtherHeight + "px");
+                    this.$container.css('max-height', newHeight + "px");
+                    this.$otherDiv.css('max-height', newOtherHeight + "px");
+                    this.callback(newHeight);
+                } else {
+                    let newWidth = ownStartWidth + (this.firstLast ? -dx : dx);
+                    let newOtherWidth = otherStartWidth + (this.firstLast ? dx : -dx);
+                    this.$container.css('width', newWidth + "px");
+                    this.$otherDiv.css('width', newOtherWidth + "px");
+                    this.$container.css('max-width', newWidth + "px");
+                    this.$otherDiv.css('max-width', newOtherWidth + "px");
+                    this.callback(newWidth);
+                }
+                this.$container.css('flex', "0 1 auto");
+        
             });
 
             jQuery(document).on(mousePointer + "up.slider", () => {
@@ -96,24 +118,6 @@ export class EmbeddedSlider {
     }
 
     slide(dx: number, dy: number){
-        if(this.horVert){
-            let height = Number.parseInt(this.$container.css('height').replace('px', ''));
-            let otherHeight = Number.parseInt(this.$otherDiv.css('height').replace('px', ''));
-            let newHeight = this.firstLast ? height -= dy : height += dy;
-            let newOtherHeight = this.firstLast ? otherHeight += dy : otherHeight -= dy;
-            this.$container.css('height', newHeight + "px");
-            this.$otherDiv.css('height', newOtherHeight + "px");
-            this.callback(newHeight);
-        } else {
-            let width = Number.parseInt(this.$container.css('width').replace('px', ''));
-            let otherWidth = Number.parseInt(this.$otherDiv.css('width').replace('px', ''));
-            let newWidth = this.firstLast ? width -= dx : width += dx;
-            let newOtherWidth = this.firstLast ? otherWidth += dx : otherWidth -= dx;
-            this.$container.css('width', newWidth + "px");
-            this.$otherDiv.css('width', newOtherWidth + "px");
-            this.callback(newWidth);
-        }
-        this.$container.css('flex', "0 1 auto");
 
     }
 
