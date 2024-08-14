@@ -168,7 +168,7 @@
 
 .jo_synchro_scrollbarPlaceholder {
     flex: 0 0 13px;
-    /* background-color: black; */
+    background-color: var(--backgroundHeading);
 }
 
 .jo_synchro_fileListHeaderCenter {

@@ -63,7 +63,7 @@ export class ThemeManager {
                 "--file-hover": "hsla(0, 0%, 38%, 0.125)",
                 "--file-active": "#094771",
                 "--file-active-hover": "rgba(9, 71, 113, 0.827)",
-                "--file-errorcount": "red",
+                "--file-errorcount": "rgb(224, 93, 93)",
                 "--inplace-editor": "blue",
                 "--contextmenu-background": "#3c3c3c",
                 "--contextmenu-color": "rgb(212,212,212)",

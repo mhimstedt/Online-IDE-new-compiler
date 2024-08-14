@@ -57,7 +57,7 @@ export class ErrorManager {
             let $errorList: JQuery<HTMLElement>[] = [];
             
             let errors = this.main.getCompiler().getSortedAndFilteredErrors(file);
-            errorCountMap.set(file, errors.length);
+            errorCountMap.set(file, errors.filter(error => error.level == "error").length);
 
             for (let error of errors) {
 
