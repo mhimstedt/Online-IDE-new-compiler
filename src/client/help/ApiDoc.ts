@@ -1,15 +1,14 @@
 import jQuery from 'jquery';
-import { extractCsrfTokenFromGetRequest } from "../communication/AjaxHelper.js";
 import { JavaLanguage } from '../../compiler/java/JavaLanguage.js';
-import { SystemModule } from '../../compiler/java/runtime/system/SystemModule.js';
 import { JavaLibraryModuleManager } from '../../compiler/java/module/libraries/JavaLibraryModuleManager.js';
-import { BaseType } from '../../compiler/common/BaseType.js';
-import { JavaClass } from '../../compiler/java/types/JavaClass.js';
-import { JavaInterface } from '../../compiler/java/types/JavaInterface.js';
-import { JavaEnum } from '../../compiler/java/types/JavaEnum.js';
-import { NonPrimitiveType } from '../../compiler/java/types/NonPrimitiveType.js';
-import { JavaMethod } from '../../compiler/java/types/JavaMethod.js';
 import { TokenType } from '../../compiler/java/TokenType.js';
+import { JavaClass } from '../../compiler/java/types/JavaClass.js';
+import { JavaEnum } from '../../compiler/java/types/JavaEnum.js';
+import { JavaInterface } from '../../compiler/java/types/JavaInterface.js';
+import { JavaMethod } from '../../compiler/java/types/JavaMethod.js';
+import { NonPrimitiveType } from '../../compiler/java/types/NonPrimitiveType.js';
+import { extractCsrfTokenFromGetRequest } from "../communication/AjaxHelper.js";
+import { HelpMessages } from './HelpMessages.js';
 
 export class ApiDoc {
     async start() {
@@ -85,6 +84,10 @@ export class ApiDoc {
             })
         });
 
+        jQuery('#classesHeading').text(HelpMessages.apiDocClasses());
+        jQuery('#interfacesHeading').text(HelpMessages.apiDocInterfaces());
+        jQuery('#enumsHeading').text(HelpMessages.apiDocEnums());
+        jQuery('#mainHeading').text(HelpMessages.apiDocMainHeading());
 
     }
 
@@ -97,6 +100,11 @@ export class ApiDoc {
         monaco.editor.colorize(type.getDeclaration(), "myJava", {}).then(
             (html) => {$caption.append(jQuery(html))}
         );
+
+        if(type.documentation){
+            $main.append(jQuery('<div class="jo_documentation">' + this.docToString(type.documentation) + '</div>'));
+        }
+
 
         if(type instanceof JavaClass) this.showConstructors(type);
         this.showMethods(type);
@@ -112,7 +120,7 @@ export class ApiDoc {
         methods.sort((a, b) => a.identifier.localeCompare(b.identifier));
 
         if(methods.length == 0){
-            $main.append(jQuery('<div class="jo_method">Keine</div>'));
+            $main.append(jQuery(`<div class="jo_method">${HelpMessages.apiDocNone()}</div>`));
         } else {
             for(let method of methods){
                 let $caption = jQuery(jQuery('<div class="jo_method"></div>'));
@@ -122,7 +130,7 @@ export class ApiDoc {
                 );
 
                 if(method.documentation != null && method.documentation != ""){
-                    $main.append(jQuery('<div class="jo_documentation">' + method.documentation + '</div>'));
+                    $main.append(jQuery('<div class="jo_documentation">' + this.docToString(method.documentation) + '</div>'));
                 }
             }
         }     
@@ -141,7 +149,7 @@ export class ApiDoc {
         methods.sort((a, b) => a.identifier.localeCompare(b.identifier));
 
         if(methods.length == 0){
-            $main.append(jQuery('<div class="jo_method">Keine</div>'));
+            $main.append(jQuery(`<div class="jo_method">${HelpMessages.apiDocNone()}</div>`));
         } else {
             for(let method of methods){
                 let $caption = jQuery(jQuery('<div class="jo_method"></div>'));
@@ -151,7 +159,7 @@ export class ApiDoc {
                 );
 
                 if(method.documentation != null && method.documentation != ""){
-                    $main.append(jQuery('<div class="jo_documentation">' + method.documentation + '</div>'));
+                    $main.append(jQuery('<div class="jo_documentation">' + this.docToString(method.documentation) + '</div>'));
                 }
             }
         }     
@@ -171,7 +179,7 @@ export class ApiDoc {
         attributes.sort((a, b) => a.identifier.localeCompare(b.identifier));
 
         if(attributes.length == 0){
-            $main.append(jQuery('<div class="jo_method">Keine</div>'));
+            $main.append(jQuery(`<div class="jo_method">${HelpMessages.apiDocNone()}</div>`));
         } else {
             for(let attribute of attributes){
                 let $caption = jQuery(jQuery('<div class="jo_method"></div>'));
@@ -181,7 +189,7 @@ export class ApiDoc {
                 );
 
                 if(attribute.documentation != null && attribute.documentation != ""){
-                    $main.append(jQuery('<div class="jo_documentation">' + attribute.documentation + '</div>'));
+                    $main.append(jQuery('<div class="jo_documentation">' + this.docToString(attribute.documentation) + '</div>'));
                 }
             }
         }     
