@@ -40,7 +40,7 @@ export class SpritesheetData {
 
                 graphicsManager.userSpritesheet = new PIXI.Spritesheet(textureNew, this.pixiSpritesheetData);
                 graphicsManager.userSpritesheet.parse().then(() => { });
-                
+
                 for (let identifier in this.pixiSpritesheetData.frames) {
                     let hashIndex = identifier.indexOf('#');
                     spriteIdentifiers.add(identifier.substring(0, hashIndex));
@@ -49,9 +49,15 @@ export class SpritesheetData {
 
         }
 
+        /**
+         * See user-defined-spritesheets.md
+         */
+
         let spriteLibraryEnum = <JavaEnum>main.getCompiler().getType("SpriteLibrary");
-        let id = spriteLibraryEnum.id;
-        
+
+        /**
+         * object klass is the same for each instance of the embedded ide on a given webpage
+         */
         let klass = spriteLibraryEnum.runtimeClass;
         klass.removeUserSpritesheets(spriteLibraryEnum);
         spriteIdentifiers.forEach(identifier => klass.addEntry(identifier, spriteLibraryEnum));
