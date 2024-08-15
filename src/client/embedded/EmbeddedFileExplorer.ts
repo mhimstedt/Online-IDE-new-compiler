@@ -2,7 +2,7 @@ import { MainEmbedded } from "./MainEmbedded.js";
 import { openContextMenu, makeEditable } from "../../tools/HtmlTools.js";
 import { JOScript } from "./EmbeddedStarter.js";
 import jQuery from "jquery";
-import { FileTypeManager } from "../main/gui/FileTypeManager.js";
+import { FileTypeManager } from "../../compiler/common/module/FileTypeManager.js";
 import { File } from "../workspace/File.js";
 import { Workspace } from "../workspace/Workspace.js";
 

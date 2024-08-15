@@ -5,7 +5,7 @@ import { File } from '../../workspace/File.js';
 import { Workspace } from "../../workspace/Workspace.ts";
 import { Main } from "../Main.ts";
 import { MainBase } from "../MainBase.ts";
-import { FileTypeManager } from "./FileTypeManager.ts";
+import { FileTypeManager } from "../../../compiler/common/module/FileTypeManager.ts";
 
 export type HistoryEntry = {
     file_id: number,

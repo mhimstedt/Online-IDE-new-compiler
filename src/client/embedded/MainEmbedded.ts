@@ -19,7 +19,7 @@ import { downloadFile, makeTabs, openContextMenu } from "../../tools/HtmlTools.j
 import { BottomDiv } from "../main/gui/BottomDiv.js";
 import { Editor } from "../main/gui/Editor.js";
 import { FileManager } from "../main/gui/FileManager.js";
-import { FileTypeManager } from "../main/gui/FileTypeManager.js";
+import { FileTypeManager } from "../../compiler/common/module/FileTypeManager.js";
 import { InputManager } from "../main/gui/InputManager.js";
 import { PrintManager } from "../main/gui/PrintManager.js";
 import { ProgramControlButtons } from "../main/gui/ProgramControlButtons.js";

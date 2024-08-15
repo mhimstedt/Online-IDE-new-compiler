@@ -1,7 +1,6 @@
 # TODO
   * Implement Test-Runner
   * Fix class diagram
-  * Fix API-Verzeichnis
   * Test homework-functionality
   * Database classes
   * Robot class
@@ -10,6 +9,7 @@
   * add more compiler-tests
 
 # Done:
+  * Fix API-documentation
 
 
 

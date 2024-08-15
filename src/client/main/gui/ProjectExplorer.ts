@@ -9,7 +9,7 @@ import { Workspace } from "../../workspace/Workspace.js";
 import { Main } from "../Main.js";
 import { Accordion, AccordionContextMenuItem, AccordionElement, AccordionPanel } from "./Accordion.js";
 import { DistributeToStudentsDialog } from "./DistributeToStudentsDialog.js";
-import { FileTypeManager } from './FileTypeManager.js';
+import { FileTypeManager } from '../../../compiler/common/module/FileTypeManager.js';
 import { Helper } from "./Helper.js";
 import { TeacherExplorer } from './TeacherExplorer.js';
 import { WorkspaceSettingsDialog } from "./WorkspaceSettingsDialog.js";
