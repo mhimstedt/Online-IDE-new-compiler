@@ -102,7 +102,7 @@ window.onload = () => {
         }
 
         main.spriteManager = new SpriteManager(main);
-        main.spriteManager.initGUI();
+        // main.spriteManager.initGUI();
 
         //@ts-ignore
         p5.disableFriendlyErrors = true

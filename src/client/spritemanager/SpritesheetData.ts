@@ -53,8 +53,8 @@ export class SpritesheetData {
         let id = spriteLibraryEnum.id;
         
         let klass = spriteLibraryEnum.runtimeClass;
-        klass.removeUserSpritesheets(id);
-        spriteIdentifiers.forEach(identifier => klass.addEntry(identifier, id));
+        klass.removeUserSpritesheets(spriteLibraryEnum);
+        spriteIdentifiers.forEach(identifier => klass.addEntry(identifier, spriteLibraryEnum));
 
     }
 
