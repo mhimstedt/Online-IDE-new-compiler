@@ -77,6 +77,14 @@ export class BottomDiv {
 
     }
 
+    showJunitTab() {
+
+        jQuery('.jo_testrunnerTabheading').css('display', 'block');
+        let mousePointer = window.PointerEvent ? "pointer" : "mouse";
+        jQuery('.jo_testrunnerTabheading').trigger(mousePointer + "down");
+
+    }
+
     hideHomeworkTab() {
 
         jQuery('.jo_homeworkTabheading').css('display', 'none');

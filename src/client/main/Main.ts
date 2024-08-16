@@ -11,7 +11,7 @@ import { Language } from '../../compiler/common/Language.js';
 import { EditorOpenerProvider } from '../../compiler/common/monacoproviders/EditorOpenerProvider.js';
 import { ErrorMarker } from '../../compiler/common/monacoproviders/ErrorMarker.js';
 import { ProgramPointerManager } from '../../compiler/common/monacoproviders/ProgramPointerManager.js';
-import { IRange } from '../../compiler/common/range/Range.js';
+import { IRange, Range } from '../../compiler/common/range/Range.js';
 import { JavaLanguage } from '../../compiler/java/JavaLanguage.js';
 import { JavaRepl } from '../../compiler/java/parser/repl/JavaRepl.js';
 import { DatabaseNewLongPollingListener } from '../../tools/database/DatabaseNewLongPollingListener.js';
@@ -48,6 +48,8 @@ import { PruefungManagerForStudents } from './pruefung/PruefungManagerForStudent
 import { CompilerFile } from '../../compiler/common/module/CompilerFile.js';
 import { Disassembler } from '../../compiler/common/disassembler/Disassembler.js';
 import { ExceptionMarker } from '../../compiler/common/interpreter/ExceptionMarker.js';
+import { JUnitTestrunner } from '../../compiler/common/testrunner/JUnitTestrunner.js';
+import { IPosition } from '../../compiler/common/range/Position.js';
 
 export class Main implements MainBase {
 
@@ -101,7 +103,8 @@ export class Main implements MainBase {
     language: Language;
     interpreter: Interpreter;
 
-    showFile(file: CompilerFile): void {
+    showFile(file?: CompilerFile): void {
+        if(!file) return;
         this.projectExplorer.setCurrentlyEditedFile(<File>file);
     }
 
@@ -243,8 +246,8 @@ export class Main implements MainBase {
             printManager, this.actionManager,
             graphicsManager, keyboardManager,
             breakpointManager, this.debugger,
-            programPointerManager, undefined,
-            inputManager, fileManager, exceptionMarker);
+            programPointerManager, inputManager, 
+            fileManager, exceptionMarker);
 
         let errorMarker = new ErrorMarker();
 
@@ -253,6 +256,8 @@ export class Main implements MainBase {
         */
         this.language = new JavaLanguage(this, errorMarker);
         this.language.registerLanguageAtMonacoEditor(this);
+        
+        new JUnitTestrunner(this, jQuery('.jo_testrunnerTab')[0]);
 
         this.getCompiler().eventManager.on('compilationFinished', this.onCompilationFinished, this);
         this.getCompiler().startCompilingPeriodically();
@@ -262,6 +267,7 @@ export class Main implements MainBase {
         this.programControlButtons = new ProgramControlButtons(jQuery('#controls'), this.interpreter, this.actionManager);
 
         new EditorOpenerProvider(this);
+
 
     }
 
@@ -395,7 +401,17 @@ export class Main implements MainBase {
         this.rightDiv.adjustWidthToWorld();
     }
 
+    showJUnitDiv() {
+        this.bottomDiv.showJunitTab();
+    }
 
+    showProgramPosition(file?: CompilerFile, positionOrRange?: IPosition | IRange) {
+        this.showFile(file);
+        if(!positionOrRange) return;
+        if(positionOrRange["startLineNumber"]) positionOrRange = Range.getStartPosition(<IRange>positionOrRange);
+        this.getMainEditor().setPosition(<IPosition>positionOrRange)
+        this.getMainEditor().focus();
+    }
 
 }
 

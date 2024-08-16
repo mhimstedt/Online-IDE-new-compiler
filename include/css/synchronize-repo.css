@@ -21,14 +21,6 @@
 
 }
 
-.joe_slider:hover {
-    filter: brightness(130%);
-}
-
-.joe_slider:active {
-    background-color: rgb(255, 166, 0) !important;
-}
-
 #synchronize-div {
     overflow: hidden;
     display: flex;
@@ -141,10 +133,7 @@
 }
 
 #jo_synchro_editor>.joe_slider {
-    position:absolute;
-    z-index: 10;
     top: -4px !important;
-    /* background-color: lightblue */
 }
 
 #jo_synchro_fileListOuter {

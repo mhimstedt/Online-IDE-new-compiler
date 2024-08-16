@@ -1,7 +1,7 @@
 import jQuery from 'jquery';
 import { MainBase } from "../MainBase.js";
-import { IPrintManager } from '../../../compiler/common/interpreter/PrintManager.js';
 import { InputManager } from './InputManager.js';
+import { IPrintManager } from '../../../compiler/common/interpreter/IPrintManager.js';
 
 type PrintCommand = {
     text: string;
@@ -9,7 +9,7 @@ type PrintCommand = {
     newLine: boolean;
 }
 
-export class PrintManager implements IPrintManager{
+export class PrintManager implements IPrintManager {
 
     color: string = "";
     lastSpan: string = "";
@@ -228,6 +228,12 @@ export class PrintManager implements IPrintManager{
                 newLine: false
             });
         }
+    }
+
+    printHtmlElement(htmlElement: HTMLElement): void {
+        this.flush();
+        this.$lines.push(jQuery(htmlElement));
+        this.$outputDiv.append(jQuery(htmlElement));
     }
 
 }

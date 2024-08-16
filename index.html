@@ -68,7 +68,8 @@
                 alt="1. Preisträger beim isi Digital-Wettbewerb 2022" style="width: 300px">
         </a>
         <!-- <div id="login-heading" class="jo_login_div">Online-IDE</div> -->
-        <img src="assets/graphics/Logo1.png" alt="Logo der Online-IDE" style="width: 250px; margin: 30px auto 10px auto">
+        <img src="assets/graphics/Logo1.png" alt="Logo der Online-IDE"
+            style="width: 250px; margin: 30px auto 10px auto">
         <div style="flex-grow: 1" class="jo_login_div"></div>
         <div class="jo_login_div">
             <div id="login-center">
@@ -140,7 +141,9 @@
             <!-- <div>
                 <vidis-login loginurl="https://online-ide.de/vidisRedirect"></vidis-login>
             </div> -->
-            <div><a href="https://aai-test.vidis.schule/auth/realms/vidis/protocol/openid-connect/auth?client_id=online-ide-o&response_type=code&scope=openid&redirect_uri=https://online-ide.de/vidisRedirect">VIDIS-Test</a></div>
+            <div><a
+                    href="https://aai-test.vidis.schule/auth/realms/vidis/protocol/openid-connect/auth?client_id=online-ide-o&response_type=code&scope=openid&redirect_uri=https://online-ide.de/vidisRedirect">VIDIS-Test</a>
+            </div>
             <div id="login-datenschutz">
                 <a href="https://www.learnj.de/doku.php?id=ide:datenschutzerklaerung"
                     target="_blank">Datenschutzerklärung</a> -
@@ -179,7 +182,7 @@
                         </div>
                         <div id="buttonUserSettings" title="Benutzereinstellungen" style="margin-left: 10px"
                             class="img_user jo_button jo_active"></div>
-                        <span id="menupanel-username" style="user-select: none">Tina Test</span>
+                        <span id="menupanel-username" style="user-select: none"></span>
                         <div id="buttonLogout" title="Logout" style="margin-left: 8px"
                             class="img_disconnect-dark jo_button jo_active"></div>
                     </div>
@@ -198,11 +201,13 @@
                             <div class="jo_tabheadings">
                                 <div class="jo_tabheading jo_active" data-target="jo_errorsTab">Fehler</div>
                                 <div class="jo_tabheading jo_console-tab" data-target="jo_consoleTab">Console</div>
-                                <div class="jo_tabheading" data-target="jo_pcodeTab">Code</div>
                                 <div class="jo_tabheading jo_homeworkTabheading" data-target="jo_homeworkTab">
                                     Hausaufgaben</div>
                                 <div class="jo_tabheading jo_gradingTabheading" data-target="jo_gradingTab">
                                     Bewertung</div>
+                                <div class="jo_tabheading jo_testrunnerTabheading" data-target="jo_testrunnerTab">
+                                    Test-Runner</div>
+                                <div class="jo_tabheading" data-target="jo_pcodeTab">Code</div>
                                 <div class="jo_tabheading-right jo_noHeading">
                                     <img class="jo_db-busy" title="Warten auf Datenbank..."
                                         src="assets/graphics/grid.svg">
@@ -230,6 +235,7 @@
                                 <div class="jo_scrollable jo_pcodeTab">PCode</div>
                                 <div class="jo_homeworkTab"></div>
                                 <div class="jo_gradingTab"></div>
+                                <div class="jo_testrunnerTab"></div>
                             </div>
                         </div>
                     </div>
@@ -286,30 +292,6 @@
                         <img src="assets/graphics/ball-triangle.svg" class="jo_classdiagram-spinner">
                     </div>
 
-                    <!-- <div class="jo_tab jo_objectdiagram">
-                        <div class="jo_objectdiagram-header">
-                            <div>
-                            <span>Typ: </span>
-                            <select class="jo_objectdiagram-type">
-                                <option value="none">Bitte auswählen...</option>
-                                <option value="tree">Baumdiagramm</option>
-                                <option value="list">Liste</option>
-                                <option value="all">Alle Objekte</option>
-                            </select>
-                            </div>
-                            <div class="jo_objectdiagram-settings">
-                                <div>Setting 1</div>
-                                <div>Setting 2</div>
-                                <div>Setting 3</div>
-                                <div>Setting 4</div>
-                            </div>
-                        </div>
-                        <div class="jo_objectdiagram-canvas jo_scrollable"></div>
-                    </div>
-
-                    <div class="jo_tab jo_sequencediagram">
-                    </div> -->
-
                 </div>
 
             </div>
@@ -319,7 +301,7 @@
         </div>
     </div>
 
-    <div id="synchronize-div" style = "display: none;"></div>
+    <div id="synchronize-div" style="display: none;"></div>
     <div id="createRepo-div"></div>
     <div id="updateRepo-div"></div>
     <div id="checkoutRepo-div"></div>

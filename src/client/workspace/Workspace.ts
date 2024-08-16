@@ -202,5 +202,9 @@ export class Workspace extends CompilerWorkspace {
         if(this.files.length > 0) return this.files[0];
         return undefined;
     }
+
+    getIdentifier(): string {
+        return this.name;
+    }
 }
 

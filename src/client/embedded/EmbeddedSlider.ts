@@ -1,4 +1,5 @@
 import jQuery from 'jquery';
+import '/include/css/slider.css';
 
 export class EmbeddedSlider {
 

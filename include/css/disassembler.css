@@ -22,12 +22,11 @@
 }
 
 .jo_disassemblerHeading {
-    font-size: 150%;
+    font-size: 120%;
     color: var(--disassembler-heading);
 }
 
 .jo_disassemblerSignature {
-    font-size: 125%;
     margin-bottom: 5px;
 }
 
@@ -49,7 +48,6 @@
     justify-content: start;
     margin-left: 5px;
     padding: 3px 0;
-    font-size: 14px;
     text-wrap: wrap;
     user-select: none;
 }

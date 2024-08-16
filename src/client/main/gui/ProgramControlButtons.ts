@@ -36,7 +36,7 @@ export class ProgramControlButtons {
         { actionIdentifier: "interpreter.stepInto", title: "Step Into", iconClass: "img_step-into-dark jo_button" },
         { actionIdentifier: "interpreter.stepOut", title: "Step Out", iconClass: "img_step-out-dark jo_button" },
         { actionIdentifier: "interpreter.restart", title: "Restart", iconClass: "img_restart-dark jo_button" },
-        { actionIdentifier: "interpreter.startTests", title: "Alle JUnit-Tests im Workspace ausführen", iconClass: "img_test-start jo_button" },
+        { actionIdentifier: "interpreter.startTests", title: "Alle JUnit-Tests im Workspace ausführen", iconClass: "img_test-start jo_button jo_start-test-button" },
     ]
 
     constructor($buttonsContainer: JQuery<HTMLElement>, interpreter: Interpreter, actionManager: ActionManager) {

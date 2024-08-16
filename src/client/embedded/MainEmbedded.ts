@@ -12,7 +12,7 @@ import { CompilerWorkspace } from "../../compiler/common/module/CompilerWorkspac
 import { EditorOpenerProvider } from "../../compiler/common/monacoproviders/EditorOpenerProvider.js";
 import { ErrorMarker } from "../../compiler/common/monacoproviders/ErrorMarker.js";
 import { ProgramPointerManager } from "../../compiler/common/monacoproviders/ProgramPointerManager.js";
-import { IRange } from "../../compiler/common/range/Range.js";
+import { IRange, Range } from "../../compiler/common/range/Range.js";
 import { JavaLanguage } from "../../compiler/java/JavaLanguage.js";
 import { JavaRepl } from "../../compiler/java/parser/repl/JavaRepl.js";
 import { downloadFile, makeTabs, openContextMenu } from "../../tools/HtmlTools.js";
@@ -37,6 +37,7 @@ import { SchedulerState } from "../../compiler/common/interpreter/Scheduler.js";
 import { CompilerFile } from "../../compiler/common/module/CompilerFile.js";
 import { Disassembler } from "../../compiler/common/disassembler/Disassembler.js";
 import { ExceptionMarker } from "../../compiler/common/interpreter/ExceptionMarker.js";
+import { IPosition } from "../../compiler/common/range/Position.js";
 
 
 type JavaOnlineConfig = {
@@ -552,8 +553,8 @@ export class MainEmbedded implements MainBase {
             printManager, this.actionManager,
             new GraphicsManager(graphicsDiv),  keyboardManager,
             breakpointManager, this.debugger,
-            programPointerManager, undefined,
-            inputManager, fileManager, new ExceptionMarker(this));
+            programPointerManager, inputManager,
+            fileManager, new ExceptionMarker(this));
 
         
 
@@ -917,12 +918,24 @@ export class MainEmbedded implements MainBase {
         }
     }
 
-    showFile(file: CompilerFile): void {
+    showFile(file?: CompilerFile): void {
+        if(!file) return;
         this.fileExplorer.selectFile(<File>file, false);
     }
 
     getDisassembler(): Disassembler | undefined {
         return this.disassembler;
+    }
+
+    showJUnitDiv(): void {
+        this.bottomDiv?.showJunitTab();
+    }
+
+    showProgramPosition(file?: CompilerFile, positionOrRange?: IPosition | IRange) {
+        this.showFile(file);
+        if(!positionOrRange) return;
+        if(positionOrRange["startLineNumber"]) positionOrRange = Range.getStartPosition(<IRange>positionOrRange);
+        this.getMainEditor().setPosition(<IPosition>positionOrRange)
     }
 
 }
