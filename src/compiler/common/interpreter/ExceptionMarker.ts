@@ -3,6 +3,7 @@ import { CompilerFile } from "../module/CompilerFile";
 import { ProgramPointerPositionInfo } from "../monacoproviders/ProgramPointerManager";
 import { IRange } from "../range/Range";
 import { Step } from "./Program";
+import { SchedulerState } from "./Scheduler";
 import { IThrowable } from "./ThrowableType";
 import '/include/css/exceptionmarker.css';
 
@@ -44,7 +45,9 @@ export class ExceptionMarker {
 
     setTimeout(() => {
       this.main.getDisassembler()?.markException(step);
-      this.main.getInterpreter().eventManager.once("stateChanged", (newState) => {
+
+      // event stop is also fired when compiler sends new Executable to interpreter!
+      this.main.getInterpreter().eventManager.once("stop", () => {
         this.removeExceptionMarker();
       })
 
