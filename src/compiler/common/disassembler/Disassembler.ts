@@ -50,6 +50,10 @@ export class Disassembler {
             }    
         })    
 
+        this.main.getInterpreter().eventManager.on("stateChanged", (newState) => {
+            this.unmarkException();
+        })
+
         this.main.getInterpreter().eventManager.on("hideProgramPointer", () => {
             this.hideProgramPointer();
         })    
@@ -89,6 +93,8 @@ export class Disassembler {
     }
     
     markException(step: Step){
+        this.unmarkException();
+
         let element = this.findHtmlElementForStep(step);
         element?.classList.add("jo_revealDisassemblerException");
         element?.scrollIntoView({block: "nearest", inline: "nearest"});

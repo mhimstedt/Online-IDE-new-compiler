@@ -38,6 +38,7 @@ import { CompilerFile } from "../../compiler/common/module/CompilerFile.js";
 import { Disassembler } from "../../compiler/common/disassembler/Disassembler.js";
 import { ExceptionMarker } from "../../compiler/common/interpreter/ExceptionMarker.js";
 import { IPosition } from "../../compiler/common/range/Position.js";
+import { JUnitTestrunner } from "../../compiler/common/testrunner/JUnitTestrunner.js";
 
 
 type JavaOnlineConfig = {
@@ -76,6 +77,7 @@ export class MainEmbedded implements MainBase {
     bottomDiv: BottomDiv;
     $filesListDiv: JQuery<HTMLElement>;
     $disassemblerDiv: JQuery<HTMLElement>;
+    $junitDiv: JQuery<HTMLElement>;
     disassembler?: Disassembler;
 
     $hintDiv: JQuery<HTMLElement>;
@@ -565,6 +567,8 @@ export class MainEmbedded implements MainBase {
         this.language = new JavaLanguage(this, errorMarker);
         this.language.registerLanguageAtMonacoEditor(this);
 
+        new JUnitTestrunner(this,this.$junitDiv[0]);
+
         this.getCompiler().eventManager.on("compilationFinished", this.onCompilationFinished, this);
 
         this.getCompiler().startCompilingPeriodically();
@@ -762,6 +766,10 @@ export class MainEmbedded implements MainBase {
             $tabheadings.append($thPCode);
         }
 
+        let $thJunit = jQuery('<div class="jo_tabheading" data-target="jo_junitTab" style="line-height: 24px">Testrunner </div>');
+        $tabheadings.append($thJunit);
+
+
         $tabheadings.append($thRightSide);
 
         $bottomDiv.append($tabheadings);
@@ -791,6 +799,10 @@ export class MainEmbedded implements MainBase {
             this.$disassemblerDiv = jQuery('<div class="jo_scrollable jo_pcodeTab">PCode</div>');
             $tabs.append(this.$disassemblerDiv);
         }
+
+        this.$junitDiv = jQuery('<div class="jo_scrollable jo_junitTab">Testrunner</div>');
+        $tabs.append(this.$junitDiv);
+
 
         $bottomDiv.append($tabs);
 
@@ -935,7 +947,8 @@ export class MainEmbedded implements MainBase {
         this.showFile(file);
         if(!positionOrRange) return;
         if(positionOrRange["startLineNumber"]) positionOrRange = Range.getStartPosition(<IRange>positionOrRange);
-        this.getMainEditor().setPosition(<IPosition>positionOrRange)
+        this.getMainEditor().setPosition(<IPosition>positionOrRange);
+        this.getMainEditor().focus();
     }
 
 }
