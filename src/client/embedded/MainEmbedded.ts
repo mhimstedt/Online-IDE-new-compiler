@@ -480,13 +480,13 @@ export class MainEmbedded implements MainBase {
             if (this.config.withFileList) {
                 let $filesDiv = this.makeFilesDiv();
                 $bottomDiv.prepend($filesDiv);
-                new EmbeddedSlider($filesDiv, false, false, () => { });
+                new EmbeddedSlider($filesDiv[0], false, false, () => { });
             }
             makeTabs($bottomDivInner);
 
 
             $centerDiv.append($editorDiv, $bottomDiv);
-            new EmbeddedSlider($bottomDiv, true, true, () => { this.editor.editor.layout(); });
+            new EmbeddedSlider($bottomDiv[0], true, true, () => { this.editor.editor.layout(); });
         } else {
             $centerDiv.prepend($editorDiv);
         }
@@ -511,7 +511,7 @@ export class MainEmbedded implements MainBase {
         $div.append($centerDiv, $rightDiv);
 
         if (!this.config.hideEditor) {
-            new EmbeddedSlider($rightDiv, true, false, () => {
+            new EmbeddedSlider($rightDiv[0], true, false, () => {
                 this.editor.editor.layout();
             });
         }
