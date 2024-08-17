@@ -31,7 +31,7 @@ import { Workspace } from "../workspace/Workspace.js";
 import { ExportedWorkspace, WorkspaceImporterExporter } from "../workspace/WorkspaceImporterExporter.js";
 import { EmbeddedFileExplorer } from "./EmbeddedFileExplorer.js";
 import { EmbeddedIndexedDB } from "./EmbeddedIndexedDB.js";
-import { EmbeddedSlider } from "./EmbeddedSlider.js";
+import { EmbeddedSlider } from "../../tools/components/EmbeddedSlider.js";
 import { JOScript } from "./EmbeddedStarter.js";
 import { SchedulerState } from "../../compiler/common/interpreter/Scheduler.js";
 import { CompilerFile } from "../../compiler/common/module/CompilerFile.js";

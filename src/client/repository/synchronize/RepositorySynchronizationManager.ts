@@ -2,7 +2,7 @@ import jQuery from 'jquery';
 import { makeDiv } from "../../../tools/HtmlTools.js";
 import { ajax } from "../../communication/AjaxHelper.js";
 import { GainRepositoryLockRequest, GainRepositoryLockResponse, GetRepositoryRequest, GetRepositoryResponse, LeaseRepositoryLockRequest, LeaseRepositoryLockResponse, Repository } from "../../communication/Data.js";
-import { EmbeddedSlider } from "../../embedded/EmbeddedSlider.js";
+import { EmbeddedSlider } from "../../../tools/components/EmbeddedSlider.js";
 import { Main } from "../../main/Main.js";
 import { SpritesheetData } from "../../spritemanager/SpritesheetData.js";
 import { Workspace } from "../../workspace/Workspace.js";

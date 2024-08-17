@@ -1,5 +1,5 @@
 import jQuery from 'jquery';
-import { EmbeddedSlider } from "../../../client/embedded/EmbeddedSlider";
+import { EmbeddedSlider } from "../../../tools/components/EmbeddedSlider";
 import { Treeview } from "../../../tools/components/treeview/Treeview";
 import { DOM } from "../../../tools/DOM";
 import { JavaClass } from "../../java/types/JavaClass";
