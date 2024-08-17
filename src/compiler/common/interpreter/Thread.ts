@@ -205,6 +205,7 @@ export class Thread {
     handleSystemException(exception: any, step: Step, currentProgramState: ProgramState) {
         console.log(exception);
         console.log(step!.codeAsString);
+        //@ts-ignore
         this.throwException(new SystemException("SystemException", InterpreterMessages.SystemException() + exception), step!);
     }
 
@@ -746,7 +747,7 @@ export class Thread {
 
     CheckLastIndex(index: number, dimension: number): number {
         let array = this.lastCheckedArrays.pop();
-        if (index < 0 || index >= array.length) throw new IndexOutOfBoundsExceptionClass(InterpreterMessages.ArrayIndexOutOfBoundsException(index, array.length, dimension));
+        if (index < 0 || index >= array!.length) throw new IndexOutOfBoundsExceptionClass(InterpreterMessages.ArrayIndexOutOfBoundsException(index, array!.length, dimension));
         return index;
     }
 

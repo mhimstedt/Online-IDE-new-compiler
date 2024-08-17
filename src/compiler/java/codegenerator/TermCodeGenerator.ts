@@ -393,6 +393,8 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
 
             if (!(indsnip?.type?.isUsableAsIndex())) {
                 if (indsnip) this.pushError(JCM.indexMustHaveIntegerValue(), "error", index);
+
+                // set dummy replacement to keep on compiling...
                 indsnip = new StringCodeSnippet('0', index.range, this.intType);
             }
 
@@ -423,7 +425,7 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
                 }
 
                 returnSnippet = new SeveralParameterTemplate(`${checkAndReturnArrayMethod}(§1, §2)[${Helpers.checkLastIndex}(§3, ${indexSnippets.length + 1})]`)
-                    .applyToSnippet(remainingType, node.range, arraySnippet, indexSnippet, lastIndexSnippet);
+                    .applyToSnippet(remainingType, node.range, arraySnippet, indexSnippet, lastIndexSnippet!);
             }
         } else {
             let indexSnippet = ParametersJoinedTemplate.applyToSnippet(this.voidType, node.range, '', ', ', '', ...indexSnippets);
@@ -885,7 +887,10 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
         if (isEnum && objectType.identifier == 'SpriteLibrary') {
             let enumType = <JavaEnum>(<StaticNonPrimitiveType>objectType).nonPrimitiveType;
             let id = enumType.id;
-            let value = enumType.runtimeClass.getSpriteLibrary(id, node.attributeIdentifier);
+            
+            if(!enumType.runtimeClass) return undefined;
+
+            let value = enumType.runtimeClass!.getSpriteLibrary(id, node.attributeIdentifier);
             if (value) {
                 return new StringCodeSnippet(`${Helpers.classes}["SpriteLibrary"].getSpriteLibrary(${id}, "${node.attributeIdentifier}")`, node.range, enumType);
             }
