@@ -119,7 +119,7 @@ export class Parser extends StatementParser {
             let pos = this.pos;
             let statement = this.parseStatementOrExpression();
 
-            if (statement) {
+            if (statement && !(statement.kind == TokenType.block && statement.isEmpty)) {
                 this.mainMethodStatements.push(statement);
             }
 
