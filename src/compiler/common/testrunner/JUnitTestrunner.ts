@@ -77,7 +77,7 @@ export class JUnitTestrunner {
             ]
         }
         
-        new EmbeddedSlider(jQuery(leftDiv), false, false, () => { });
+        new EmbeddedSlider(leftDiv, false, false, () => { });
         
     }
     
