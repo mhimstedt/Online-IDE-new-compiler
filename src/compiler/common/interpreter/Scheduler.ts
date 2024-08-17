@@ -223,7 +223,10 @@ export class Scheduler {
                     let dt = performance.now() - this.timeStampProgramStarted;
                     let stepsPerSecond = Math.round(this.stepCountSinceStartOfProgram / dt * 1000);
                     this.interpreter.printManager.print("", true, undefined);
-                    this.interpreter.printManager.print(InterpreterMessages.ExecutionTime() + ": " + Math.round(dt * 100) / 100 + " ms, " + this.stepCountSinceStartOfProgram + " steps, " + this.printMillions(stepsPerSecond) + " steps/s", true, undefined);
+                    this.interpreter.printManager.print(InterpreterMessages.ExecutionTime() + ": " +
+                        Math.round(dt * 100) / 100 + " ms, " +
+                        this.stepCountSinceStartOfProgram + " steps, " +
+                        this.printMillions(stepsPerSecond) + " steps/s", true, undefined);
                 }
                 this.terminateAllThreads();
                 break;
@@ -232,9 +235,9 @@ export class Scheduler {
     }
 
     printMillions(n: number): string {
-        if(n < 1e6) return "" + Math.trunc(n);
+        if (n < 1e6) return "" + Math.trunc(n);
 
-        n = Math.trunc(n/1e3)*1e3/1e6;
+        n = Math.trunc(n / 1e3) * 1e3 / 1e6;
 
         return n + " million";
     }
@@ -500,7 +503,7 @@ export class Scheduler {
         }
     }
 
-    exit(status: number){
+    exit(status: number) {
         console.log("Exited with status " + status);
         this.interpreter.printManager?.print("Exited with status " + status, true, 0xffffff);
         this.setState(SchedulerState.stopped);

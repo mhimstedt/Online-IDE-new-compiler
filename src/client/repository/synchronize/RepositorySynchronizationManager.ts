@@ -344,7 +344,7 @@ export class SynchronizationManager {
 
         this.$belowMainHeadingDiv.append(this.$leftDiv, this.$historyOuterDiv);
 
-        new EmbeddedSlider(this.$historyOuterDiv, true, false, () => { this.diffEditor.layout(); }).$sliderDiv.css('left', '-3px');
+        new EmbeddedSlider(this.$historyOuterDiv[0], true, false, () => { this.diffEditor.layout(); }).sliderDiv.style.left = '-3px';
         this.$historyOuterDiv.find('.joe_slider').css('position', 'absolute');
 
         this.$historyScrollDiv = makeDiv("historyScrollDiv", "jo_scrollable");
@@ -410,7 +410,7 @@ export class SynchronizationManager {
 
 
 
-        let horizontalSlider = new EmbeddedSlider(this.$editorDiv, true, true, () => { this.diffEditor.layout(); });
+        let horizontalSlider = new EmbeddedSlider(this.$editorDiv[0], true, true, () => { this.diffEditor.layout(); });
         horizontalSlider.setColor('var(--slider)');
 
         this.makeDroppable("left", this.$fileListDivs[0]);

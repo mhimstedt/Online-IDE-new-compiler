@@ -1,3 +1,15 @@
+/* beta-version */
+#login, #login-center {
+    background-color: var(--backgroundBeta)
+}
+
+#beta-version {
+    position: absolute;
+    font-size: 150%;
+    left: 10px;
+    top: 10px;
+}
+/* End beta */
 html, body {
     position: relative;
     padding: 0;

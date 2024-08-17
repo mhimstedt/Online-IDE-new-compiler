@@ -2,7 +2,9 @@
     --breakpoint-size: 10px;
     --breakpoint-radius: 10px;
 
-    --backgroundDark: #1e1e1e;
+    --backgroundBeta: #4d0000;
+
+    --backgroundDark: #433232;
     --backgroundLight: #252526;
     --backgroundHeading: #37373d;
     --backgroundSelected: #2a2d2e;
