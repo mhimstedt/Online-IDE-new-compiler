@@ -149,7 +149,7 @@ export class ClassBox extends DiagramElement {
             });
             for (let field of this.klass.getFields()) {
 
-                let text: string = this.getVisibilityText(field.visibility) + field.type.toString() + " " +  field.identifier;
+                let text: string = this.getVisibilityText(field.visibility) + field.type?.toString() + " " +  field.identifier;
 
                 this.addTextLine({
                     type: "text",
@@ -302,7 +302,7 @@ export class ClassBox extends DiagramElement {
         let s: string = "";
 
         if (klass instanceof JavaClass && this.withFields && klass.fields.length > 0) {
-            for (let f of klass.fields) s += this.getVisibilityText(f.visibility) + f.type.toString() + " " + f.identifier;
+            for (let f of klass.fields) s += this.getVisibilityText(f.visibility) + f.type?.toString() + " " + f.identifier;
         }
 
         let methods = klass.getOwnMethods();
