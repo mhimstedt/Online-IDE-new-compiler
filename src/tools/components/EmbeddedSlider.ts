@@ -3,7 +3,8 @@ import { DOM } from '../DOM';
 
 export class EmbeddedSlider {
 
-    sliderDiv: HTMLElement;
+    sliderDiv!: HTMLElement;
+    otherDiv!: HTMLElement;
 
     /**
      * A div contains container and another div. Between the latter two 
@@ -16,15 +17,23 @@ export class EmbeddedSlider {
      */
     constructor(private container: HTMLElement,
         private firstLast: boolean, private horVert: boolean,
-        private callback: (newLength: number) => void, private otherDiv?: HTMLElement) {
+        private callback: (newLength: number) => void, 
+        otherDiv?: HTMLElement) {
+
         this.initSlider();
+        if(otherDiv) this.otherDiv = otherDiv;
     }
 
     initSlider() {
         let that = this;
 
         if (this.otherDiv == null) {
-            Array.from(this.container.parentElement.children).forEach((element) => {
+            let parentElement = this.container.parentElement;
+            if(!parentElement){
+                console.log("Error in EmbeddedSlider: element has no parentElement.");
+                return;
+            }
+            Array.from(parentElement.children).forEach((element) => {
                 if (element != this.container) {
                     that.otherDiv = <HTMLElement>element;
                 }
@@ -54,23 +63,25 @@ export class EmbeddedSlider {
 
         let mousePointer = window.PointerEvent ? "pointer" : "mouse";
 
+        //@ts-ignore
         this.sliderDiv.addEventListener(mousePointer + "down", (md: PointerEvent) => {
-
+            
             let x = md.clientX;
             let y = md.clientY;
-
+            
             let ownRectangle = this.container.getBoundingClientRect();
             let ownStartHeight = ownRectangle.height;
             let ownStartWidth = ownRectangle.width;
             let otherRectangle = this.otherDiv.getBoundingClientRect();
             let otherStartHeight = otherRectangle.height;
             let otherStartWidth = otherRectangle.width;
-
+            
             let moveListener: EventListener;
+            //@ts-ignore
             document.addEventListener(mousePointer + "move", moveListener = (mm: PointerEvent) => {
                 let dx = mm.clientX - x;
                 let dy = mm.clientY - y;
-
+                
                 if (this.horVert) {
                     let newHeight = ownStartHeight + (this.firstLast ? -dy : dy);
                     let newOtherHeight = otherStartHeight + (this.firstLast ? dy : -dy);
@@ -89,10 +100,11 @@ export class EmbeddedSlider {
                     this.callback(newWidth);
                 }
                 this.container.style.flex = "0 1 auto";
-
+                
             });
-
+            
             let upListener: EventListener;
+            //@ts-ignore
             document.addEventListener(mousePointer + "up", upListener = () => {
                 
                 document.removeEventListener(mousePointer + "move", moveListener);
