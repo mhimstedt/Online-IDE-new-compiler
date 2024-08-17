@@ -119,7 +119,7 @@ export class Parser extends StatementParser {
             let pos = this.pos;
             let statement = this.parseStatementOrExpression();
 
-            if (statement && !(statement.kind == TokenType.block && statement.isEmpty)) {
+            if (statement) {
                 this.mainMethodStatements.push(statement);
             }
 
@@ -161,6 +161,8 @@ export class Parser extends StatementParser {
 
             // restore current class after leaving child class
             this.currentClassOrInterface = currentClassOrInterface;
+
+            while(this.comesToken(TokenType.semicolon, true)){}
         }
 
     }
