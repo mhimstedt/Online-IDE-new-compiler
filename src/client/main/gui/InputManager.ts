@@ -1,7 +1,5 @@
-import { IInputManager, InputManagerValidator, InputManagerCallback } from "../../../compiler/common/interpreter/IInputManager";
-import { IPrintManager } from "../../../compiler/common/interpreter/PrintManager";
-import { DOM } from "../../../tools/DOM";
-import { TabManager } from "../../../tools/TabManager";
+import jQuery from "jquery";
+import { IInputManager, InputManagerCallback, InputManagerValidator } from "../../../compiler/common/interpreter/IInputManager";
 import { MainBase } from "../MainBase";
 import { PrintManager } from "./PrintManager";
 

@@ -60,7 +60,7 @@ export type WorkspaceData = {
     id: number,
     owner_id: number,
     files: FileData[],
-    currentFileId: number,
+    current_file_id: number,
     settings?: string,       // serialized WorkspaceSettings
 
     version: number,

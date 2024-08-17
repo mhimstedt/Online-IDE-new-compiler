@@ -78,7 +78,7 @@ export class Workspace extends CompilerWorkspace {
             isFolder: this.isFolder,
             id: this.id,
             owner_id: this.owner_id,
-            currentFileId: this.currentlyOpenFile == null ? null : this.currentlyOpenFile.id,
+            current_file_id: this.currentlyOpenFile == null ? null : this.currentlyOpenFile.id,
             files: [],
             version: this.version,
             repository_id: this.repository_id,
@@ -180,7 +180,7 @@ export class Workspace extends CompilerWorkspace {
             let file = File.restoreFromData(f);
             w.files.push(file);
 
-            if(f.id == wd.currentFileId){
+            if(f.id == wd.current_file_id){
                 w.currentlyOpenFile = file;
             }
 
