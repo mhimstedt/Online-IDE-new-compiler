@@ -2,7 +2,7 @@
     --breakpoint-size: 10px;
     --breakpoint-radius: 10px;
 
-    --backgroundBeta: #4d0000;
+    --backgroundBeta: #000125;
 
     --backgroundDark: #433232;
     --backgroundLight: #252526;
@@ -236,7 +236,7 @@ body .monaco-editor-hover .monaco-tokenized-source {
 }
 
 #jo_login_new>ul a:link {
-    color: rgb(63, 126, 160);
+    color: rgb(94, 136, 159);
 }
 
 #jo_login_new>ul a:hover {
@@ -244,7 +244,7 @@ body .monaco-editor-hover .monaco-tokenized-source {
 }
 
 #jo_login_new>ul a:visited {
-    color: rgb(63, 126, 160);
+    color: rgb(94, 136, 159);
     filter:brightness(50%);
 }
 
