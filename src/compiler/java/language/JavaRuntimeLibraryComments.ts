@@ -515,6 +515,10 @@ export class JRC {
     "en": `Displays this object behind all others inside the same group.`,
     })
 
+    static shapeTintComment = () => lm({
+    "de": `Überzieht das Grafikobjekt mit der angegebenen Farbe. Diese Methode wirkt nur bei denjenigen Grafikobjekten, die die Methode tint unterstützen.`,
+    "en": `Sets tint color of this object.`,
+    })
 
     /**
      * Class FilledShape
