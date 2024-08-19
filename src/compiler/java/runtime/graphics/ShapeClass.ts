@@ -11,6 +11,7 @@ import { GroupClass } from './GroupClass';
 import { updateWorldTransformRecursively } from './PixiHelper';
 import { JRC } from '../../language/JavaRuntimeLibraryComments';
 import { ContainerProxy } from './ContainerProxy';
+import { ColorClass } from './ColorClass';
 
 export type MouseEventMethod = (t: Thread, callback: CallbackParameter, x: number, y: number, button: number) => void;
 
@@ -57,6 +58,7 @@ export class ShapeClass extends ActorClass {
         { type: "method", signature: "final boolean collidesWithAnyShape()", native: ShapeClass.prototype._collidesWithAnyShape, comment: JRC.shapeCollidesWithAnyShapeComment },
         { type: "method", signature: "final boolean collidesWithFillColor(int color)", native: ShapeClass.prototype._collidesWithAnyShape, comment: JRC.shapeCollidesWithFillColorComment },
         { type: "method", signature: "final boolean collidesWithFillColor(string color)", native: ShapeClass.prototype._collidesWithAnyShape, comment: JRC.shapeCollidesWithFillColorComment },
+        { type: "method", signature: "final boolean collidesWithFillColor(Color color)", native: ShapeClass.prototype._collidesWithAnyShape, comment: JRC.shapeCollidesWithFillColorComment },
         { type: "method", signature: "final Sprite getFirstCollidingSprite(int imageIndex)", native: ShapeClass.prototype._getFirstCollidingSprite, comment: JRC.shapeGetFirstCollidingSpriteComment },
 
         { type: "method", signature: "void onMouseUp(double x, double y, int button)", java: ShapeClass.prototype._mj$onMouseUp$void$double$double$int, comment: JRC.shapeOnMouseUpComment },
@@ -621,11 +623,16 @@ export class ShapeClass extends ActorClass {
 
     }
 
-    _collidesWithAnyShape(color?: number | string): boolean {
+    _collidesWithAnyShape(color?: number | string | ColorClass): boolean {
 
-        if (color && (typeof color == "string")) {
-            color = ColorHelper.parseColorToOpenGL(color).color;
+        if(color){
+            if (typeof color == "string") {
+                color = ColorHelper.parseColorToOpenGL(color).color;
+            } else if(color instanceof ColorClass){
+                color = color._toInt();
+            }
         }
+
 
         if (this.isDestroyed) return false;
 
