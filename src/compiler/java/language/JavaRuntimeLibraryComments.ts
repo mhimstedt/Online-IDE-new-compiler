@@ -370,6 +370,16 @@ export class JRC {
         "en": "Is called if mouse cursor is on object and user moves mouse.",
     })
 
+    static shapeStartTrackingEveryMouseMovementComment = () => lm({
+    "de": `Sorgt dafür, dass ab jetzt JEDE Bewegung des Mauszeigers (auch wenn sich dieser außerhalb des Objekts befindet) ein MouseMove-Ereignis für dieses Objekt auslöst. -> Praktisch zur Umsetzung des "Ziehens" von Objekten mit der Maus!`,
+    "en": `Makes the object react to mouse move events even if it doesn't contain the mouse pointer. Hint: use this method to create drag/drop-functionality.`,
+    })
+
+    static shapeStopTrackingEveryMouseMovementComment = () => lm({
+    "de": `Sorgt dafür, dass ab jetzt nur noch dann Bewegungen des Mauszeigers ein MouseMove-Ereignis für dieses Objekt auslösen, wenn sich der Mauszeiger über dem Objekt befindet. -> Praktisch zur Umsetzung des "Ziehens" von Objekten mit der Maus!`,
+    "en": `Makes the object react to mouse move events only if it contains the mouse pointer. Hint: use this method to create drag/drop-functionality.`,
+    })
+
     static shapeOnMouseEnterComment = () => lm({
         "de": "Wird aufgerufen, wenn der Mauspfeil das Objekt betritt.",
         "en": "Is called if mouse cursor enters object.",

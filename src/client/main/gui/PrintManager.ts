@@ -64,6 +64,10 @@ export class PrintManager implements IPrintManager {
         });
     }
 
+    isTestPrintManager(): boolean {
+        return false;
+    }
+
     showProgramEnd() {
         let $programEndDiv = this.$runDiv.find('.jo_run-programend');
         $programEndDiv.show();

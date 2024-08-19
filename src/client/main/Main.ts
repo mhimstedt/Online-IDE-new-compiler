@@ -410,6 +410,7 @@ export class Main implements MainBase {
         if(!positionOrRange) return;
         if(positionOrRange["startLineNumber"]) positionOrRange = Range.getStartPosition(<IRange>positionOrRange);
         this.getMainEditor().setPosition(<IPosition>positionOrRange)
+        this.getMainEditor().revealPositionInCenterIfOutsideViewport(<IPosition>positionOrRange);
         this.getMainEditor().focus();
     }
 

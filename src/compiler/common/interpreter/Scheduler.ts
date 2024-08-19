@@ -220,13 +220,16 @@ export class Scheduler {
             case SchedulerState.stopped:
             case SchedulerState.error:
                 if (this.state == SchedulerState.running) {
-                    let dt = performance.now() - this.timeStampProgramStarted;
-                    let stepsPerSecond = Math.round(this.stepCountSinceStartOfProgram / dt * 1000);
-                    this.interpreter.printManager.print("", true, undefined);
-                    this.interpreter.printManager.print(InterpreterMessages.ExecutionTime() + ": " +
-                        Math.round(dt * 100) / 100 + " ms, " +
-                        this.stepCountSinceStartOfProgram + " steps, " +
-                        this.printMillions(stepsPerSecond) + " steps/s", true, undefined);
+                    let printManager = this.interpreter.printManager;
+                    if(!printManager.isTestPrintManager()){
+                        let dt = performance.now() - this.timeStampProgramStarted;
+                        let stepsPerSecond = Math.round(this.stepCountSinceStartOfProgram / dt * 1000);
+                        this.interpreter.printManager.print("", true, undefined);
+                        this.interpreter.printManager.print(InterpreterMessages.ExecutionTime() + ": " +
+                            Math.round(dt * 100) / 100 + " ms, " +
+                            this.stepCountSinceStartOfProgram + " steps, " +
+                            this.printMillions(stepsPerSecond) + " steps/s", true, undefined);
+                    }
                 }
                 this.terminateAllThreads();
                 break;
