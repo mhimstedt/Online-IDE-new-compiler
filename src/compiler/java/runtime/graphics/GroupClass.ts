@@ -7,6 +7,7 @@ import { RuntimeExceptionClass } from '../system/javalang/RuntimeException';
 import { ShapeClass } from './ShapeClass';
 import { JRC } from '../../language/JavaRuntimeLibraryComments';
 import { CallbackParameter } from '../../../common/interpreter/CallbackParameter';
+import { CollisionPairClass } from './CollisionpairClass';
 
 export class GroupClass extends ShapeClass {
     static __javaDeclarations: LibraryDeclarations = [
@@ -28,6 +29,8 @@ export class GroupClass extends ShapeClass {
         { type: "method", signature: "final Group<T> copy()", java: GroupClass.prototype._mj$copy$Group$, comment: JRC.groupCopyComment },
 
         { type: "method", signature: "final boolean collidesWith(Shape otherShape)", native: GroupClass.prototype._collidesWith, comment: JRC.shapeCollidesWithComment },
+        { type: "method", signature: "final T[] getCollidingShapes(Shape otherShape)", native: GroupClass.prototype._getCollidingShapesGroup, comment: JRC.groupGetCollidingShapesComment },
+        { type: "method", signature: "final <V> CollisionPair<T, V> getCollisionPairs(Group<V> otherGroup, boolean maxOneCollisionPerShape)", native: GroupClass.prototype._getCollisionPairs, comment: JRC.groupGetCollisionPairsComment },
 
     ]
 
@@ -272,6 +275,31 @@ export class GroupClass extends ShapeClass {
         for (let shape of this.shapes) shape.setWorldTransformAndHitPolygonDirty();
     }
 
+    _getCollidingShapesGroup(shape: ShapeClass): ShapeClass[]{
+        if(shape == null || !this.hasOverlappingBoundingBoxWith(shape)) return [];
 
+        return this.shapes.filter(s => s != shape && shape._collidesWith(s));
+    }
 
+    _getCollisionPairs(otherGroup: GroupClass, onePairPerShape: boolean = false): CollisionPairClass[]{
+        if(otherGroup == null || !this.hasOverlappingBoundingBoxWith(otherGroup)) return [];
+        let pairs: CollisionPairClass[] = [];
+
+        let collidingShapesB: Set<ShapeClass> = new Set();
+
+        for(let shapeA of this.shapes){
+            for(let shapeB of otherGroup.shapes){
+                if(collidingShapesB.has(shapeB)) continue;
+                if(shapeA._collidesWith(shapeB)){
+                    pairs.push(new CollisionPairClass(shapeA, shapeB));
+                    if(onePairPerShape){
+                        collidingShapesB.add(shapeB);
+                        break;
+                    }
+                }
+            }
+        }
+
+        return pairs;
+    }
 }

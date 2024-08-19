@@ -5,6 +5,9 @@
   * Database classes
   * Robot class
   * Test all library classes, add missing methods, fix bugs
+    * World.follow
+    * Shape.directionRelativeTo
+    * Shape.moveBackFrom
   * missing methods:
     * Group.copy, Group.renderAsStaticBitmap (Testfile Sternen-Hintergrund)
     * Program must not stop after program end if Timer-object is running (Test-file Timer)

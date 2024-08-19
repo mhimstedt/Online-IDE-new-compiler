@@ -756,8 +756,6 @@ export class ProjectExplorer {
         f.restoreViewState(this.main.getMainEditor());
         this.main.editor.dontPushNextCursorMove--;
 
-        this.main.getInterpreter().breakpointManager.renderBreakpointDecorators();
-
         this.setCurrentlyEditedFile(f);
 
         this.main.getInterpreter().showProgramPointer();

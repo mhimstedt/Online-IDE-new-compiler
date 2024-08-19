@@ -1,6 +1,7 @@
 import { Helpers, StepParams } from "../../common/interpreter/StepFunction";
 import { IRange } from "../../common/range/Range";
 import { JCM } from "../language/JavaCompilerMessages";
+import { PrimitiveType } from "../runtime/system/primitiveTypes/PrimitiveType";
 import { JavaType } from "../types/JavaType";
 import { CodeSnippet, ConstantValue, StringCodeSnippet } from "./CodeSnippet";
 import { CodeSnippetContainer } from "./CodeSnippetKinds";
@@ -173,7 +174,7 @@ export class SeveralParameterTemplate extends CodeTemplate {
     applyToSnippet(resultType: JavaType, range: IRange, ...snippets: CodeSnippet[]): CodeSnippet {
 
         // if there are <= 2 parameters: use faster templates which don't need to analyze the template string and may generate more efficient code:
-        switch(snippets.length){
+        switch (snippets.length) {
             case 1: return new OneParameterTemplate(this.templateString).applyToSnippet(resultType, range, snippets[0]);
             case 2: return new TwoParameterTemplate(this.templateString).applyToSnippet(resultType, range, snippets[0], snippets[1]);
         }
@@ -251,15 +252,29 @@ export class BinaryOperatorTemplate extends CodeTemplate {
 
         if (snippet0IsPure && snippet1IsPure) {
             let snippet: StringCodeSnippet;
+            
             if (this.operator == "/" || this.operator == "%") {
+                let prefix: string = "";
+                let suffix: string = "";
+                
+                if(this.operator == "/"){
+                    let bothTypesAreShortByteIntLong: boolean = snippets[0].type instanceof PrimitiveType && snippets[0].type.isByteShortIntLong() && snippets[1].type instanceof PrimitiveType && snippets[1].type.isByteShortIntLong();
+                    if (bothTypesAreShortByteIntLong) {
+                        prefix = "Math.trunc( ";
+                        suffix = ")";
+                    }
+                }
+
                 if (snippet1IsConstant && snippets[1].getConstantValue() != 0) {
-                    snippet = new StringCodeSnippet(snippets[0].getPureTerm() + " " + this.operator + " " + snippets[1].getPureTerm(),
+                    snippet = new StringCodeSnippet(prefix + snippets[0].getPureTerm() + " " + this.operator + " " + snippets[1].getPureTerm() + suffix,
                         _range, _resultType);
                 } else {
-                    snippet = new StringCodeSnippet(snippets[0].getPureTerm() + " " + this.operator + " (" + snippets[1].getPureTerm() +
-                        `|| ${Helpers.throwAE}("${JCM.divideByZero()}", ${_range.startLineNumber}, ${_range.startColumn}, ${_range.endLineNumber}, ${_range.endColumn}))`,
+                        snippet = new StringCodeSnippet(prefix +  snippets[0].getPureTerm() + " " + this.operator + " (" + snippets[1].getPureTerm() +
+                        `|| ${Helpers.throwArithmeticException}("${JCM.divideByZero()}", ${_range.startLineNumber}, ${_range.startColumn}, ${_range.endLineNumber}, ${_range.endColumn}))` + suffix,
                         _range, _resultType);
                 }
+
+                
             } else {
                 snippet = new StringCodeSnippet(snippets[0].getPureTerm() + " " + this.operator + " " + snippets[1].getPureTerm(), _range, _resultType);
             }
@@ -288,7 +303,14 @@ export class BinaryOperatorTemplate extends CodeTemplate {
 
             switch (this.operator) {
                 case '-': snippetContainer.addStringPart(`-${StepParams.stack}.pop() + ${StepParams.stack}.pop()`, _range, _resultType); break;
-                case '/': snippetContainer.addStringPart(`1/(${StepParams.stack}.pop() || ${Helpers.throwAE}("${JCM.divideByZero()}", ${_range.startLineNumber}, ${_range.startColumn}, ${_range.endLineNumber}, ${_range.endColumn})) * ${StepParams.stack}.pop()`, _range, _resultType); break;
+                case '/':
+                    let bothTypesAreShortByteIntLong: boolean = snippets[0].type instanceof PrimitiveType && snippets[0].type.isByteShortIntLong() && snippets[1].type instanceof PrimitiveType && snippets[1].type.isByteShortIntLong();
+                    if (bothTypesAreShortByteIntLong) {
+                        snippetContainer.addStringPart(`Math.trunc( 1/(${StepParams.stack}.pop() || ${Helpers.throwArithmeticException}("${JCM.divideByZero()}", ${_range.startLineNumber}, ${_range.startColumn}, ${_range.endLineNumber}, ${_range.endColumn})) * ${StepParams.stack}.pop() );`, _range, _resultType);
+                    } else {
+                        snippetContainer.addStringPart(`1/(${StepParams.stack}.pop() || ${Helpers.throwArithmeticException}("${JCM.divideByZero()}", ${_range.startLineNumber}, ${_range.startColumn}, ${_range.endLineNumber}, ${_range.endColumn})) * ${StepParams.stack}.pop()`, _range, _resultType);
+                    }
+                    break;
                 case '<': snippetContainer.addStringPart(`${StepParams.stack}.pop() > ${StepParams.stack}.pop()`, _range, _resultType); break;
                 case '>': snippetContainer.addStringPart(`${StepParams.stack}.pop() < ${StepParams.stack}.pop()`, _range, _resultType); break;
                 case '<=': snippetContainer.addStringPart(`${StepParams.stack}.pop() >= ${StepParams.stack}.pop()`, _range, _resultType); break;
@@ -303,7 +325,7 @@ export class BinaryOperatorTemplate extends CodeTemplate {
         snippetContainer.addParts(snippets[1]);
         snippetContainer.addParts(snippets[0]);
         if (this.operator == '%') {
-            snippetContainer.addStringPart(`${StepParams.stack}.pop() ${this.operator} (${StepParams.stack}.pop() || ${Helpers.throwAE}("${JCM.divideByZero()}", ${_range.startLineNumber}, ${_range.startColumn}, ${_range.endLineNumber}, ${_range.endColumn}))`, _range, _resultType);
+            snippetContainer.addStringPart(`${StepParams.stack}.pop() ${this.operator} (${StepParams.stack}.pop() || ${Helpers.throwArithmeticException}("${JCM.divideByZero()}", ${_range.startLineNumber}, ${_range.startColumn}, ${_range.endLineNumber}, ${_range.endColumn}))`, _range, _resultType);
         } else {
             snippetContainer.addStringPart(`${StepParams.stack}.pop() ${this.operator} ${StepParams.stack}.pop()`, _range, _resultType);
         }

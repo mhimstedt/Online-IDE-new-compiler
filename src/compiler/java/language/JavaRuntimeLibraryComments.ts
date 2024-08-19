@@ -525,6 +525,11 @@ export class JRC {
         "en": "If this graphic object collides with any sprite with given imageIndex then this method returns the first one. Use imageIndex == -1 to search for ANY colliding Sprite.",
     })
 
+    static shapeGetCollidingShapesComment = () => lm({
+    "de": `Gibt alle Elemente der Group zurück, die mit diesem graphischen Objekt kollidieren.`,
+    "en": `Returns each element of given Group whicht collide with this object.`,
+    })
+
     static shapeBringToFrontComment = () => lm({
     "de": `Setzt das Grafikobjekt vor alle anderen innerhalb der Gruppe.`,
     "en": `Displays this object in front of all others inside the same group.`,
@@ -701,6 +706,44 @@ export class JRC {
     "de": `Erstellt eine Kopie dieser Gruppe inclusive Kopien aller ihrer Elemente.`,
     "en": `Creates a copy of this group containing copies of it's elements.`,
     })
+
+    static groupGetCollidingShapesComment = () => lm({
+    "de": `Gibt die Elemente der Gruppe zurück, die mit dem übergebenen Shape kollidieren.`,
+    "en": `Returns all elements of this group which collide with given Shape.`,
+    })
+
+    static groupGetCollisionPairsComment = () => lm({
+    "de": 'Überprüft, welche Objekte der Gruppe mit welchen der anderen kollidieren.' +
+            ' Gibt für jede Kollision ein Collisionpair-Objekt zurück, das die beiden kollidierenden Objekte enthält.' +
+        ' Falls maxOneCollisionPerShape == true ist jedes Objekt dabei aber nur in max. einem Collisionpair-Objekt enthalten.',
+    "en": `Checks which elements of this group collide with elements of the other one. For each detected collision ` + 
+          `it returns a Collisionpair-object that contains both elements.` + 
+          ` If maxOneCollisionPerShape == true then no shape of this group is contained two or more of the returned collisionpair-objects.`,
+    })
+
+    /**
+     * class CollisionPair
+     */
+    static collisionPairClassComment = () => lm({
+    "de": `Speichert die Referenzen auf zwei Figuren, die gerade kollidiert sind. Diese Klasse von den Kollisionsmethden der Klasse Group benutzt.`,
+    "en": `Saves pointers to two graphical objects which have collided. This class is used by Group.getCollisionPairs(Group otherGroup).`,
+    })
+
+    static collisionPairShapeAComment = () => lm({
+    "de": `Die erste der beiden kollidierenden Figuren. Sie gehört zu group1 des Methodenaufrufs group1.getCollisionPairs(group2).`,
+    "en": `First colliding Shape. It belongs to group1 of method call group1.getCollisionPairs(group2).`,
+    })
+
+    static collisionPairShapeBComment = () => lm({
+    "de": `Die zweite der beiden kollidierenden Figuren. Sie gehört zu group2 des Methodenaufrufs group1.getCollisionPairs(group2).`,
+    "en": `Second colliding Shape. It belongs to group2 of method call group1.getCollisionPairs(group2).`,
+    })
+
+    static collisionPairConstructorComment = () => lm({
+    "de": `Erzeugt ein paar zweier Shape-objekte.`,
+    "en": `Creates a tuple of two shapes.`,
+    })
+
 
     /**
      * Class Circle

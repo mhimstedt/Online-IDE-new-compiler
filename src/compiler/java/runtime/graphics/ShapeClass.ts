@@ -44,7 +44,7 @@ export class ShapeClass extends ActorClass {
         { type: "method", signature: "final void defineCenterRelative(double x, double y)", native: ShapeClass.prototype._defineCenterRelative, comment: JRC.shapeDefineCenterRelativeComment },
 
         { type: "method", signature: "final void tint(int color)", native: ShapeClass.prototype._setTintInt, comment: JRC.shapeTintComment },
-        { type: "method", signature: "final void tint(string color)", native: ShapeClass.prototype._setTintInt, comment: JRC.shapeTintComment },
+        { type: "method", signature: "final void tint(string color)", native: ShapeClass.prototype._setTintString, comment: JRC.shapeTintComment },
 
         { type: "method", signature: "static void setDefaultVisibility(boolean isVisible)", native: ShapeClass._setDefaultVisibility, comment: JRC.shapeSetDefaultVisibilityComment },
         { type: "method", signature: "final void setVisible(boolean isVisible)", native: ShapeClass.prototype._setVisible, comment: JRC.shapeSetVisibleComment },
@@ -60,6 +60,8 @@ export class ShapeClass extends ActorClass {
         { type: "method", signature: "final boolean collidesWithFillColor(string color)", native: ShapeClass.prototype._collidesWithAnyShape, comment: JRC.shapeCollidesWithFillColorComment },
         { type: "method", signature: "final boolean collidesWithFillColor(Color color)", native: ShapeClass.prototype._collidesWithAnyShape, comment: JRC.shapeCollidesWithFillColorComment },
         { type: "method", signature: "final Sprite getFirstCollidingSprite(int imageIndex)", native: ShapeClass.prototype._getFirstCollidingSprite, comment: JRC.shapeGetFirstCollidingSpriteComment },
+        { type: "method", signature: "final <T> T[] getCollidingShapes(Group<T> group)", native: ShapeClass.prototype._getCollidingShapes, comment: JRC.shapeGetCollidingShapesComment },
+
 
         { type: "method", signature: "void onMouseUp(double x, double y, int button)", java: ShapeClass.prototype._mj$onMouseUp$void$double$double$int, comment: JRC.shapeOnMouseUpComment },
         { type: "method", signature: "void onMouseDown(double x, double y, int button)", java: ShapeClass.prototype._mj$onMouseDown$void$double$double$int, comment: JRC.shapeOnMouseDownComment },
@@ -579,6 +581,18 @@ export class ShapeClass extends ActorClass {
     _getFirstCollidingSprite(imageIndex: number): ShapeClass | null {
         if (this.hitPolygonDirty) this.transformHitPolygon();
         return this.getFirstCollidingSpriteHelper(imageIndex, this.world.shapesWhichBelongToNoGroup, this.container.getBounds());
+    }
+
+    _getCollidingShapes(group: GroupClass): ShapeClass[] | null {
+        if(group == null) return [];
+
+        if(!this.hasOverlappingBoundingBoxWith(group)) return [];
+
+        let ret: ShapeClass[] = [];
+        for(let shape of group.shapes){
+            if(this._collidesWith(shape)) ret.push(shape);
+        }
+        return ret;
     }
 
     collidesWithAnyShapeHelper(color: number | undefined, shapes: ShapeClass[], bounds: PIXI.Bounds): boolean {
