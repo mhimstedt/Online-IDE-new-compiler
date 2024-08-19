@@ -157,7 +157,8 @@ export class SpriteClass extends ShapeClass {
             height: height
         })
 
-        tileSprite.parent = sprite.parent;
+        sprite.parent.addChild(tileSprite);
+
         tileSprite.setFromMatrix(sprite.localTransform);
         tileSprite.updateLocalTransform();
 
