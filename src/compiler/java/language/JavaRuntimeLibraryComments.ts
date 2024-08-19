@@ -380,6 +380,11 @@ export class JRC {
     "en": `Makes the object react to mouse move events even if it doesn't contain the mouse pointer. Hint: use this method to create drag/drop-functionality.`,
     })
 
+    static shapeCopyComment = () => lm({
+    "de": `Erstellt eine Kopie des Grafikobjekts und gibt sie zurück.`,
+    "en": `Creates and returns a copy of this object.`,
+    })
+
     static shapeStopTrackingEveryMouseMovementComment = () => lm({
     "de": `Sorgt dafür, dass ab jetzt nur noch dann Bewegungen des Mauszeigers ein MouseMove-Ereignis für dieses Objekt auslösen, wenn sich der Mauszeiger über dem Objekt befindet. -> Praktisch zur Umsetzung des "Ziehens" von Objekten mit der Maus!`,
     "en": `Makes the object react to mouse move events only if it contains the mouse pointer. Hint: use this method to create drag/drop-functionality.`,
@@ -690,6 +695,11 @@ export class JRC {
     static groupDestroyAllChildrenComment = () => lm({
         "de": "Zerstört alle Elemente der Gruppe, nicht aber die Gruppe selbst.",
         "en": "Destroys all elements inside this group, but not this group itself.",
+    })
+
+    static groupCopyComment = () => lm({
+    "de": `Erstellt eine Kopie dieser Gruppe inclusive Kopien aller ihrer Elemente.`,
+    "en": `Creates a copy of this group containing copies of it's elements.`,
     })
 
     /**

@@ -67,6 +67,9 @@ export class ShapeClass extends ActorClass {
 
         { type: "method", signature: "void startTrackingEveryMouseMovement()", native: ShapeClass.prototype._startTrackingEveryMouseMovement, comment: JRC.shapeStartTrackingEveryMouseMovementComment },
         { type: "method", signature: "void stopTrackingEveryMouseMovement()", native: ShapeClass.prototype._stopTrackingEveryMouseMovement, comment: JRC.shapeStartTrackingEveryMouseMovementComment },
+        
+        { type: "method", signature: "abstract Shape copy()", java: ShapeClass.prototype._mj$copy$Shape$, comment: JRC.shapeCopyComment },
+
 
 
     ]
@@ -137,6 +140,10 @@ export class ShapeClass extends ActorClass {
     }
 
     render(): void { };
+
+    _mj$copy$Shape$(t: Thread, callback: CallbackParameter){
+        // this method is abstract => empty method stub
+    }
 
     _cj$_constructor_$Shape$(t: Thread, callback: CallbackParameter) {
         this._cj$_constructor_$Actor$(t, () => {

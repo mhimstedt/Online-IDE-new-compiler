@@ -6,6 +6,7 @@ import { NonPrimitiveType } from "../../types/NonPrimitiveType";
 import { RuntimeExceptionClass } from '../system/javalang/RuntimeException';
 import { ShapeClass } from './ShapeClass';
 import { JRC } from '../../language/JavaRuntimeLibraryComments';
+import { CallbackParameter } from '../../../common/interpreter/CallbackParameter';
 
 export class GroupClass extends ShapeClass {
     static __javaDeclarations: LibraryDeclarations = [
@@ -23,6 +24,8 @@ export class GroupClass extends ShapeClass {
         { type: "method", signature: "final void empty()", native: GroupClass.prototype.removeAllChildren, comment: JRC.groupEmptyComment },
         { type: "method", signature: "final void destroyAllChildren()", native: GroupClass.prototype.destroyAllChildren, comment: JRC.groupDestroyAllChildrenComment },
         // { type: "method", signature: "Rectangle(double left, double top, double width, double height)", java: GroupClass.prototype._cj$_constructor_$Rectangle$double$double$double$double },
+
+        { type: "method", signature: "final Group<T> copy()", java: GroupClass.prototype._mj$copy$Group$, comment: JRC.groupCopyComment },
 
         { type: "method", signature: "final boolean collidesWith(Shape otherShape)", native: GroupClass.prototype._collidesWith, comment: JRC.shapeCollidesWithComment },
 
@@ -54,6 +57,34 @@ export class GroupClass extends ShapeClass {
 
     }
 
+    _mj$copy$Shape$(t: Thread, callback: CallbackParameter){
+        this._mj$copy$Group$(t, callback);
+    }
+
+    _mj$copy$Group$(t: Thread, callback: CallbackParameter){
+        
+        let g = new GroupClass();
+        g._cj$_constructor_$Group$(t, () => {
+            let index = 0;
+
+            let f = () => {
+                if(index >= this.shapes.length){
+                    t.s.push(g);
+                    if(callback) callback();
+                    return;
+                }
+                let shape = this.shapes[index];
+                shape._mj$copy$Shape$(t, () => {
+                    g.add(t.s.pop());
+                    index++;
+                    f();
+                })
+            }
+
+            f();
+        })
+
+    }
 
     _containsPoint(x: number, y: number) {
         if (!this.container.getBounds().containsPoint(x, y)) return false;

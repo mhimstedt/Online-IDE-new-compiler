@@ -484,6 +484,9 @@ export class TurtleClass extends FilledShapeClass {
         return this.lineElements[this.lineElements.length - 1];
     }
 
+    _mj$copy$Shape$(t: Thread, callback: CallbackParameter){
+        this._mj$copy$Turtle$(t, callback);
+    }
 
     _mj$copy$Turtle$(t: Thread, callback: CallbackFunction) {
         let copy = new TurtleClass();
