@@ -1251,7 +1251,7 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
                     }
                 }
             }
-            if (suitable) {
+            if (suitable && castsNeeded < castsNeededWithBestMethodSoFar) {
 
                 bestMethodSoFar = method;
                 castsNeededWithBestMethodSoFar = castsNeeded;
