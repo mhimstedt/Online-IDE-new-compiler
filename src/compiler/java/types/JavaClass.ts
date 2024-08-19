@@ -214,13 +214,13 @@ export class JavaClass extends IJavaClass {
                 if (m.isAbstract) {
                     abstractMethods.push(m);
                 } else {
-                    concreteMethodSignatures.set(m.getSignature(), m);
+                    concreteMethodSignatures.set(m.getSignatureWithoutReturnParameter(), m);
                 }
             }
             klass = klass.getExtends();
         }
 
-        let abstractMethodsNotYetImplemented = abstractMethods.filter(m => !concreteMethodSignatures.get(m.getSignature()));
+        let abstractMethodsNotYetImplemented = abstractMethods.filter(m => !concreteMethodSignatures.get(m.getSignatureWithoutReturnParameter()));
 
         return abstractMethodsNotYetImplemented;
 
