@@ -601,9 +601,9 @@ export class GenericVariantOfJavaClass extends IJavaClass {
         let newTypeMap: Map<GenericTypeParameter, NonPrimitiveType> = new Map();
         let copyNeeded = false;
         this.typeMap.forEach((jt, gt) => {
-            let jtCopy = jt.getCopyWithConcreteType(otherTypeMap);
+            let jtCopy = <NonPrimitiveType>jt.getCopyWithConcreteType(otherTypeMap);
             if (jt != jtCopy) copyNeeded = true;
-            newTypeMap.set(gt, jt);
+            newTypeMap.set(gt, jtCopy);
         })
 
         if (!copyNeeded) return this;
