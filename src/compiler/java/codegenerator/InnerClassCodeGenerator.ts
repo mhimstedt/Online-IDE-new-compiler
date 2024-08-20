@@ -169,9 +169,11 @@ export class InnerClassCodeGenerator extends StatementCodeGenerator {
         }
         method.takeInternalJavaNameWithGenericParamterIdentifiersFrom(methodToImplement);
 
+        method.identifierRange = node.statement?.range || node.range;
+
         //@ts-ignore    (fake methodNode to use compileMethodDeclaration later)
         let methodNode: ASTMethodDeclarationNode = {
-            range: node.range,
+            range: method.identifierRange,
             statement: node.statement,
             isContructor: false,
             identifier: method.identifier,
