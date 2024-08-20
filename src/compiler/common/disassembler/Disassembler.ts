@@ -111,15 +111,11 @@ export class Disassembler {
     }
 
     showElementpositionInMonacoModel(file: CompilerFile, range: IRange) {
-        this.main.showFile(file);
-        let model = file.getMonacoModel();
-        if (!model) return;
-
         let programPointerManager = this.main.getInterpreter().programPointerManager;
         if (!programPointerManager) return;
 
         let p: ProgramPointerPositionInfo = {
-            programOrmoduleOrMonacoModel: model,
+            programOrmoduleOrFile: file,
             range: range
         }
 

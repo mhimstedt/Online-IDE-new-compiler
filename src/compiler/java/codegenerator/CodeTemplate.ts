@@ -207,7 +207,8 @@ export class SeveralParameterTemplate extends CodeTemplate {
         }
 
         if (onlyPureTerms) {
-            for (let parameter of this.orderedParameters) {
+            for(let i: number = this.orderedParameters.length -1; i >= 0; i--){
+                let parameter = this.orderedParameters[i];
                 appliedTemplate = appliedTemplate.replace(new RegExp('\\' + parameter.parameter, 'g'), snippets[parameter.n - 1].emit());
             }
             let snippet = new StringCodeSnippet(appliedTemplate, range, resultType);
@@ -221,7 +222,7 @@ export class SeveralParameterTemplate extends CodeTemplate {
         * Some snippets may push values to stack. We have to ensure they do this in reversed parameter order so that
         * values get popped in unreversed order.
         */
-        let parametersInDescendingOrder = this.orderedParameters.sort((p1, p2) => p2.order - p1.order);
+       let parametersInDescendingOrder = this.orderedParameters.sort((p1, p2) => p2.order - p1.order);
         let lastParts: CodeSnippet[] = [];
         for (let i = 0; i < parametersInDescendingOrder.length; i++) {
             let parameter = parametersInDescendingOrder[i];

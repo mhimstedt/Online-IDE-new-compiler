@@ -186,10 +186,10 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
             return objectSnippet;
         }
 
-        if (!destType.fastExtendsImplements(sourceType.identifier)) {
-            this.pushError(JCM.cantCastFromTo(sourceType.identifier, destType.identifier), "error", node);
-            return objectSnippet;
-        }
+        // if (!destType.fastExtendsImplements(sourceType.identifier)) {
+        //     this.pushError(JCM.cantCastFromTo(sourceType.identifier, destType.identifier), "error", node);
+        //     return objectSnippet;
+        // }
 
         let range = node.range;
         return SnippetFramer.frame(objectSnippet, `${Helpers.checkCast}(§1, "${destType.pathAndIdentifier}", ${range.startLineNumber}, ${range.startColumn}, ${range.endLineNumber}, ${range.endColumn})`
@@ -1060,7 +1060,7 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
                 }
             }
         }
-
+        // if(node.identifier == "addBlockSquareWithTiles") debugger;
         // cast parameter values
         parameterValueSnippet = this.castParameterValuesAndPackEllipsis(parameterValueSnippet, method);
 

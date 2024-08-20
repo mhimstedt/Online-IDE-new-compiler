@@ -22,8 +22,8 @@ export class ShapeClass extends ActorClass {
         { type: "declaration", signature: "abstract class Shape extends Actor", comment: JRC.shapeClassComment },
 
         { type: "field", signature: "private double angle", comment: JRC.shapeAngleComment },
-        { type: "field", signature: "private double centerX", comment: JRC.shapeCenterXComment },
-        { type: "field", signature: "private double centerY", comment: JRC.shapeCenterYComment },
+        { type: "field", signature: "protected double centerX", comment: JRC.shapeCenterXComment },
+        { type: "field", signature: "protected double centerY", comment: JRC.shapeCenterYComment },
 
         { type: "method", signature: "Shape()", java: ShapeClass.prototype._cj$_constructor_$Shape$ },
         { type: "method", signature: "final void move(double dx, double dy)", native: ShapeClass.prototype._move, comment: JRC.shapeMoveComment },
@@ -385,13 +385,13 @@ export class ShapeClass extends ActorClass {
 
     public _getCenterX(): number {
         let p = new PIXI.Point(this.centerXInitial, this.centerYInitial);
-        this.getWorldTransform().apply(p, p);
+        if(this.container) this.getWorldTransform().apply(p, p);
         return p.x;
     }
 
     public _getCenterY(): number {
         let p = new PIXI.Point(this.centerXInitial, this.centerYInitial);
-        this.getWorldTransform().apply(p, p);
+        if(this.container) this.getWorldTransform().apply(p, p);
         return p.y;
     }
 
@@ -420,13 +420,11 @@ export class ShapeClass extends ActorClass {
         let index2 = world.shapesNotAffectedByWorldTransforms.indexOf(this);
         if (index2 >= 0) world.shapesNotAffectedByWorldTransforms.splice(index2, 1);
 
-        this.container.destroy();
+        this.world.registerShapeToDestroy(this);
 
         if (this.mouseEventsImplemented) {
             this.world.mouseManager.removeShapeWithImplementedMouseMethods(this);
         }
-
-        this.container = ContainerProxy.instance;
 
         super.destroy();
     }
@@ -465,7 +463,7 @@ export class ShapeClass extends ActorClass {
 
     _defineCenter(x: number, y: number) {
         let p = new PIXI.Point(x, y);
-        this.container.worldTransform.applyInverse(p, p);
+        this.getWorldTransform().applyInverse(p, p);
         this.centerXInitial = p.x;
         this.centerYInitial = p.y;
     }

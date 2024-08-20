@@ -610,6 +610,9 @@ export class LibraryDeclarationParser extends LibraryDeclarationLexer {
 
             if (mdecl.template) {
                 m.template = mdecl.template;
+                if(m.template.indexOf("&") >= 0){
+                    console.log("WARNING: Template '" + m.template + "' contains letter & instead of §!")
+                }
             }
 
             if (mdecl.constantFoldingFunction) {

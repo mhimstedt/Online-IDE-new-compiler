@@ -271,6 +271,10 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
         this.actorManager.unregisterActor(actor);
     }
 
+    registerShapeToDestroy(shape: ShapeClass){
+        this.actorManager.shapesToDestroy.push(shape);
+    }
+
     hasActors(): boolean {
         return this.actorManager?.hasActors() || this.mouseManager.hasMouseListeners() || this.gngEventlistenerManager?.hasEventListeners();
     }

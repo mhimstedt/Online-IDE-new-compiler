@@ -758,6 +758,7 @@ export class ProjectExplorer {
 
         this.setCurrentlyEditedFile(f);
 
+        this.main.getDisassembler()?.disassemble();
         this.main.getInterpreter().showProgramPointer();
 
         setTimeout(() => {
@@ -768,7 +769,7 @@ export class ProjectExplorer {
 
     }
 
-    setCurrentlyEditedFile(f: File) {
+    private setCurrentlyEditedFile(f: File) {
         if (f == null) return;
         let ws = this.main.currentWorkspace;
         if (ws.currentlyOpenFile != f) {

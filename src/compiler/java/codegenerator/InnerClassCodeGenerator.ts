@@ -353,8 +353,9 @@ export class InnerClassCodeGenerator extends StatementCodeGenerator {
                 steps.unshift(storeOuterClassReferenceSnippet);
             }
 
-            let getBaseClass: string = `let obj = ${Helpers.elementRelativeToStackbase(0)};\nlet baseKlass = Object.getPrototypeOf(Object.getPrototypeOf(obj));\n`
-            let superCall: string = `baseKlass.${baseConstructor.getInternalName(baseConstructor.hasImplementationWithNativeCallingConvention ? "native" : "java")}.call(obj${parametersForSuperCall});\n`;
+            // let getBaseClass: string = `let obj = ${Helpers.elementRelativeToStackbase(0)};\nlet baseKlass = ${Helpers.classes}.Object.getPrototypeOf(Object.getPrototypeOf(obj));\n`
+            let getBaseClass: string = `let obj = ${Helpers.elementRelativeToStackbase(0)};\nlet baseKlass = ${Helpers.classes}.${baseClass.identifier};\n`
+            let superCall: string = `baseKlass.prototype.${baseConstructor.getInternalName(baseConstructor.hasImplementationWithNativeCallingConvention ? "native" : "java")}.call(obj${parametersForSuperCall});\n`;
             let returnCall: string = `${Helpers.return}(${Helpers.elementRelativeToStackbase(0)});\n`;
 
             steps.unshift(new StringCodeSnippet(getBaseClass + superCall));

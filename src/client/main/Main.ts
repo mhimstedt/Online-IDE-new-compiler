@@ -105,7 +105,7 @@ export class Main implements MainBase {
 
     showFile(file?: CompilerFile): void {
         if(!file) return;
-        this.projectExplorer.setCurrentlyEditedFile(<File>file);
+        this.projectExplorer.setFileActive(<File>file);
     }
 
     getDisassembler(): Disassembler | undefined {
