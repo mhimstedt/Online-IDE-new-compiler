@@ -55,7 +55,9 @@ export class TwoParameterTemplate extends CodeTemplate {
         if (snippet0Pure && snippet1Pure) {
             let code: string = this.templateString.replace(new RegExp('\\§1', 'g'), snippets[0].getPureTerm());
             code = code.replace(new RegExp('\\§2', 'g'), snippets[1].getPureTerm());
-            return new StringCodeSnippet(code, range, resultType);
+            let newSnippet = new StringCodeSnippet(code, range, resultType);
+            newSnippet.takeEmitToStepListenersFrom(snippets);
+            return newSnippet;
         }
 
         let countPlaceholderOne = (this.templateString.match(/\§1/g) || []).length;

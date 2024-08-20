@@ -55,7 +55,7 @@ export class InnerClassCodeGenerator extends StatementCodeGenerator {
 
         };  //
 
-        let oldClass = klass.runtimeClass;
+        let oldRuntimeClass = klass.runtimeClass;
         // oldClass.__programs = [];
 
         // let type = node.newObjectNode.type.resolvedType;
@@ -103,8 +103,10 @@ export class InnerClassCodeGenerator extends StatementCodeGenerator {
 
         };  //
 
-        Object.assign(klass.runtimeClass, oldClass);
-        Object.assign(klass.runtimeClass.prototype, oldClass.prototype);
+        klass.runtimeClass.type = klass;
+
+        Object.assign(klass.runtimeClass, oldRuntimeClass);
+        Object.assign(klass.runtimeClass.prototype, oldRuntimeClass.prototype);
         // snippet which instantiates object of this class calling it's typescript constructor and it's java constructor
 
         // klass.checkIfInterfacesAreImplementedAndSupplementDefaultMethods({});
@@ -190,7 +192,7 @@ export class InnerClassCodeGenerator extends StatementCodeGenerator {
 
         };  //
 
-        let oldClass = klass.runtimeClass;
+        let oldRuntimeClass = klass.runtimeClass;
         // oldClass.__programs = [];
         klass.addImplements(functionalInterface);
 
@@ -221,8 +223,10 @@ export class InnerClassCodeGenerator extends StatementCodeGenerator {
 
         };  //
 
-        Object.assign(klass.runtimeClass, oldClass);
-        Object.assign(klass.runtimeClass.prototype, oldClass.prototype);
+        klass.runtimeClass.type = klass;
+
+        Object.assign(klass.runtimeClass, oldRuntimeClass);
+        Object.assign(klass.runtimeClass.prototype, oldRuntimeClass.prototype);
         // snippet which instantiates object of this class calling it's typescript constructor and it's java constructor
 
         let parameterString = Helpers.elementRelativeToStackbase(0);
