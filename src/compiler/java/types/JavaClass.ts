@@ -3,6 +3,8 @@ import { TokenType, TokenTypeReadable } from "../TokenType";
 import { JCM } from "../language/JavaCompilerMessages.ts";
 import { ColorHelper } from "../lexer/ColorHelper.ts";
 import { JavaBaseModule } from "../module/JavaBaseModule";
+import { JavaTypeStore } from "../module/JavaTypeStore.ts";
+import { JavaLibraryModuleManager } from "../module/libraries/JavaLibraryModuleManager.ts";
 import { GenericTypeParameter } from "./GenericTypeParameter.ts";
 import { JavaField } from "./JavaField";
 import { GenericVariantOfJavaInterface, IJavaInterface, JavaInterface } from "./JavaInterface";
@@ -515,6 +517,20 @@ export class JavaClass extends IJavaClass {
         return decl;
     }
 
+    getMinimumConcreteGenericType(libraryTypeStore: JavaTypeStore){
+        let typeMap: Map<GenericTypeParameter, NonPrimitiveType> = new Map();
+        if(!(this.genericTypeParameters?.length > 0)) return this;
+        for(let gp of this.genericTypeParameters){
+            if(gp.upperBounds.length > 0){
+                typeMap.set(gp, gp.upperBounds[0]);
+            } else {
+                typeMap.set(gp, <NonPrimitiveType>libraryTypeStore.getType("Object"))
+            }
+        }
+        
+        return new GenericVariantOfJavaClass(this, typeMap);
+    }
+ 
 }
 
 export class GenericVariantOfJavaClass extends IJavaClass {

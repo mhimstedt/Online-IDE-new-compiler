@@ -234,6 +234,7 @@ export class TypeResolver {
                     }
                 }
 
+                // remaining generic parameters:
                 for(let i = genericTypeNode.actualTypeArguments.length; i < baseType.genericTypeParameters!.length; i++){
                     let gp = baseType.genericTypeParameters![i];
                     if(gp.upperBounds.length > 0){
