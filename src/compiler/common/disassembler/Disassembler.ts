@@ -198,7 +198,7 @@ export class Disassembler {
     }
 
     insertTypeHeading(type: BaseType, marginLeft: number) {
-        let headingDiv = DOM.makeDiv(this.disassemblerDiv, "jo_disassemblerLambdaHeading");
+        let headingDiv = DOM.makeDiv(this.disassemblerDiv, "jo_disassemblerHeading");
         headingDiv.style.marginLeft = marginLeft + "px";
         if (type.identifier == "main class") {
             headingDiv.textContent = "Main method:";

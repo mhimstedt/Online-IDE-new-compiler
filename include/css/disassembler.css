@@ -1,6 +1,7 @@
 :root {
     --disassembler-horizontal-line: #808080;
     --disassembler-heading: #51e24e;
+    --disassembler-lambda-heading: #d19bfa;
 }   
 
 .jo_disassemblerDiv {
@@ -24,6 +25,10 @@
 .jo_disassemblerHeading {
     font-size: 120%;
     color: var(--disassembler-heading);
+}
+
+.jo_disassemblerLambdaHeading {
+    color: var(--disassembler-lambda-heading);
 }
 
 .jo_disassemblerSignature {
