@@ -230,7 +230,9 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
             collectionElementType = collectionType.getElementType();
             if (node.elementType.kind != TokenType.varType) {
                 if (!this.typesAreIdentical(elementType!, collectionElementType)) {
-                    this.pushError(JCM.wrongArrayElementType(elementType!.toString(), node.elementIdentifier, collectionElementType.toString()), "error", node.elementIdentifierPosition);
+                    if(!this.canCastTo(collectionElementType, elementType, "implicit")){
+                        this.pushError(JCM.wrongArrayElementType(elementType!.toString(), node.elementIdentifier, collectionElementType.toString()), "error", node.elementIdentifierPosition);
+                    }
                 }
             }
             elementType = collectionElementType;

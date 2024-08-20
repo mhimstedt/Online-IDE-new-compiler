@@ -9,12 +9,8 @@
     * Shape.directionRelativeTo
     * Shape.moveBackFrom
   * missing methods:
-    * Group.copy, Group.renderAsStaticBitmap (Testfile Sternen-Hintergrund)
+    * Group.renderAsStaticBitmap (Testfile Sternen-Hintergrund)
     * Program must not stop after program end if Timer-object is running (Test-file Timer)
-    * Sprite.tint(int)
-    * Shape.startTrackingEveryMouseMovement()
-    * Shape.stopTrackingEveryMouseMovement()
-    * class Ereignisbehandlung not found. (Test-file: Grafik-> GNG-> GNG)
   * In CodeGenerator: use CodeSnippetContainer instead of CodeSnippet[] throughout the code to make inserting nextStepMark() easier and avoid extremely nested CodeSnippetContainers
 
 
