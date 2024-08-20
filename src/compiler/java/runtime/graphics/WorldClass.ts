@@ -370,7 +370,9 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
             (shape) => {
                 shape._move(-dx, -dy);
             });
-
+            
+        stage.worldTransform.copyFrom(stage.localTransform);
+        this.shapesWhichBelongToNoGroup.forEach((shape) => shape.worldTransformDirty = true);
     }
 
     _setCoordinateSystem(left: number, top: number, width: number, height: number) {
