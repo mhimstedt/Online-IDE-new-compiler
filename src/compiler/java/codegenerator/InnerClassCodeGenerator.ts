@@ -311,6 +311,8 @@ export class InnerClassCodeGenerator extends StatementCodeGenerator {
     buildStandardConstructors(classContext: JavaClass) {
         if (classContext.methods.some(m => m.isConstructor)) return;
 
+        // if(classContext.identifier == 'History') debugger;
+
         let baseClass: IJavaClass = classContext;
         while (!baseClass.getOwnMethods().find(m => m.isConstructor && m.visibility != TokenType.keywordPrivate)) baseClass = baseClass.getExtends()!;
         // TypeResolver enforces base class to be at least Object
@@ -355,7 +357,7 @@ export class InnerClassCodeGenerator extends StatementCodeGenerator {
             let superCall: string = `baseKlass.${baseConstructor.getInternalName(baseConstructor.hasImplementationWithNativeCallingConvention ? "native" : "java")}.call(obj${parametersForSuperCall});\n`;
             let returnCall: string = `${Helpers.return}(${Helpers.elementRelativeToStackbase(0)});\n`;
 
-            steps.push(new StringCodeSnippet(getBaseClass + superCall));
+            steps.unshift(new StringCodeSnippet(getBaseClass + superCall));
             let returnSnippet = new CodeSnippetContainer(new StringCodeSnippet(returnCall));
             returnSnippet.enforceNewStepBeforeSnippet();
             steps.push(returnSnippet);

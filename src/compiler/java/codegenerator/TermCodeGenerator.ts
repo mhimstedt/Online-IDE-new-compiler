@@ -298,6 +298,11 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
         let classHasOuterType: boolean = (klassType.outerType && !klassType.isStatic) ? true : false;
 
         let callingConvention: CallingConvention = method.hasImplementationWithNativeCallingConvention && !classHasOuterType ? "native" : "java";
+        
+        // if this is no library class: use java calling convention because 
+        // new MyClass() could be compiled before standard constructors of MyClass() are built
+        // if new MyClass is part of instanceInitializers of other class.
+        if(method.classEnumInterface != klassType) callingConvention = 'java';
 
         if (!newObjectSnippet) {
             newObjectSnippet = new StringCodeSnippet(`new ${Helpers.classes}["${klassType.pathAndIdentifier}"](${enumValueIdentifier ? '"' + enumValueIdentifier + '", ' + enumValueIndex : ""})`);

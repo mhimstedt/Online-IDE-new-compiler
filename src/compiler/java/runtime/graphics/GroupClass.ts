@@ -7,9 +7,10 @@ import { RuntimeExceptionClass } from '../system/javalang/RuntimeException';
 import { ShapeClass } from './ShapeClass';
 import { JRC } from '../../language/JavaRuntimeLibraryComments';
 import { CallbackParameter } from '../../../common/interpreter/CallbackParameter';
-import { CollisionPairClass } from './CollisionpairClass';
+import { CollisionPairClass } from './CollisionPairClass';
+import { BaseListType } from '../../../common/BaseType';
 
-export class GroupClass extends ShapeClass {
+export class GroupClass extends ShapeClass implements BaseListType {
     static __javaDeclarations: LibraryDeclarations = [
         { type: "declaration", signature: "class Group<T extends Shape> extends Shape", comment: JRC.groupClassComment },
 
@@ -58,6 +59,10 @@ export class GroupClass extends ShapeClass {
 
     render() {
 
+    }
+
+    getElements(): any[] {
+        return this.shapes;
     }
 
     _mj$copy$Shape$(t: Thread, callback: CallbackParameter){

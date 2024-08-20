@@ -425,7 +425,7 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
 
         let moveX: number = 0;
         let moveY: number = 0;
-
+ 
         let shapeX: number = shape._getCenterX();
         let shapeY: number = shape._getCenterY();
 
@@ -455,6 +455,8 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
             stage.localTransform.identity();
             stage.localTransform.translate(moveX, moveY);
             stage.localTransform.prepend(matrix);
+
+            stage.setFromMatrix(stage.localTransform);
 
             //@ts-ignore
             stage._didLocalTransformChangeId = stage._didChangeId;
