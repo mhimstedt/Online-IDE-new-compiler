@@ -9,6 +9,7 @@ import { JRC } from '../../language/JavaRuntimeLibraryComments';
 import { CallbackParameter } from '../../../common/interpreter/CallbackParameter';
 import { CollisionPairClass } from './CollisionPairClass';
 import { BaseListType } from '../../../common/BaseType';
+import { SpriteClass } from './SpriteClass';
 
 export class GroupClass extends ShapeClass implements BaseListType {
     static __javaDeclarations: LibraryDeclarations = [
@@ -25,6 +26,7 @@ export class GroupClass extends ShapeClass implements BaseListType {
         { type: "method", signature: "final int size()", template: `§1.shapes.length`, comment: JRC.groupSizeComment },
         { type: "method", signature: "final void empty()", native: GroupClass.prototype.removeAllChildren, comment: JRC.groupEmptyComment },
         { type: "method", signature: "final void destroyAllChildren()", native: GroupClass.prototype.destroyAllChildren, comment: JRC.groupDestroyAllChildrenComment },
+        { type: "method", signature: "final void renderAsStaticBitmap()", java: GroupClass.prototype._mj$renderAsStaticBitmap$void$, comment: JRC.groupRenderAsStaticBitmapComment },
         // { type: "method", signature: "Rectangle(double left, double top, double width, double height)", java: GroupClass.prototype._cj$_constructor_$Rectangle$double$double$double$double },
 
         { type: "method", signature: "final Group<T> copy()", java: GroupClass.prototype._mj$copy$Group$, comment: JRC.groupCopyComment },
@@ -307,4 +309,27 @@ export class GroupClass extends ShapeClass implements BaseListType {
 
         return pairs;
     }
+
+    _mj$renderAsStaticBitmap$void$(t: Thread, callback: CallbackParameter){
+        new SpriteClass()._cj$_constructor_$Sprite$double$double$SpriteLibrary$int$ScaleMode(
+            t, () => {
+                this.destroyAllChildren();
+                let sprite = <SpriteClass>t.s.pop();
+                let centerXOld = this._getCenterX();
+                let centerYOld = this._getCenterY();
+                sprite._defineCenter(this._getCenterX(), this._getCenterY());
+                
+                sprite.container.localTransform.append(this.world.app!.stage.localTransform);
+                sprite.container.setFromMatrix(sprite.container.localTransform);
+                sprite.container.updateLocalTransform();
+                sprite.setWorldTransformAndHitPolygonDirty();
+
+                this.add(sprite);
+                this._defineCenter(centerXOld, centerYOld);
+                
+                if(callback) callback();
+            }, 0, 0, undefined, 0, undefined, this
+        );
+    }
+
 }

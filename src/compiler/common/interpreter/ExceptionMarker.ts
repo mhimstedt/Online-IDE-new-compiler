@@ -21,7 +21,7 @@ export class ExceptionMarker {
     let file = exception.file;
     let range = exception.range;
 
-    if (!file || !model || !range) return;
+    if (!file || !range) return;
 
     let ppm = this.main.getInterpreter().programPointerManager;
     if (!ppm) return;

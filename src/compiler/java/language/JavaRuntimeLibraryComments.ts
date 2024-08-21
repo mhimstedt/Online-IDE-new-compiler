@@ -495,6 +495,11 @@ export class JRC {
         "en": "Y coordinate of the diagonal intersection of the object's BoundingBox",
     })
 
+    static shapeScaleFactorComment = () => lm({
+    "de": `Streckungsfaktor des Shapes`,
+    "en": `Scale factor of this Shape object`,
+    })
+
     static shapeContainsPointComment = () => lm({
         "de": "Gibt genau dann true zurück, wenn die Figur den angegebenen Punkt enthält.",
         "en": "Returns true if and only if this shape contains given point.",
@@ -725,6 +730,11 @@ export class JRC {
     static groupDestroyAllChildrenComment = () => lm({
         "de": "Zerstört alle Elemente der Gruppe, nicht aber die Gruppe selbst.",
         "en": "Destroys all elements inside this group, but not this group itself.",
+    })
+
+    static groupRenderAsStaticBitmapComment = () => lm({
+    "de": `Erstellt eine Bitmap (Textur) und zeichnet alle in der Gruppe enthaltenen Elemente darauf. Zeichnet ab diesem Zeitpunkt statt der enthaltenen Elemente nur noch die Bitmap (=> schneller!). Alle enthaltenen Elemente werden bei dieser Operation zerstört.`,
+    "en": `Creates a bitmap (texture) and draws all elements onto it. Then it uses this bitmap to draw to screen instead of the elements (=> faster!). All elements are destroyed afterwards.`,
     })
 
     static groupCopyComment = () => lm({

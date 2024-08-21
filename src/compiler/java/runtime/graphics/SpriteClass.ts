@@ -70,17 +70,19 @@ export class SpriteClass extends ShapeClass {
         this._cj$_constructor_$Shape$(t, () => {
             this.x = x;
             this.y = y;
-            this.spriteLibrary = (typeof spriteLibrary == "string") ? spriteLibrary : spriteLibrary.name;
-            this.imageIndex = imageIndex;
             this.scaleModeOrdinal = scaleMode?.ordinal || ScaleMode.nearest_neighbour;
-
+            
             if (copyFromOtherShape == null) {
+                this.spriteLibrary = (typeof spriteLibrary == "string") ? spriteLibrary : spriteLibrary.name;
+                this.imageIndex = imageIndex;
                 this.setTexture(undefined, imageIndex);
             } else {
                 this.copyBitmapFromShape(copyFromOtherShape);
                 let bounds = copyFromOtherShape.container.getBounds();
-                this.x = bounds.left + bounds.width / 2;
-                this.y = bounds.top + bounds.height / 2;
+                let p = new PIXI.Point(bounds.left + bounds.width / 2, bounds.top + bounds.height / 2);
+                p = this.world.app.stage.localTransform.applyInverse(p);
+                this.x = p.x;
+                this.y = p.y;
             }
 
             let sprite = <PIXI.Sprite>this.container;
@@ -131,7 +133,7 @@ export class SpriteClass extends ShapeClass {
 
         return this._cj$_constructor_$Sprite$Shape$ScaleMode(
             t, callback, shape, undefined
-        );
+        ); 
     }
 
     oldTexture: PIXI.Texture | null = null;
@@ -229,7 +231,7 @@ export class SpriteClass extends ShapeClass {
         this.world.app.renderer.render({
             container: dob,
             target: rt,
-            transform: new PIXI.Matrix().translate(-bounds.left, -bounds.top)
+            transform: new PIXI.Matrix().translate(-bounds.left, -bounds.top).append(dob.worldTransform)
         });
 
         let points: convexhull.Point[] = [];

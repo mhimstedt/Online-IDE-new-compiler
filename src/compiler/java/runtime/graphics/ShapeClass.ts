@@ -24,6 +24,7 @@ export class ShapeClass extends ActorClass {
         { type: "field", signature: "private double angle", comment: JRC.shapeAngleComment },
         { type: "field", signature: "protected double centerX", comment: JRC.shapeCenterXComment },
         { type: "field", signature: "protected double centerY", comment: JRC.shapeCenterYComment },
+        { type: "field", signature: "private double scaleFactor", comment: JRC.shapeScaleFactorComment },
 
         { type: "method", signature: "Shape()", java: ShapeClass.prototype._cj$_constructor_$Shape$ },
         { type: "method", signature: "final void move(double dx, double dy)", native: ShapeClass.prototype._move, comment: JRC.shapeMoveComment },
@@ -470,7 +471,12 @@ export class ShapeClass extends ActorClass {
 
     _defineCenterRelative(x: number, y: number) {
         let bounds = this.container.getBounds(false);
-        this._defineCenter(bounds.left + bounds.width * x, bounds.top + bounds.height * y);
+        let topLeft = new PIXI.Point(bounds.left, bounds.top);
+        let bottomRight = new PIXI.Point(bounds.right, bounds.bottom);
+        topLeft = this.world.app.stage.localTransform.applyInverse(topLeft);
+        bottomRight = this.world.app.stage.localTransform.applyInverse(bottomRight);
+
+        this._defineCenter(topLeft.x + (bottomRight.x - topLeft.x) * x, topLeft.y + (bottomRight.y - topLeft.y) * y);
     }
 
     static _setDefaultVisibility(isVisible: boolean) {
@@ -679,12 +685,13 @@ export class ShapeClass extends ActorClass {
         //@ts-ignore
         this.container._worldTransform ||= new PIXI.Matrix();
         //@ts-ignore
-        if (parent && parent._worldTransform) {
+        if (this.belongsToGroup != null) {
             //@ts-ignore
             PIXI.updateWorldTransform(this.container.localTransform, parent._worldTransform, this.container._worldTransform);
         } else {
             //@ts-ignore
             this.container._worldTransform.copyFrom(this.container.localTransform);
+            // PIXI.updateWorldTransform(this.container.localTransform, parent.localTransform, this.container._worldTransform);
         }
 
         this.worldTransformDirty = false;
