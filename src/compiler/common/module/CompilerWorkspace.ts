@@ -13,7 +13,7 @@ export abstract class CompilerWorkspace {
 
     ensureModuleIsCompiled(module: Module): void {
         if (module.isReplModule()) {
-            this.cmain.getRepl().compileAndShowErrors(module.file.getText());
+            this.cmain.getRepl().compile(module.file.getText());
         } else {
             this.cmain.getCompiler().updateSingleModuleForCodeCompletion(module);
         }

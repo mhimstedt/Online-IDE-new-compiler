@@ -13,6 +13,8 @@ export class CircleClass extends FilledShapeClass {
     static __javaDeclarations: LibraryDeclarations = [
         { type: "declaration", signature: "class Circle extends FilledShape", comment: JRC.circleClassComment },
 
+        { type: "field", signature: "private double radius", nativeIdentifier: "scaledRadius"},
+
         { type: "method", signature: "Circle()", java: CircleClass.prototype._cj$_constructor_$Circle$, comment: JRC.circleEmptyConstructorComment },
         { type: "method", signature: "Circle(double mx, double my, double r)", java: CircleClass.prototype._cj$_constructor_$Circle$double$double$double, comment: JRC.circleConstructorComment },
 
@@ -31,6 +33,11 @@ export class CircleClass extends FilledShapeClass {
     mx!: number;
     my!: number;
     radius!: number;
+
+
+    get scaledRadius(): number {
+        return this.scaleFactor * this.radius;
+    }
 
     _cj$_constructor_$Circle$(t: Thread, callback: CallbackFunction) {
         this._cj$_constructor_$Circle$double$double$double(t, callback, 50, 50, 50);

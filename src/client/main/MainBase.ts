@@ -18,7 +18,6 @@ export interface MainBase extends IMain {
     getActionManager(): ActionManager;
     setFileActive(file: File);
     isEmbedded(): boolean;
-    jumpToDeclaration(file: CompilerFile, declaration: IRange): void;
 
 
     addWorkspace(ws: CompilerWorkspace): void;

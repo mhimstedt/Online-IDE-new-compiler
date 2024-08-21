@@ -12,6 +12,9 @@ export class RectangleClass extends FilledShapeClass {
     static __javaDeclarations: LibraryDeclarations = [
         { type: "declaration", signature: "class Rectangle extends FilledShape", comment: JRC.rectangleClassComment },
 
+        { type: "field", signature: "private double width", nativeIdentifier: "scaledWidth"},
+        { type: "field", signature: "private double height", nativeIdentifier: "scaledHeight"},
+
         { type: "method", signature: "Rectangle()", java: RectangleClass.prototype._cj$_constructor_$Rectangle$, comment: JRC.rectangleEmptyConstructorComment },
         { type: "method", signature: "Rectangle(double left, double top, double width, double height)", java: RectangleClass.prototype._cj$_constructor_$Rectangle$double$double$double$double, comment: JRC.rectangleConstructorComment },
         { type: "method", signature: "final void setWidth(double width)", native: RectangleClass.prototype._setWidth, comment: JRC.rectangleSetWidthComment },
@@ -30,6 +33,14 @@ export class RectangleClass extends FilledShapeClass {
     top!: number;
     width!: number;
     height!: number;
+
+    get scaledWidth(): number {
+        return this.scaleFactor * this.width;
+    }
+
+    get scaledHeight(): number {
+        return this.scaleFactor * this.width;
+    }
 
     _cj$_constructor_$Rectangle$(t: Thread, callback: CallbackFunction) {
         this._cj$_constructor_$Rectangle$double$double$double$double(t, callback, 0, 0, 100, 100);

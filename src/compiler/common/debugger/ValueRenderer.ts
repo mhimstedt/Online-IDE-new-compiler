@@ -64,7 +64,9 @@ export class ValueRenderer {
     private static renderObject(value: RuntimeObject | null, maxLength: number): string {
         if(value == null) return "null";
 
-        let s: string = "{";
+        if(value["value"]) return ValueRenderer.renderValue(value["value"], maxLength);
+
+        let s: string = "{ ";
             let type = value.getType();
             if(type){
                 let fields = type.getOwnAndInheritedFields();
@@ -84,7 +86,7 @@ export class ValueRenderer {
 
             }
 
-        return s + "}";
+        return s + " }";
     }
 
 }

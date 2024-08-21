@@ -20,7 +20,7 @@ export class JavaReplCodeGenerator extends StatementCodeGenerator {
 
     }
 
-    start(baseSymbolTable: JavaSymbolTable): Program {
+    start(baseSymbolTable: JavaSymbolTable, withToStringCall: boolean): Program {
 
         this.currentSymbolTable = new JavaSymbolTable(this.module, this.module.ast!.range, true, baseSymbolTable);
         this.module.symbolTables.push(this.currentSymbolTable);
@@ -48,8 +48,11 @@ export class JavaReplCodeGenerator extends StatementCodeGenerator {
                 snippets.pop();
                 snippets.push(snippetWithValueOnStack);
 
-                let lastSnippet = new StringCodeSnippet(`${Helpers.toString}(__t, undefined, ${Helpers.threadStack}[${Helpers.threadStack}.length - 1]);\n`);
-                snippets.push(lastSnippet);
+                if(withToStringCall){
+                    let lastSnippet = new StringCodeSnippet(`${Helpers.toString}(__t, undefined, ${Helpers.threadStack}[${Helpers.threadStack}.length - 1]);\n`);
+                    snippets.push(lastSnippet);
+                }
+                
                 this.module.returnType = snippet.type;
 
             }

@@ -36,8 +36,7 @@ export class JavaRepl {
 
     lastCompiledModule?: JavaCompiledModule;
 
-    constructor(private main: IMain, libraryModuleManager: JavaLibraryModuleManager, private errorMarker: ErrorMarker
-    ) {
+    constructor(private main: IMain, libraryModuleManager: JavaLibraryModuleManager) {
         let interpreter = this.getInterpreter();
         if(!interpreter){
             console.error("JavaRepl constructor called before interpreter was created.");
@@ -66,7 +65,7 @@ export class JavaRepl {
     }
 
 
-    compileAndShowErrors(statement: string): ProgramAndModule | undefined {
+    compile(statement: string, withToStringCall: boolean): ProgramAndModule | undefined {
         let programAndModule: ProgramAndModule | undefined;
         let interpreter = this.getInterpreter();
 
@@ -84,7 +83,7 @@ export class JavaRepl {
                 if (symbolTable) {
                     let oldNumberOfChildTables = symbolTable.childTables.length;
 
-                    programAndModule = this.replCompiler.compile(statement, symbolTable, interpreter.executable);
+                    programAndModule = this.replCompiler.compile(statement, symbolTable, interpreter.executable, withToStringCall);
                     
                     symbolTable.childTables.splice(oldNumberOfChildTables, symbolTable.childTables.length - oldNumberOfChildTables);
                 }
@@ -92,11 +91,10 @@ export class JavaRepl {
             }
         } else {
             // execute in REPL standalone context
-            programAndModule = this.replCompiler.compile(statement, this.standaloneSymbolTable, this.standaloneExecutable);
+            programAndModule = this.replCompiler.compile(statement, this.standaloneSymbolTable, this.standaloneExecutable, withToStringCall);
         }
 
         if (programAndModule) {
-            this.showErrors(programAndModule.module.errors);
             this.lastCompiledModule = programAndModule.module;
         }
 
@@ -106,7 +104,7 @@ export class JavaRepl {
     executeSynchronously(statement: string): ReplReturnValue {
 
         let interpreter = this.getInterpreter();
-        let programAndModule = this.compileAndShowErrors(statement);
+        let programAndModule = this.compile(statement, false);
 
         if (!programAndModule) {
             return undefined;
@@ -138,11 +136,11 @@ export class JavaRepl {
         return thread.replReturnValue;
 
     }
-
+ 
     async executeAsync(statement: string, withMaxSpeed: boolean): Promise<ReplReturnValue> {
 
         let interpreter = this.getInterpreter();
-        let programAndModule = this.compileAndShowErrors(statement);
+        let programAndModule = this.compile(statement, true);
 
         let threadBefore = interpreter.scheduler.getCurrentThread();
         let stackSizeBefore = threadBefore?.s.length;
@@ -163,7 +161,8 @@ export class JavaRepl {
                 
                 if(currentProgramState) currentProgramState.lastExecutedStep = lastExecutedStep;
                 if(stackSizeBefore) threadBefore?.s.splice(stackSizeBefore, threadBefore?.s.length - stackSizeBefore);
-
+                returnValue.errors = programAndModule.module.errors;
+                
                 resolve(returnValue);
             }
 
@@ -186,7 +185,8 @@ export class JavaRepl {
 
 
 
-    prepareThread(programAndModule: { module: JavaReplCompiledModule; program: Program | undefined; }, callback?: (returnValue: ReplReturnValue) => void,
+    prepareThread(programAndModule: { module: JavaReplCompiledModule; program: Program | undefined; }, 
+        callback?: (returnValue: ReplReturnValue) => void,
                    withMaxSpeed: boolean = true): Thread | undefined {
 
         let interpreter = this.getInterpreter();
@@ -201,6 +201,7 @@ export class JavaRepl {
         }
 
         programAndModule.program.compileToJavascriptFunctions();
+        programAndModule.program.isReplProgram = true;
 
         let noProgramIsRunning = [SchedulerState.running, SchedulerState.paused].indexOf(scheduler.state) < 0;
         let currentThread = scheduler.getCurrentThread()!;
@@ -235,14 +236,5 @@ export class JavaRepl {
         return currentThread;
     }
 
-    showErrors(errors: Error[]) {
-        let editor = this.main.getReplEditor();
-        if(!editor) return;
-        let monacoModel = editor.getModel();
-        if (!monacoModel) return;
-
-        this.errorMarker.markErrors(errors, monacoModel);
-
-    }
 
 }

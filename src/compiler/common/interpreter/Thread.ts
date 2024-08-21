@@ -83,6 +83,7 @@ export class Thread {
     maxStepsPerSecond?: number;
     lastTimeThreadWasRun: number = performance.now();
 
+    isExecutingReplProgram: boolean = false;
     stacksizeBeforeREPLProgram: number = 0;
     replReturnValue?: ReplReturnValue;
 
@@ -144,6 +145,7 @@ export class Thread {
                         this.lastRange = step.range as IRange;
                     }
                     if (this.isSingleStepCompleted()) {
+                        if (currentProgramState) currentProgramState.lastExecutedStep = step!;
                         this.stepCallback();
                         return { state: this._state, stepsExecuted: this.numberOfSteps }
                     }
@@ -197,7 +199,6 @@ export class Thread {
             }
             
         }
-
 
         return { state: this._state, stepsExecuted: this.numberOfSteps }
     }
@@ -277,6 +278,8 @@ export class Thread {
         exception.file = this.currentProgramState.program.module.file;
         exception.range = step.getValidRangeOrUndefined();
         exception.thread = this;
+
+        if(this.isExecutingReplProgram) this.returnFromREPLProgram(exception, step);
 
         let classNames = exception.getExtendedImplementedIdentifiers().slice();
         classNames.push(exception.getIdentifier());
@@ -415,23 +418,32 @@ export class Thread {
 
     startREPLProgram() {
         this.stacksizeBeforeREPLProgram = this.s.length;
+        this.isExecutingReplProgram = true;
     }
 
     /**
      * return from REPL-Program
      */
-    returnFromREPLProgram() {
+    returnFromREPLProgram(exception?: Exception & IThrowable, step?: Step) {
+        this.isExecutingReplProgram = false;
+
+        // TODO: getStacktrace and get exception to the output...
         let replProgram = this.programStack.pop();
-        this.replReturnValue = undefined;
-        if (this.s.length > this.stacksizeBeforeREPLProgram) {
-            let text = this.s.pop();
-            let value = this.s.pop();
-            this.replReturnValue = {
-                value: value,
-                text: text,
-                type: replProgram?.program.module.returnType
-            }
+        while(replProgram && !replProgram.program.isReplProgram){
+            replProgram = this.programStack.pop();
         }
+
+        this.replReturnValue = undefined;
+
+        let text = this.s.length > this.stacksizeBeforeREPLProgram + 1 ? this.s.pop() : undefined;
+        let value = this.s.length > this.stacksizeBeforeREPLProgram ? this.s.pop() : undefined;
+
+        this.replReturnValue = {
+            value: value,
+            text: text,
+            type: replProgram?.program.module.returnType
+        }
+
         // shouldn't be necessary:
         while (this.s.length > this.stacksizeBeforeREPLProgram) {
             this.s.pop();

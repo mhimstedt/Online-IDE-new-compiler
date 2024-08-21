@@ -11,7 +11,7 @@ import { JavaReplParser } from "./JavaReplParser.ts";
 
 export class JavaReplCompiler {
 
-    compile(code: string, symbolTable: JavaSymbolTable, executable: Executable): {module: JavaReplCompiledModule, program: Program | undefined} {
+    compile(code: string, symbolTable: JavaSymbolTable, executable: Executable, withToStringCall: boolean): {module: JavaReplCompiledModule, program: Program | undefined} {
         let replCompiledModule: JavaReplCompiledModule = new JavaReplCompiledModule(code);
 
         let lexerOutput = new Lexer().lex(code);
@@ -29,7 +29,7 @@ export class JavaReplCompiler {
             let replCodeGenerator = new JavaReplCodeGenerator(replCompiledModule, libraryTypestore,
                 compiledTypesTypestore, executable.exceptionTree);
 
-            let program = replCodeGenerator.start(symbolTable);
+            let program = replCodeGenerator.start(symbolTable, withToStringCall);
             return {
                 module: replCompiledModule,
                 program: program

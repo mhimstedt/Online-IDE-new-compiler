@@ -1,5 +1,6 @@
 import { removeJavadocSyntax } from "../../../tools/StringTools.ts";
 import { IMain } from "../../common/IMain.ts";
+import { ValueRenderer } from "../../common/debugger/ValueRenderer.ts";
 import { ValueTool } from "../../common/debugger/ValueTool.ts";
 import { SchedulerState } from "../../common/interpreter/Scheduler.ts";
 import { Module } from "../../common/module/Module.ts";
@@ -64,30 +65,29 @@ export class JavaHoverProvider {
     replReturnValueToOutput(replReturnValue: ReplReturnValue, caption: string) {
         if (typeof replReturnValue == "undefined") return caption + ": ---";
         let type: string = replReturnValue.type ? replReturnValue.type.toString() + " " : "";
-        let text = replReturnValue.text;
 
-        if(text == null || typeof text == "undefined") return 'null';
+        let text = ValueRenderer.renderValue(replReturnValue.value, 100);
 
-        //@ts-ignore#
-        if(typeof text["value"] !== "undefined") text = text.value;
-        switch (type) {
-            case "string ":
-            case "String ": 
-            if(replReturnValue.value){
-                text = '"' + text + '"';
-            } else {
-                text = "null";
-            }
-                break;
-            case "char ":
-            case "Character ":
-                text = "'" + text + "'";
-                break;
-        }
+        // //@ts-ignore#
+        // if(typeof text["value"] !== "undefined") text = text.value;
+        // switch (type) {
+        //     case "string ":
+        //     case "String ": 
+        //     if(replReturnValue.value){
+        //         text = '"' + text + '"';
+        //     } else {
+        //         text = "null";
+        //     }
+        //         break;
+        //     case "char ":
+        //     case "Character ":
+        //         text = "'" + text + "'";
+        //         break;
+        // }
 
-        if(text.length > 20){
-            text = text.substring(0, 20) + " ...";
-        }
+        // if(text.length > 20){
+        //     text = text.substring(0, 20) + " ...";
+        // }
 
         return '```\n' + type + caption + " : " + text + '\n```'
 
@@ -126,7 +126,7 @@ export class JavaHoverProvider {
         }
 
         for (let error of module.errors) {
-            if (Range.containsPosition(error.range, position)) {
+            if (error.level == "error" && Range.containsPosition(error.range, position)) {
                 return null; // Show error-tooltip and don't show hover-tooltip
             }
         }

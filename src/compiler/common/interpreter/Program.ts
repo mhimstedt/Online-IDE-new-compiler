@@ -31,7 +31,7 @@ export class Step {
 
     getValidRangeOrUndefined(): IRange | undefined {
         let r = this.range;
-        if(typeof r.startLineNumber != "undefined"){
+        if(typeof r.startLineNumber != "undefined" && r.startLineNumber >= 0){
             return <any>r;
         }
         return undefined;
@@ -107,6 +107,8 @@ export class Program {
 
     stepsSingle: Step[] = [];
     stepsMultiple: Step[] = [];
+
+    isReplProgram?: boolean;
 
     constructor(public module: Module, public symbolTable: BaseSymbolTable | undefined, 
         public methodIdentifierWithClass: string) {

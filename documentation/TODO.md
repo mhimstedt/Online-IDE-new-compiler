@@ -12,7 +12,7 @@
     * Group.renderAsStaticBitmap (Testfile Sternen-Hintergrund)
     * Program must not stop after program end if Timer-object is running (Test-file Timer)
   * In CodeGenerator: use CodeSnippetContainer instead of CodeSnippet[] throughout the code to make inserting nextStepMark() easier and avoid extremely nested CodeSnippetContainers
-
+  * more private fields for graphical objects to get better debugger output
 
 
 

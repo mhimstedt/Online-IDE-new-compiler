@@ -6,7 +6,7 @@
 import { IPosition, Position } from './Position';
 
 export class EmptyRange {
-	static instance:IRange = {startLineNumber: 0, endLineNumber: 0, startColumn: 0, endColumn: 0};
+	static instance:IRange = {startLineNumber: -1, endLineNumber: -1, startColumn: -1, endColumn: -1};
 }
 
 /**

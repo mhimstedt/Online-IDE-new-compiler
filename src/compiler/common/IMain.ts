@@ -33,7 +33,7 @@ export interface IMain {
 
     showFile(file?: CompilerFile): void;
 
-    showProgramPosition(file?: CompilerFile, positionOrRange?: IPosition | IRange);
+    showProgramPosition(file?: CompilerFile, positionOrRange?: IPosition | IRange, setCursor?: boolean);
 
     getDisassembler(): Disassembler | undefined;
 

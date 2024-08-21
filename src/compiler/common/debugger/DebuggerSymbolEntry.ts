@@ -5,6 +5,7 @@ import { BaseField, BaseSymbol, SymbolOnStackframe } from "../BaseSymbolTable";
 import { BaseArrayType, BaseListType, BaseType } from "../BaseType";
 import { SymbolTableSection } from "./SymbolTableSection";
 import { ValueRenderer } from "./ValueRenderer.ts";
+import { IPosition } from "../range/Position.ts";
 
 export type RuntimeObject = {
     getType(): RuntimeObjectType & BaseType;
@@ -31,7 +32,8 @@ export class DebuggerSymbolEntry {
     static quickArrayOutputMaxLength = 100;
 
     constructor(protected symbolTableSection: SymbolTableSection,
-        parent: DebuggerSymbolEntry | undefined, protected type: BaseType | undefined, public identifier: string
+        parent: DebuggerSymbolEntry | undefined, protected type: BaseType | undefined, 
+        public identifier: string
     ) {
 
         this.treeViewNode = new TreeviewNode(symbolTableSection.treeview,
@@ -130,7 +132,13 @@ export class DebuggerSymbolEntry {
             caption = ValueRenderer.renderValue(o, DebuggerSymbolEntry.quickArrayOutputMaxLength);
         }
 
-        if(this.identifier == "this") caption = '';
+        if(this.identifier == "this"){
+            caption = '';
+            let style = this.treeViewNode.getMainDiv().style;
+            style.borderBottomStyle = "dashed";
+            style.borderBottomColor = '#808080';
+            style.borderBottomWidth = '1px';
+        } 
 
         this.treeViewNode.iconClass = "img_debugger-object";
         this.setCaption(": " +  this.type.toString(), " " + caption, "jo_debugger_value");
@@ -241,15 +249,32 @@ export class StackElementDebuggerEntry extends DebuggerSymbolEntry {
         private symbol: SymbolOnStackframe) {
         super(symbolTableSection, undefined, symbol.getType(), symbol.identifier);
 
+        if (!(this.symbol instanceof SymbolOnStackframe)){
+            this.treeViewNode.getMainDiv().style.display = 'none';
+        } 
     }
+    
+    fetchValueFromStackAndRender(stack: any[], stackBase: number, position: IPosition) {
 
-    fetchValueFromStackAndRender(stack: any[], stackBase: number) {
+        let notYetDefined: boolean = true;
+        let symbolRange = this.symbol.identifierRange;
 
-        if (!(this.symbol instanceof SymbolOnStackframe)) return;
-
-        let value = this.symbol.getValue(stack, stackBase);
-
-        this.render(value);
+        if(symbolRange.endLineNumber < position.lineNumber){
+            notYetDefined = false;
+        } else if (symbolRange.endLineNumber == position.lineNumber && symbolRange.endColumn < position.column){
+            notYetDefined = false;
+        }
+        
+        if(notYetDefined){
+            this.treeViewNode.getMainDiv().style.display = 'none';
+        } else {
+            this.treeViewNode.getMainDiv().style.display = '';
+            let value = this.symbol.getValue(stack, stackBase);
+    
+            this.render(value);
+        }
+        
+        
 
     }
 

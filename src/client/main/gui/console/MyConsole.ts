@@ -1,3 +1,5 @@
+import { Error } from "../../../../compiler/common/Error.js";
+import { ErrorMarker } from "../../../../compiler/common/monacoproviders/ErrorMarker.js";
 import { ReplReturnValue } from "../../../../compiler/java/parser/repl/ReplReturnValue.js";
 import { MainBase } from "../../MainBase.js";
 import { Helper } from "../Helper.js";
@@ -16,6 +18,8 @@ export class MyConsole {
 
     $consoleTabHeading: JQuery<HTMLElement>;
     $consoleTab: JQuery<HTMLElement>;
+
+    errorMarker: ErrorMarker = new ErrorMarker();
 
     constructor(private main: MainBase, public $bottomDiv: JQuery<HTMLElement>) {
         if ($bottomDiv == null) return; // Console is only used to highlight exceptions
@@ -119,6 +123,8 @@ export class MyConsole {
                     that.historyPos = 0;
 
                     let returnValue = await that.main.getRepl().executeAsync(command!, false);
+                    this.showCompilationErrors(returnValue.errors);
+
                     if(typeof returnValue !== "undefined"){
                         that.writeConsoleEntry(command, returnValue);
                         this.editor.getModel()?.setValue('');
@@ -195,6 +201,15 @@ export class MyConsole {
         // monaco.editor.colorize(command, 'myJava', { tabSize: 3 }).then((command) => {
 
         // });
+
+    }
+
+    showCompilationErrors(errors?: Error[]) {
+        if(!errors) return;
+        let monacoModel = this.main.getReplEditor()?.getModel();
+        if(!monacoModel) return;
+
+        this.errorMarker.markErrors(errors, monacoModel);
 
     }
 

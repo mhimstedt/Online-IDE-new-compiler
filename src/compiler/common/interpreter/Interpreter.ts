@@ -165,9 +165,6 @@ export class Interpreter {
             this.pause();
             this.showProgramPointer(this.scheduler.getNextStepPosition());
         });
-        if (!stepInto) {
-            this.setState(SchedulerState.running);
-        }
     }
 
     showProgramPointer(_textPositionWithModule?: ProgramPointerPositionInfo, tag?: string) {

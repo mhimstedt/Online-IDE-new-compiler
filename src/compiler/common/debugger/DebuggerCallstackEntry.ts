@@ -7,7 +7,7 @@ import { IRange } from "../range/Range";
 export class DebuggerCallstackEntry {
 
     program: Program;
-    currentStep: Step | undefined;
+    nextStep: Step | undefined;
     range?: IRange;
     symbolTable: BaseSymbolTable | undefined;
 
@@ -16,18 +16,17 @@ export class DebuggerCallstackEntry {
 
         this.symbolTable = this.program.symbolTable;
 
-        this.currentStep = programState.lastExecutedStep;
-        if(!this.currentStep) this.currentStep = programState.currentStepList[programState.stepIndex];
+        this.nextStep = programState.currentStepList[programState.stepIndex];
 
-        if(this.currentStep){
+        if(this.nextStep){
             //@ts-ignore
-            this.range = this.currentStep.range;
+            this.range = this.nextStep.range;
         }
 
-        if(this.symbolTable && this.currentStep && this.currentStep.range?.startLineNumber && this.currentStep.range?.startColumn){
+        if(this.symbolTable && this.nextStep && this.nextStep.range?.startLineNumber && this.nextStep.range?.startColumn){
             this.symbolTable = this.symbolTable.findSymbolTableAtPosition({
-                lineNumber: this.currentStep.range.startLineNumber!,
-                column: this.currentStep.range.startColumn!
+                lineNumber: this.nextStep.range.startLineNumber!,
+                column: this.nextStep.range.startColumn!
             })
         }
     }

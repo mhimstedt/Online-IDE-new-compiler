@@ -12,6 +12,8 @@ import { DebuggerWatchEntry } from "./DebuggerWatchEntry.ts";
 import { DebuggerWatchSection } from "./DebuggerWatchSection.ts";
 import { SymbolTableSection } from "./SymbolTableSection";
 import '/include/css/debugger.css';
+import { IPosition } from "../range/Position.ts";
+import { Range } from "../range/Range.ts";
 
 export class Debugger {
 
@@ -224,7 +226,6 @@ export class Debugger {
 
         let remainingSymbolTableSections: SymbolTableSection[] = [];
 
-        this.showVariablesTreeview.detachAllNodes();
         let firstNonFittingFound = false;
         for(let i = 0; i < this.currentlyVisibleSymbolTableSections.length; i++){
             let sts = this.currentlyVisibleSymbolTableSections[i];
@@ -234,18 +235,29 @@ export class Debugger {
                 remainingSymbolTableSections.push(sts);
             }
         }
-
+        
         while(remainingSymbolTableSections.length < symbolTablesToShow.length){
             let index = remainingSymbolTableSections.length;
             remainingSymbolTableSections.push(new SymbolTableSection(this.showVariablesTreeview, symbolTablesToShow[index], this));
         }
         
         this.currentlyVisibleSymbolTableSections = remainingSymbolTableSections;
-
-
+        
+        
+        
+        let position: IPosition = {
+            lineNumber: Number.MAX_SAFE_INTEGER,
+            column: 0
+        }
+        let range = callstackEntry.nextStep.getValidRangeOrUndefined();
+        if(range && range.startLineNumber >= 0){
+            position = Range.getStartPosition(range);
+        }
+        
+        this.showVariablesTreeview.detachAllNodes();
         for(let sts of this.currentlyVisibleSymbolTableSections){
             sts.attachNodesToTreeview();
-            sts.renewValues(thread.s, programState.stackBase);
+            sts.renewValues(thread.s, programState.stackBase, position);
         }
 
     }

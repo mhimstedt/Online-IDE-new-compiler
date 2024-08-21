@@ -103,12 +103,6 @@ export class MainEmbedded implements MainBase {
 
     isEmbedded(): boolean { return true; }
 
-    jumpToDeclaration(file: File, declaration: IRange): void {
-        this.fileExplorer.selectFile(file);
-        this.editor.editor.revealLineInCenter(declaration.startLineNumber);
-        this.editor.editor.setPosition({ column: declaration.startColumn, lineNumber: declaration.startLineNumber });
-    };
-
     getCompiler(): Compiler {
         return this.language.getCompiler();
     }
@@ -943,11 +937,12 @@ export class MainEmbedded implements MainBase {
         this.bottomDiv?.showJunitTab();
     }
 
-    showProgramPosition(file?: CompilerFile, positionOrRange?: IPosition | IRange) {
+    showProgramPosition(file?: CompilerFile, positionOrRange?: IPosition | IRange, setCursor: boolean = true) {
         this.showFile(file);
         if(!positionOrRange) return;
         if(positionOrRange["startLineNumber"]) positionOrRange = Range.getStartPosition(<IRange>positionOrRange);
-        this.getMainEditor().setPosition(<IPosition>positionOrRange);
+        if(setCursor) this.getMainEditor().setPosition(<IPosition>positionOrRange);
+        this.getMainEditor().revealPositionInCenterIfOutsideViewport(<IPosition>positionOrRange);
         this.getMainEditor().focus();
     }
 

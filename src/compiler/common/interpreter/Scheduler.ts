@@ -270,19 +270,31 @@ export class Scheduler {
 
         this.ifBreakpointPresentDisableOnce();
 
+        let thread = this.getCurrentThread();
+        if (thread == null) return;
+
         if (stepInto) {
             if (this.state == SchedulerState.paused) {
                 this.setState(SchedulerState.running);
-                this.run(1);
+                
+                let finished: boolean = false;
+                do {
+                    this.run(1);
+                    let step = this.getNextStep();
+                    // skip steps for which position can't be shown to user:
+                    finished = !(step && !step.getValidRangeOrUndefined() && thread.state == ThreadState.runnable)
+                } while (!finished)
+                
                 this.setState(SchedulerState.paused);
             }
             callback();
         } else {
-            let thread = this.runningThreads[this.currentThreadIndex];
-            if (thread == null) return;
+            
             thread.markSingleStepOver(() => {
                 callback();
             });
+
+            this.setState(SchedulerState.running);
         }
     }
 

@@ -122,7 +122,7 @@ export class ClassBox extends DiagramElement {
     }
 
     jumpToDeclaration(element: JavaClass | JavaInterface | JavaMethod | JavaField) {
-        this.diagram.main.jumpToDeclaration(this.klass.module.file, element.identifierRange);
+        this.diagram.main.showProgramPosition(this.klass.module.file, element.identifierRange);
     }
 
 

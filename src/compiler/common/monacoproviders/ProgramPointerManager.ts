@@ -46,7 +46,7 @@ export class ProgramPointerManager {
         let model: monaco.editor.ITextModel | undefined = file.getMonacoModel();
 
         if(model){
-            this.main.showProgramPosition(file, position.range);
+            this.main.showProgramPosition(file, position.range, false);
         }
 
         let oldDecorations = this.keyToDecorationsMap.get(style.key);

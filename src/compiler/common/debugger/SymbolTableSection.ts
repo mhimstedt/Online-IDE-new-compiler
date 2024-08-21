@@ -1,6 +1,7 @@
 import { Treeview } from "../../../tools/components/treeview/Treeview";
 import { JavaSymbolTable } from "../../java/codegenerator/JavaSymbolTable";
 import { BaseSymbol, BaseSymbolTable } from "../BaseSymbolTable";
+import { IPosition } from "../range/Position";
 import { Debugger } from "./Debugger";
 import { DebuggerSymbolEntry, StackElementDebuggerEntry } from "./DebuggerSymbolEntry";
 
@@ -22,9 +23,9 @@ export class SymbolTableSection {
         }
     }
 
-    renewValues(stack: any[], stackBase: number) {
+    renewValues(stack: any[], stackBase: number, position: IPosition) {
 
-        this.children.forEach(c => c.fetchValueFromStackAndRender(stack, stackBase));
+        this.children.forEach(c => c.fetchValueFromStackAndRender(stack, stackBase, position));
 
     }
 

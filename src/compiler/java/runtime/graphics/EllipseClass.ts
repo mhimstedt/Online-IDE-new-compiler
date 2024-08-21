@@ -13,6 +13,9 @@ export class EllipseClass extends FilledShapeClass {
     static __javaDeclarations: LibraryDeclarations = [
         { type: "declaration", signature: "class Ellipse extends FilledShape", comment: JRC.EllipseClassComment },
 
+        { type: "field", signature: "private double radiusX", nativeIdentifier: "scaledRadiusX"},
+        { type: "field", signature: "private double radiusY", nativeIdentifier: "scaledRadiusY"},
+
         { type: "method", signature: "Ellipse()", java: EllipseClass.prototype._cj$_constructor_$Ellipse$, comment: JRC.EllipseEmptyConstructorComment },
         { type: "method", signature: "Ellipse(double mx, double my, double rx, double ry)", java: EllipseClass.prototype._cj$_constructor_$Ellipse$double$double$double$double, comment: JRC.EllipseConstructorComment },
 
@@ -36,6 +39,16 @@ export class EllipseClass extends FilledShapeClass {
     my!: number;
     radiusX!: number;
     radiusY!: number;
+
+    get scaledRadiusX(): number {
+        return this.scaleFactor * this.radiusX;
+    }
+
+    get scaledRadiusY(): number {
+        return this.scaleFactor * this.radiusY;
+    }
+
+
 
     _cj$_constructor_$Ellipse$(t: Thread, callback: CallbackFunction) {
         this._cj$_constructor_$Ellipse$double$double$double$double(t, callback, 200, 100, 100, 50);

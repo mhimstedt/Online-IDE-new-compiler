@@ -1,4 +1,5 @@
 import { IMain } from "../IMain";
+import { IPosition } from "../range/Position";
 import { Range } from "../range/Range";
 
 export class EditorOpenerProvider implements monaco.editor.ICodeEditorOpener {
@@ -16,7 +17,11 @@ export class EditorOpenerProvider implements monaco.editor.ICodeEditorOpener {
 
         if (model) {
             editor.setModel(model);
-            editor.setPosition(Range.getStartPosition(<monaco.IRange>selectionOrPosition));
+            console.log(selectionOrPosition);
+            let position = selectionOrPosition["startLineNumber"] ? Range.getStartPosition(<monaco.IRange>selectionOrPosition) : <IPosition>selectionOrPosition;
+
+            editor.setPosition(<IPosition>position);
+            editor.revealLineInCenterIfOutsideViewport((<IPosition>position).lineNumber);
             return true;
         }
 

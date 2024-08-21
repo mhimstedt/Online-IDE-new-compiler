@@ -12,6 +12,11 @@ export class RoundedRectangleClass extends FilledShapeClass {
     static __javaDeclarations: LibraryDeclarations = [
         { type: "declaration", signature: "class RoundedRectangle extends FilledShape", comment: JRC.RoundedRectangleClassComment },
 
+        { type: "field", signature: "private double width", nativeIdentifier: "scaledWidth"},
+        { type: "field", signature: "private double height", nativeIdentifier: "scaledHeight"},
+        { type: "field", signature: "private double radius", nativeIdentifier: "scaledRadius"},
+
+
         { type: "method", signature: "RoundedRectangle()", java: RoundedRectangleClass.prototype._cj$_constructor_$RoundedRectangle$, comment: JRC.RoundedRectangleEmptyConstructorComment },
         { type: "method", signature: "RoundedRectangle(double left, double top, double width, double height, double radius)", java: RoundedRectangleClass.prototype._cj$_constructor_$RoundedRectangle$double$double$double$double$double, comment: JRC.RoundedRectangleConstructorComment },
         { type: "method", signature: "final void setWidth(double width)", native: RoundedRectangleClass.prototype._setWidth, comment: JRC.RoundedRectangleSetWidthComment },
@@ -31,6 +36,20 @@ export class RoundedRectangleClass extends FilledShapeClass {
     width!: number;
     height!: number;
     radius!: number;
+
+    get scaledWidth(): number {
+        return this.scaleFactor * this.width;
+    }
+
+    get scaledHeight(): number {
+        return this.scaleFactor * this.width;
+    }
+
+    get scaledRadius(): number {
+        return this.scaleFactor * this.radius;
+    }
+
+
 
     _cj$_constructor_$RoundedRectangle$(t: Thread, callback: CallbackFunction) {
         this._cj$_constructor_$RoundedRectangle$double$double$double$double$double(t, callback, 0, 0, 100, 100, 10);
