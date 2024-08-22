@@ -85,9 +85,9 @@ export class CodeGenerator extends InnerClassCodeGenerator {
         
             let hasParameterlessConstructor = klass.methods.filter(m => m.isConstructor && m.parameters.length == 0);
             let doesExtendSystemClass: boolean = false;
-            let klass1: IJavaClass = klass.getExtends();
+            let klass1: IJavaClass | undefined = klass.getExtends();
             while(klass1 != this.objectType){
-                if(klass1.module instanceof SystemModule){
+                if(klass1?.module instanceof SystemModule){
                     doesExtendSystemClass = true;
                     break;
                 }
@@ -102,7 +102,8 @@ export class CodeGenerator extends InnerClassCodeGenerator {
 
             klass.methods.push(toJsonMethod);
             
-            klass.runtimeClass.prototype._mn$toJson$string$ = function(){
+            //@ts-ignore
+            klass.runtimeClass!.prototype._mn$toJson$string$ = function(){
                 return new JsonTool().toJson(this);
             }
 
@@ -114,6 +115,7 @@ export class CodeGenerator extends InnerClassCodeGenerator {
 
             klass.methods.push(fromJsonMethod);
 
+            //@ts-ignore
             klass.runtimeClass["_mn$fromJson$" + klass.identifier + "$string"] = function(jsonString: string){
                 return new JsonTool().fromJson(jsonString, klass);
             }

@@ -277,7 +277,7 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
                     collectionElementType = firstGenericParametersType;
                 }
             } else if(collectionType.identifier == "Group"){
-                collectionElementType = this.libraryTypestore.getType("Shape");
+                collectionElementType = this.libraryTypestore.getType("Shape")!;
             }
             if (node.elementType.kind != TokenType.varType) {
                 if (!this.typesAreIdentical(elementType!, collectionElementType)) {

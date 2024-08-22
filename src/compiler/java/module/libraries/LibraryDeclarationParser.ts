@@ -298,12 +298,12 @@ export class LibraryDeclarationParser extends LibraryDeclarationLexer {
         let type = this.findType(id);
 
         if (this.comesToken(TokenType.lower, true)) {
-            if (type.genericTypeParameters?.length == 0) {
+            if (type.genericTypeParameters?.length || 0 == 0) {
                 this.pushError("Der Typ " + type.identifier + " ist nicht generisch.");
                 this.skipTill(TokenType.greater, true);
             } else {
                 let typeMap: Map<GenericTypeParameter, JavaType> = new Map();
-                for (let gtp of type.genericTypeParameters) {
+                for (let gtp of type.genericTypeParameters!) {
                     let t = this.parseType(module);
 
                     if (t instanceof GenericTypeParameter && t.isWildcard) {

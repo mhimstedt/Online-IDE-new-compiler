@@ -132,6 +132,7 @@ export class MouseManager {
                     let mouseEventMethod: MouseEventMethod = shape.mouseEventsImplemented![mouseEventKind];
                     if (mouseEventMethod && shape._containsPoint(x, y) && !shape.mouseLastSeenInsideObject) {
                         shape.mouseLastSeenInsideObject = true;
+                        //@ts-ignore
                         mouseEventMethod.call(shape, t, undefined, x, y);
                     }
                 }
@@ -142,6 +143,7 @@ export class MouseManager {
                     let mouseEventMethod: MouseEventMethod = shape.mouseEventsImplemented![mouseEventKind];
                     if (mouseEventMethod && shape.mouseLastSeenInsideObject) {
                         shape.mouseLastSeenInsideObject = false;
+                        //@ts-ignore
                         mouseEventMethod.call(shape, t, undefined, x, y);
                     }
                 }
@@ -159,14 +161,17 @@ export class MouseManager {
                     ){
                         let containsPoint = shape._containsPoint(x, y);
                         if((shape.trackMouseMove || containsPoint) && mouseMoveEventMethod != null){
+                            //@ts-ignore
                             mouseMoveEventMethod.call(shape, t, undefined, x, y);
                         }
                         if(containsPoint && mouseEnterEventMethod != null && !shape.mouseLastSeenInsideObject){
                             shape.mouseLastSeenInsideObject = true;
+                            //@ts-ignore
                             mouseEnterEventMethod.call(shape, t, undefined, x, y);
                         }
                         if(!containsPoint && mouseLeaveEventMethod != null && shape.mouseLastSeenInsideObject){
                             shape.mouseLastSeenInsideObject = false;
+                            //@ts-ignore
                             mouseLeaveEventMethod.call(shape, t, undefined, x, y);
                         }
                     }

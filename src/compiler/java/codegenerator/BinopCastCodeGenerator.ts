@@ -377,7 +377,7 @@ export abstract class BinopCastCodeGenerator {
             if(this.canCastTo(rightSnippet.type, leftSnippet.type, "implicit")){
                 rightSnippet = this.compileCast(rightSnippet, leftSnippet.type!, "implicit");
             } else {
-                this.pushError(JCM.cantCastType(rightSnippet.type.identifier, leftSnippet.type.identifier), "error", rightSnippet.range!);
+                this.pushError(JCM.cantCastType(rightSnippet.type!.identifier, leftSnippet.type!.identifier), "error", rightSnippet.range!);
             }
             return new BinaryOperatorTemplate(operatorAsString, false).applyToSnippet(leftSnippet.type!, wholeRange, leftSnippet, rightSnippet);
         }
@@ -680,7 +680,7 @@ export abstract class BinopCastCodeGenerator {
         let boxedType = this.libraryTypestore.getType(boxedIdentifier);
         let boxedSnippet = SnippetFramer.frame(snippet, `new ${Helpers.classes}["${boxedIdentifier}"](§1)`, boxedType);
         
-        if(snippet instanceof StringCodeSnippet) snippet.setConstantValue(constant);
+        if(snippet instanceof StringCodeSnippet) snippet.setConstantValue(constant || null);
 
         return boxedSnippet;
     }

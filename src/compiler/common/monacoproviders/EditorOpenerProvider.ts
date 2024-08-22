@@ -17,8 +17,10 @@ export class EditorOpenerProvider implements monaco.editor.ICodeEditorOpener {
 
         if (model) {
             editor.setModel(model);
-            console.log(selectionOrPosition);
-            let position = selectionOrPosition["startLineNumber"] ? Range.getStartPosition(<monaco.IRange>selectionOrPosition) : <IPosition>selectionOrPosition;
+            if(!selectionOrPosition) return false;
+
+            //@ts-ignore
+            let position = selectionOrPosition.startLineNumber ? Range.getStartPosition(<monaco.IRange>selectionOrPosition) : <IPosition>selectionOrPosition;
 
             editor.setPosition(<IPosition>position);
             editor.revealLineInCenterIfOutsideViewport((<IPosition>position).lineNumber);

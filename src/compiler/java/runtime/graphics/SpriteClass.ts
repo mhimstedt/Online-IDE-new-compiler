@@ -14,6 +14,7 @@ import { SpriteLibraryEnum } from './SpriteLibraryEnum';
 import { JRC } from '../../language/JavaRuntimeLibraryComments';
 import { ExceptionPrinter } from '../../../common/interpreter/ExceptionPrinter';
 import { CallbackParameter } from '../../../common/interpreter/CallbackParameter';
+import { Exception } from '../../../common/interpreter/ExceptionInfo';
 
 export class SpriteClass extends ShapeClass {
     static __javaDeclarations: LibraryDeclarations = [
@@ -64,7 +65,7 @@ export class SpriteClass extends ShapeClass {
     imageIndex: number = 0;    // If you change this identifier then you have to change corresponding declaration in class ShapeClass
 
     _cj$_constructor_$Sprite$double$double$SpriteLibrary$int$ScaleMode(t: Thread, callback: CallbackParameter,
-        x: number, y: number, spriteLibrary: SpriteLibraryEnum | string, imageIndex: number,
+        x: number, y: number, spriteLibrary: string | SpriteLibraryEnum | undefined, imageIndex: number,
         scaleMode?: ScaleModeEnum, copyFromOtherShape?: ShapeClass
     ) {
         this._cj$_constructor_$Shape$(t, () => {
@@ -73,7 +74,7 @@ export class SpriteClass extends ShapeClass {
             this.scaleModeOrdinal = scaleMode?.ordinal || ScaleMode.nearest_neighbour;
             
             if (copyFromOtherShape == null) {
-                this.spriteLibrary = (typeof spriteLibrary == "string") ? spriteLibrary : spriteLibrary.name;
+                this.spriteLibrary = (typeof spriteLibrary == "string") ? spriteLibrary : spriteLibrary!.name;
                 this.imageIndex = imageIndex;
                 this.setTexture(undefined, imageIndex);
             } else {
@@ -107,13 +108,13 @@ export class SpriteClass extends ShapeClass {
     }
 
     _cj$_constructor_$Sprite$double$double$SpriteLibrary$int(t: Thread, callback: CallbackParameter,
-        x: number, y: number, spriteLibrary: SpriteLibraryEnum | undefined, imageIndex: number
+        x: number, y: number, spriteLibrary: string | SpriteLibraryEnum | undefined, imageIndex: number
     ) {
         return this._cj$_constructor_$Sprite$double$double$SpriteLibrary$int$ScaleMode(t, callback, x, y, spriteLibrary, imageIndex, undefined);
     }
 
     _cj$_constructor_$Sprite$double$double$SpriteLibrary(t: Thread, callback: CallbackParameter,
-        x: number, y: number, spriteLibrary: SpriteLibraryEnum | undefined
+        x: number, y: number, spriteLibrary: string | SpriteLibraryEnum | undefined
     ) {
         return this._cj$_constructor_$Sprite$double$double$SpriteLibrary$int$ScaleMode(t, callback, x, y, spriteLibrary, 0, undefined);
     }
@@ -455,7 +456,7 @@ export class SpriteClass extends ShapeClass {
         // the exception ourselves...
         try {
             this.setTexture(this.spriteLibrary, this.animationIndices[image]);
-        } catch (exception){
+        } catch (exception: any){
             this.world.interpreter.stop(false);
             this.world.interpreter.printManager.printHtmlElement(ExceptionPrinter.getHtmlWithLinks(exception, [], this.world.interpreter.getMain()));
             this._stopAnimation(false);

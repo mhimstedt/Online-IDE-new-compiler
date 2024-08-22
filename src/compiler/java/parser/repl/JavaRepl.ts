@@ -161,9 +161,11 @@ export class JavaRepl {
                 
                 if(currentProgramState) currentProgramState.lastExecutedStep = lastExecutedStep;
                 if(stackSizeBefore) threadBefore?.s.splice(stackSizeBefore, threadBefore?.s.length - stackSizeBefore);
-                returnValue.errors = programAndModule.module.errors;
-                
-                resolve(returnValue);
+                if(returnValue){
+                    returnValue.errors = programAndModule?.module?.errors;
+                    
+                    resolve(returnValue);
+                }
             }
 
             thread = this.prepareThread(programAndModule!, callback, withMaxSpeed);

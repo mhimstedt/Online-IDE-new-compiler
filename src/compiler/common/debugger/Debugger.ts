@@ -130,6 +130,7 @@ export class Debugger {
             )
             if(thread == currentThread) node.setSelected(true);
             node.onClickHandler = (t) => {
+                if(!t) return;
                 this.showCallstack(t);
                 this.showVariables(t);
             }
@@ -168,7 +169,7 @@ export class Debugger {
             let node = this.callstackTreeview.addNode(false, entry.getCaption(), undefined,
                 entry, entry, undefined, true);
             node.onClickHandler = (entry) => {
-                this.showVariables(thread, entry.programState);
+                this.showVariables(thread, entry?.programState);
                 this.showProgramPosition(thread, entry);
             }
             if(i == programStack.length - 1){
@@ -182,8 +183,8 @@ export class Debugger {
         }
     }
 
-    showProgramPosition(thread: Thread, entry: DebuggerCallstackEntry) {
-        if(!entry.range) return;
+    showProgramPosition(thread: Thread, entry?: DebuggerCallstackEntry) {
+        if(!entry?.range) return;
 
         let position: ProgramPointerPositionInfo = {
             programOrmoduleOrFile: entry.program,
@@ -249,7 +250,7 @@ export class Debugger {
             lineNumber: Number.MAX_SAFE_INTEGER,
             column: 0
         }
-        let range = callstackEntry.nextStep.getValidRangeOrUndefined();
+        let range = callstackEntry.nextStep?.getValidRangeOrUndefined();
         if(range && range.startLineNumber >= 0){
             position = Range.getStartPosition(range);
         }

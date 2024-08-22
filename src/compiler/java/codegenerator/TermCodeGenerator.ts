@@ -293,8 +293,8 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
         node: ASTNewObjectNode | ASTEnumValueNode, newObjectSnippet: CodeSnippet | undefined,
         enumValueIdentifier?: string, enumValueIndex?: number) {
 
-        if(klassType instanceof JavaClass && klassType.genericTypeParameters?.length > 0){
-            klassType = klassType.getMinimumConcreteGenericType(this.libraryTypestore);
+        if(klassType instanceof JavaClass && klassType.genericTypeParameters?.length || 0 > 0){
+            klassType = (<JavaClass>klassType).getMinimumConcreteGenericType(this.libraryTypestore);
         }
 
         parameterValues = this.castParameterValuesAndPackEllipsis(parameterValues, method);

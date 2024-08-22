@@ -31,10 +31,10 @@ export class JavaDefinitionProvider implements monaco.languages.DefinitionProvid
          * to cursor, so:
          */
         setTimeout(() => {
-            let currentEditorPosition = editor.getPosition();
+            let currentEditorPosition = editor!.getPosition();
             if(model == targetModel && currentEditorPosition){
-                if(Position.equals(editor.getPosition(), Range.getStartPosition(range))){
-                    editor.revealPositionInCenterIfOutsideViewport(currentEditorPosition);
+                if(Position.equals(editor.getPosition(), Range.getStartPosition(range!))){
+                    editor!.revealPositionInCenterIfOutsideViewport(currentEditorPosition);
                 }
 
             } 

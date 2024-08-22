@@ -221,27 +221,27 @@ export class JUnitTestrunner {
     
     findTreeviewEntry(klass: JavaClass | undefined, method: JavaMethod | undefined) {
         if (method) {
-            return this.testTreeview.nodes.find(entry => entry.externalObject.method == method)?.externalObject;
+            return this.testTreeview.nodes.find(entry => entry.externalObject?.method == method)?.externalObject;
         }
         if (klass) {
-            return this.testTreeview.nodes.find(entry => entry.externalObject.klass == klass)?.externalObject;
+            return this.testTreeview.nodes.find(entry => entry.externalObject?.klass == klass)?.externalObject;
         }
-        return this.testTreeview.nodes.find(entry => !entry.externalObject.klass && !entry.externalObject.method)?.externalObject;
+        return this.testTreeview.nodes.find(entry => !entry.externalObject?.klass && !entry.externalObject?.method)?.externalObject;
         
     }
     
     async executeAllTests() {
-        let treeviewEntry = this.findTreeviewEntry(undefined, undefined);
+        let treeviewEntry = this.findTreeviewEntry(undefined, undefined) || undefined;
         await this.executeTests(treeviewEntry);
     }
     
     async executeAllTestsOfClass(klass: JavaClass) {
-        let treeviewEntry = this.findTreeviewEntry(klass, undefined);
+        let treeviewEntry = this.findTreeviewEntry(klass, undefined) || undefined;
         await this.executeTests(treeviewEntry);
     }
 
     async executeTestMethod(method: JavaMethod) {
-        let treeviewEntry = this.findTreeviewEntry(undefined, method);
+        let treeviewEntry = this.findTreeviewEntry(undefined, method) || undefined;
         await this.executeTests(treeviewEntry);
     }
 

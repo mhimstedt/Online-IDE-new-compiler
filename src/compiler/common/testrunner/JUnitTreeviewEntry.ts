@@ -42,12 +42,12 @@ export class JUnitTreeviewEntry {
         this.treeviewNode.render();
         this.treeviewNode.onIconClicked = (element) => {
             testrunner.clearOutput();
-            element.runTests();
+            element?.runTests();
         }
 
         this.treeviewNode.onClickHandler = () => {
             if (this.method) {
-                this.jumpToMethod(method);
+                this.jumpToMethod(this.method);
             } else if (this.klass) {
                 this.testrunner.main.showProgramPosition(this.klass.module.file, this.klass.identifierRange);
             }
@@ -60,6 +60,7 @@ export class JUnitTreeviewEntry {
     }
 
     jumpToMethod(method: JavaMethod) {
+        if(!this.method) return;
         this.testrunner.main.showProgramPosition(this.method.module.file, this.method.identifierRange);
     }
 
@@ -73,12 +74,14 @@ export class JUnitTreeviewEntry {
             }
             return;
         }
-        for (let module of this.moduleManager.modules) {
-            for (let type of module.types.filter(type => type instanceof JavaClass)) {
-                let testMethods = type.getOwnMethods()
-                    .filter(m => !m.isConstructor && m.hasAnnotation("Test") && m.returnParameterType?.identifier == "void" && m.parameters.length == 0);
-                if (testMethods.length > 0) {
-                    this.children.push(new JUnitTreeviewEntry(this.testrunner, this, undefined, type, undefined));
+        if(this.moduleManager?.modules){
+            for (let module of this.moduleManager.modules) {
+                for (let type of module.types.filter(type => type instanceof JavaClass)) {
+                    let testMethods = (<JavaClass>type).getOwnMethods()
+                        .filter(m => !m.isConstructor && m.hasAnnotation("Test") && m.returnParameterType?.identifier == "void" && m.parameters.length == 0);
+                    if (testMethods.length > 0) {
+                        this.children.push(new JUnitTreeviewEntry(this.testrunner, this, undefined, <JavaClass>type, undefined));
+                    }
                 }
             }
         }
@@ -151,16 +154,18 @@ export class JUnitTreeviewEntry {
                 let results = assertionObserver.assertionResults;
                 this.testrunner.eraseExecutingTestCaption();
 
-                if (mainThread.state == ThreadState.terminatedWithException) {
+                if (mainThread?.state == ThreadState.terminatedWithException) {
                     let htmlElement = DOM.makeDiv(undefined);
 
                     htmlElement.innerHTML = `<div class="jo_junitFailBlock">` +
                         `<div><span class="jo_junitError">Test exited with exception:</span> </div>\n` +
                         `</div>`;
 
-                    let exceptionHtml = ExceptionPrinter.getHtmlWithLinks(mainThread.exception, mainThread.stackTrace!, this.testrunner.main);
-                    exceptionHtml.classList.add('jo_junitFailBlock');
-                    htmlElement.append(exceptionHtml);
+                    if(mainThread.exception){
+                        let exceptionHtml = ExceptionPrinter.getHtmlWithLinks(mainThread.exception, mainThread.stackTrace!, this.testrunner.main);
+                        exceptionHtml.classList.add('jo_junitFailBlock');
+                        htmlElement.append(exceptionHtml);
+                    }
 
                     results.push({
                         state: "failed",
@@ -180,7 +185,7 @@ export class JUnitTreeviewEntry {
                 return;
             }
 
-            this.testrunner.printExecutingTestCaption(this.method);
+            if(this.method) this.testrunner.printExecutingTestCaption(this.method);
             interpreter.scheduler.setState(SchedulerState.paused);
             mainThread.state = ThreadState.runnable;
             interpreter.start();
@@ -213,7 +218,7 @@ export class JUnitTreeviewEntry {
 
             let linkSpan = <HTMLSpanElement>line.getElementsByClassName("jo_junitLink")[0];
             linkSpan.addEventListener("click", () => {
-                this.jumpToMethod(this.method);
+                if(this.method) this.jumpToMethod(this.method);
             })
 
 
@@ -224,7 +229,7 @@ export class JUnitTreeviewEntry {
             if (this.klass) {
                 this.testrunner.printLine(JUnitTestrunnerLanguage.runningAllTestsOfClass(this.klass.identifier), "jo_junitCaption");
             } else {
-                this.testrunner.printLine(JUnitTestrunnerLanguage.runningAllTestsOfWorkspace(this.moduleManager.workspace?.getIdentifier() || "---"), "jo_junitCaption");
+                this.testrunner.printLine(JUnitTestrunnerLanguage.runningAllTestsOfWorkspace(this.moduleManager?.workspace?.getIdentifier() || "---"), "jo_junitCaption");
             }
             for (let child of this.children) {
                 child.printResults();

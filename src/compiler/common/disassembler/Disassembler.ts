@@ -110,7 +110,8 @@ export class Disassembler {
         }
     }
 
-    showElementpositionInMonacoModel(file: CompilerFile, range: IRange) {
+    showElementpositionInMonacoModel(file: CompilerFile | undefined, range: IRange | undefined) {
+        if(!file || !range) return;
         let programPointerManager = this.main.getInterpreter().programPointerManager;
         if (!programPointerManager) return;
 
@@ -225,7 +226,7 @@ export class Disassembler {
         let module = this.currentModule;
         if (range && module) {
             signatureDiv.addEventListener('pointerdown', (ev) => {
-                this.showElementpositionInMonacoModel(module.file, range);
+                this.showElementpositionInMonacoModel(module?.file, range);
                 this.markProgramPointer(signatureDiv);
             })
             signatureDiv.classList.add("jo_disassemblerLink");
@@ -300,6 +301,7 @@ export class Disassembler {
     }
 
     insertLambdaOrInnerClass(step: Step, marginLeft: number) {
+        if(!step.innerClass) return;
         let klass: Klass = step.innerClass;
         if (step.lambdaObject) klass = step.lambdaObject.constructor;
 
@@ -319,7 +321,7 @@ export class Disassembler {
             .map(method => {
                 return {
                     type: type,
-                    program: method.program,
+                    program: method.program!,
                     signature: method.getSignature(),
                     methodDeclarationRange: method.identifierRange
                 }

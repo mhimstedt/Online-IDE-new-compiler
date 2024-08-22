@@ -10,7 +10,7 @@ export class SystemException implements Exception, IThrowable {
     stacktrace: Stacktrace = [];
     file?: CompilerFile;
     range?: IRange;
-    thread: Thread;
+    thread!: Thread;
 
 
     constructor(public identifier: string, public message: string){

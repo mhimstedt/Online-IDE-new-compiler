@@ -10,17 +10,17 @@ import { ObjectClass } from "../system/javalang/ObjectClassStringClass";
 type SerializedObject = {
     "!k"?: string, // Class identifier or object index
     "!i": number  // index
-}
+} | null;
 
 export class JsonTool {
     // to deserialize:
-    indexToObjectMap: Map<number, ObjectClass>;
-    arrayElementsToResolve: {array: any[], arrayIndex: number, objectToResolveIndex: number}[];
-    fieldsToResolve: { objectHoldingField: ObjectClass, fieldIdentifier: string,  objectToResolveIndex: number }[];
+    indexToObjectMap?: Map<number, ObjectClass>;
+    arrayElementsToResolve?: {array: any[], arrayIndex: number, objectToResolveIndex: number}[];
+    fieldsToResolve?: { objectHoldingField: ObjectClass, fieldIdentifier: string,  objectToResolveIndex: number }[];
 
     // to serialize:
-    objectToIndexMap: Map<ObjectClass, number>;
-    nextIndex: number;
+    objectToIndexMap!: Map<ObjectClass, number>;
+    nextIndex: number = -1;
 
     wrapperTypes: String[] = ["String", "Integer", "Double", "Boolean", "Float", "Character", "Short", "Long"];
 
@@ -28,7 +28,6 @@ export class JsonTool {
         this.objectToIndexMap = new Map();
         this.nextIndex = 0;
         let json = JSON.stringify(this.anyToJson(data));
-        this.objectToIndexMap = null; // free memory
         return json;
     }
 
@@ -56,6 +55,7 @@ export class JsonTool {
     objectToJson(object: ObjectClass): SerializedObject {
         let klass = <JavaClass>object.getType();
         if(this.wrapperTypes.indexOf(klass.identifier) >= 0){
+            //@ts-ignore
             return object["value"];
         }
 
@@ -84,8 +84,10 @@ export class JsonTool {
                     if (first) {
                         first = false;
                         serializedFields = {};
+                        //@ts-ignore
                         serializedObject[klass.identifier] = serializedFields;
                     }
+                    //@ts-ignore
                     serializedFields[field.getInternalName()] = this.anyToJson(object[field.getInternalName()]);
                 }
             }
@@ -96,7 +98,7 @@ export class JsonTool {
         return serializedObject;
     }
 
-    fromJson(jsonString: string, type: JavaClass): ObjectClass {
+    fromJson(jsonString: string, type: JavaClass): ObjectClass | null {
         this.indexToObjectMap = new Map();
         this.arrayElementsToResolve = [];
         this.fieldsToResolve = [];
@@ -107,6 +109,7 @@ export class JsonTool {
         for (let ftr of this.fieldsToResolve) {
             let object = this.indexToObjectMap.get(ftr.objectToResolveIndex);
             if (object != null) {
+                //@ts-ignore
                 ftr.objectHoldingField[ftr.fieldIdentifier] = object;
             }
         }
@@ -118,24 +121,21 @@ export class JsonTool {
             }
         }
 
-        this.indexToObjectMap = null; // free memory
-        this.fieldsToResolve = null;
-        this.arrayElementsToResolve = null;
         return ret;
     }
 
-    fromJsonObj(serializedObject: any, klass: JavaClass, registerResolver: (index: number) => void): ObjectClass {
+    fromJsonObj(serializedObject: any, klass: JavaClass, registerResolver: (index: number) => void): ObjectClass | null{
         if (serializedObject == null) return null;
 
         if(this.wrapperTypes.indexOf(klass.identifier) >= 0){
-            return new klass.runtimeClass(serializedObject);
+            return new klass.runtimeClass!(serializedObject);
         }
 
         let klassIdentifier: string = serializedObject["!k"];
         let index = serializedObject["!i"];
 
         if(klassIdentifier != null){
-            let realObject = new klass.runtimeClass(); // todo: call constructor...
+            let realObject = new klass.runtimeClass!(); // todo: call constructor...
     
             let serializedFields: any = serializedObject[klass.identifier];
             if(serializedFields){
@@ -145,7 +145,7 @@ export class JsonTool {
                         let type = field.type;
                         if(type instanceof JavaClass){
                             realObject[identifier] = this.fromJsonObj(serializedFields[identifier], type, (index: number) => {
-                                this.fieldsToResolve.push({
+                                this.fieldsToResolve!.push({
                                     objectHoldingField: realObject, 
                                     fieldIdentifier: identifier, 
                                     objectToResolveIndex: index
@@ -159,15 +159,15 @@ export class JsonTool {
                 }
             }
 
-            this.indexToObjectMap.set(index, realObject);
+            this.indexToObjectMap!.set(index, realObject);
 
             return realObject;
 
         } else {
-            let cachedObject = this.indexToObjectMap.get(index);
+            let cachedObject = this.indexToObjectMap!.get(index);
             if(cachedObject != null) return cachedObject;
             registerResolver(index);
-            return undefined;
+            return null;
         }
 
     }
@@ -176,7 +176,7 @@ export class JsonTool {
     fromJsonAny(data: any, type: JavaType): any {
         if(type instanceof JavaEnum){ 
             let ordinal: number = data;
-            return type.runtimeClass.values.find(v => v.ordinal == ordinal );
+            return type.runtimeClass!.values.find((v: any) => v.ordinal == ordinal );
         } else if(type instanceof JavaArrayType && Array.isArray(data)){
             return this.fromJsonArray(data, type.elementType, type.dimension);
         } else if(type.isPrimitive){
@@ -185,7 +185,7 @@ export class JsonTool {
         return undefined;
     }
 
-    fromJsonArray(data: any[], elementType: JavaType, dimension: number){
+    fromJsonArray(data: any[], elementType: JavaType, dimension: number): any[]{
         if(dimension > 1){
             return data.map(element => this.fromJsonArray(element, elementType, dimension - 1));
         } else {
@@ -194,7 +194,7 @@ export class JsonTool {
                 let element = data[i];
                 if(elementType instanceof JavaClass){
                     ret.push(this.fromJsonObj(element, elementType, (index: number) => {
-                        this.arrayElementsToResolve.push({
+                        this.arrayElementsToResolve!.push({
                             array: data, 
                             arrayIndex: i,
                             objectToResolveIndex: index

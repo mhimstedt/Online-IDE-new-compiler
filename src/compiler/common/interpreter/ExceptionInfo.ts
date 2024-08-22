@@ -18,6 +18,6 @@ export interface Exception {
     getIdentifier(): string;
     getExtendedImplementedIdentifiers(): string[];
     getMessage(): string;
-    getThread(): Thread;  // Thread
-    getFile(): CompilerFile;    // CompilerFile
+    getThread(): Thread | undefined;  // Thread
+    getFile(): CompilerFile | undefined;    // CompilerFile
 }

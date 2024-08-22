@@ -207,7 +207,7 @@ export class Thread {
      * We use this method if we are in a call chain outside of Thread.run-method, e.g.
      * called by a network-event in database-classes.
      */
-    throwRuntimeExceptionOnLastExecutedStep(exception){
+    throwRuntimeExceptionOnLastExecutedStep(exception: Exception & IThrowable){
         this.throwException(exception, this.currentProgramState!.lastExecutedStep!);
     }
 

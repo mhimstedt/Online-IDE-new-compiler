@@ -328,7 +328,7 @@ export class GroupClass extends ShapeClass implements BaseListType {
                 this._defineCenter(centerXOld, centerYOld);
                 
                 if(callback) callback();
-            }, 0, 0, undefined, 0, undefined, this
+            }, 0, 0, "", 0, undefined, this
         );
     }
 

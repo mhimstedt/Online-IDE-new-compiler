@@ -486,13 +486,13 @@ export class Interpreter {
 
         this.scheduler.setMaxSpeed(value, isMaxSpeed);
 
-        if (!isMaxSpeed && this.stepsPerSecondGoal > 20) {
+        if (!isMaxSpeed && this.stepsPerSecondGoal! > 20) {
             this.hideProgrampointerPosition();
         }
     }
 
     getStepsPerSecond(): number {
-        return this.stepsPerSecondGoal;
+        return this.isMaxSpeed ? -1 : this.stepsPerSecondGoal!;
     }
 
     runsEmbedded(): boolean {
