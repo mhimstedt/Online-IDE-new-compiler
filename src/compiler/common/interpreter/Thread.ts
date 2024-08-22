@@ -203,6 +203,14 @@ export class Thread {
         return { state: this._state, stepsExecuted: this.numberOfSteps }
     }
 
+    /**
+     * We use this method if we are in a call chain outside of Thread.run-method, e.g.
+     * called by a network-event in database-classes.
+     */
+    throwRuntimeExceptionOnLastExecutedStep(exception){
+        this.throwException(exception, this.currentProgramState!.lastExecutedStep!);
+    }
+
     handleSystemException(exception: any, step: Step, currentProgramState: ProgramState) {
 
         console.log(exception);

@@ -3,6 +3,8 @@
 # TODO
   * Test homework-functionality
   * Database classes
+  * Test WebSocket classes
+  * Serialize object to/from JSON
   * Robot class
   * Test all library classes, add missing methods, fix bugs
   * missing methods:
@@ -16,7 +18,7 @@
   * add more compiler-tests
 
 # Done:
-  * Fix API-documentation
+  * Fix API-documentation 
   * Fix class diagram
   * Make @Test-Annotation work for classes
   * check array indices at runtime

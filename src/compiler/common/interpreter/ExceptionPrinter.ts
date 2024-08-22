@@ -58,7 +58,8 @@ export class ExceptionPrinter {
 
     }
 
-    static getHtmlWithLinks(exception: Exception, stacktrace: Stacktrace, main: IMain): HTMLDivElement {
+    static getHtmlWithLinks(exception: Exception, stacktrace: Stacktrace, main: IMain | undefined): HTMLDivElement {
+        
         let outerDiv = DOM.makeDiv(undefined, 'jo_exceptionPrinter_outer');
 
         let headingDiv = DOM.makeDiv(outerDiv, 'jo_exceptionPrinter_heading');
@@ -72,7 +73,7 @@ export class ExceptionPrinter {
 
             let linkSpan = stacktraceDiv.getElementsByClassName("jo_stacktraceLink")[0];
             linkSpan.addEventListener("click", () => {
-                main.showProgramPosition(ste.file, ste.range);
+                main?.showProgramPosition(ste.file, ste.range);
             })
 
         }

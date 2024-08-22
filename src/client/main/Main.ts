@@ -240,7 +240,7 @@ export class Main implements MainBase {
             graphicsManager, keyboardManager,
             breakpointManager, this.debugger,
             programPointerManager, inputManager, 
-            fileManager, exceptionMarker);
+            fileManager, exceptionMarker, this);
 
         let errorMarker = new ErrorMarker();
 

@@ -4816,4 +4816,154 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
     })
 
 
+    /**
+     * class DatabaseManager
+     */
+    static databaseManagerClassComment = () => lm({
+    "de": `Über die statische Methode DatabaseManager.getConnection(String code) kann die Verbindung zu einer Datenbank auf www.sql-ide.de aufgebaut werden.`,
+    "en": `A connection to a database on www.sql-ide.de can be established using the static method DatabaseManager.getConnection(String code).`,
+    })
+
+    static databaseManagerNotInEmbeddedVersionException = () => lm({
+    "de": `Verbindung zu einer Datenbank kann nur von www.online-ide.de aus aufgebaut werden.`,
+    "en": `You can reach databases at www.sql-ide.de only from the ide in www.online-ide.de.`,
+    })
+
+    static databaseManagerGetConnectionComment = () => lm({
+    "de": `Baut eine Verbindung mit einer Datenbank auf www.sql-ide.de auf. Gibt ein Connection-Objekt zurück, das diese Verbindung repräsentiert.`,
+    "en": `Sets up a connection to a database on www.sql-ide.de. Returns a Connection object representing this connection.`,
+    })
+
+    /**
+     * class Connection
+     */
+    static connectionClassComment = () => lm({
+    "de": `Ein Connection-Objekt repräsentiert die Verbindung zu einer Datenbank auf www.sql-ide.de`,
+    "en": `A connection object represents the connection to a database on www.sql-ide.de`,
+    })
+
+    static connectionCreateStatementComment = () => lm({
+    "de": `Erstellt ein Statement-Objekt, mit dem Statements zur Datenbank geschickt werden können.`,
+    "en": `Creates a Statement object that can be used to send statements to the database.`,
+    })
+
+    static connectionPrepareStatementComment = () => lm({
+    "de": `Erstellt ein PreparedStatement-Objekt, mit dem Anweisungen zur Datenbank geschickt werden können.`,
+    "en": `Creates a PreparedStatement object that can be used to send statements to the database.`,
+    })
+
+    static connectionCloseComment = () => lm({
+    "de": `Schließt die Verbindung zur Datenbank.`,
+    "en": `Closes connection to the database.`,
+    })
+
+    static connectionDatabaseConnectionError = () => lm({
+    "de": `Es besteht keine Verbindung zur Datenbank.`,
+    "en": `Connection to database lost.`,
+    })
+
+    /**
+     * class Statement
+     */
+    static statementClassComment = () => lm({
+    "de": `Ein Statement-Objekt repräsentiert eine Anweisung an die Datenbank.`,
+    "en": `A Statement object represents a statement to the database.`,
+    })
+
+    static statementOnlySelectionStatementsWithQueryException = () => lm({
+    "de": `Mit der Methode executeQuery können nur select-Anweisungen ausgeführt werden. Benutze für datenverändernde Anweisungen die Methode executeUpdate.`,
+    "en": `The executeQuery method can only execute select statements. For data changing statements, use the executeUpdate method.`,
+    })
+
+    static statementExecuteQueryComment = () => lm({
+    "de": `Führt ein SQL-Statement aus, das eine selcet-Anweisung enthält.`,
+    "en": `Executes a SQL-statement containing a select-query.`,
+    })
+
+    static statementExecuteUpdateException = () => lm({
+    "de": `Mit der Methode executeUpdate können nur datenverändernde Anweisungen ausgeführt werden. Benutze für select-Anweisungen die Methode executeQuery.`,
+    "en": `Only statements that change data can be executed with the executeUpdate method. Use the executeQuery method for select statements.`,
+    })
+
+    static statementExecuteUpdateComment = () => lm({
+    "de": `Führt ein SQL-Statement aus, das eine datenverändernde Anweisung enthält.`,
+    "en": `Executes a SQL-statement which manipulates data.`,
+    })
+
+    /**
+     * class ResultSet
+     */
+
+    static resultSetClassComment = () => lm({
+    "de": `Ein ResultSet-Objekt speichert das Ergebnis einer Abfrage an die Datenbank.`,
+    "en": `A ResulSet object contains the result of a database query.`,
+    })
+
+    static resultSetNextComment = () => lm({
+    "de": `Bewegt den "Cursor" zum nächsten Datensatz und gibt genau dann true zurück, wenn noch ein Datensatz da ist.`,
+    "en": `Moves the "cursor" to the next record and returns true if there is another record.`,
+    })
+
+    static resultSetSizeComment = () => lm({
+    "de": `Gibt die Anzahl der Zeilen der Ergebnistabelle zurück.`,
+    "en": `Returns number of rows of result table.`,
+    })
+
+    static resultSetGetIndexComment = () => lm({
+    "de": `Gibt den Index zurück, auf dem der "Cursor" in der Liste der Zeilen der Ergebnistabelle steht. Vor dem ersten Aufruf von next() wird -1 zurückgegeben.`,
+    "en": `Returns the index where the "cursor" is located in the list of rows of the result table. -1 is returned before the first call to next().`,
+    })
+
+    static resultSetWasNullComment = () => lm({
+    "de": `Gibt genau dann true zurück, wenn der zuletzt gelesene Wert null war.`,
+    "en": `Returns true if and only if the last value read was null.`,
+    })
+
+    static resultSetGetByIndexComment = (type: string) => lm({
+    "de": `Gibt den Wert der Spalte mit dem angegebenen Spaltenindex als ${type} zurück.`,
+    "en": `Returns value of column with given index as ${type}.`,
+    })
+
+    static resultSetGetByLabelComment = (type: string) => lm({
+    "de": `Gibt den Wert der Spalte mit dem angegebenen Spaltenlabel als ${type} zurück.`,
+    "en": `Returns value of column with given label as ${type}.`,
+    })
+
+    static resultHasNoColumnWithGivenIndexException = () => lm({
+    "de": `Die Ergebnistabelle hat keine Spalte mit dem angegebenen Index.`,
+    "en": `Resultset-table has no column with given index.`,
+    })
+
+    static cursorAfterLastRecordException = () => lm({
+    "de": `Der Cursor befindet sich hinter dem letzten Datensatz der Ergebnistabelle.`,
+    "en": `Cursor is located after last record of resultset table.`,
+    })
+
+
+    /**
+     * class PreparedStatement
+     */
+    static preparedStatementClassComment = () => lm({
+    "de": `Ein PreparedStatement-Objekt repräsentiert eine parametrisierte Anweisung an die Datenbank.`,
+    "en": `A SQL statement is precompiled and stored in a PreparedStatement object. This object can then be used to efficiently execute this statement multiple times.`,
+    })
+
+    static preparedStatementSetComment = (type: string) => lm({
+    "de": `Ersetzt den Parameter mit dem angegebenen Index durch den ${type}-Wert.`,
+    "en": `Replaces parameter with given index with given ${type}-value.`,
+    })
+
+    static preparedStatementParametersMissingException = () => lm({
+    "de": `Es gibt keine Parameter (mit ? besetzte Stellen) in dieser Anweisung.`,
+    "en": `There are no parameters (given as ?) in this statement.`,
+    })
+
+    static preparedStatementWrongParameterIndex = (count: number, actual: number) => lm({
+    "de": "Es gibt nur die Parameterpositionen 1 bis " + count + " in der SQL-Anweisung, keine Position " + actual + ".",
+    "en": `In this statement parameter positions are numbered ${1} ... ${count}. There's no parameter with position ${actual}.`,
+    })
+
+
 }  
+
+

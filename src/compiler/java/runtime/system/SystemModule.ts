@@ -131,7 +131,12 @@ import { World3dClass } from "../graphics/3d/World3dClass.ts";
 import { CodeFragment } from "../../../common/disassembler/CodeFragment.ts";
 import { MethodOfDestroyedGOExceptionClass } from "./javalang/MethodOfDestroyedGOExceptionClass.ts";
 import { GNGEreignisbehandlung } from "../graphics/gng/GNGEreignisbehandlung.ts";
-import { CollisionPairClass } from "../graphics/CollisionpairClass.ts";
+import { CollisionPairClass } from "../graphics/CollisionPairClass.ts";
+import { DatabaseManagerClass } from "../database/DatabaseManagerClass.ts";
+import { ConnectionClass } from "../database/ConnectionClass.ts";
+import { StatementClass } from "../database/StatementClass.ts";
+import { PreparedStatementClass } from "../database/PreparedStatementClass.ts";
+import { ResultSetClass } from "../database/ResultSetClass.ts";
 
 export class SystemModule extends JavaLibraryModule {
 
@@ -230,6 +235,9 @@ export class SystemModule extends JavaLibraryModule {
             // Gui components
             ChangeListenerInterface, GuiComponentClass, GuiTextComponentClass, ButtonClass, CheckboxClass,
             RadiobuttonClass, TextfieldClass,
+
+            // Database
+            DatabaseManagerClass, ConnectionClass, StatementClass, PreparedStatementClass, ResultSetClass,
 
             // Graphics'n Games (GNG)
             GNGBaseFigur, GNGKreis, GNGRechteck, GNGDreieck, GNGText, GNGFigur,

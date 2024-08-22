@@ -457,7 +457,7 @@ export class SpriteClass extends ShapeClass {
             this.setTexture(this.spriteLibrary, this.animationIndices[image]);
         } catch (exception){
             this.world.interpreter.stop(false);
-            this.world.interpreter.printManager.printHtmlElement(ExceptionPrinter.getHtmlWithLinks(exception, [], this.world.interpreter.breakpointManager.main));
+            this.world.interpreter.printManager.printHtmlElement(ExceptionPrinter.getHtmlWithLinks(exception, [], this.world.interpreter.getMain()));
             this._stopAnimation(false);
         }
     }

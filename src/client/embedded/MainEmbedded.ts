@@ -550,7 +550,7 @@ export class MainEmbedded implements MainBase {
             new GraphicsManager(graphicsDiv),  keyboardManager,
             breakpointManager, this.debugger,
             programPointerManager, inputManager,
-            fileManager, new ExceptionMarker(this));
+            fileManager, new ExceptionMarker(this), this);
 
         
 

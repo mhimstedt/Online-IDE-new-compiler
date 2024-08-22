@@ -61,15 +61,14 @@ export class DatabaseTool {
 
     databaseStructure: DatabaseStructure;
 
-    constructor(private main: MainBase){
+    constructor(private main: MainBase) {
 
     }
 
     initializeWorker(template: Uint8Array, queries: string[], callbackAfterInitializing?: (error: string) => void) {
-        
-        this.main.getBottomDiv().console.writeConsoleEntry('Bitte warten, die Datenbank wird initialisiert...', null);
-        
-            if (this.worker != null) {
+
+
+        if (this.worker != null) {
             this.worker.terminate();
         }
 
@@ -78,13 +77,13 @@ export class DatabaseTool {
         // console.log("Starting worker...");
 
         let url: string = "worker/sqljs-worker.js"
-        if(this.main.isEmbedded()){
+        if (this.main.isEmbedded()) {
             //@ts-ignore
             url = window.javaOnlineDir + url;
         }
 
         //@ts-ignore
-        if(window.jo_doc){
+        if (window.jo_doc) {
             //@ts-ignore
             this.worker = new WorkerSim();
         } else {
@@ -123,7 +122,7 @@ export class DatabaseTool {
 
             };
 
-            if(queries == null) queries = [];
+            if (queries == null) queries = [];
             queries = queries.slice();
             let queryCount = queries.length;
 
@@ -135,13 +134,13 @@ export class DatabaseTool {
                         execQuery();
                     }, (error) => {
                         error = ("Error while setting up database: " + error + ", query: " + query);
-                        console.log({"error": "Error while setting up database: " + error, "query": query});
+                        console.log({ "error": "Error while setting up database: " + error, "query": query });
                         console.log()
                         execQuery();
                     })
                 } else {
                     if (callbackAfterInitializing != null) callbackAfterInitializing(error);
-                   
+
                 }
             }
 
@@ -178,9 +177,9 @@ export class DatabaseTool {
 
     }
 
-    executeWriteQueries(queries: string[], successCallback: () => void, errorCallback: QueryErrorCallback){
+    executeWriteQueries(queries: string[], successCallback: () => void, errorCallback: QueryErrorCallback) {
 
-        if(queries.length == 0){
+        if (queries.length == 0) {
             successCallback()
             return;
         }
@@ -190,7 +189,7 @@ export class DatabaseTool {
         this.executeQuery(query, () => {
             this.executeWriteQueries(queries, successCallback, errorCallback);
         }, (message) => {
-            this.executeWriteQueries(queries, () => {}, (error) => {});
+            this.executeWriteQueries(queries, () => { }, (error) => { });
             errorCallback(message); // report first error
         });
 
@@ -216,8 +215,8 @@ export class DatabaseTool {
 
     }
 
-    close(){
-        if(this.worker != null){
+    close() {
+        if (this.worker != null) {
             this.worker.terminate();
             this.worker = null;
         }

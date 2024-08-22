@@ -3,6 +3,7 @@ import { IAssertionObserver } from "../../java/runtime/unittests/IAssertionObser
 import { BreakpointManager } from "../BreakpointManager.ts";
 import { Debugger } from "../debugger/Debugger.ts";
 import { Executable } from "../Executable.ts";
+import { IMain } from "../IMain.ts";
 import { Module } from "../module/Module.ts";
 import { ProgramPointerManager, ProgramPointerPositionInfo } from "../monacoproviders/ProgramPointerManager.ts";
 import { ActionManager } from "./ActionManager.ts";
@@ -77,7 +78,7 @@ export class Interpreter {
         public breakpointManager?: BreakpointManager, public _debugger?: Debugger,
         public programPointerManager?: ProgramPointerManager,
         public inputManager?: IInputManager, public fileManager?: IFileManager,
-        public exceptionMarker?: ExceptionMarker
+        public exceptionMarker?: ExceptionMarker, private main?: IMain
     ) {
 
         //@ts-ignore
@@ -508,5 +509,9 @@ export class Interpreter {
 
     public deleteObject(classIdentifier: string){
         this.objectStore.delete(classIdentifier);
+    }
+
+    public getMain(): IMain | undefined {
+        return this.main;
     }
 }
