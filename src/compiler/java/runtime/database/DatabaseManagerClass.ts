@@ -29,11 +29,11 @@ export class DatabaseManagerClass extends ObjectClass {
         let ch: ConnectionClass = new ConnectionClass(t.scheduler.interpreter);
 
         interpreter.showProgramPointer(undefined, "DatabaseManager");
-        main.getBottomDiv().showHideDbBusyIcon(true);
+        main.getBottomDiv().showHideBusyIcon(true);
         t.state = ThreadState.waiting;
 
         ch.connect(code, (error: string) => {
-            main.getBottomDiv().showHideDbBusyIcon(false);
+            main.getBottomDiv().showHideBusyIcon(false);
             if(error == null){
                 t.s.push(ch);
             } else {

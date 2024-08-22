@@ -4488,6 +4488,81 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
         "en": "Creates a new WebSocket object.",
     })
 
+    static WebSocketOpenComment = () => lm({
+    "de": `Startet die Verbindung mit dem Server. Den SessionCode kannst Du frei wählen. Mit allen anderen Clients, die eine Verbindung mit demselben SessionCode aufbauen, kannst Du anschließend Daten austauschen. Auch der Nickname ist frei wählbar. Er ist für alle anderen Clients sichtbar.`,
+    "en": `Starts the connection to the server. You can freely choose the session code. You can then exchange data with all other clients that establish a connection with the same session code. The nickname can also be freely chosen. It is visible to all other clients.`,
+    })
+
+    static WebSocketSendToAllComment = () => lm({
+    "de": `Sendet Daten (message) an alle anderen Clients. Den messageType kannst Du frei wählen. Die empfangenden Clients bekommen ihn zusammen mit den Daten übermittelt. Tipp: Du kannst auch Objekte senden, musst sie dazu aber vorher serialisieren, d.h. mithilfe der Methode toJson in eine Zeichenkette verwandeln.`,
+    "en": `Sends data (message) to all other clients. You can freely choose the message type. The receiving clients receive it together with the data. Tip: You can also send objects, but you have to serialize them first, i.e. convert them into a string using the toJson method.`,
+    })
+
+    static WebSocketFindClientsComment = () => lm({
+    "de": `Sucht die übergebene Anzahl von "kontaktbereiten" Clients, d.h. solchen Clients, die exakt dieselbe Suchanfrage abgegeben haben. Findet der Server die Clients, so ruft er bei allen beteiligten Clients onClientsFound auf.`,
+    "en": `Searches for the number of "ready to contact" clients, i.e. those clients that have submitted exactly the same search query. If the server finds the clients, it calls onClientsFound for all clients involved.`,
+    })
+
+    static WebSocketFindClientsByNicknamesComment = () => lm({
+    "de": `Sucht die Clients mit den angegebenen Nicknames. Haben sie eine entsprechende Suchanfrage (d.h. dieselben Nicknames) abgegeben, so so ruft der Server bei allen beteiligten Clients onClientsFound auf.`,
+    "en": `Searches for the clients with the specified nicknames. If you have submitted a corresponding search query (i.e. the same nickname), the server calls onClientsFound for all clients involved.`,
+    })
+
+    static WebSocketFindClientComment = () => lm({
+    "de": `Sucht den Client mit dem angegebenen Nickname. Hat er eine entsprechende Suchanfrage (d.h. mit dem Nickname DIESES clients) abgegeben, so so ruft der Server bei beiden Clients onClientsFound auf.`,
+    "en": `Searches for the client with the specified nickname. If he has submitted a corresponding search query (i.e. with the nickname THIS client), the server calls onClientsFound for both clients.`,
+    })
+
+    static WebSocketCloseComment = () => lm({
+    "de": `Beendet die Verbindung. Bei allen anderen Clients, die sich mit derselben sessionId verbunden haben, wird daraufhin die Methode onOtherClientDisconnected aufgerufen.`,
+    "en": `Terminates the connection. The onOtherClientDisconnected method is then called for all other clients that have connected with the same sessionId.`,
+    })
+
+    static WebSocketGetOtherClientsComment = () => lm({
+    "de": `Gibt alle bisher bei der selben Session angemeldeten Clients zurück.`,
+    "en": `Returns an Array of all clients connected to the same session.`,
+    })
+
+    static WebSocketOnOpenComment = () => lm({
+    "de": `Wird aufgerufen, sobald die Verbindung mit dem Server zustandegekommen ist.`,
+    "en": `Is called as soon as the connection to the server has been established.`,
+    })
+
+    static WebSocketOnCloseComment = () => lm({
+    "de": `Wird aufgerufen, nachdem die Verbindung geschlossen wurde.`,
+    "en": `This method is called after connection had been closed.`,
+    })
+
+    static WebSocketOnMessageComment = () => lm({
+    "de": `Wird immer dann aufgerufen, wenn eine Nachricht eines anderen Clients empfangen wurde.`,
+    "en": `Called whenever a message from another client has been received.`,
+    })
+
+    static WebSocketOnOtherClientDisconnectedComment = () => lm({
+    "de": `Wird immer dann aufgerufen, wenn ein anderer Client unter Nutzung desselben sessionCodes die Verbindung mit dem Server beendet hat.`,
+    "en": `Is always called when another client using the same sessionCode has terminated the connection to the server.`,
+    })
+
+    static WebSocketOnOtherClientConnectedComment = () => lm({
+    "de": `Wird immer dann aufgerufen, wenn ein anderer Client unter Nutzung desselben sessionCodes die Verbindung mit dem Server öffnet.`,
+    "en": `Is always called when another client using the same sessionCode connects to the server.`,
+    })
+
+    static WebSocketOnClientsFoundComment = () => lm({
+    "de": `Wird aufgerufen, wenn die durch die Methoden findClient bzw. findClients zuvor gesuchten Clients gefunden wurden.`,
+    "en": `Called when the clients previously searched for by the findClient or findClients methods have been found.`,
+    })
+
+    static WebSocketFunctionalityNotInEmbeddedModeException = () => lm({
+    "de": `Die Netzwerkfunktionalitäten stehen nur eingeloggten Nutzern in der Entwicklungsumgebung zur Verfügung und können daher leider hier nicht ausprobiert werden.`,
+    "en": `The network functionalities are only available to logged in users at www.online-ide.de and therefore unfortunately cannot be tried out here.`,
+    })
+
+    static WebSocketCommunicationError = () => lm({
+    "de": `Kommunikationsfehler beim WebSocket: `,
+    "en": `The WebSocket object had a communication error: `,
+    })
+
     /**
      * class WebSocketClient
      */

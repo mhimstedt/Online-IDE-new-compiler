@@ -15,6 +15,7 @@ export class JavaField extends BaseField {
 
     _isStatic: boolean = false;
     _isFinal: boolean = false;
+    _isTransient: boolean = false;
 
     /**
      * The class/enum this field belongs to
@@ -91,6 +92,10 @@ export class JavaField extends BaseField {
 
     isFinal(): boolean {
         return this._isFinal;
+    }
+
+    isTransient(): boolean {
+        return this._isTransient;
     }
 
 }

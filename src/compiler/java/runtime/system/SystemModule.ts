@@ -137,6 +137,8 @@ import { ConnectionClass } from "../database/ConnectionClass.ts";
 import { StatementClass } from "../database/StatementClass.ts";
 import { PreparedStatementClass } from "../database/PreparedStatementClass.ts";
 import { ResultSetClass } from "../database/ResultSetClass.ts";
+import { WebSocketClass } from "../network/WebSocketClass.ts";
+import { WebSocketClientClass } from "../network/WebSocketClientClass.ts";
 
 export class SystemModule extends JavaLibraryModule {
 
@@ -238,6 +240,9 @@ export class SystemModule extends JavaLibraryModule {
 
             // Database
             DatabaseManagerClass, ConnectionClass, StatementClass, PreparedStatementClass, ResultSetClass,
+
+            // WebSocket
+            WebSocketClass, WebSocketClientClass,
 
             // Graphics'n Games (GNG)
             GNGBaseFigur, GNGKreis, GNGRechteck, GNGDreieck, GNGText, GNGFigur,

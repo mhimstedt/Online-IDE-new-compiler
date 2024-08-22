@@ -1,232 +1,289 @@
+import { ajax } from "../../../../client/communication/AjaxHelper";
+import { GetWebSocketTokenResponse, WebSocketRequestConnect, WebSocketRequestDisconnect, WebSocketRequestFindPairing, WebSocketRequestSendToAll, WebSocketRequestSendToClient, WebSocketResponse, WebSocketResponsePairingFound } from "../../../../client/communication/Data";
+import { Main } from "../../../../client/main/Main";
+import { CallbackParameter } from "../../../common/interpreter/CallbackParameter";
+import { Interpreter } from "../../../common/interpreter/Interpreter";
+import { Thread, ThreadState } from "../../../common/interpreter/Thread";
 import { JRC } from "../../language/JavaRuntimeLibraryComments";
 import { LibraryDeclarations } from "../../module/libraries/DeclareType";
 import { NonPrimitiveType } from "../../types/NonPrimitiveType";
 import { ObjectClass } from "../system/javalang/ObjectClassStringClass";
+import { RuntimeExceptionClass } from "../system/javalang/RuntimeException";
 import { WebSocketClientClass } from "./WebSocketClientClass";
 
 export class WebSocketClass extends ObjectClass {
     static __javaDeclarations: LibraryDeclarations = [
-        {type: "declaration", signature: "class WebSocket extends Object", comment: JRC.WebSocketClassComment},
-        {type: "method", signature: "WebSocket()", native: WebSocketClass.prototype._constructor1, comment: JRC.WebSocketConstructorComment}
+        { type: "declaration", signature: "class WebSocket extends Object", comment: JRC.WebSocketClassComment },
+        { type: "method", signature: "WebSocket()", java: WebSocketClass.prototype._cj$_constructor_$WebSocket$, comment: JRC.WebSocketConstructorComment },
+        { type: "method", signature: "void open(string sessionCode, string nickname)", java: WebSocketClass.prototype._mj$open$void$string$string, comment: JRC.WebSocketOpenComment },
+        { type: "method", signature: "void sendToAll(string message, string messageType)", native: WebSocketClass.prototype._sendToAll, comment: JRC.WebSocketSendToAllComment },
+        { type: "method", signature: "void findClients(int count)", java: WebSocketClass.prototype._findClientsFromCount, comment: JRC.WebSocketFindClientsComment },
+        { type: "method", signature: "void findClients(string[] nicknames)", java: WebSocketClass.prototype._findClientsFromNicknames, comment: JRC.WebSocketFindClientsByNicknamesComment },
+        { type: "method", signature: "void findClient(string nicknames)", java: WebSocketClass.prototype._findClientsFromNicknames, comment: JRC.WebSocketFindClientComment },
+        { type: "method", signature: "void close()", native: WebSocketClass.prototype._close, comment: JRC.WebSocketCloseComment },
+        { type: "method", signature: "WebSocketClient getOtherClients()", java: WebSocketClass.prototype._getOtherClients, comment: JRC.WebSocketGetOtherClientsComment },
+        
+        { type: "method", signature: "void onOpen()", java: WebSocketClass.prototype._mj$onOpen$void$, comment: JRC.WebSocketOnOpenComment },
+        { type: "method", signature: "void onClose()", java: WebSocketClass.prototype._mj$onClose$void$, comment: JRC.WebSocketOnCloseComment },
+        { type: "method", signature: "void onMessage(WebSocketClient sender, string message, string messageType)", java: WebSocketClass.prototype._mj$onMessage$void$WebSocketClient$string$string, comment: JRC.WebSocketOnMessageComment },
+        { type: "method", signature: "void onOtherClientConnected(WebSocketClient otherClient)", java: WebSocketClass.prototype._mj$onOtherClientConnected$void$WebSocketClient, comment: JRC.WebSocketOnOtherClientConnectedComment },
+        { type: "method", signature: "void onOtherClientDisconnected(WebSocketClient otherClient)", java: WebSocketClass.prototype._mj$onOtherClientDisconnected$void$WebSocketClient, comment: JRC.WebSocketOnOtherClientDisconnectedComment },
+        { type: "method", signature: "void onClientsFound(WebSocketClient[] otherClients, int ownNumber)", java: WebSocketClass.prototype._mj$onClientsFound$void$WebSocketClient_I$int, comment: JRC.WebSocketOnClientsFoundComment },
     ];
 
     static type: NonPrimitiveType;
 
-    
+
     clientList: WebSocketClientClass[] = [];
     idToClientMap: { [id: number]: WebSocketClientClass } = {};
-    
+
     connection?: WebSocket;
     client_id: number = 0; // own client-id
     isOpen: boolean = false;
-        
-    _constructor1() {
-        super._constructor();
-        return this;
+
+    interpreter!: Interpreter;
+    main: Main;
+
+    _cj$_constructor_$WebSocket$(t: Thread, callback: CallbackParameter) {
+        this.interpreter = t.scheduler.interpreter;
+        this.main = <Main>this.interpreter.getMain();
+        t.s.push(this);
+        if(callback) callback();
     }
 
-    // connect(t: Thread, callback: CallbackParameter, sessionCode: string, nickName: string) {
+    /*
+     * Event handler to override:
+     */
 
-    //     if(t.scheduler.interpreter.runsEmbedded()){
-    //         throw new RuntimeExceptionClass("Die Netzwerkfunktionalitäten stehen nur eingeloggten Nutzern in der Entwicklungsumgebung zur Verfügung und können daher leider hier nicht ausprobiert werden.");
-    //     }
+    _mj$onOpen$void$(t: Thread, callback: CallbackParameter){}
+    
+    _mj$onClose$void$(t: Thread, callback: CallbackParameter){}
+    
+    _mj$onMessage$void$WebSocketClient$string$string(t: Thread, callback: CallbackParameter, sender: WebSocketClientClass, message: string, messageType: string){}
+    
+    _mj$onOtherClientDisconnected$void$WebSocketClient(t: Thread, callback: CallbackParameter, otherClient: WebSocketClientClass){}
+    
+    _mj$onOtherClientConnected$void$WebSocketClient(t: Thread, callback: CallbackParameter, otherClient: WebSocketClientClass){}
+    
+    _mj$onClientsFound$void$WebSocketClient_I$int(t: Thread, callback: CallbackParameter, otherClients: WebSocketClientClass[], ownNumber: number){}
+    
+    /*
+    * java-methods:
+    */
+   
+   _mj$open$void$string$string(t: Thread, callback: CallbackParameter, sessionCode: string, nickName: string) {
+       
+        if (t.scheduler.interpreter.runsEmbedded()) {
+            throw new RuntimeExceptionClass(JRC.WebSocketNotInEmbeddedException());
+        }
+        
+        t.scheduler.interpreter.showProgramPointer(undefined, "WebSocketClass");
+        this.main.getBottomDiv().showHideBusyIcon(true);
+        t.state = ThreadState.waiting;
+        
+        
+        ajax('getWebSocketToken', {}, (response: GetWebSocketTokenResponse) => {
+            
+            let url: string = (window.location.protocol.startsWith("https") ? "wss://" : "ws://") + window.location.host + "/servlet/websocket";
+            this.connection = new WebSocket(url);
+            
+            this.connection.onerror = (error: Event) => { this.onError(error); }
+            this.connection.onclose = (event: CloseEvent) => { this.onClose(event); }
+            this.connection.onmessage = (event: MessageEvent) => { this.onMessage(event); }
+            
+            this.connection.onopen = (event: Event) => {
+                let request: WebSocketRequestConnect = {
+                    command: 1,
+                    token: response.token,
+                    nickname: nickName,
+                    sessionCode: sessionCode
+                }    
+                
+                t.scheduler.interpreter.eventManager.once("stop", () => {
+                    this._close();
+                })    
+                
+                this.isOpen = true;
+                this.sendIntern(JSON.stringify(request));
+                this.onOpen();
+                
+            }    
+            
+        });    
+        
+    }    
+    
+    _close(){
+        this.disconnect();
+    }    
+    _getOtherClients(){
+        return this.clientList.slice();
+    }    
+    
+    _findClientsFromCount(count: number) {
+        let message: WebSocketRequestFindPairing = {
+            command: 6,
+            count: count,
+            nicknames: []
+        }    
+        
+        this.sendIntern(JSON.stringify(message));
+    }    
+    
+    _findClientsFromNicknames(nicknames: string | string[]) {
+        if(!Array.isArray(nicknames)) nicknames = [nicknames];
+        
+        let message: WebSocketRequestFindPairing = {
+            command: 6,
+            count: nicknames.length,
+            nicknames: nicknames
+        }    
+        
+        this.sendIntern(JSON.stringify(message));
+    }    
+    
+    _sendToAll(data: string, dataType: string) {
+        let message: WebSocketRequestSendToAll = {
+            command: 2,
+            data: data,
+            dataType: dataType
+        };
+        this.sendIntern(JSON.stringify(message));
+    }
+ 
+    
+    
+    /*
+    * internal methods:
+    */ 
+   
+   
+   unsentMessages: string[] = [];
+   sendIntern(message: string) {
+       
+       if (!this.isOpen) {
+           this.unsentMessages.push(message);
+        } else {
+            try {
+                this.connection.send(message);
+            } catch (exception) {
+                console.log(exception);
+            }
+        }
+    }
 
+    onClose(event: CloseEvent) {
+        this.isOpen = false;
+        let thread = this.interpreter.scheduler.createThread("Websocket-onOpen");
+        this._mj$onClose$void$(thread, undefined);
+        thread.state = ThreadState.runnable;
+    }
 
-    //     ajax('getWebSocketToken', {}, (response: GetWebSocketTokenResponse) => {
+    sendToClient(clientId: number, data: string, dataType: string) {
+        let message: WebSocketRequestSendToClient = {
+            command: 3,
+            data: data,
+            dataType: dataType,
+            recipient_id: clientId
+        };
+        this.sendIntern(JSON.stringify(message));
+    }
 
-    //         let url: string = (window.location.protocol.startsWith("https") ? "wss://" : "ws://") + window.location.host + "/servlet/websocket";
-    //         this.connection = new WebSocket(url);
+    disconnect() {
+        let message: WebSocketRequestDisconnect = {
+            command: 4
+        };
+        this.sendIntern(JSON.stringify(message));
+        this.connection.close();
+    }
 
-    //         this.connection.onerror = (error: Event) => { this.onError(error); }
-    //         this.connection.onclose = (event: CloseEvent) => { this.onClose(event); }
-    //         this.connection.onmessage = (event: MessageEvent) => { this.onMessage(event); }
+    onMessage(event: MessageEvent) {
 
-    //         this.connection.onopen = (event: Event) => {
-    //             let request: WebSocketRequestConnect = {
-    //                 command: 1,
-    //                 token: response.token,
-    //                 nickname: nickName,
-    //                 sessionCode: sessionCode
-    //             }
+        let response: WebSocketResponse = JSON.parse(event.data);
+        if (response.command == undefined) return;
 
-    //             this.interpreter.webSocketsToCloseAfterProgramHalt.push(this.connection);
-    //             this.isOpen = true;
-    //             this.sendIntern(JSON.stringify(request));
-    //             this.onOpen();
+        switch (response.command) {
+            case 1: // new Client
+                let newClient = new WebSocketClientClass(this, response.user_id,
+                    response.rufname, response.familienname, response.username, response.nickname);
+                this.clientList.push(newClient);
+                this.idToClientMap[response.user_id] = newClient;
 
-    //         }
+                let thread = this.interpreter.scheduler.createThread("Websocket-onClientConnected");
+                this._mj$onOtherClientConnected$void$WebSocketClient(thread, undefined, newClient);
+                thread.state = ThreadState.runnable;
+        
+                break;
+            case 2: // message
+                let senderClient = this.idToClientMap[response.from_client_id];
+                if (senderClient == null) return;
+                
+                let thread1 = this.interpreter.scheduler.createThread("Websocket-onMessage");
+                this._mj$onMessage$void$WebSocketClient$string$string(thread1, undefined, senderClient, response.data, response.dataType);
+                thread1.state = ThreadState.runnable;
 
-    //     });
+                break;
+            case 3: // other client disconnected
+                let disconnectedClient = this.idToClientMap[response.disconnecting_client_id];
+                if (disconnectedClient == null) return;
+                this.clientList.splice(this.clientList.indexOf(disconnectedClient), 1);
+                this.idToClientMap[response.disconnecting_client_id] = undefined;
 
-    // }
+                let thread2 = this.interpreter.scheduler.createThread("Websocket-onClientDisconnected");
+                this._mj$onOtherClientDisconnected$void$WebSocketClient(thread2, undefined, senderClient);
+                thread1.state = ThreadState.runnable;
 
-    // unsentMessages: string[] = [];
-    // sendIntern(message: string) {
+                break;
+            case 4: // time synchronization
+                // this.systemClassType.deltaTimeMillis = response.currentTimeMills - Date.now();
+                this.client_id = response.client_id
+                break;
+            case 5: // keep alive
+                break;
+            case 6: // Clients found
+                this.onClientsFound(response);
+                break;
+        }
+    }
 
-    //     if (!this.isOpen) {
-    //         this.unsentMessages.push(message);
-    //     } else {
-    //         try {
-    //             this.connection.send(message);
-    //         } catch (exception) {
-    //             console.log(exception);
-    //         }
-    //     }
-    // }
+    onClientsFound(response: WebSocketResponsePairingFound) {
+        let own_index: number = 0;
+        let otherClients: WebSocketClientClass[] = [];
 
-    // onClose(event: CloseEvent) {
-    //     this.isOpen = false;
-    //     this.runMethod(this.onCloseMethod, []);
-    // }
+        for (let client of response.clients) {
+            if (client.id == this.client_id) {
+                own_index = client.index;
+            } else {
+                let otherClient = this.idToClientMap[client.id];
+                if (otherClient != null) {
+                    otherClient.index = client.index;
+                    otherClients.push(otherClient);
+                }
+            }
+        }
 
-    // sendToClient(clientId: number, data: string, dataType: string) {
-    //     let message: WebSocketRequestSendToClient = {
-    //         command: 3,
-    //         data: data,
-    //         dataType: dataType,
-    //         recipient_id: clientId
-    //     };
-    //     this.sendIntern(JSON.stringify(message));
-    // }
+        let thread1 = this.interpreter.scheduler.createThread("Websocket-onClientsFound");
+        this._mj$onClientsFound$void$WebSocketClient_I$int(thread1, undefined, otherClients, own_index);
+        thread1.state = ThreadState.runnable;
 
-    // sendToAll(data: string, dataType: string) {
-    //     let message: WebSocketRequestSendToAll = {
-    //         command: 2,
-    //         data: data,
-    //         dataType: dataType
-    //     };
-    //     this.sendIntern(JSON.stringify(message));
-    // }
+    }
 
-    // disconnect() {
-    //     let message: WebSocketRequestDisconnect = {
-    //         command: 4
-    //     };
-    //     this.sendIntern(JSON.stringify(message));
-    //     this.connection.close();
-    //     let wtr = this.interpreter.webSocketsToCloseAfterProgramHalt;
-    //     wtr.splice(wtr.indexOf(this.connection), 1);
-    // }
+    onError(error: Event) {
+        this.interpreter.printManager?.print(JRC.WebSocketCommunicationError() + error?.toString(), true, 0x3030ff);
+    }
 
-    // onMessage(event: MessageEvent) {
+    onOpen() {
+        this.isOpen = true;
+        if (this.unsentMessages.length > 0) {
+            this.unsentMessages.forEach(m => this.sendIntern(m));
+            this.unsentMessages = [];
+        }
 
-    //     let response: WebSocketResponse = JSON.parse(event.data);
-    //     if (response.command == undefined) return;
-
-    //     switch (response.command) {
-    //         case 1: // new Client
-    //             let clientRuntimeObject = new RuntimeObject(this.webSocketClientType);
-    //             let wch: WebSocketClientHelper = new WebSocketClientHelper(clientRuntimeObject, this, response.user_id,
-    //                 response.rufname, response.familienname, response.username, response.nickname);
-    //             clientRuntimeObject.intrinsicData["Helper"] = wch;
-    //             this.clientList.push(wch);
-    //             this.idToClientMap[response.user_id] = wch;
-    //             this.runMethod(this.onClientConnectedMethod, [{ type: this.webSocketClientType, value: clientRuntimeObject }]);
-    //             break;
-    //         case 2: // message
-    //             let clientHelper = this.idToClientMap[response.from_client_id];
-    //             if (clientHelper == null) return;
-    //             this.runMethod(this.onMessageMethod, [
-    //                 { type: this.webSocketClientType, value: clientHelper.runtimeObject },
-    //                 { type: stringPrimitiveType, value: response.data },
-    //                 { type: stringPrimitiveType, value: response.dataType }
-    //             ]);
-    //             break;
-    //         case 3: // other client disconnected
-    //             let clientHelper1 = this.idToClientMap[response.disconnecting_client_id];
-    //             if (clientHelper1 == null) return;
-    //             this.clientList.splice(this.clientList.indexOf(clientHelper1), 1);
-    //             this.idToClientMap[response.disconnecting_client_id] = undefined;
-    //             this.runMethod(this.onClientDisconnectedMethod, [
-    //                 { type: this.webSocketClientType, value: clientHelper1.runtimeObject }
-    //             ]);
-    //             break;
-    //         case 4: // time synchronization
-    //             this.systemClassType.deltaTimeMillis = response.currentTimeMills - Date.now();
-    //             this.client_id = response.client_id
-    //             break;
-    //         case 5: // keep alive
-    //             break;
-    //         case 6: // Clients found
-    //             this.onClientsFound(response);
-    //             break;
-    //     }
-    // }
-
-    // onClientsFound(response: WebSocketResponsePairingFound) {
-    //     let own_index: number = 0;
-    //     let otherClients: Value[] = [];
-
-    //     for (let client of response.clients) {
-    //         if (client.id == this.client_id) {
-    //             own_index = client.index;
-    //         } else {
-    //             let otherClient = this.idToClientMap[client.id];
-    //             if (otherClient != null) {
-    //                 otherClient.index = client.index;
-    //                 otherClients.push({
-    //                     type: this.webSocketClientType,
-    //                     value: otherClient.runtimeObject
-    //                 });
-    //             }
-    //         }
-    //     }
-
-    //     let arrayValue: Value = {
-    //         type: new ArrayType(this.webSocketClientType),
-    //         value: otherClients
-    //     }
-
-    //     this.runMethod(this.onClientsFoundMethod, [arrayValue, { type: intPrimitiveType, value: own_index }]);
-
-    // }
-
-    // onError(error: Event) {
-    //     this.interpreter.throwException("Kommunikationsfehler beim WebSocket");
-    // }
-
-    // onOpen() {
-    //     this.isOpen = true;
-    //     if(this.unsentMessages.length > 0){
-    //         this.unsentMessages.forEach(m => this.sendIntern(m));
-    //         this.unsentMessages = [];
-    //     }
-    //     this.runMethod(this.onOpenMethod, []);
-    // }
-
-    // runMethod(method: Method, stackElements: Value[]) {
-    //     if (method == null) return;
-    //     stackElements.splice(0, 0, {
-    //         type: this.runtimeObject.class,
-    //         value: this.runtimeObject
-    //     });
-
-    //     if (this.interpreter.state == InterpreterState.waitingForInput || this.interpreter.state == InterpreterState.waitingForDB) {
-    //         this.interpreter.executeImmediatelyInNewStackframe(method.program, stackElements);
-    //     } else {
-    //         this.interpreter.runTimer(method, stackElements, () => { }, false);
-    //     }
-    // }
-
-    // findClientsFromCount(count: number) {
-    //     let message: WebSocketRequestFindPairing = {
-    //         command: 6,
-    //         count: count,
-    //         nicknames: []
-    //     }
-
-    //     this.sendIntern(JSON.stringify(message));
-    // }
-
-    // findClientsFromNicknames(nicknames: string[]) {
-    //     let message: WebSocketRequestFindPairing = {
-    //         command: 6,
-    //         count: nicknames.length,
-    //         nicknames: nicknames
-    //     }
-
-    //     this.sendIntern(JSON.stringify(message));
-    // }
+        let thread = this.interpreter.scheduler.createThread("Websocket-onOpen");
+        this._mj$onOpen$void$(thread, undefined);
+        thread.state = ThreadState.runnable;
+    }
+ 
 
 
 }

@@ -24,7 +24,7 @@ export class JavaLanguage extends Language {
     constructor(private main: IMain, errorMarker: ErrorMarker) {
         super("Java", ".java");
         this.compiler = new JavaCompiler(main, errorMarker);
-        this.repl = new JavaRepl(main, this.compiler.libraryModuleManager, errorMarker);
+        this.repl = new JavaRepl(main, this.compiler.libraryModuleManager);
     }
 
     registerLanguageAtMonacoEditor(): void {

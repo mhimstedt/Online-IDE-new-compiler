@@ -2,7 +2,6 @@
 
 # TODO
   * Test homework-functionality
-  * Database classes
   * Test WebSocket classes
   * Serialize object to/from JSON
   * Robot class
@@ -36,6 +35,7 @@
     * Shape.directionRelativeTo
     * Shape.moveBackFrom
     * Group.renderAsStaticBitmap (Testfile Sternen-Hintergrund)
+  * Database classes
     
 
 

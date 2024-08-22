@@ -1,13 +1,18 @@
 import { Program } from "../../common/interpreter/Program";
 import { Helpers } from "../../common/interpreter/StepFunction.ts";
+import { EmptyRange } from "../../common/range/Range.ts";
 import { TokenType } from "../TokenType";
 import { JCM } from "../language/JavaCompilerMessages.ts";
 import { JavaCompiledModule } from "../module/JavaCompiledModule";
 import { JavaTypeStore } from "../module/JavaTypeStore";
 import { ASTClassDefinitionNode, ASTEnumDefinitionNode, ASTInterfaceDefinitionNode, ASTStaticInitializerNode, TypeScope } from "../parser/AST";
-import { JavaClass } from "../types/JavaClass.ts";
+import { JsonTool } from "../runtime/network/JsonTool.ts";
+import { SystemModule } from "../runtime/system/SystemModule.ts";
+import { IJavaClass, JavaClass } from "../types/JavaClass.ts";
 import { JavaEnum } from "../types/JavaEnum.ts";
 import { JavaInterface } from "../types/JavaInterface.ts";
+import { JavaMethod } from "../types/JavaMethod.ts";
+import { JavaParameter } from "../types/JavaParameter.ts";
 import { CodeSnippet, StringCodeSnippet } from "./CodeSnippet";
 import { CodeSnippetContainer } from "./CodeSnippetKinds.ts";
 import { OneParameterTemplate } from "./CodeTemplate.ts";
@@ -16,7 +21,6 @@ import { InnerClassCodeGenerator } from "./InnerClassCodeGenerator.ts";
 import { SnippetLinker } from "./SnippetLinker";
 
 export class CodeGenerator extends InnerClassCodeGenerator {
-
 
     constructor(module: JavaCompiledModule, libraryTypestore: JavaTypeStore, compiledTypesTypestore: JavaTypeStore,
         exceptionTree: ExceptionTree) {
@@ -48,12 +52,12 @@ export class CodeGenerator extends InnerClassCodeGenerator {
 
         for (let cdef of typeScope.innerTypes) {
             if (cdef.isAnonymousInnerType) continue;     // anonymous inner class
-            if(cdef.kind != TokenType.keywordClass && cdef.kind != TokenType.keywordEnum) continue;
+            if (cdef.kind != TokenType.keywordClass && cdef.kind != TokenType.keywordEnum) continue;
 
             let type = cdef.resolvedType;
             if (!type || !cdef.resolvedType) return;
 
-            if(cdef.annotations){
+            if (cdef.annotations) {
                 type.setAnnotations(cdef.annotations.map(this.compileAnnotation));
             }
 
@@ -62,11 +66,12 @@ export class CodeGenerator extends InnerClassCodeGenerator {
             } else {
                 cdef.symbolTable = this.pushAndGetNewSymbolTable(cdef.range, false, type);
             }
-            
+
             this.compileInstanceFieldsAndInitializer(cdef, type as JavaClass | JavaEnum);
 
             if (cdef.kind == TokenType.keywordClass) {
                 this.buildStandardConstructors(type as JavaClass);
+                this.insertJsonMethods(type as JavaClass);
             }
 
 
@@ -74,6 +79,45 @@ export class CodeGenerator extends InnerClassCodeGenerator {
 
             this.popSymbolTable();
         }
+    }
+
+    insertJsonMethods(klass: JavaClass) {
+        
+            let hasParameterlessConstructor = klass.methods.filter(m => m.isConstructor && m.parameters.length == 0);
+            let doesExtendSystemClass: boolean = false;
+            let klass1: IJavaClass = klass.getExtends();
+            while(klass1 != this.objectType){
+                if(klass1.module instanceof SystemModule){
+                    doesExtendSystemClass = true;
+                    break;
+                }
+            }
+
+            if(!hasParameterlessConstructor || doesExtendSystemClass) return;
+
+            let toJsonMethod = new JavaMethod("toJson", EmptyRange.instance, this.module);
+            toJsonMethod.hasImplementationWithNativeCallingConvention = true;
+            toJsonMethod.isFinal = true;
+            toJsonMethod.returnParameterType = this.stringType;
+
+            klass.methods.push(toJsonMethod);
+            
+            klass.runtimeClass.prototype._mn$toJson$string$ = function(){
+                return new JsonTool().toJson(this);
+            }
+
+            let fromJsonMethod = new JavaMethod("fromJson", EmptyRange.instance, this.module);
+            fromJsonMethod.isStatic = true;
+            fromJsonMethod.parameters.push(new JavaParameter("jsonString", EmptyRange.instance, this.module, this.stringType, true, false, false));
+            fromJsonMethod.returnParameterType = klass;
+            fromJsonMethod.hasImplementationWithNativeCallingConvention = true;
+
+            klass.methods.push(fromJsonMethod);
+
+            klass.runtimeClass["_mn$fromJson$" + klass.identifier + "$string"] = function(jsonString: string){
+                return new JsonTool().fromJson(jsonString, klass);
+            }
+
     }
 
     compileStaticFieldsAndInitializerAndEnumValuesRecursive(typeScope: TypeScope | undefined) {
@@ -90,10 +134,10 @@ export class CodeGenerator extends InnerClassCodeGenerator {
             } else {
                 cdef.symbolTable = this.pushAndGetNewSymbolTable(cdef.range, false, type);
                 //@ts-ignore
-                if(cdef.identifier == "" && cdef.parent["mainProgramNode"]){
+                if (cdef.identifier == "" && cdef.parent["mainProgramNode"]) {
                     cdef.symbolTable.hiddenWhenDebugging = true;
                 }
-                
+
             }
 
             this.compileStaticFieldsAndInitializerAndEnumValues(type, cdef);
@@ -172,9 +216,9 @@ export class CodeGenerator extends InnerClassCodeGenerator {
     compileEnumValueConstruction(javaEnum: JavaEnum, enumDeclNode: ASTEnumDefinitionNode, staticFieldSnippets: CodeSnippet[]) {
 
         staticFieldSnippets.push(new StringCodeSnippet(`${Helpers.classes}["${javaEnum.identifier}"].values = [];\n`));
-        
+
         let parameterlessConstructor = javaEnum.methods.find(m => m.isConstructor && m.parameters.length == 0);
-        
+
         let enumValueIndex: number = 0;
         for (let valueNode of enumDeclNode.valueNodes) {
 
@@ -212,7 +256,7 @@ export class CodeGenerator extends InnerClassCodeGenerator {
 
     buildInitializer(snippets: CodeSnippet[], identifier: string): Program {
         let program = new Program(this.module, this.currentSymbolTable, identifier);
-        if(snippets.length > 0){
+        if (snippets.length > 0) {
             snippets.push(new StringCodeSnippet(`${Helpers.return}();`));
         }
         this.linker.link(snippets, program);

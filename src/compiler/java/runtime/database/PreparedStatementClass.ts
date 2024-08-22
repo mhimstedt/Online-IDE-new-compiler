@@ -120,7 +120,7 @@ export class PreparedStatementClass extends ObjectClass {
             throw new RuntimeExceptionClass(JRC.statementOnlySelectionStatementsWithQueryException());
 
         t.scheduler.interpreter.showProgramPointer(undefined, "DatabaseManager");
-        this.connection.main.getBottomDiv().showHideDbBusyIcon(true);
+        this.connection.main.getBottomDiv().showHideBusyIcon(true);
         t.state = ThreadState.waiting;
         
         this.connection.executeQuery(query, (error: string, queryResult: QueryResult) => {
@@ -135,7 +135,7 @@ export class PreparedStatementClass extends ObjectClass {
             let resultSet = new ResultSetClass(queryResult);
             t.s.push(resultSet);
             
-            this.connection.main.getBottomDiv().showHideDbBusyIcon(false);
+            this.connection.main.getBottomDiv().showHideBusyIcon(false);
             t.state = ThreadState.runnable;
 
         })
@@ -149,7 +149,7 @@ export class PreparedStatementClass extends ObjectClass {
             throw new RuntimeExceptionClass(JRC.statementExecuteUpdateException());
 
         t.scheduler.interpreter.showProgramPointer(undefined, "DatabaseManager");
-        this.connection.main.getBottomDiv().showHideDbBusyIcon(true);
+        this.connection.main.getBottomDiv().showHideBusyIcon(true);
         t.state = ThreadState.waiting;
         
         this.connection.executeWriteStatement(query, (error: string, lastRowId: number) => {
@@ -163,7 +163,7 @@ export class PreparedStatementClass extends ObjectClass {
 
             t.s.push(lastRowId);
             
-            this.connection.main.getBottomDiv().showHideDbBusyIcon(false);
+            this.connection.main.getBottomDiv().showHideBusyIcon(false);
             t.state = ThreadState.runnable;
 
         })
