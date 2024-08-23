@@ -56,6 +56,10 @@ export class SystemClass extends ObjectClass {
         return Math.round(performance.now()) + SystemClass.deltaTimeMillis;
     }    
 
+    static synchronizeToServerTimeMillis(serverTimeMillis: number){
+        SystemClass.deltaTimeMillis = serverTimeMillis - performance.now();
+    }
+
 
 
 }    

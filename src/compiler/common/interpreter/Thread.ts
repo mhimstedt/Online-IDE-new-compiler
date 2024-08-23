@@ -112,6 +112,14 @@ export class Thread {
         let currentProgramState!: ProgramState;
         let stepIndex!: number;
 
+        if(!this.currentProgramState){
+            this.state = ThreadState.terminated;
+            return {
+                state: this.state,
+                stepsExecuted: 0
+            };
+        }
+
         try {
             //@ts-ignore
             while (this.numberOfSteps < maxNumberOfSteps && this.state == ThreadState.runnable) {

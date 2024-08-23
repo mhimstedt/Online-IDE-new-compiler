@@ -34,6 +34,16 @@ export class ProgramPointerManager {
     }
 
     show(position: ProgramPointerPositionInfo, style: ProgramPointerStyle) {
+
+        if(position.range.endLineNumber > position.range.startLineNumber){
+            position.range = {
+                startLineNumber: position.range.startLineNumber,
+                startColumn: position.range.startColumn,
+                endLineNumber: position.range.startLineNumber,
+                endColumn: 1000
+            }
+        }
+
         let file: CompilerFile | undefined;
         if(position.programOrmoduleOrFile instanceof Program){
             file = position.programOrmoduleOrFile.module.file;

@@ -7,8 +7,9 @@ import { Thread, ThreadState } from "../../../common/interpreter/Thread";
 import { JRC } from "../../language/JavaRuntimeLibraryComments";
 import { LibraryDeclarations } from "../../module/libraries/DeclareType";
 import { NonPrimitiveType } from "../../types/NonPrimitiveType";
-import { ObjectClass } from "../system/javalang/ObjectClassStringClass";
+import { ObjectClass, StringClass } from "../system/javalang/ObjectClassStringClass";
 import { RuntimeExceptionClass } from "../system/javalang/RuntimeException";
+import { SystemClass } from "../system/javalang/SystemClass";
 import { WebSocketClientClass } from "./WebSocketClientClass";
 
 export class WebSocketClass extends ObjectClass {
@@ -17,15 +18,15 @@ export class WebSocketClass extends ObjectClass {
         { type: "method", signature: "WebSocket()", java: WebSocketClass.prototype._cj$_constructor_$WebSocket$, comment: JRC.WebSocketConstructorComment },
         { type: "method", signature: "void open(string sessionCode, string nickname)", java: WebSocketClass.prototype._mj$open$void$string$string, comment: JRC.WebSocketOpenComment },
         { type: "method", signature: "void sendToAll(string message, string messageType)", native: WebSocketClass.prototype._sendToAll, comment: JRC.WebSocketSendToAllComment },
-        { type: "method", signature: "void findClients(int count)", java: WebSocketClass.prototype._findClientsFromCount, comment: JRC.WebSocketFindClientsComment },
-        { type: "method", signature: "void findClients(string[] nicknames)", java: WebSocketClass.prototype._findClientsFromNicknames, comment: JRC.WebSocketFindClientsByNicknamesComment },
-        { type: "method", signature: "void findClient(string nicknames)", java: WebSocketClass.prototype._findClientsFromNicknames, comment: JRC.WebSocketFindClientComment },
+        { type: "method", signature: "void findClients(int count)", native: WebSocketClass.prototype._findClientsFromCount, comment: JRC.WebSocketFindClientsComment },
+        { type: "method", signature: "void findClients(string[] nicknames)", native: WebSocketClass.prototype._findClientsFromNicknames, comment: JRC.WebSocketFindClientsByNicknamesComment },
+        { type: "method", signature: "void findClient(string nicknames)", native: WebSocketClass.prototype._findClientsFromNicknames, comment: JRC.WebSocketFindClientComment },
         { type: "method", signature: "void close()", native: WebSocketClass.prototype._close, comment: JRC.WebSocketCloseComment },
-        { type: "method", signature: "WebSocketClient getOtherClients()", java: WebSocketClass.prototype._getOtherClients, comment: JRC.WebSocketGetOtherClientsComment },
+        { type: "method", signature: "WebSocketClient getOtherClients()", native: WebSocketClass.prototype._getOtherClients, comment: JRC.WebSocketGetOtherClientsComment },
         
         { type: "method", signature: "void onOpen()", java: WebSocketClass.prototype._mj$onOpen$void$, comment: JRC.WebSocketOnOpenComment },
         { type: "method", signature: "void onClose()", java: WebSocketClass.prototype._mj$onClose$void$, comment: JRC.WebSocketOnCloseComment },
-        { type: "method", signature: "void onMessage(WebSocketClient sender, string message, string messageType)", java: WebSocketClass.prototype._mj$onMessage$void$WebSocketClient$string$string, comment: JRC.WebSocketOnMessageComment },
+        { type: "method", signature: "void onMessage(WebSocketClient sender, String message, String messageType)", java: WebSocketClass.prototype._mj$onMessage$void$WebSocketClient$String$String, comment: JRC.WebSocketOnMessageComment },
         { type: "method", signature: "void onOtherClientConnected(WebSocketClient otherClient)", java: WebSocketClass.prototype._mj$onOtherClientConnected$void$WebSocketClient, comment: JRC.WebSocketOnOtherClientConnectedComment },
         { type: "method", signature: "void onOtherClientDisconnected(WebSocketClient otherClient)", java: WebSocketClass.prototype._mj$onOtherClientDisconnected$void$WebSocketClient, comment: JRC.WebSocketOnOtherClientDisconnectedComment },
         { type: "method", signature: "void onClientsFound(WebSocketClient[] otherClients, int ownNumber)", java: WebSocketClass.prototype._mj$onClientsFound$void$WebSocketClient_I$int, comment: JRC.WebSocketOnClientsFoundComment },
@@ -59,7 +60,7 @@ export class WebSocketClass extends ObjectClass {
     
     _mj$onClose$void$(t: Thread, callback: CallbackParameter){}
     
-    _mj$onMessage$void$WebSocketClient$string$string(t: Thread, callback: CallbackParameter, sender: WebSocketClientClass, message: string, messageType: string){}
+    _mj$onMessage$void$WebSocketClient$String$String(t: Thread, callback: CallbackParameter, sender: WebSocketClientClass, message: StringClass, messageType: StringClass){}
     
     _mj$onOtherClientDisconnected$void$WebSocketClient(t: Thread, callback: CallbackParameter, otherClient: WebSocketClientClass){}
     
@@ -104,8 +105,10 @@ export class WebSocketClass extends ObjectClass {
                 })    
                 
                 this.isOpen = true;
+                this.main.getBottomDiv().showHideBusyIcon(false);
                 this.sendIntern(JSON.stringify(request));
                 this.onOpen();
+                t.state = ThreadState.runnable;
                 
             }    
             
@@ -219,7 +222,7 @@ export class WebSocketClass extends ObjectClass {
                 if (senderClient == null) return;
                 
                 let thread1 = this.interpreter.scheduler.createThread("Websocket-onMessage");
-                this._mj$onMessage$void$WebSocketClient$string$string(thread1, undefined, senderClient, response.data, response.dataType);
+                this._mj$onMessage$void$WebSocketClient$String$String(thread1, undefined, senderClient, new StringClass(response.data), new StringClass(response.dataType));
                 thread1.state = ThreadState.runnable;
 
                 break;
@@ -230,12 +233,12 @@ export class WebSocketClass extends ObjectClass {
                 this.idToClientMap[response.disconnecting_client_id] = undefined;
 
                 let thread2 = this.interpreter.scheduler.createThread("Websocket-onClientDisconnected");
-                this._mj$onOtherClientDisconnected$void$WebSocketClient(thread2, undefined, senderClient);
-                thread1.state = ThreadState.runnable;
+                this._mj$onOtherClientDisconnected$void$WebSocketClient(thread2, undefined, disconnectedClient);
+                thread2.state = ThreadState.runnable;
 
                 break;
             case 4: // time synchronization
-                // this.systemClassType.deltaTimeMillis = response.currentTimeMills - Date.now();
+                SystemClass.synchronizeToServerTimeMillis(response.currentTimeMills);
                 this.client_id = response.client_id
                 break;
             case 5: // keep alive
