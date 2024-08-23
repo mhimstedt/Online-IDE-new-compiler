@@ -298,7 +298,7 @@ export class LibraryDeclarationParser extends LibraryDeclarationLexer {
         let type = this.findType(id);
 
         if (this.comesToken(TokenType.lower, true)) {
-            if (type.genericTypeParameters?.length || 0 == 0) {
+            if ((type.genericTypeParameters?.length || 0) == 0) {
                 this.pushError("Der Typ " + type.identifier + " ist nicht generisch.");
                 this.skipTill(TokenType.greater, true);
             } else {
@@ -459,7 +459,7 @@ export class LibraryDeclarationParser extends LibraryDeclarationLexer {
     }
 
     pushError(error: string) {
-        console.log("Error parsing library declaration (" + error + "): " + this.currentDeclaration);
+         console.log("Error parsing library declaration (" + error + "): " + this.currentDeclaration);
     }
 
     expect(tt: TokenType, skip: boolean): boolean {

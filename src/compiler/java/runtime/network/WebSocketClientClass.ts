@@ -8,7 +8,7 @@ export class WebSocketClientClass extends ObjectClass {
     static __javaDeclarations: LibraryDeclarations = [
         {type: "declaration", signature: "class WebSocketClient extends Object", comment: JRC.WebSocketClientClassComment},
         {type: "method", signature: "void send(string message, string messageType)", native: WebSocketClientClass.prototype.send, comment: JRC.WebSocketClientSendComment},
-        {type: "method", signature: "void setUserData(string key, object value)", native: WebSocketClientClass.prototype.setUserData, comment: JRC.WebSocketClientSetUserDataComment},
+        {type: "method", signature: "void setUserData(string key, Object value)", native: WebSocketClientClass.prototype.setUserData, comment: JRC.WebSocketClientSetUserDataComment},
         {type: "method", signature: "Object getUserData(string key)", native: WebSocketClientClass.prototype.getUserData, comment: JRC.WebSocketClientGetUserDataComment},
         
         {type: "method", signature: "string getFirstName()", template: '§1.rufname'},

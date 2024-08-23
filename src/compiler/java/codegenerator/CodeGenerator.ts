@@ -91,6 +91,7 @@ export class CodeGenerator extends InnerClassCodeGenerator {
                     doesExtendSystemClass = true;
                     break;
                 }
+                klass1 = klass1.getExtends();
             }
 
             if(!hasParameterlessConstructor || doesExtendSystemClass) return;
