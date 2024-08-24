@@ -68,7 +68,7 @@ export class JavaCompiler implements Compiler {
         this.files = files;
     }
 
-    private async compileIfDirty(): Promise<Executable | undefined> {
+    public async compileIfDirty(): Promise<Executable | undefined> {
 
         if (this.lastCompiledExecutable) {
             this.lastCompiledExecutable.findMainModule(false, this.lastOpenedFile, this.main?.getCurrentWorkspace()?.getCurrentlyEditedModule());
@@ -98,10 +98,10 @@ export class JavaCompiler implements Compiler {
         //  - modules that are (indirectly) dependent on other dirty modules
         this.moduleManager.iterativelySetDirtyFlags();
 
-        
+
         newOrDirtyModules = this.moduleManager.getNewOrDirtyModules();
         this.progressManager.setNewOrDirtyModules(newOrDirtyModules.map(m => m.file.name).join(", "));  // only for console.log later
-        
+
         if (newOrDirtyModules.length == 0) return this.lastCompiledExecutable;
 
         this.errors = [];
@@ -322,9 +322,9 @@ export class JavaCompiler implements Compiler {
     }
 
     async interruptAndStartOverAgain(): Promise<void> {
-        
-        if(this.progressManager.isInsideCompilationRun){
-            this.progressManager.interruptCompilerIfRunning(false); 
+
+        if (this.progressManager.isInsideCompilationRun) {
+            this.progressManager.interruptCompilerIfRunning(false);
         } else {
             this.progressManager.initBeforeCompiling();
             this.compileIfDirty();

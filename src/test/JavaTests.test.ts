@@ -109,14 +109,14 @@ function test1(sourcecode: string, file: string) {
 
 function compileAndTest(name: string, program: string, lineOffset: number, expectedOutput: string | undefined, expectedCompiliationErrors: ExpectedError[]) {
 
-    test(name, (context) => {
+    test(name, async (context) => {
         let file = new CompilerFile();
 
         file.setText(program);
 
         let compiler = new JavaCompiler();
         compiler.setFiles([file]);
-        let executable = compiler.compileIfDirty();
+        let executable = await compiler.compileIfDirty();
         if (!executable){
             return;
         } 
