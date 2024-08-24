@@ -24,6 +24,10 @@ html, body {
     font-size: 10pt;
 }
 
+a {
+    color:rgb(93, 136, 200);
+}
+
 .jo_debugger {
     position: absolute;
     top: 0;
