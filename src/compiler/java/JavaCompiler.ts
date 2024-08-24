@@ -104,6 +104,7 @@ export class JavaCompiler implements Compiler {
 
         // if(newOrDirtyModules.length > 0)
         //console.log("New/dirty modules: " + newOrDirtyModules.map(m => m.file.name).join(", "));
+        this.progressManager.setNewOrDirtyModules(newOrDirtyModules.map(m => m.file.name).join(", "));  // only for console.log later
 
         newOrDirtyModules = this.moduleManager.getNewOrDirtyModules();
         if (newOrDirtyModules.length == 0) return this.lastCompiledExecutable;

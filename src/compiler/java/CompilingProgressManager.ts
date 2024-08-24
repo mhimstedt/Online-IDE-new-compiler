@@ -7,6 +7,7 @@ export class CompilingProgressManager {
     private lastInterruptionTime: number = 0;
     private numberOfInterruptions: number = 0;
     private interruptAndRestartFlag: boolean = false;
+    private newOrDirtyModules: string = "";
 
     private interruptAtLeastEveryMs: 50;
     private interruptForMs: 5;
@@ -20,11 +21,12 @@ export class CompilingProgressManager {
         this.numberOfInterruptions = 0;
         if(this.nextRunWithoutInterruptions) this.lastInterruptionTime += 1e6;
         this.nextRunWithoutInterruptions = false;
+        this.newOrDirtyModules = "---";
     }
 
     afterCompiling(){
         let dt = performance.now() - this.timeStarted;
-        console.log("Compilation run took " + Math.round(dt) + " ms and was " + this.numberOfInterruptions + " times interrupted.");
+        console.log("Compiled modules [" + this.newOrDirtyModules + "]; Compilation run took " + Math.round(dt) + " ms and was " + this.numberOfInterruptions + " times interrupted.");
     }
 
     async interruptIfNeeded(): Promise<void> {
@@ -49,5 +51,9 @@ export class CompilingProgressManager {
 
     restartNecessary(){
         return this.interruptAndRestartFlag;
+    }
+
+    setNewOrDirtyModules(newOrDirtyModules: string){
+        this.newOrDirtyModules = newOrDirtyModules;
     }
 }
