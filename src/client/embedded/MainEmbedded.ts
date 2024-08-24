@@ -302,7 +302,7 @@ export class MainEmbedded implements MainBase {
 
                             script = this.eraseDokuwikiSearchMarkup(script);
 
-                            let file = new File(name, script);
+                            let file = new File(this, name, script);
                             file.setSaved(true);
 
                             that.fileExplorer?.addFile(file);
@@ -396,7 +396,7 @@ export class MainEmbedded implements MainBase {
     addFile(script: JOScript): File {
         let fileType = FileTypeManager.filenameToFileType(script.title);
 
-        let file = new File(script.title, script.text);
+        let file = new File(this, script.title, script.text);
         file.id = this.currentWorkspace.getFiles().length;
 
         this.currentWorkspace.addFile(file);
@@ -824,7 +824,7 @@ export class MainEmbedded implements MainBase {
             ws.settings = ew.settings;
 
             for (let mo of ew.modules) {
-                let f = new File(mo.name, mo.text);
+                let f = new File(this, mo.name, mo.text);
                 ws.addFile(f);
             }
 

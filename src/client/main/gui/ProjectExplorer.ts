@@ -58,7 +58,7 @@ export class ProjectExplorer {
                     return null;
                 }
 
-                let f = new File(accordionElement.name);
+                let f = new File(this.main, accordionElement.name);
                 f.panelElement = accordionElement;
                 accordionElement.externalElement = f;
 
@@ -124,7 +124,7 @@ export class ProjectExplorer {
                 callback: (element: AccordionElement) => {
 
                     let oldFile: File = element.externalElement;
-                    let newFile: File = new File(oldFile.name + " - Kopie", oldFile.getText());
+                    let newFile: File = new File(this.main, oldFile.name + " - Kopie", oldFile.getText());
                     newFile.version = oldFile.version;
 
                     let workspace = that.main.getCurrentWorkspace();
@@ -361,7 +361,7 @@ export class ProjectExplorer {
 
             if (workspace.getFiles().indexOf(file) >= 0) return; // module is already in destination workspace
 
-            let newFile: File = new File(file.name, file.getText());
+            let newFile: File = new File(this.main, file.name, file.getText());
             newFile.version = file.version;
 
             if (dropEffekt == "move") {
@@ -795,7 +795,7 @@ export class ProjectExplorer {
     }
 
     getNewFile(fileData: FileData): File {
-        return File.restoreFromData(fileData);
+        return File.restoreFromData(this.main, fileData);
     }
 
     async fetchAndRenderOwnWorkspaces() {

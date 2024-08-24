@@ -1,8 +1,12 @@
+import { IMain } from "../../compiler/common/IMain";
 import { CompilerFile } from "../../compiler/common/module/CompilerFile";
 import { FileData } from "../communication/Data";
 import { AccordionElement } from "../main/gui/Accordion";
+import { Main } from "../main/Main";
 import { Patcher } from "./Patcher";
 import { Workspace } from "./Workspace";
+
+type OnDidChangeContentListener = () => void;
 
 export class File extends CompilerFile {
 
@@ -19,7 +23,8 @@ export class File extends CompilerFile {
     version: number = 1;
     panelElement?: AccordionElement;
 
-    constructor(filename?: string, text?: string) {
+
+    constructor(private main: IMain, filename?: string, text?: string) {
         super(filename);
         if(text) this.setText(text);
     }
@@ -43,10 +48,10 @@ export class File extends CompilerFile {
         return fd;
     }
 
-    static restoreFromData(f: FileData): File {
+    static restoreFromData(main: IMain, f: FileData): File {
         let patched = Patcher.patch(f.text);
 
-        let file = new File(f.name);
+        let file = new File(main, f.name);
         file.setText(patched.patchedText);
         file.text_before_revision = f.text_before_revision;
         file.submitted_date = f.submitted_date;
@@ -60,5 +65,32 @@ export class File extends CompilerFile {
         return file;
     }
 
+
+    getMonacoModel(): monaco.editor.ITextModel | undefined {
+        let hadMonacoModel: boolean = this.hasMonacoModel();
+        let model = super.getMonacoModel();
+
+        if(!hadMonacoModel && !this.main.isEmbedded()){
+            model.onDidChangeContent(() => {
+                let main1: Main = <Main>this.main;    
+                if(main1.workspacesOwnerId != main1.user.id){
+                    if(this.text_before_revision == null || this.student_edited_after_revision){
+                        this.student_edited_after_revision = false;
+                        this.text_before_revision = this.getText();
+                        
+                        this.setSaved(false);
+                        main1.networkManager.sendUpdates(null, false);
+                        main1.bottomDiv.homeworkManager.showHomeWorkRevisionButton();
+                        main1.projectExplorer.renderHomeworkButton(this);
+                    }
+                } else {
+                    this.student_edited_after_revision = true; 
+                }
+
+            })
+        }
+
+        return model;
+    }
 
 }

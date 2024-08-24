@@ -336,7 +336,7 @@ export class SynchroWorkspace {
         for (let synchroFile of this.files) {
             if (synchroFile.idInsideRepository != null && oldIdToFileMap[synchroFile.idInsideRepository] == null) {
 
-                let f = new File(synchroFile.name, synchroFile.text);
+                let f = new File(this.manager.main, synchroFile.name, synchroFile.text);
                 f.is_copy_of_id = synchroFile.idInsideRepository;
                 f.repository_file_version = synchroFile.repository_file_version;
                 f.identical_to_repository_version = synchroFile.identical_to_repository_version;

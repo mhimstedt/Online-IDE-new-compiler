@@ -177,7 +177,7 @@ export class Workspace extends CompilerWorkspace {
 
         for(let f of wd.files){
 
-            let file = File.restoreFromData(f);
+            let file = File.restoreFromData(main, f);
             w.files.push(file);
 
             if(f.id == wd.current_file_id){
