@@ -68,9 +68,7 @@ export class JavaCompiler implements Compiler {
         this.files = files;
     }
 
-    async compileIfDirty(): Promise<Executable | undefined> {
-
-        this.progressManager.initBeforeCompiling();
+    private async compileIfDirty(): Promise<Executable | undefined> {
 
         if (this.lastCompiledExecutable) {
             this.lastCompiledExecutable.findMainModule(false, this.lastOpenedFile, this.main?.getCurrentWorkspace()?.getCurrentlyEditedModule());
@@ -89,7 +87,7 @@ export class JavaCompiler implements Compiler {
 
         // we call moduleManager.getNewOrDirtyModules before iterativelySetDirtyFlags
         // to check if ANY file has changed/is new since last compilation run:
-        let newOrDirtyModules = this.moduleManager.getNewOrDirtyModules();
+        let newOrDirtyModules = this.moduleManager.getNewOrDirtyModules(true);
         /**
         * if no module has changed, return as fast as possible
         */
@@ -181,8 +179,6 @@ export class JavaCompiler implements Compiler {
 
         this.endOfLastCompilationRunMs = performance.now();
 
-        this.progressManager.afterCompiling();
-
         return executable;
 
     }
@@ -253,12 +249,14 @@ export class JavaCompiler implements Compiler {
             if (this.state == CompilerState.compilingPeriodically) {
                 do {
                     try {
-
+                        this.progressManager.initBeforeCompiling();
                         this.compileIfDirty();
+                        this.progressManager.afterCompiling();
 
                     } catch (exception) {
-                        if (exception instanceof CompilingProgressManagerException) {
-
+                        this.progressManager.afterCompiling(exception.toString());
+                        if (!(exception instanceof CompilingProgressManagerException)) {
+                            break;   // if this.progressManager.restartNecessary then we would get an infinite loop if we wouldn't break
                         }
                     }
                 } while (this.progressManager.restartNecessary())
@@ -328,7 +326,9 @@ export class JavaCompiler implements Compiler {
         if(this.progressManager.isInsideCompilationRun){
             this.progressManager.interruptCompilerIfRunning(false); 
         } else {
+            this.progressManager.initBeforeCompiling();
             this.compileIfDirty();
+            this.progressManager.afterCompiling();
         }
 
         return new Promise(resolve => {

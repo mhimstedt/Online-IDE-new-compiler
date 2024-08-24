@@ -88,7 +88,9 @@ export class JavaModuleManager {
         this.modules = this.modules.filter(m => files.indexOf(m.file) >= 0);
     }
 
-    getNewOrDirtyModules(): JavaCompiledModule[] {
+    getNewOrDirtyModules(log: boolean = false): JavaCompiledModule[] {
+//        if(log) console.log("Module-versions: " + this.modules.map(m => m.file.name + ": " + m.getLastCompiledMonacoVersion()).join(", "));
+        
         return this.modules.filter(
             m => m.isDirty()
         );

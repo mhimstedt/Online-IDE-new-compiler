@@ -4,7 +4,7 @@ export class CompilingProgressManagerException {
 
 export class CompilingProgressManager {
 
-    private doLogging: boolean = true;
+    private doLogging: boolean = false;
 
     private timeStarted: number = 0;
     private lastInterruptionTime: number = 0;
@@ -33,11 +33,12 @@ export class CompilingProgressManager {
         this._isInsideCompilationRun = true;
     }
 
-    afterCompiling(){
+    afterCompiling(exception?: string){
         this._isInsideCompilationRun = false;
         let dt = performance.now() - this.timeStarted;
-        if(this.doLogging){
-            console.log("Compiled modules [" + this.newOrDirtyModules + "]; Compilation run took " + Math.round(dt) + " ms and was " + this.numberOfInterruptions + " times interrupted.");
+        if(this.doLogging && this.newOrDirtyModules != '---'){
+            let withException: string = exception ? " with Exception " : "";
+            console.log("Compiled modules [" + this.newOrDirtyModules + "]" + withException + "; Compilation run took " + Math.round(dt) + " ms and was " + this.numberOfInterruptions + " times interrupted.");
         }
     }
 
@@ -59,7 +60,7 @@ export class CompilingProgressManager {
     }
 
     interruptCompilerIfRunning(nextRunWithoutInterruptions: boolean){
-        console.log("Request to interrupt compiler by JavaCompletionItemProvider");
+        if(this.doLogging) console.log("Request to interrupt compiler by JavaCompletionItemProvider");
         this.interruptAndRestartFlag = true;
         this.nextRunWithoutInterruptions = nextRunWithoutInterruptions;
     }
