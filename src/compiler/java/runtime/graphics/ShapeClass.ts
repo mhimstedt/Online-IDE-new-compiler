@@ -2,18 +2,17 @@ import * as PIXI from 'pixi.js';
 import { Punkt, polygonBerührtPolygonExakt, polygonEnthältPunkt } from '../../../../tools/MatheTools';
 import { CallbackParameter } from '../../../common/interpreter/CallbackParameter';
 import { Thread } from "../../../common/interpreter/Thread";
+import { JRC } from '../../language/JavaRuntimeLibraryComments';
 import { ColorHelper } from '../../lexer/ColorHelper';
 import { LibraryDeclarations } from "../../module/libraries/DeclareType";
 import { NonPrimitiveType } from "../../types/NonPrimitiveType";
+import { RuntimeExceptionClass } from '../system/javalang/RuntimeException';
 import { ActorClass } from "./ActorClass";
+import { ColorClass } from './ColorClass';
+import { DirectionEnum } from './DirectionEnum';
 import { FilledShapeDefaults } from './FilledShapeDefaults';
 import { GroupClass } from './GroupClass';
 import { updateWorldTransformRecursively } from './PixiHelper';
-import { JRC } from '../../language/JavaRuntimeLibraryComments';
-import { ContainerProxy } from './ContainerProxy';
-import { ColorClass } from './ColorClass';
-import { DirectionEnum } from './DirectionEnum';
-import { RuntimeExceptionClass } from '../system/javalang/RuntimeException';
 
 export type MouseEventMethod = (t: Thread, callback: CallbackParameter, x: number, y: number, button: number) => void;
 
