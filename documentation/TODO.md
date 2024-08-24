@@ -2,8 +2,6 @@
 
 # TODO
   * Test homework-functionality
-  * Test WebSocket classes
-  * Serialize object to/from JSON
   * Robot class
   * Test all library classes, add missing methods, fix bugs
   * missing methods:
@@ -36,6 +34,8 @@
     * Shape.moveBackFrom
     * Group.renderAsStaticBitmap (Testfile Sternen-Hintergrund)
   * Database classes
+  * Test WebSocket classes
+  * Serialize object to/from JSON
     
 
 
