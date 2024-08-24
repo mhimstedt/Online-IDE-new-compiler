@@ -5,7 +5,7 @@ import { EventManager } from "./interpreter/EventManager";
 import { CompilerFile } from "./module/CompilerFile";
 import { Module } from "./module/Module";
 
-export type CompilerEvents = "compilationFinished";
+export type CompilerEvents = "typesReadyForCodeCompletion" | "compilationFinished";
 
 export interface Compiler {
     setFiles(files: CompilerFile[]): void;    
@@ -16,6 +16,7 @@ export interface Compiler {
     getSortedAndFilteredErrors(file: CompilerFile): Error[];
     getType(identifier: string): BaseType | undefined;
     startCompilingPeriodically(): void;
+    interruptAndStartOverAgain(): void;
 
     eventManager: EventManager<CompilerEvents>;
 

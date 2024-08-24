@@ -27,6 +27,7 @@ import { JavaCompiledModule } from "./module/JavaCompiledModule.ts";
 import { JavaModuleManager } from "./module/JavaModuleManager";
 import { JavaLibraryModuleManager } from "./module/libraries/JavaLibraryModuleManager";
 import { Parser } from "./parser/Parser";
+import { CompilingProgressManager, CompilingProgressManagerException } from "./CompilingProgressManager.ts";
 
 
 enum CompilerState {
@@ -52,6 +53,8 @@ export class JavaCompiler implements Compiler {
 
     private endOfLastCompilationRunMs = performance.now();
 
+    private progressManager = new CompilingProgressManager();
+
     constructor(public main?: IMain, private errorMarker?: ErrorMarker) {
         this.libraryModuleManager = new JavaLibraryModuleManager();
         this.moduleManager = new JavaModuleManager();
@@ -65,23 +68,23 @@ export class JavaCompiler implements Compiler {
         this.files = files;
     }
 
-    compileIfDirty(): Executable | undefined {
+    async compileIfDirty(): Promise<Executable | undefined> {
 
         let time = performance.now();
 
-        if(this.lastCompiledExecutable){
+        if (this.lastCompiledExecutable) {
             this.lastCompiledExecutable.findMainModule(false, this.lastOpenedFile, this.main?.getCurrentWorkspace()?.getCurrentlyEditedModule());
         }
 
         // if we're not in test mode:
-        if(this.main){
+        if (this.main) {
             if (this.main.getInterpreter().isRunningOrPaused()) return;
             let currentWorkspace = this.main?.getCurrentWorkspace();
             if (!currentWorkspace) return;
             this.moduleManager.workspace = currentWorkspace;
             this.files = currentWorkspace.getFiles().filter(file => FileTypeManager.filenameToFileType(file.name).language == 'myJava');
         }
-        
+
         this.moduleManager.setupModulesBeforeCompiliation(this.files);
 
         // we call moduleManager.getNewOrDirtyModules before iterativelySetDirtyFlags
@@ -92,16 +95,16 @@ export class JavaCompiler implements Compiler {
         */
         if (newOrDirtyModules.length == 0) return this.lastCompiledExecutable;
 
-       // now we extend set of dirty modules to
-       //  - modules which had errors in last compilation run
-       //  - modules that are (indirectly) dependent on other dirty modules
-       this.moduleManager.iterativelySetDirtyFlags();
-       
-       // console.log(Math.round(performance.now() - time) + " ms: Found " + newOrDirtyModules.length + " new or dirty modules.");
-       
-       // if(newOrDirtyModules.length > 0)
-       //console.log("New/dirty modules: " + newOrDirtyModules.map(m => m.file.name).join(", "));
-       
+        // now we extend set of dirty modules to
+        //  - modules which had errors in last compilation run
+        //  - modules that are (indirectly) dependent on other dirty modules
+        this.moduleManager.iterativelySetDirtyFlags();
+
+        // console.log(Math.round(performance.now() - time) + " ms: Found " + newOrDirtyModules.length + " new or dirty modules.");
+
+        // if(newOrDirtyModules.length > 0)
+        //console.log("New/dirty modules: " + newOrDirtyModules.map(m => m.file.name).join(", "));
+
         newOrDirtyModules = this.moduleManager.getNewOrDirtyModules();
         if (newOrDirtyModules.length == 0) return this.lastCompiledExecutable;
 
@@ -120,10 +123,11 @@ export class JavaCompiler implements Compiler {
 
             let lexerOutput = new Lexer().lex(module.file.getText());
             module.setLexerOutput(lexerOutput);
+            this.progressManager.interruptIfNeeded();
 
             let parser = new Parser(module);
             parser.parse();
-
+            this.progressManager.interruptIfNeeded();
         }
 
         let typeResolver = new TypeResolver(this.moduleManager, this.libraryModuleManager);
@@ -137,12 +141,17 @@ export class JavaCompiler implements Compiler {
 
             for (let module of newOrDirtyModules) {
                 let codegenerator = new CodeGenerator(module, this.libraryModuleManager.typestore,
-                    this.moduleManager.typestore, exceptionTree);
-                codegenerator.start();
+                    this.moduleManager.typestore, exceptionTree, this.progressManager);
+                await codegenerator.start();
                 module.setDirty(false);
+                this.progressManager.interruptIfNeeded();
             }
 
         }
+
+        this.eventManager.fire("typesReadyForCodeCompletion");
+
+        await this.progressManager.interruptIfNeeded();
 
         let klassObjectRegistry: KlassObjectRegistry = {};
 
@@ -212,7 +221,7 @@ export class JavaCompiler implements Compiler {
         let exceptionTree = new ExceptionTree(this.libraryModuleManager.typestore, this.moduleManager.typestore);
 
         let codegenerator = new CodeGenerator(module, this.libraryModuleManager.typestore,
-            this.moduleManager.typestore, exceptionTree);
+            this.moduleManager.typestore, exceptionTree, this.progressManager);
         codegenerator.start();
 
         /**
@@ -236,14 +245,25 @@ export class JavaCompiler implements Compiler {
             // if compileIfDirty() had been called from outside between two invocations of f, then 
             // we don't need to compile this early:
             let plannedNextCompilationTime = this.endOfLastCompilationRunMs + this.maxMsBetweenRuns;
-            if(performance.now() < plannedNextCompilationTime - 30){
+            if (performance.now() < plannedNextCompilationTime - 30) {
                 setTimeout(f, plannedNextCompilationTime - performance.now());
                 return;
             }
 
             if (this.state == CompilerState.compilingPeriodically) {
-                this.compileIfDirty();
-                setTimeout(f,  this.maxMsBetweenRuns);
+                do {
+                    this.progressManager.start();
+                    try {
+                        
+                        this.compileIfDirty();
+
+                    } catch (exception) {
+                        if (exception instanceof CompilingProgressManagerException) {
+
+                        }
+                    }
+                } while (this.progressManager.restartNecessary())
+                setTimeout(f, this.maxMsBetweenRuns);
             }
         }
 
@@ -255,7 +275,7 @@ export class JavaCompiler implements Compiler {
     }
 
     findModuleByFile(file: CompilerFile): Module | undefined {
-        return this.lastCompiledExecutable?.moduleManager.findModuleByFile(file);
+        return this.moduleManager.findModuleByFile(file);
     }
 
     getAllModules(): Module[] {
@@ -297,11 +317,18 @@ export class JavaCompiler implements Compiler {
     }
 
     errorLevelCompare(level1: ErrorLevel, level2: ErrorLevel): number {
-        if(level1 == "error") return 1;
-        if(level2 == "error") return -1;
-        if(level1 == "warning") return 1;
-        if(level2 == "warning") return -1;
+        if (level1 == "error") return 1;
+        if (level2 == "error") return -1;
+        if (level1 == "warning") return 1;
+        if (level2 == "warning") return -1;
         return 1;
+    }
+
+    async interruptAndStartOverAgain(): Promise<void> {
+        this.progressManager.doRestart(); 
+        return new Promise(resolve => {
+            this.eventManager.once("typesReadyForCodeCompletion", resolve);
+        })
     }
 
 }

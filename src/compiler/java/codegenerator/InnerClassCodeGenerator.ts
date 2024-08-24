@@ -84,7 +84,7 @@ export class InnerClassCodeGenerator extends StatementCodeGenerator {
 
         this.compileInstanceFieldsAndInitializer(node.klass, klass);
         this.buildStandardConstructors(klass);
-        this.compileMethods(node.klass, klass);
+        this.compileMethods(node.klass, klass, false);
 
 
 
@@ -686,9 +686,16 @@ export class InnerClassCodeGenerator extends StatementCodeGenerator {
 
 
 
-    protected compileMethods(cdef: ASTClassDefinitionNode | ASTEnumDefinitionNode | ASTInterfaceDefinitionNode, classContext: JavaClass | JavaEnum | JavaInterface) {
+    protected async compileMethods(cdef: ASTClassDefinitionNode | ASTEnumDefinitionNode | ASTInterfaceDefinitionNode, 
+        classContext: JavaClass | JavaEnum | JavaInterface, interruptIfNeeded: boolean) {
         for (let method of cdef.methods) {
+
+            if(interruptIfNeeded){
+                await this.progressManager.interruptIfNeeded();
+            }
+
             this.compileMethodDeclaration(method, classContext);
+
             if (method.isContructor) {
                 if (cdef.kind == TokenType.keywordEnum) {
                     if (method.visibility != TokenType.keywordPrivate) {

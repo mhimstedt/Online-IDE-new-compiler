@@ -95,7 +95,7 @@ export class CompilerFile {
     
     getMonacoVersion(): number {
         if (this.monacoModel) {
-            return this.monacoModel.getAlternativeVersionId() + this.storedMonacoModelVersion;
+            return this.monacoModel.getAlternativeVersionId();
         } else {
             return this.storedMonacoModelVersion;
         }

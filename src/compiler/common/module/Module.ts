@@ -49,6 +49,10 @@ export abstract class Module {
         return this.errors.find(error => error.level == "error") ? true : false;
     }
 
+    getLastCompiledMonacoVersion(){
+        return this.lastCompiledMonacoVersion;
+    }
+
     findSymbolAtPosition(position: Position): UsagePosition | undefined {
         let symbol = this.compiledSymbolsUsageTracker.findSymbolAtPosition(position);
         if (symbol) return symbol;

@@ -1,6 +1,7 @@
 import { Program } from "../../common/interpreter/Program";
 import { Helpers } from "../../common/interpreter/StepFunction.ts";
 import { EmptyRange } from "../../common/range/Range.ts";
+import { CompilingProgressManager } from "../CompilingProgressManager.ts";
 import { TokenType } from "../TokenType";
 import { JCM } from "../language/JavaCompilerMessages.ts";
 import { JavaCompiledModule } from "../module/JavaCompiledModule";
@@ -23,19 +24,20 @@ import { SnippetLinker } from "./SnippetLinker";
 export class CodeGenerator extends InnerClassCodeGenerator {
 
     constructor(module: JavaCompiledModule, libraryTypestore: JavaTypeStore, compiledTypesTypestore: JavaTypeStore,
-        exceptionTree: ExceptionTree) {
+        exceptionTree: ExceptionTree, progressManager: CompilingProgressManager) {
         super(module, libraryTypestore, compiledTypesTypestore, exceptionTree);
+        this.progressManager = progressManager;
         this.linker = new SnippetLinker();
     }
 
-    start() {
+    async start() {
         this.module.programsToCompileToFunctions = [];
-        this.compileClassesEnumsAndInterfaces(this.module.ast);
+        await this.compileClassesEnumsAndInterfaces(this.module.ast);
         // this.compileMainProgram();
     }
 
 
-    compileClassesEnumsAndInterfaces(typeScope: TypeScope | undefined) {
+    async compileClassesEnumsAndInterfaces(typeScope: TypeScope | undefined) {
 
         // First compile all static fields and static initializers in all types:
         // If they can be evaluated to constants, then you can use them in switch...case-statements later on
@@ -43,7 +45,7 @@ export class CodeGenerator extends InnerClassCodeGenerator {
 
         this.compileInstanceFieldsInitializersAndStandardConstructorsRecursively(typeScope);
 
-        this.compileMethodsRecursively(typeScope);
+        await this.compileMethodsRecursively(typeScope);
 
     }
 
@@ -152,7 +154,7 @@ export class CodeGenerator extends InnerClassCodeGenerator {
     }
 
 
-    compileMethodsRecursively(typeScope: TypeScope | undefined) {
+    async compileMethodsRecursively(typeScope: TypeScope | undefined) {
         if (!typeScope) return;
 
         for (let cdef of typeScope.innerTypes) {
@@ -167,9 +169,9 @@ export class CodeGenerator extends InnerClassCodeGenerator {
                 cdef.symbolTable = this.pushAndGetNewSymbolTable(cdef.range, false, type);
             }
 
-            this.compileMethods(cdef, type);
+            await this.compileMethods(cdef, type, true);
 
-            this.compileMethodsRecursively(cdef);
+            await this.compileMethodsRecursively(cdef);
 
             this.popSymbolTable();
         }

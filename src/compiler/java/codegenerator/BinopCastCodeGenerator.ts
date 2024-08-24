@@ -2,6 +2,7 @@ import { ErrormessageWithId } from "../../../tools/language/LanguageManager";
 import { ErrorLevel, QuickFix } from "../../common/Error";
 import { Helpers, StepParams } from "../../common/interpreter/StepFunction";
 import { EmptyRange, IRange } from "../../common/range/Range";
+import { CompilingProgressManager } from "../CompilingProgressManager";
 import { TokenType, TokenTypeReadable } from "../TokenType";
 import { JCM } from "../language/JavaCompilerMessages";
 import { JavaCompiledModule } from "../module/JavaCompiledModule";
@@ -69,6 +70,8 @@ var comparisonOperators: TokenType[] = [TokenType.lower, TokenType.greater, Toke
 
 
 export abstract class BinopCastCodeGenerator {
+
+    progressManager!: CompilingProgressManager;
 
     voidType: JavaType;
     charType: JavaType;

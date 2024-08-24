@@ -23,7 +23,7 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
     }
 
     first: boolean = true;
-    provideCompletionItems(model: monaco.editor.ITextModel, position: monaco.Position, context: monaco.languages.CompletionContext, token: monaco.CancellationToken): monaco.languages.ProviderResult<monaco.languages.CompletionList> {
+    async provideCompletionItems(model: monaco.editor.ITextModel, position: monaco.Position, context: monaco.languages.CompletionContext, token: monaco.CancellationToken): Promise<monaco.languages.CompletionList> {
 
         // setTimeout(() => {
         //@ts-ignore
@@ -54,6 +54,12 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
 
         if (module == null) {
             return null;
+        }
+
+        if(module.getLastCompiledMonacoVersion() < module.file.getMonacoVersion() - 1){
+            console.log("Request to interrupt compiler by JavaCompletionItemProvider");
+            await this.main.getCompiler().interruptAndStartOverAgain();
+            module = <JavaCompiledModule>this.main.getCurrentWorkspace()?.getModuleForMonacoModel(model);
         }
 
         let symbolTable = module.findSymbolTableAtPosition(position);
@@ -109,7 +115,6 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
             //     this.main.compileIfDirty();
             // }
 
-            this.main.getCurrentWorkspace()?.ensureModuleIsCompiled(module);
             symbolTable = module.findSymbolTableAtPosition(position);
             classContext = symbolTable == null ? undefined : symbolTable.classContext;
         }
