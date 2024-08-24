@@ -77,7 +77,7 @@ export class TwoParameterTemplate extends CodeTemplate {
             let lastPart2 = snippets[1].lastPartOrPop();
 
             snippetContainer.addStringPart(this.templateString.replace(new RegExp('\\§1', 'g'), lastPart1.emit())
-                .replace(new RegExp('\\§2', 'g'), lastPart2.emit()), range, undefined, [lastPart1, lastPart2]);
+                .replace(new RegExp('\\§2', 'g'), lastPart2.emit()), range, resultType, [lastPart1, lastPart2]);
             snippetContainer.type = resultType;
 
             return snippetContainer;
@@ -96,7 +96,7 @@ export class TwoParameterTemplate extends CodeTemplate {
         }
 
         snippetContainer.addStringPart(this.templateString.replace(new RegExp('\\§1', 'g'), `${StepParams.stack}.pop()`)
-            .replace(new RegExp('\\§2', 'g'), `${StepParams.stack}.pop()`), range);
+            .replace(new RegExp('\\§2', 'g'), `${StepParams.stack}.pop()`), range, resultType);
 
         snippetContainer.type = resultType;
         return snippetContainer;
@@ -309,7 +309,7 @@ export class BinaryOperatorTemplate extends CodeTemplate {
         if (['-', '/', '<', '>', '<=', '>='].indexOf(this.operator) >= 0) {
             snippets[0].ensureFinalValueIsOnStack();
             snippets[1].ensureFinalValueIsOnStack();
-            snippetContainer.addParts(snippets[0]);
+            snippetContainer.addParts(snippets[0]); 
             snippetContainer.addParts(snippets[1]);
 
             switch (this.operator) {
@@ -317,7 +317,7 @@ export class BinaryOperatorTemplate extends CodeTemplate {
                 case '/':
                     let bothTypesAreShortByteIntLong: boolean = snippets[0].type instanceof PrimitiveType && snippets[0].type.isByteShortIntLong() && snippets[1].type instanceof PrimitiveType && snippets[1].type.isByteShortIntLong();
                     if (bothTypesAreShortByteIntLong) {
-                        snippetContainer.addStringPart(`Math.trunc( 1/(${StepParams.stack}.pop() || ${Helpers.throwArithmeticException}("${JCM.divideByZero()}", ${_range.startLineNumber}, ${_range.startColumn}, ${_range.endLineNumber}, ${_range.endColumn})) * ${StepParams.stack}.pop() );`, _range, _resultType);
+                        snippetContainer.addStringPart(`Math.trunc( 1/(${StepParams.stack}.pop() || ${Helpers.throwArithmeticException}("${JCM.divideByZero()}", ${_range.startLineNumber}, ${_range.startColumn}, ${_range.endLineNumber}, ${_range.endColumn})) * ${StepParams.stack}.pop() )`, _range, _resultType);
                     } else {
                         snippetContainer.addStringPart(`1/(${StepParams.stack}.pop() || ${Helpers.throwArithmeticException}("${JCM.divideByZero()}", ${_range.startLineNumber}, ${_range.startColumn}, ${_range.endLineNumber}, ${_range.endColumn})) * ${StepParams.stack}.pop()`, _range, _resultType);
                     }

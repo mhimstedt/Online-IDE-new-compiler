@@ -100,9 +100,10 @@ export class JavaCompiler implements Compiler {
         //  - modules that are (indirectly) dependent on other dirty modules
         this.moduleManager.iterativelySetDirtyFlags();
 
-        this.progressManager.setNewOrDirtyModules(newOrDirtyModules.map(m => m.file.name).join(", "));  // only for console.log later
-
+        
         newOrDirtyModules = this.moduleManager.getNewOrDirtyModules();
+        this.progressManager.setNewOrDirtyModules(newOrDirtyModules.map(m => m.file.name).join(", "));  // only for console.log later
+        
         if (newOrDirtyModules.length == 0) return this.lastCompiledExecutable;
 
         this.errors = [];
