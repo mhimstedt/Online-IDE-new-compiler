@@ -416,6 +416,11 @@ export class TokenIterator {
             let token = this.tokenList[pos];
             let tt = token.tt;
             if (tt == TokenType.semicolon || tt == TokenType.assignment) break;
+            if(tt == TokenType.newline){
+                if(nonSpaceTokenTypesFound.length == 1){
+                    return "statement";
+                }
+            }
             if(tt == TokenType.leftBracket){
                 if(isCodeOutsideClassdeclarations){
                     nonSpaceTokenTypesFound.push(tt);
