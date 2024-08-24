@@ -112,14 +112,20 @@ export class FilledShapeClass extends ShapeClass {
     }
 
     _setFillColorColor(color: ColorClass, alpha?: number) {
-        if(color == null) throw new NullPointerExceptionClass(JRC.fsColorIsNullException());
+        if(color == null){
+            this.fillColor = null;
+            return;
+        } 
         this.fillColor = color.red * 0x10000 + color.green * 0x100 + color.blue;
         if(alpha) this.fillAlpha = alpha;
         this.render();
     }
 
     _setBorderColorColor(color: ColorClass, alpha?: number) {
-        if(color == null) throw new NullPointerExceptionClass(JRC.fsColorIsNullException());
+        if(color == null){
+            this.borderColor = null;
+            return;
+        }
         this.borderColor = color.red * 0x10000 + color.green * 0x100 + color.blue;
         if(alpha) this.borderAlpha = alpha;
         this.render();
