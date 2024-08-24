@@ -57,7 +57,6 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
         }
 
         if(module.getLastCompiledMonacoVersion() < module.file.getMonacoVersion() - 1){
-            console.log("Request to interrupt compiler by JavaCompletionItemProvider");
             await this.main.getCompiler().interruptAndStartOverAgain();
             module = <JavaCompiledModule>this.main.getCurrentWorkspace()?.getModuleForMonacoModel(model);
         }

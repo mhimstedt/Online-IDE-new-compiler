@@ -70,7 +70,7 @@ export class JavaCompiler implements Compiler {
 
     async compileIfDirty(): Promise<Executable | undefined> {
 
-        let time = performance.now();
+        this.progressManager.initBeforeCompiling();
 
         if (this.lastCompiledExecutable) {
             this.lastCompiledExecutable.findMainModule(false, this.lastOpenedFile, this.main?.getCurrentWorkspace()?.getCurrentlyEditedModule());
@@ -100,10 +100,6 @@ export class JavaCompiler implements Compiler {
         //  - modules that are (indirectly) dependent on other dirty modules
         this.moduleManager.iterativelySetDirtyFlags();
 
-        // console.log(Math.round(performance.now() - time) + " ms: Found " + newOrDirtyModules.length + " new or dirty modules.");
-
-        // if(newOrDirtyModules.length > 0)
-        //console.log("New/dirty modules: " + newOrDirtyModules.map(m => m.file.name).join(", "));
         this.progressManager.setNewOrDirtyModules(newOrDirtyModules.map(m => m.file.name).join(", "));  // only for console.log later
 
         newOrDirtyModules = this.moduleManager.getNewOrDirtyModules();
@@ -184,6 +180,8 @@ export class JavaCompiler implements Compiler {
 
         this.endOfLastCompilationRunMs = performance.now();
 
+        this.progressManager.afterCompiling();
+
         return executable;
 
     }
@@ -253,11 +251,9 @@ export class JavaCompiler implements Compiler {
 
             if (this.state == CompilerState.compilingPeriodically) {
                 do {
-                    this.progressManager.initBeforeCompiling();
                     try {
 
                         this.compileIfDirty();
-                        this.progressManager.afterCompiling();
 
                     } catch (exception) {
                         if (exception instanceof CompilingProgressManagerException) {
@@ -327,7 +323,13 @@ export class JavaCompiler implements Compiler {
     }
 
     async interruptAndStartOverAgain(): Promise<void> {
-        this.progressManager.doRestart(false); 
+        
+        if(this.progressManager.isInsideCompilationRun){
+            this.progressManager.interruptCompilerIfRunning(false); 
+        } else {
+            this.compileIfDirty();
+        }
+
         return new Promise(resolve => {
             this.eventManager.once("typesReadyForCodeCompletion", resolve);
         })
