@@ -29,13 +29,13 @@ export class OneParameterTemplate extends CodeTemplate {
     applyToSnippet(resultType: JavaType, range: IRange, ...snippets: CodeSnippet[]): CodeSnippet {
 
         if (snippets[0].isPureTerm()) {
-            let newSnippet = new StringCodeSnippet(this.templateString.replace(new RegExp('\\§1', 'g'), snippets[0].getPureTerm()), range, resultType);
+            let newSnippet = new StringCodeSnippet(this.templateString.replace(new RegExp('\\§1', 'g'), () => snippets[0].getPureTerm()), range, resultType);
             newSnippet.takeEmitToStepListenersFrom(snippets);
         }
 
         let snippetContainer = new CodeSnippetContainer(snippets[0].allButLastPart(), range);
         let lastPart = snippets[0].lastPartOrPop();
-        snippetContainer.addStringPart(this.templateString.replace(new RegExp('\\§1', 'g'), lastPart.emit()), range, resultType, [lastPart]);
+        snippetContainer.addStringPart(this.templateString.replace(new RegExp('\\§1', 'g'), () => lastPart.emit()), range, resultType, [lastPart]);
         snippetContainer.type = resultType;
         return snippetContainer;
     }
@@ -54,8 +54,8 @@ export class TwoParameterTemplate extends CodeTemplate {
         let snippet1Pure = snippets[1].isPureTerm();
 
         if (snippet0Pure && snippet1Pure) {
-            let code: string = this.templateString.replace(new RegExp('\\§1', 'g'), snippets[0].getPureTerm());
-            code = code.replace(new RegExp('\\§2', 'g'), snippets[1].getPureTerm());
+            let code: string = this.templateString.replace(new RegExp('\\§1', 'g'), () => snippets[0].getPureTerm());
+            code = code.replace(new RegExp('\\§2', 'g'), () => snippets[1].getPureTerm());
             let newSnippet = new StringCodeSnippet(code, range, resultType);
             newSnippet.takeEmitToStepListenersFrom(snippets);
             return newSnippet;
@@ -76,8 +76,8 @@ export class TwoParameterTemplate extends CodeTemplate {
             let lastPart1 = snippets[0].lastPartOrPop();
             let lastPart2 = snippets[1].lastPartOrPop();
 
-            snippetContainer.addStringPart(this.templateString.replace(new RegExp('\\§1', 'g'), lastPart1.emit())
-                .replace(new RegExp('\\§2', 'g'), lastPart2.emit()), range, resultType, [lastPart1, lastPart2]);
+            snippetContainer.addStringPart(this.templateString.replace(new RegExp('\\§1', 'g'), () => lastPart1.emit())
+                .replace(new RegExp('\\§2', 'g'), () => lastPart2.emit()), range, resultType, [lastPart1, lastPart2]);
             snippetContainer.type = resultType;
 
             return snippetContainer;
@@ -209,7 +209,7 @@ export class SeveralParameterTemplate extends CodeTemplate {
         if (onlyPureTerms) {
             for (let i: number = this.orderedParameters.length - 1; i >= 0; i--) {
                 let parameter = this.orderedParameters[i];
-                appliedTemplate = appliedTemplate.replace(new RegExp('\\' + parameter.parameter, 'g'), snippets[parameter.n - 1].emit());
+                appliedTemplate = appliedTemplate.replace(new RegExp('\\' + parameter.parameter, 'g'), () => snippets[parameter.n - 1].emit());
             }
             let snippet = new StringCodeSnippet(appliedTemplate, range, resultType);
             snippet.takeEmitToStepListenersFrom(snippets);
@@ -229,7 +229,7 @@ export class SeveralParameterTemplate extends CodeTemplate {
             snippetContainer.addParts(snippets[parameter.n - 1].allButLastPart());
             let lastPart = snippets[parameter.n - 1].lastPartOrPop();
             lastParts.push(lastPart);
-            appliedTemplate = appliedTemplate.replace(new RegExp('\\' + parameter.parameter, 'g'), lastPart.emit());
+            appliedTemplate = appliedTemplate.replace(new RegExp('\\' + parameter.parameter, 'g'), () => lastPart.emit());
         }
 
         snippetContainer.addStringPart(appliedTemplate, range, resultType, lastParts);

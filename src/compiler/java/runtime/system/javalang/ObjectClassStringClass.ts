@@ -339,15 +339,15 @@ export class StringClass extends ObjectClass implements IPrimitiveTypeWrapper {
     }
 
     _nReplace(target: string, replacement: string): string {
-        return this.value.replace(target, replacement);
+        return this.value.replace(target, () => replacement);
     }
 
     _nReplaceAll(regEx: string, replacement: string): string {
-        return this.value.replace(new RegExp(regEx, 'g'), replacement);
+        return this.value.replace(new RegExp(regEx, 'g'), () => replacement);
     }
 
     _nReplaceFirst(regEx: string, replacement: string): string {
-        return this.value.replace(new RegExp(regEx, ''), replacement);
+        return this.value.replace(new RegExp(regEx, ''), () => replacement);
     }
 
     _nMatches(regEx: string) {
