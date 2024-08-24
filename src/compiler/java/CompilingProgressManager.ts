@@ -13,14 +13,14 @@ export class CompilingProgressManager {
     private newOrDirtyModules: string = "";
     private _isInsideCompilationRun: boolean = false;
 
-    private interruptAtLeastEveryMs: 50;
+    private interruptAtLeastEveryMs: number = 30;
     private interruptForMs: 5;
 
 
     private nextRunWithoutInterruptions: boolean = false;
 
     get isInsideCompilationRun(): boolean {
-        return this.isInsideCompilationRun;
+        return this._isInsideCompilationRun;
     }
 
     initBeforeCompiling(){
@@ -42,8 +42,8 @@ export class CompilingProgressManager {
     }
 
     async interruptIfNeeded(): Promise<void> {
-        let time = performance.now();
-        if(time - this.lastInterruptionTime >= this.interruptAtLeastEveryMs){
+        let dt = performance.now() - this.lastInterruptionTime;
+        if(dt >= this.interruptAtLeastEveryMs){
             if(this.doLogging){
                 console.log("Compiler was interrupted by CompilingProgressManger.");
             }
