@@ -207,7 +207,7 @@ export class SeveralParameterTemplate extends CodeTemplate {
         }
 
         if (onlyPureTerms) {
-            for(let i: number = this.orderedParameters.length -1; i >= 0; i--){
+            for (let i: number = this.orderedParameters.length - 1; i >= 0; i--) {
                 let parameter = this.orderedParameters[i];
                 appliedTemplate = appliedTemplate.replace(new RegExp('\\' + parameter.parameter, 'g'), snippets[parameter.n - 1].emit());
             }
@@ -222,7 +222,7 @@ export class SeveralParameterTemplate extends CodeTemplate {
         * Some snippets may push values to stack. We have to ensure they do this in reversed parameter order so that
         * values get popped in unreversed order.
         */
-       let parametersInDescendingOrder = this.orderedParameters.sort((p1, p2) => p2.order - p1.order);
+        let parametersInDescendingOrder = this.orderedParameters.sort((p1, p2) => p2.order - p1.order);
         let lastParts: CodeSnippet[] = [];
         for (let i = 0; i < parametersInDescendingOrder.length; i++) {
             let parameter = parametersInDescendingOrder[i];
@@ -309,7 +309,7 @@ export class BinaryOperatorTemplate extends CodeTemplate {
         if (['-', '/', '<', '>', '<=', '>='].indexOf(this.operator) >= 0) {
             snippets[0].ensureFinalValueIsOnStack();
             snippets[1].ensureFinalValueIsOnStack();
-            snippetContainer.addParts(snippets[0]); 
+            snippetContainer.addParts(snippets[0]);
             snippetContainer.addParts(snippets[1]);
 
             switch (this.operator) {
@@ -345,7 +345,7 @@ export class BinaryOperatorTemplate extends CodeTemplate {
         }
 
         snippetContainer.finalValueIsOnStack = false;
-        
+
         snippetContainer.type = _resultType;
         return snippetContainer;
     }
@@ -366,7 +366,12 @@ export class BinaryOperatorTemplate extends CodeTemplate {
             //@ts-ignore
             case "*": result = value0 * value1; break;
             //@ts-ignore
-            case "/": result = value0 / value1; break;
+            case "/":
+                if ((<PrimitiveType>snippet0.type).isByteShortIntLong() && (<PrimitiveType>snippet1.type).isByteShortIntLong()) {
+                    result = Math.trunc(Math.trunc(<number>value0) / Math.trunc(<number>value1));
+                    break;
+                }
+                result = <number>value0 / <number>value1; break;
             //@ts-ignore
             case "%": result = value0 % value1; break;
             //@ts-ignore
