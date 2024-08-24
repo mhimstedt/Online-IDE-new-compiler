@@ -5,24 +5,36 @@ export class CompilingProgressManagerException {
 export class CompilingProgressManager {
     private timeStarted: number = 0;
     private lastInterruptionTime: number = 0;
+    private numberOfInterruptions: number = 0;
+    private interruptAndRestartFlag: boolean = false;
 
     private interruptAtLeastEveryMs: 50;
     private interruptForMs: 5;
 
-    private interruptAndRestart: boolean = false;
 
-    start(){
+    private nextRunWithoutInterruptions: boolean = false;
+
+    initBeforeCompiling(){
         this.timeStarted = this.lastInterruptionTime = performance.now();
-        this.interruptAndRestart = false;
+        this.interruptAndRestartFlag = false;
+        this.numberOfInterruptions = 0;
+        if(this.nextRunWithoutInterruptions) this.lastInterruptionTime += 1e6;
+        this.nextRunWithoutInterruptions = false;
+    }
+
+    afterCompiling(){
+        let dt = performance.now() - this.timeStarted;
+        console.log("Compilation run took " + Math.round(dt) + " ms and was " + this.numberOfInterruptions + " times interrupted.");
     }
 
     async interruptIfNeeded(): Promise<void> {
         let time = performance.now();
         if(time - this.lastInterruptionTime >= this.interruptAtLeastEveryMs){
             console.log("Compiler was interrupted by CompilingProgressManger.");
+            this.numberOfInterruptions++;
             await this.setTimeout(this.interruptForMs);
             this.lastInterruptionTime = performance.now();
-            if(this.interruptAndRestart) throw new CompilingProgressManagerException();
+            if(this.interruptAndRestartFlag) throw new CompilingProgressManagerException();
         }
     }
 
@@ -30,11 +42,12 @@ export class CompilingProgressManager {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    doRestart(){
-        this.interruptAndRestart = true;
+    doRestart(nextRunWithoutInterruptions: boolean){
+        this.interruptAndRestartFlag = true;
+        this.nextRunWithoutInterruptions = nextRunWithoutInterruptions;
     }
 
     restartNecessary(){
-        return this.interruptAndRestart;
+        return this.interruptAndRestartFlag;
     }
 }

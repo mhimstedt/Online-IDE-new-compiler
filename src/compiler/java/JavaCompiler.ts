@@ -252,10 +252,11 @@ export class JavaCompiler implements Compiler {
 
             if (this.state == CompilerState.compilingPeriodically) {
                 do {
-                    this.progressManager.start();
+                    this.progressManager.initBeforeCompiling();
                     try {
-                        
+
                         this.compileIfDirty();
+                        this.progressManager.afterCompiling();
 
                     } catch (exception) {
                         if (exception instanceof CompilingProgressManagerException) {
@@ -325,7 +326,7 @@ export class JavaCompiler implements Compiler {
     }
 
     async interruptAndStartOverAgain(): Promise<void> {
-        this.progressManager.doRestart(); 
+        this.progressManager.doRestart(false); 
         return new Promise(resolve => {
             this.eventManager.once("typesReadyForCodeCompletion", resolve);
         })
