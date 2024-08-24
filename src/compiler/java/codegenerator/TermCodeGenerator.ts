@@ -339,7 +339,15 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
         }
 
         if (callingConvention == "java") {
-            template += `${StepParams.thread}, undefined` + (parameterValues.length > 0 ? ", " : "");
+            /*
+             * if class is child of Actor or Shape then overridden listener-methos (act, onMouseDown, onKeyDown, ...)
+             * must not be called before constructor is FULLY finished. We achieve this by setting the callback-function
+             * of the constructor: 
+             */
+            let callRegisterListeners: string = (!klassType.isLibraryType && klassType.fastExtendsImplements("Actor")) ?
+            `() => {${StepParams.stack}[${StepParams.stack}.length - 1]._registerListeners(); }` : "undefined";
+            
+            template += `${StepParams.thread}, ${callRegisterListeners}` + (parameterValues.length > 0 ? ", " : "");
         }
 
         let i = 2;

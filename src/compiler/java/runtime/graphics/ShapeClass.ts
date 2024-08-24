@@ -47,7 +47,7 @@ export class ShapeClass extends ActorClass {
 
         { type: "method", signature: "final void tint(int color)", native: ShapeClass.prototype._setTintInt, comment: JRC.shapeTintComment },
         { type: "method", signature: "final void tint(string color)", native: ShapeClass.prototype._setTintString, comment: JRC.shapeTintComment },
-        
+
         { type: "method", signature: "final Direction directionRelativeTo(Shape otherShape)", native: ShapeClass.prototype._directionRelativeTo, comment: JRC.shapeDirectionRelativeToComment },
         { type: "method", signature: "final void moveBackFrom(Shape otherShape, boolean keepColliding)", native: ShapeClass.prototype._moveBackFrom, comment: JRC.shapeMoveBackFromComment },
 
@@ -76,7 +76,7 @@ export class ShapeClass extends ActorClass {
 
         { type: "method", signature: "void startTrackingEveryMouseMovement()", native: ShapeClass.prototype._startTrackingEveryMouseMovement, comment: JRC.shapeStartTrackingEveryMouseMovementComment },
         { type: "method", signature: "void stopTrackingEveryMouseMovement()", native: ShapeClass.prototype._stopTrackingEveryMouseMovement, comment: JRC.shapeStartTrackingEveryMouseMovementComment },
-        
+
         { type: "method", signature: "abstract Shape copy()", java: ShapeClass.prototype._mj$copy$Shape$, comment: JRC.shapeCopyComment },
 
 
@@ -150,44 +150,51 @@ export class ShapeClass extends ActorClass {
 
     render(): void { };
 
-    _mj$copy$Shape$(t: Thread, callback: CallbackParameter){
+    _mj$copy$Shape$(t: Thread, callback: CallbackParameter) {
         // this method is abstract => empty method stub
+    }
+
+    /*
+     * TermCodeGenerator.invokeConstructor does compiler magic to ensure that this method is called AFTER the constructor
+     * of the child class of Shape is FULLY finished 
+     */
+    _registerListeners() {
+        super._registerListeners();
+        let atLeastOneMouseListenerOverridden = false;
+        if (this._mj$onMouseDown$void$double$double$int != ShapeClass.prototype._mj$onMouseDown$void$double$double$int) {
+            atLeastOneMouseListenerOverridden = true;
+            if (!this.mouseEventsImplemented) this.mouseEventsImplemented = {};
+            this.mouseEventsImplemented["mousedown"] = this._mj$onMouseDown$void$double$double$int;
+        }
+        if (this._mj$onMouseUp$void$double$double$int != ShapeClass.prototype._mj$onMouseUp$void$double$double$int) {
+            atLeastOneMouseListenerOverridden = true;
+            if (!this.mouseEventsImplemented) this.mouseEventsImplemented = {};
+            this.mouseEventsImplemented["mouseup"] = this._mj$onMouseUp$void$double$double$int;
+        }
+        if (this._mj$onMouseMove$void$double$double != ShapeClass.prototype._mj$onMouseMove$void$double$double) {
+            atLeastOneMouseListenerOverridden = true;
+            if (!this.mouseEventsImplemented) this.mouseEventsImplemented = {};
+            this.mouseEventsImplemented["mousemove"] = this._mj$onMouseMove$void$double$double;
+        }
+        if (this._mj$onMouseEnter$void$double$double != ShapeClass.prototype._mj$onMouseEnter$void$double$double) {
+            atLeastOneMouseListenerOverridden = true;
+            if (!this.mouseEventsImplemented) this.mouseEventsImplemented = {};
+            this.mouseEventsImplemented["mouseenter"] = this._mj$onMouseEnter$void$double$double;
+        }
+        if (this._mj$onMouseLeave$void$double$double != ShapeClass.prototype._mj$onMouseLeave$void$double$double) {
+            atLeastOneMouseListenerOverridden = true;
+            if (!this.mouseEventsImplemented) this.mouseEventsImplemented = {};
+            this.mouseEventsImplemented["mouseleave"] = this._mj$onMouseLeave$void$double$double;
+        }
+        if (atLeastOneMouseListenerOverridden) {
+            this.world.mouseManager.addShapeWithImplementedMouseMethods(this);
+        }
     }
 
     _cj$_constructor_$Shape$(t: Thread, callback: CallbackParameter) {
         this._cj$_constructor_$Actor$(t, () => {
             if (!this.world.defaultGroup) {
                 this.world.shapesWhichBelongToNoGroup.push(this);
-            }
-
-            let atLeastOneMouseListenerOverridden = false;
-            if (this._mj$onMouseDown$void$double$double$int != ShapeClass.prototype._mj$onMouseDown$void$double$double$int) {
-                atLeastOneMouseListenerOverridden = true;
-                if (!this.mouseEventsImplemented) this.mouseEventsImplemented = {};
-                this.mouseEventsImplemented["mousedown"] = this._mj$onMouseDown$void$double$double$int;
-            }
-            if (this._mj$onMouseUp$void$double$double$int != ShapeClass.prototype._mj$onMouseUp$void$double$double$int) {
-                atLeastOneMouseListenerOverridden = true;
-                if (!this.mouseEventsImplemented) this.mouseEventsImplemented = {};
-                this.mouseEventsImplemented["mouseup"] = this._mj$onMouseUp$void$double$double$int;
-            }
-            if (this._mj$onMouseMove$void$double$double != ShapeClass.prototype._mj$onMouseMove$void$double$double) {
-                atLeastOneMouseListenerOverridden = true;
-                if (!this.mouseEventsImplemented) this.mouseEventsImplemented = {};
-                this.mouseEventsImplemented["mousemove"] = this._mj$onMouseMove$void$double$double;
-            }
-            if (this._mj$onMouseEnter$void$double$double != ShapeClass.prototype._mj$onMouseEnter$void$double$double) {
-                atLeastOneMouseListenerOverridden = true;
-                if (!this.mouseEventsImplemented) this.mouseEventsImplemented = {};
-                this.mouseEventsImplemented["mouseenter"] = this._mj$onMouseEnter$void$double$double;
-            }
-            if (this._mj$onMouseLeave$void$double$double != ShapeClass.prototype._mj$onMouseLeave$void$double$double) {
-                atLeastOneMouseListenerOverridden = true;
-                if (!this.mouseEventsImplemented) this.mouseEventsImplemented = {};
-                this.mouseEventsImplemented["mouseleave"] = this._mj$onMouseLeave$void$double$double;
-            }
-            if (atLeastOneMouseListenerOverridden) {
-                this.world.mouseManager.addShapeWithImplementedMouseMethods(this);
             }
 
             if (callback) callback();
@@ -385,13 +392,13 @@ export class ShapeClass extends ActorClass {
 
     public _getCenterX(): number {
         let p = new PIXI.Point(this.centerXInitial, this.centerYInitial);
-        if(this.container) this.getWorldTransform().apply(p, p);
+        if (this.container) this.getWorldTransform().apply(p, p);
         return p.x;
     }
 
     public _getCenterY(): number {
         let p = new PIXI.Point(this.centerXInitial, this.centerYInitial);
-        if(this.container) this.getWorldTransform().apply(p, p);
+        if (this.container) this.getWorldTransform().apply(p, p);
         return p.y;
     }
 
@@ -592,13 +599,13 @@ export class ShapeClass extends ActorClass {
     }
 
     _getCollidingShapes(group: GroupClass): ShapeClass[] | null {
-        if(group == null) return [];
+        if (group == null) return [];
 
-        if(!this.hasOverlappingBoundingBoxWith(group)) return [];
+        if (!this.hasOverlappingBoundingBoxWith(group)) return [];
 
         let ret: ShapeClass[] = [];
-        for(let shape of group.shapes){
-            if(this._collidesWith(shape)) ret.push(shape);
+        for (let shape of group.shapes) {
+            if (this._collidesWith(shape)) ret.push(shape);
         }
         return ret;
     }
@@ -647,10 +654,10 @@ export class ShapeClass extends ActorClass {
 
     _collidesWithAnyShape(color?: number | string | ColorClass): boolean {
 
-        if(color){
+        if (color) {
             if (typeof color == "string") {
                 color = ColorHelper.parseColorToOpenGL(color).color;
-            } else if(color instanceof ColorClass){
+            } else if (color instanceof ColorClass) {
                 color = color._toInt();
             }
         }
@@ -677,7 +684,7 @@ export class ShapeClass extends ActorClass {
     public getWorldTransform(): PIXI.Matrix {
         //@ts-ignore
         if (!this.worldTransformDirty) return this.container._worldTransform || PIXI.Matrix.IDENTITY;
-        if (this.belongsToGroup != null) 
+        if (this.belongsToGroup != null)
             this.belongsToGroup.getWorldTransform();
         let parent = this.container.parent;
 
@@ -756,8 +763,8 @@ export class ShapeClass extends ActorClass {
     }
 
     _directionRelativeTo(otherShape: ShapeClass): DirectionEnum {
-        if(otherShape == null) throw new RuntimeExceptionClass(JRC.shapeNullError());
-        if(otherShape.isDestroyed) throw new RuntimeExceptionClass(JRC.shapeAlreadyDestroyedError());
+        if (otherShape == null) throw new RuntimeExceptionClass(JRC.shapeNullError());
+        if (otherShape.isDestroyed) throw new RuntimeExceptionClass(JRC.shapeAlreadyDestroyedError());
 
         let bb = this.container.getBounds();
         let bb1 = otherShape.container.getBounds();
@@ -802,59 +809,59 @@ export class ShapeClass extends ActorClass {
         }
 
         return ei;
-    } 
+    }
 
     _moveBackFrom(sh1: ShapeClass, keepColliding: boolean) {
-        if(sh1 == null) throw new RuntimeExceptionClass(JRC.shapeNullError());
-        if(sh1.isDestroyed) throw new RuntimeExceptionClass(JRC.shapeAlreadyDestroyedError());
-        
-                // subsequent calls to move destroy values in this.lastMoveDx and this.lastMoveDy, so:
-                let lmdx = this.lastMoveDx;
-                let lmdy = this.lastMoveDy;
-        
-                let length = Math.sqrt(lmdx * lmdx + lmdy * lmdy);
-                if (length < 0.001) return;
-        
-                if (!this._collidesWith(sh1)) return;
-        
-                let parameterMax = 0;       // collision with this parameter
-                this._move(-lmdx, -lmdy);
-        
-                let currentParameter = -1;  // move to parameterMin
-        
-                while (this._collidesWith(sh1)) {
-                    parameterMax = currentParameter;    // collision at this parameter
-                    let newParameter = currentParameter * 2;
-                    this._move(lmdx * (newParameter - currentParameter), lmdy * (newParameter - currentParameter));
-                    currentParameter = newParameter;
-                    if ((currentParameter + 1) * length < -100) {
-                        this._move(lmdx * (-1 - currentParameter), lmdy * (-1 - currentParameter));
-                        return;
-                    }
-                }
-                let parameterMin = currentParameter;
-        
-                let isColliding: boolean = false;
-                // Situation now: no collision at parameterMin == currentParameter, collision at parameterMax
-                while ((parameterMax - parameterMin) * length > 1) {
-                    let np = (parameterMax + parameterMin) / 2;
-                    this._move(lmdx * (np - currentParameter), lmdy * (np - currentParameter));
-                    if (isColliding = this._collidesWith(sh1)) {
-                        parameterMax = np;
-                    } else {
-                        parameterMin = np;
-                    }
-                    currentParameter = np;
-                }
-        
-                if (keepColliding && !isColliding) {
-                    this._move(lmdx * (parameterMax - currentParameter), lmdy * (parameterMax - currentParameter));
-                } else if (isColliding && !keepColliding) {
-                    this._move(lmdx * (parameterMin - currentParameter), lmdy * (parameterMin - currentParameter));
-                }
-        
-                this.lastMoveDx = lmdx;
-                this.lastMoveDy = lmdy;
+        if (sh1 == null) throw new RuntimeExceptionClass(JRC.shapeNullError());
+        if (sh1.isDestroyed) throw new RuntimeExceptionClass(JRC.shapeAlreadyDestroyedError());
+
+        // subsequent calls to move destroy values in this.lastMoveDx and this.lastMoveDy, so:
+        let lmdx = this.lastMoveDx;
+        let lmdy = this.lastMoveDy;
+
+        let length = Math.sqrt(lmdx * lmdx + lmdy * lmdy);
+        if (length < 0.001) return;
+
+        if (!this._collidesWith(sh1)) return;
+
+        let parameterMax = 0;       // collision with this parameter
+        this._move(-lmdx, -lmdy);
+
+        let currentParameter = -1;  // move to parameterMin
+
+        while (this._collidesWith(sh1)) {
+            parameterMax = currentParameter;    // collision at this parameter
+            let newParameter = currentParameter * 2;
+            this._move(lmdx * (newParameter - currentParameter), lmdy * (newParameter - currentParameter));
+            currentParameter = newParameter;
+            if ((currentParameter + 1) * length < -100) {
+                this._move(lmdx * (-1 - currentParameter), lmdy * (-1 - currentParameter));
+                return;
+            }
+        }
+        let parameterMin = currentParameter;
+
+        let isColliding: boolean = false;
+        // Situation now: no collision at parameterMin == currentParameter, collision at parameterMax
+        while ((parameterMax - parameterMin) * length > 1) {
+            let np = (parameterMax + parameterMin) / 2;
+            this._move(lmdx * (np - currentParameter), lmdy * (np - currentParameter));
+            if (isColliding = this._collidesWith(sh1)) {
+                parameterMax = np;
+            } else {
+                parameterMin = np;
+            }
+            currentParameter = np;
+        }
+
+        if (keepColliding && !isColliding) {
+            this._move(lmdx * (parameterMax - currentParameter), lmdy * (parameterMax - currentParameter));
+        } else if (isColliding && !keepColliding) {
+            this._move(lmdx * (parameterMin - currentParameter), lmdy * (parameterMin - currentParameter));
+        }
+
+        this.lastMoveDx = lmdx;
+        this.lastMoveDy = lmdy;
     }
 
 
