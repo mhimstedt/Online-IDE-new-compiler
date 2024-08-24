@@ -189,6 +189,7 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
         completionItems = completionItems.concat(compiler.libraryModuleManager.typestore.getTypeCompletionItems(classContext, range, true, false));
         completionItems = completionItems.concat(compiler.moduleManager.typestore.getTypeCompletionItems(classContext, range, true, false));
 
+        this.upvoteItemsWithSameFirstCharacterCasing(completionItems, "A");
 
         return Promise.resolve({
             suggestions: completionItems
@@ -339,8 +340,10 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
 
         // console.log("Complete variable/Class/Keyword " + text);
 
+        this.upvoteItemsWithSameFirstCharacterCasing(completionItems, text);
+
         return Promise.resolve({
-            suggestions: completionItems
+            suggestions:  completionItems
         });
     }
 
@@ -670,7 +673,7 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
 
             let label: string = (m.isAbstract ? "implement " : "override ") + m.getCompletionLabel();
             let filterText = m.identifier;
-            let insertText = TokenTypeReadable[m.visibility] + " " + (m.returnParameterType == null ? "void" : m.returnParameterType.getDeclaration()) + " ";
+            let insertText = TokenTypeReadable[m.visibility] + " " + (m.returnParameterType == null ? "void" : m.returnParameterType.toString()) + " ";
             insertText += m.identifier + "(" + m.parameters.map(p => p.type.toString() + " " + p.identifier).join(", ");
             insertText += ") {\n\t$0\n}";
 
@@ -690,6 +693,28 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
 
         return keywordCompletionItems;
 
+    }
+
+    upvoteItemsWithSameFirstCharacterCasing(completionItems: monaco.languages.CompletionItem[], startOfUserInput: string){
+        if(!startOfUserInput || startOfUserInput.length < 1) return;
+        let userInputHasFirstCharacterUppercase = this.hasFirstCharacterUpperCase(startOfUserInput);
+        for(let ci of completionItems){
+            if(this.hasFirstCharacterUpperCase(ci.insertText) != userInputHasFirstCharacterUppercase){
+                ci.sortText = "a_" + ci.sortText;
+            } else {
+                ci.sortText = "b_" + ci.sortText;
+            }
+        }
+    }
+
+    hasFirstCharacterUpperCase(s: string){
+        if(!s || s.length < 0) return false;
+        return s[0] == s[0].toUpperCase();
+    }
+
+    hasFirstCharacterLowerCase(s: string){
+        if(!s || s.length < 0) return false;
+        return s[0] == s[0].toUpperCase();
     }
 
 }
