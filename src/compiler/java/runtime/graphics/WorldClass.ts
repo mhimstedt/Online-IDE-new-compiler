@@ -145,6 +145,7 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
             interpreter.isExternalTimer = true;
 
             this.mouseManager = new MouseManager(this);
+            this.mouseManager.registerListeners();
 
             this.gngEventlistenerManager = new GNGEventlistenerManager(interpreter, this);
 
