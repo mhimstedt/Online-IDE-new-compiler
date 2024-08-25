@@ -22,7 +22,7 @@ export class JsonTool {
     objectToIndexMap!: Map<ObjectClass, number>;
     nextIndex: number = -1;
 
-    wrapperTypes: String[] = ["String", "Integer", "Double", "Boolean", "Float", "Character", "Short", "Long"];
+    wrapperTypes: string[] = ["String", "Integer", "Double", "Boolean", "Float", "Character", "Short", "Long"];
 
     toJson(data: any): string {
         this.objectToIndexMap = new Map();

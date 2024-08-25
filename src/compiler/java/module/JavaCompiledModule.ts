@@ -206,7 +206,7 @@ export class JavaCompiledModule extends JavaBaseModule {
     startMainProgram(thread: Thread): boolean {
         let mainRuntimeClass = this.mainClass?.resolvedType?.runtimeClass;
         if (!mainRuntimeClass) return false;
-        let mainMethod = this.mainClass?.resolvedType?.methods.find(m => m.getSignature() == "void main(String[])" && m.isStatic);
+        let mainMethod = this.mainClass?.resolvedType?.methods.find(m => m.getSignature().toLocaleLowerCase() == "void main(string[])" && m.isStatic);
 
         if (!mainMethod) return false;
 

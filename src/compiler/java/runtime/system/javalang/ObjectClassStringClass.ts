@@ -224,7 +224,7 @@ export class StringClass extends ObjectClass implements IPrimitiveTypeWrapper {
         { type: "method", signature: "public final string replaceAll(string regex, string replacement)", native: StringClass.prototype._nReplaceAll, template: "§1.value.replace(new RegExp(§2, 'g'), §3)", comment: JRC.stringReplaceAllComment },
         { type: "method", signature: "public final string matches(string regex)", native: StringClass.prototype._nMatches, template: "(§1.value.match(new RegExp(§2, 'g')) != null)", comment: JRC.stringMatchesComment },
         { type: "method", signature: "public final string replaceFirst(string regex, string replacement)", native: StringClass.prototype._nReplaceFirst, template: "§1.value.replace(new RegExp(§2, ''), §3)", comment: JRC.stringReplaceFirstComment },
-        { type: "method", signature: "public final String[] split(string regex)", native: StringClass.prototype._nSplit, comment: JRC.stringSplitComment },
+        { type: "method", signature: "public final string[] split(string regex)", native: StringClass.prototype._nSplit, comment: JRC.stringSplitComment },
         { type: "method", signature: "public final int hashCode()", native: StringClass.prototype._nHashCode, template: `Array.from(§1.value).reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0)`, comment: JRC.hashCodeComment },
         { type: "method", signature: "public final char[] toCharArray()", native: StringClass.prototype._nToCharArray, template: `Array.from(§1.value)`, comment: JRC.stringToCharArrayComment },
     ]
@@ -257,8 +257,8 @@ export class StringClass extends ObjectClass implements IPrimitiveTypeWrapper {
         return this;
     }
 
-    _nSplit(regEx: string): StringClass[] {
-        return this.value.split(new RegExp(regEx, '')).map(s => new StringClass(s));
+    _nSplit(regEx: string): string[] {
+        return this.value.split(new RegExp(regEx, ''));
     }
 
     _nToString() {

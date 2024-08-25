@@ -2,7 +2,6 @@
 
 # TODO
   * Test Repository-functionality
-  * Test Pruefung-functionality
   * Robot class
   * Test all library classes, add missing methods, fix bugs
   * missing methods:
@@ -38,6 +37,7 @@
   * Test WebSocket classes
   * Serialize object to/from JSON
   * Test and debug homework-functionality
+  * Test Pruefung-functionality -> Seems to be ok...
     
 
 
