@@ -44,6 +44,8 @@ export class JavaMethod extends BaseSymbol {
      */
     returnParameterType?: JavaType;
 
+    implementsInterfaceOrAbstractMethod: boolean = false;
+
     declare module: JavaCompiledModule;
 
     private signatureCache: { [callingConvention: string]: string } = {}

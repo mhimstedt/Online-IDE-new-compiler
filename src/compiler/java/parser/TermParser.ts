@@ -362,7 +362,7 @@ export abstract class TermParser extends TokenIterator {
                     let type: ASTTypeNode | undefined;
 
                     if (!withoutType) {
-                        type = this.parseType();
+                        type = this.parseType(false);
                     }
 
                     let identifier = this.expectAndSkipIdentifierAsToken();
@@ -401,7 +401,7 @@ export abstract class TermParser extends TokenIterator {
         return lambdaNode;
     }
 
-    parseType(): ASTTypeNode | undefined {
+    parseType(replaceStringByPrimitiveString: boolean): ASTTypeNode | undefined {
 
         let returnedType: ASTTypeNode | undefined;
 
@@ -416,18 +416,23 @@ export abstract class TermParser extends TokenIterator {
                 let wildcardType = this.nodeFactory.buildWildcardTypeNode(this.getRangeAndThenSkipToken());
                 if (this.comesToken(TokenType.keywordExtends, true)) {
                     do {
-                        let t1 = this.parseType();
+                        let t1 = this.parseType(false);
                         if (t1) wildcardType.extends.push(t1);
                     } while (this.comesToken(TokenType.ampersand, true));
                 }
                 if (this.comesToken(TokenType.keywordSuper, true)) {
-                    wildcardType.super = this.parseType();
+                    wildcardType.super = this.parseType(false);
                 }
                 returnedType = wildcardType;
                 break;
             case TokenType.identifier:
                 let range: IRange = this.cct.range;
                 let identifier = this.expectAndSkipIdentifierAsString();
+
+                if(replaceStringByPrimitiveString && identifier == "String"){
+                    identifier = "string";
+                }
+
                 let type: ASTTypeNode = this.nodeFactory.buildBaseTypeNode(identifier, range);
 
                 while (this.comesToken(TokenType.dot, true)) {
@@ -447,7 +452,7 @@ export abstract class TermParser extends TokenIterator {
                 if (this.comesToken(TokenType.lower, true)) {     // generic parameter invocation?
                     type = this.nodeFactory.buildGenericTypeInstantiationNode(type, type.range);
                     do {
-                        let actualTypeArgument = this.parseType();
+                        let actualTypeArgument = this.parseType(false);
                         if (actualTypeArgument) (<ASTGenericTypeInstantiationNode>type).actualTypeArguments.push(actualTypeArgument);
                     } while (this.comesToken(TokenType.comma, true))
                     this.expect(TokenType.greater, true);
@@ -490,7 +495,7 @@ export abstract class TermParser extends TokenIterator {
     parseCastedObject(): ASTCastNode | undefined {
         let startToken = this.cct;
         this.nextToken(); // skip (
-        let type = this.parseType();
+        let type = this.parseType(true);
         this.expect(TokenType.rightBracket);
         let term = this.parseTermUnary();
 
@@ -516,7 +521,7 @@ export abstract class TermParser extends TokenIterator {
     parseNewArray(): ASTTermNode | undefined {
         let startToken = this.cct;
         this.nextToken(); // skip new keyword
-        let type = this.parseType();
+        let type = this.parseType(true);
 
         if (!type) return undefined;
 
@@ -561,7 +566,7 @@ export abstract class TermParser extends TokenIterator {
     parseNewObjectInstantiation(node: ASTTermNode | undefined): ASTNewObjectNode | ASTAnonymousClassNode | undefined {
         let startToken = this.cct;
         this.nextToken(); // skip new keyword
-        let type = this.parseType();
+        let type = this.parseType(false);
 
         if (!type) return undefined;
 

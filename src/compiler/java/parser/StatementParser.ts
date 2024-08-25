@@ -109,7 +109,7 @@ export abstract class StatementParser extends TermParser {
 
         let isFinal = this.comesToken(TokenType.keywordFinal, true);
 
-        let type = this.parseType();
+        let type = this.parseType(true);
         do {
             let identifer = this.expectAndSkipIdentifierAsToken();
 
@@ -309,7 +309,7 @@ export abstract class StatementParser extends TermParser {
 
     parseEnhancedForLoop(tokenFor: Token): ASTEnhancedForLoopNode | undefined {
         // for and ( are already parsed
-        let elementType = this.parseType();
+        let elementType = this.parseType(true);
         let elementIdentifier = this.expectAndSkipIdentifierAsToken();
         this.expect(TokenType.colon, true);
         let collection = this.parseTerm();
@@ -392,7 +392,7 @@ export abstract class StatementParser extends TermParser {
             if (!this.expect(TokenType.leftBracket, true)) continue;
             let exceptionTypes: ASTTypeNode[] = [];
             do {
-                let type = this.parseType();
+                let type = this.parseType(false);
                 if (type) exceptionTypes.push(type);
             } while (this.comesToken(TokenType.OR, true))
             let identifier = this.expectAndSkipIdentifierAsToken();

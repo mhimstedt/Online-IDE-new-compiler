@@ -6,6 +6,7 @@ import { TokenType } from "../TokenType";
 import {
     ASTAnnotationNode,
     ASTAnonymousClassNode,
+    ASTBaseTypeNode,
     ASTBlockNode,
     ASTClassDefinitionNode,
     ASTEnumDefinitionNode,
@@ -269,7 +270,7 @@ export class Parser extends StatementParser {
         } else {
             let genericParameters = this.parseGenericParameterDefinition();
 
-            let type = this.parseType();
+            let type = this.parseType(false);
 
             if (this.lookahead(1).tt == TokenType.leftBracket) {
                 this.parseMethodDeclaration(classASTNode, modifiers, false, type, genericParameters, documentation);
@@ -278,6 +279,9 @@ export class Parser extends StatementParser {
                     this.pushError(JCM.fieldDefinitionDoesntStartWithGenericParamter(), "error", genericParameters[0].range);
                 }
                 do {
+                    if(type.kind == TokenType.baseType && (<ASTBaseTypeNode>type).identifiers[0].identifier == "String"){
+                        (<ASTBaseTypeNode>type).identifiers[0].identifier = "string";
+                    }
                     this.parseFieldDeclaration(classASTNode, modifiers, type, documentation);
                 } while (this.comesToken(TokenType.comma, true));
 
@@ -309,7 +313,7 @@ export class Parser extends StatementParser {
         if (this.expect(TokenType.leftBracket, true)) {
             if (this.comesToken([TokenType.identifier, TokenType.keywordFinal], false)) {
                 do {
-                    this.parseParameter(methodNode);
+                    this.parseParameter(methodNode, false);
                 } while (this.comesToken(TokenType.comma, true));
             }
             this.expect(TokenType.rightBracket, true);
@@ -327,12 +331,12 @@ export class Parser extends StatementParser {
         this.setEndOfRange(methodNode);
     }
 
-    parseParameter(methodNode: ASTMethodDeclarationNode) {
+    parseParameter(methodNode: ASTMethodDeclarationNode, replaceStringByPrimitiveString: boolean) {
         let startRange = this.cct.range;
 
         let isFinal = this.comesToken(TokenType.keywordFinal, true);
 
-        let type = this.parseType();
+        let type = this.parseType(replaceStringByPrimitiveString);
 
         let isEllipsis = this.comesToken(TokenType.ellipsis, true);
 
@@ -527,7 +531,7 @@ export class Parser extends StatementParser {
 
     parseImplements(node: ASTInterfaceDefinitionNode | ASTClassDefinitionNode) {
         do {
-            let type = this.parseType();
+            let type = this.parseType(false);
             if (type) node.implements.push(type);
         } while (this.comesToken(TokenType.comma, true));
     }
@@ -536,7 +540,7 @@ export class Parser extends StatementParser {
 
         this.nextToken(); // skip "extends"
 
-        let type = this.parseType();
+        let type = this.parseType(false);
         if (type) node.extends = type;
     }
 
@@ -563,12 +567,12 @@ export class Parser extends StatementParser {
                         genericParameterDeclaration.extends = [];
 
                         do {
-                            let type = this.parseType();
+                            let type = this.parseType(false);
                             if (type != null) genericParameterDeclaration.extends.push(type);
                         } while (this.comesToken(TokenType.ampersand, true));
 
                     } else if (this.comesToken(TokenType.keywordSuper, true)) {
-                        let type = this.parseType();
+                        let type = this.parseType(false);
                         if (type != null) genericParameterDeclaration.super = type;
                     }
 

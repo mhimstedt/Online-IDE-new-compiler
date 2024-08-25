@@ -261,6 +261,9 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
             forLoopSnippet.addParts(breakLabel);
 
         } else if (collectionType instanceof IJavaClass && collectionType.runtimeClass!.prototype.getElements) {
+
+            if(elementType == this.stringType) elementType = this.stringNonPrimitiveType;
+
             /*
              * Loop over SystemCollection
             */
@@ -333,7 +336,9 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
             }
 
             if (node.elementType.kind != TokenType.varType) {
-                if (!this.typesAreIdentical(elementType!, collectionElementType)) {
+                if(elementType == this.stringType && collectionElementType == this.stringNonPrimitiveType){
+                    elementType = collectionElementType;
+                } else if (!this.typesAreIdentical(elementType!, collectionElementType)) {
                     this.pushError(JCM.elementTypeDoesntFitToIterable(elementType!.toString(), node.elementIdentifier, collectionElementType.toString()), "error", node.elementIdentifierPosition);
                 }
             }
@@ -714,7 +719,7 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
             term = SnippetFramer.frame(term, "§1.ordinal");
         }
 
-        if (!(enumType || type.identifier && ["byte", "short", "int", "char", "String"].includes(type.identifier))) {
+        if (!(enumType || type.identifier && ["byte", "short", "int", "char", "String", "string"].includes(type.identifier))) {
             this.pushError(JCM.switchOnlyFeasibleForTypes(), "error", node.term.range);
         }
 
