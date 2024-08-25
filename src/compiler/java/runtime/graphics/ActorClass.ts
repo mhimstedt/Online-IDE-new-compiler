@@ -1,3 +1,4 @@
+import { GamepadTool } from "../../../../tools/GamepadTool";
 import { CallbackParameter } from "../../../common/interpreter/CallbackParameter";
 import { Thread } from "../../../common/interpreter/Thread";
 import { JRC } from "../../language/JavaRuntimeLibraryComments";
@@ -29,10 +30,18 @@ export class ActorClass extends ObjectClass implements IActor {
         { type: "method", signature: "final boolean isDestroyed()", native: ActorClass.prototype._isDestroyed, comment: JRC.actorIsDestroyedComment },
         { type: "method", signature: "final void stopActing()", native: ActorClass.prototype._stopActing, comment: JRC.actorStopActingComment },
         { type: "method", signature: "final void restartActing()", native: ActorClass.prototype._restartActing, comment: JRC.actorRestartActingComment },
+        
+        { type: "method", signature: "final boolean isGamepadButtonDown(int gamepadIndex, int buttonIndex)", native: ActorClass.prototype._isGamepadButtonDown, comment: JRC.actorIsGamepadButtonDownComment },
+        { type: "method", signature: "final boolean isGamepadConnected(int gamepadIndex)", native: ActorClass.prototype._isGamepadConnected, comment: JRC.actorIsGamepadConnectedComment },
+        { type: "method", signature: "final double getGamepadAxisValue(int gamepadIndex, int axisIndex)", native: ActorClass.prototype._getGamepadAxisValue, comment: JRC.actorGetGamepadAxisValueComment },
+
+
 
     ]
 
     static type: NonPrimitiveType;
+
+    static gamepadTool?: GamepadTool = (typeof window === 'undefined') ? undefined : new GamepadTool();
 
     isActing: boolean = true;
 
@@ -155,5 +164,20 @@ export class ActorClass extends ObjectClass implements IActor {
     destroy() {
         this.world.unregisterActor(this);
         this.isDestroyed = true;
+    }
+
+    _isGamepadButtonDown(gamepadIndex: number, buttonIndex: number){
+        if(!ActorClass.gamepadTool) return false;
+        return ActorClass.gamepadTool.isGamepadButtonPressed(gamepadIndex, buttonIndex);
+    }
+
+    _isGamepadConnected(gamepadIndex: number): boolean {
+        if(!ActorClass.gamepadTool) return false;
+        return ActorClass.gamepadTool.isGamepadConnected(gamepadIndex);
+    }
+
+    _getGamepadAxisValue(gamepadIndex: number, axisIndex: number): number {
+        if(!ActorClass.gamepadTool) return 0.0;
+        return ActorClass.gamepadTool.getGamepadAxisValue(gamepadIndex, axisIndex);
     }
 }

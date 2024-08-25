@@ -356,6 +356,21 @@ export class JRC {
         "en": "Restarts the act method of this object being called 30 times per second.",
     })
 
+    static actorIsGamepadConnectedComment = () => lm({
+    "de": `Gibt true zurück, falls das Gamepad mit dem übergebenen Index angeschlossen ist. VORSICHT: Das erste Gamepad hat Index 0.`,
+    "en": `If it returns true, the gamepad is connected to the passed index. CAUTION: The first gamepad has index 0.`,
+    })
+
+    static actorIsGamepadButtonDownComment = () => lm({
+    "de": `Gibt genau dann true zurück, wenn der Button buttonIndex des Gamepads GamepadIndex gedrückt ist.`,
+    "en": `Returns true if button with given index is held down. Caution: First Gamepad has index 0!`,
+    })
+
+    static actorGetGamepadAxisValueComment = () => lm({
+    "de": `Gibt den Wert des Gamepad-Steuerknüppels mit Index axisIndex zurück.`,
+    "en": `Returns value of Gamepad-stick with given index on given axis.`,
+    })
+
     /**
      * Class Shape
      */
