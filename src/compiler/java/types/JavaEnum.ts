@@ -146,10 +146,6 @@ export class JavaEnum extends JavaTypeWithInstanceInitializer {
         return decl;
     }
 
-    getReifiedIdentifier(): string {
-        return this.identifier;
-    }
-
     getCompletionItems(visibilityUpTo: Visibility, leftBracketAlreadyThere: boolean, identifierAndBracketAfterCursor: string,
         rangeToReplace: monaco.IRange, methodContext?: JavaMethod, onlyStatic?: false): monaco.languages.CompletionItem[] {
 

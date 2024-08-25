@@ -77,10 +77,6 @@ export abstract class IJavaInterface extends NonPrimitiveType {
         return s;
     }
 
-    getReifiedIdentifier(): string {
-        return this.identifier;
-    }
-
     getCompletionItems(visibilityUpTo: Visibility, leftBracketAlreadyThere: boolean, identifierAndBracketAfterCursor: string, 
         rangeToReplace: monaco.IRange, methodContext: JavaMethod | undefined, onlyStatic?: false): monaco.languages.CompletionItem[] {
 

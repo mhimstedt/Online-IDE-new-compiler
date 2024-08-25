@@ -34,10 +34,6 @@ export class NullType extends JavaType {
         return "null";
     }
 
-    getReifiedIdentifier(): string {
-        return "null";
-    }
-
     getDeclaration(): string {
         return "null";    
     }

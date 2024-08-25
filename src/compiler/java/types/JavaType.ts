@@ -35,8 +35,6 @@ export abstract class JavaType extends BaseType {
 
     abstract toString(): string;
 
-    abstract getReifiedIdentifier(): string;
-
     getInternalName(): string {
         return this.identifier;
     }

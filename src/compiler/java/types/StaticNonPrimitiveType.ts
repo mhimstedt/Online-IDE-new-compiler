@@ -67,10 +67,6 @@ export class StaticNonPrimitiveType extends JavaType {
         return this.nonPrimitiveType.toString();
     }
 
-    getReifiedIdentifier(): string {
-       return this.nonPrimitiveType.identifier;
-    }
-
     getDeclaration(): string {
         return this.nonPrimitiveType.getDeclaration();
     }

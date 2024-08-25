@@ -77,10 +77,6 @@ export class JavaArrayType extends JavaType implements BaseArrayType {
         return s;
     }
 
-    getReifiedIdentifier(): string {
-        return this.toString();
-    }
-
     getInternalName(): string {
         let internalName = this.elementType.identifier;
         for(let i = 0; i < this.dimension; i++) internalName += "_I";        

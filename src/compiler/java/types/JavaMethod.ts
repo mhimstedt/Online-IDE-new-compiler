@@ -158,17 +158,17 @@ export class JavaMethod extends BaseSymbol {
 
     getSignature() {
         if (this.isConstructor) {
-            return this.identifier + "(" + this.parameters.map(p => p.type.getReifiedIdentifier()).join(", ") + ")";
+            return this.identifier + "(" + this.parameters.map(p => p.type.identifier).join(", ") + ")";
         } else {
-            return this.returnParameterType?.getReifiedIdentifier() + " " + this.identifier + "(" + this.parameters.map(p => p.type.getReifiedIdentifier()).join(", ") + ")";
+            return this.returnParameterType?.identifier + " " + this.identifier + "(" + this.parameters.map(p => p.type.identifier).join(", ") + ")";
         }
     }
 
     getSignatureWithoutReturnParameter() {
         if (this.isConstructor) {
-            return this.identifier + "(" + this.parameters.map(p => p.type.getReifiedIdentifier()).join(", ") + ")";
+            return this.identifier + "(" + this.parameters.map(p => p.type.identifier).join(", ") + ")";
         } else {
-            return this.identifier + "(" + this.parameters.map(p => p.type.getReifiedIdentifier()).join(", ") + ")";
+            return this.identifier + "(" + this.parameters.map(p => p.type.identifier).join(", ") + ")";
         }
     }
 

@@ -171,10 +171,6 @@ export abstract class IJavaClass extends JavaTypeWithInstanceInitializer {
         return s;
     }
 
-    getReifiedIdentifier(): string {
-        return this.identifier;
-    }
-
     abstract isAbstract(): boolean;
 
     hasAncestorOrIs(objectType: NonPrimitiveType): boolean {

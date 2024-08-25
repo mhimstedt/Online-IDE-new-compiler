@@ -164,10 +164,6 @@ export class GenericTypeParameter extends NonPrimitiveType {
         return false;
     }
 
-    getReifiedIdentifier(): string {
-        return this.identifier;
-    }
-
     initCatches(){
         this.catches = [];
     }
