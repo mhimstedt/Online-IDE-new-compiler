@@ -103,7 +103,6 @@ import { ChangeListenerInterface } from "../graphics/gui/ChangeListenerInterface
 import { ButtonClass } from "../graphics/gui/ButtonClass.ts";
 import { CheckboxClass } from "../graphics/gui/CheckboxClass.ts";
 import { RadiobuttonClass } from "../graphics/gui/RadiobuttonClass.ts";
-import { TextfieldClass } from "../graphics/gui/TextfieldClass.ts";
 import { SoundClass } from "./additional/SoundClass.ts";
 import { FilesClass } from "./additional/FilesClass.ts";
 import { HttpClientClass } from "../network/HttpClientClass.ts";
@@ -139,6 +138,7 @@ import { PreparedStatementClass } from "../database/PreparedStatementClass.ts";
 import { ResultSetClass } from "../database/ResultSetClass.ts";
 import { WebSocketClass } from "../network/WebSocketClass.ts";
 import { WebSocketClientClass } from "../network/WebSocketClientClass.ts";
+import { TextFieldClass } from "../graphics/gui/TextFieldClass.ts";
 
 export class SystemModule extends JavaLibraryModule {
 
@@ -236,7 +236,7 @@ export class SystemModule extends JavaLibraryModule {
 
             // Gui components
             ChangeListenerInterface, GuiComponentClass, GuiTextComponentClass, ButtonClass, CheckboxClass,
-            RadiobuttonClass, TextfieldClass,
+            RadiobuttonClass, TextFieldClass,
 
             // Database
             DatabaseManagerClass, ConnectionClass, StatementClass, PreparedStatementClass, ResultSetClass,

@@ -8,14 +8,14 @@ import { MouseEventKind } from '../MouseManager';
 import { GuiTextComponentClass } from "./GuiTextComponentClass";
 import { JRC } from '../../../language/JavaRuntimeLibraryComments';
 
-export class TextfieldClass extends GuiTextComponentClass {
+export class TextFieldClass extends GuiTextComponentClass {
 
     static __javaDeclarations: LibraryDeclarations = [
         { type: "declaration", signature: "class Textfield extends GuiTextComponent", comment: JRC.TextfieldClassComment },
-        { type: "method", signature: "Textfield(double x, double y, double width, double fontsize, string caption)", java: TextfieldClass.prototype._cj$_constructor_$Textfield$double$double$double$double$string$string, comment: JRC.TextfieldConstructorComment },
-        { type: "method", signature: "Textfield(double x, double y, double width, double fontsize, string caption, string fontFamily)", java: TextfieldClass.prototype._cj$_constructor_$Textfield$double$double$double$double$string$string, comment: JRC.TextfieldConstructorComment },
-        { type: "method", signature: "Textfield copy()", java: TextfieldClass.prototype._mj$copy$Textfield$, comment: JRC.TextfieldCopyComment },
-        { type: "method", signature: "void setPadding(double padding)", native: TextfieldClass.prototype.setPadding, comment: JRC.TextfieldSetPaddingComment },
+        { type: "method", signature: "Textfield(double x, double y, double width, double fontsize, string caption)", java: TextFieldClass.prototype._cj$_constructor_$Textfield$double$double$double$double$string$string, comment: JRC.TextfieldConstructorComment },
+        { type: "method", signature: "Textfield(double x, double y, double width, double fontsize, string caption, string fontFamily)", java: TextFieldClass.prototype._cj$_constructor_$Textfield$double$double$double$double$string$string, comment: JRC.TextfieldConstructorComment },
+        { type: "method", signature: "Textfield copy()", java: TextFieldClass.prototype._mj$copy$Textfield$, comment: JRC.TextfieldCopyComment },
+        { type: "method", signature: "void setPadding(double padding)", native: TextFieldClass.prototype.setPadding, comment: JRC.TextfieldSetPaddingComment },
     ];
 
     static type: NonPrimitiveType;
@@ -98,7 +98,7 @@ export class TextfieldClass extends GuiTextComponentClass {
 
     _mj$copy$Textfield$(t: Thread, callback: CallbackFunction) {
 
-        let tf = new TextfieldClass();
+        let tf = new TextFieldClass();
 
         tf._cj$_constructor_$Textfield$double$double$double$double$string$string(
             t, () => {
