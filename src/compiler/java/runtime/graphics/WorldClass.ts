@@ -99,6 +99,8 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
 
         this.interpreter = t.scheduler.interpreter;
         let interpreter = this.interpreter;
+        
+        interpreter.graphicsManager?.registerGraphicSystem(this);
 
         let existingWorld = <WorldClass>interpreter.retrieveObject("WorldClass");
         if (existingWorld) {
@@ -107,7 +109,6 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
             return existingWorld;
         }
 
-        interpreter.graphicsManager?.registerGraphicSystem(this);
 
         this.actorManager = new ActorManager(interpreter);
 

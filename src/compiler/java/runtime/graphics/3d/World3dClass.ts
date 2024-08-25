@@ -61,7 +61,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
             t.s.push(existingWorld);
             return existingWorld;
         }
-
+        
         interpreter.storeObject("World3dClass", this);
 
         this.actorManager = new ActorManager(interpreter);
@@ -74,15 +74,18 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
         this.graphicsDiv.style.overflow = "hidden";
         this.graphicsDiv.innerHTML = "";
-        this.graphicsDiv.style.width = graphicsDivParent.clientWidth + "px";
-        this.graphicsDiv.style.height = graphicsDivParent.clientHeight + "px";
+        this.changeResolution(this.width, this.height);
 
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, this.graphicsDiv.clientWidth / this.graphicsDiv.clientHeight, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(75, this.width/this.height, 0.1, 1000);
+        // size of 1 pixel: see https://discourse.threejs.org/t/solved-how-do-we-size-something-using-screen-pixels/1177
 
         const renderer = new THREE.WebGLRenderer();
-        renderer.setSize(this.graphicsDiv.clientWidth, this.graphicsDiv.clientHeight);
+        renderer.setSize(this.width, this.height);
         this.graphicsDiv.appendChild(renderer.domElement);
+        
+        renderer.domElement.style.width = "100%";
+        renderer.domElement.style.height = "100%";
 
         const geometry = new THREE.BoxGeometry(1, 1, 1);
         const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
@@ -99,9 +102,9 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         renderer.setAnimationLoop(animate);
 
         this.resizeObserver = new ResizeObserver(() => { 
-            // this.changeResolution(); 
+            this.changeResolution(this.width, this.height); 
         });
-        this.resizeObserver.observe(this.graphicsDiv!);
+        this.resizeObserver.observe(this.graphicsDiv!.parentElement!.parentElement!);
 
         // interpreter.isExternalTimer = true;
         this.addCallbacks(interpreter);
@@ -153,7 +156,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
         // this.app?.renderer.resize(width, height, 1);
 
-        let rect = this.graphicsDiv!.parentElement!.getBoundingClientRect();
+        let rect = this.graphicsDiv!.parentElement!.parentElement!.getBoundingClientRect();
         if (rect.width == 0 || rect.height == 0) rect = this.graphicsDiv!.parentElement!.getBoundingClientRect();
 
         let newCanvasWidth: number;
@@ -168,6 +171,9 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
         newCanvasHeight = Math.min(newCanvasHeight, rect.height);
         newCanvasWidth = Math.min(newCanvasWidth, rect.width);
+
+        this.graphicsDiv.style.width = newCanvasWidth + "px";
+        this.graphicsDiv.style.height = newCanvasHeight + "px";
 
 
         // this.app!.canvas.style.width = newCanvasWidth + "px";
