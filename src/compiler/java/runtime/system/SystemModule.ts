@@ -139,6 +139,7 @@ import { ResultSetClass } from "../database/ResultSetClass.ts";
 import { WebSocketClass } from "../network/WebSocketClass.ts";
 import { WebSocketClientClass } from "../network/WebSocketClientClass.ts";
 import { TextFieldClass } from "../graphics/gui/TextFieldClass.ts";
+import { RobotClass } from "../graphics/robot/RobotClass.ts";
 
 export class SystemModule extends JavaLibraryModule {
 
@@ -243,6 +244,9 @@ export class SystemModule extends JavaLibraryModule {
 
             // WebSocket
             WebSocketClass, WebSocketClientClass,
+
+            // Robot
+            RobotClass,
 
             // Graphics'n Games (GNG)
             GNGBaseFigur, GNGKreis, GNGRechteck, GNGDreieck, GNGText, GNGFigur,

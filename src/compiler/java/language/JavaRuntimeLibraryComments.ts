@@ -54,8 +54,8 @@ export class JRC {
     })
 
     static stringCompareToNullpointerException = () => lm({
-    "de": "Der Vergleich mit null ist nicht zulässig.",
-    "en": "Comparison with null is not possible.",
+        "de": "Der Vergleich mit null ist nicht zulässig.",
+        "en": "Comparison with null is not possible.",
     })
 
     static stringConstructorComment = () => lm({
@@ -293,8 +293,8 @@ export class JRC {
     })
 
     static worldFollowComment = () => lm({
-    "de": `Verschiebt die Welt so, dass das übergebene graphische Objekt (shape) sichtbar wird. Verschoben wird nur, wenn das Objekt weniger als frameWidth vom Rand entfernt ist und die Welt nicht über die gegebenen Koordinaten xMin, xMax, yMin und yMax hinausragt.`,
-    "en": `Moves world coordinate system to make given shape visible again. It is only moved if the shape is less than frameWidth from the edge and the world does not extend beyond the given coordinates xMin, xMax, yMin and yMax.`,
+        "de": `Verschiebt die Welt so, dass das übergebene graphische Objekt (shape) sichtbar wird. Verschoben wird nur, wenn das Objekt weniger als frameWidth vom Rand entfernt ist und die Welt nicht über die gegebenen Koordinaten xMin, xMax, yMin und yMax hinausragt.`,
+        "en": `Moves world coordinate system to make given shape visible again. It is only moved if the shape is less than frameWidth from the edge and the world does not extend beyond the given coordinates xMin, xMax, yMin and yMax.`,
     })
 
     static worldSetDefaultGroupComment = () => lm({
@@ -357,18 +357,18 @@ export class JRC {
     })
 
     static actorIsGamepadConnectedComment = () => lm({
-    "de": `Gibt true zurück, falls das Gamepad mit dem übergebenen Index angeschlossen ist. VORSICHT: Das erste Gamepad hat Index 0.`,
-    "en": `If it returns true, the gamepad is connected to the passed index. CAUTION: The first gamepad has index 0.`,
+        "de": `Gibt true zurück, falls das Gamepad mit dem übergebenen Index angeschlossen ist. VORSICHT: Das erste Gamepad hat Index 0.`,
+        "en": `If it returns true, the gamepad is connected to the passed index. CAUTION: The first gamepad has index 0.`,
     })
 
     static actorIsGamepadButtonDownComment = () => lm({
-    "de": `Gibt genau dann true zurück, wenn der Button buttonIndex des Gamepads GamepadIndex gedrückt ist.`,
-    "en": `Returns true if button with given index is held down. Caution: First Gamepad has index 0!`,
+        "de": `Gibt genau dann true zurück, wenn der Button buttonIndex des Gamepads GamepadIndex gedrückt ist.`,
+        "en": `Returns true if button with given index is held down. Caution: First Gamepad has index 0!`,
     })
 
     static actorGetGamepadAxisValueComment = () => lm({
-    "de": `Gibt den Wert des Gamepad-Steuerknüppels mit Index axisIndex zurück.`,
-    "en": `Returns value of Gamepad-stick with given index on given axis.`,
+        "de": `Gibt den Wert des Gamepad-Steuerknüppels mit Index axisIndex zurück.`,
+        "en": `Returns value of Gamepad-stick with given index on given axis.`,
     })
 
     /**
@@ -396,18 +396,18 @@ export class JRC {
     })
 
     static shapeStartTrackingEveryMouseMovementComment = () => lm({
-    "de": `Sorgt dafür, dass ab jetzt JEDE Bewegung des Mauszeigers (auch wenn sich dieser außerhalb des Objekts befindet) ein MouseMove-Ereignis für dieses Objekt auslöst. -> Praktisch zur Umsetzung des "Ziehens" von Objekten mit der Maus!`,
-    "en": `Makes the object react to mouse move events even if it doesn't contain the mouse pointer. Hint: use this method to create drag/drop-functionality.`,
+        "de": `Sorgt dafür, dass ab jetzt JEDE Bewegung des Mauszeigers (auch wenn sich dieser außerhalb des Objekts befindet) ein MouseMove-Ereignis für dieses Objekt auslöst. -> Praktisch zur Umsetzung des "Ziehens" von Objekten mit der Maus!`,
+        "en": `Makes the object react to mouse move events even if it doesn't contain the mouse pointer. Hint: use this method to create drag/drop-functionality.`,
     })
 
     static shapeCopyComment = () => lm({
-    "de": `Erstellt eine Kopie des Grafikobjekts und gibt sie zurück.`,
-    "en": `Creates and returns a copy of this object.`,
+        "de": `Erstellt eine Kopie des Grafikobjekts und gibt sie zurück.`,
+        "en": `Creates and returns a copy of this object.`,
     })
 
     static shapeStopTrackingEveryMouseMovementComment = () => lm({
-    "de": `Sorgt dafür, dass ab jetzt nur noch dann Bewegungen des Mauszeigers ein MouseMove-Ereignis für dieses Objekt auslösen, wenn sich der Mauszeiger über dem Objekt befindet. -> Praktisch zur Umsetzung des "Ziehens" von Objekten mit der Maus!`,
-    "en": `Makes the object react to mouse move events only if it contains the mouse pointer. Hint: use this method to create drag/drop-functionality.`,
+        "de": `Sorgt dafür, dass ab jetzt nur noch dann Bewegungen des Mauszeigers ein MouseMove-Ereignis für dieses Objekt auslösen, wenn sich der Mauszeiger über dem Objekt befindet. -> Praktisch zur Umsetzung des "Ziehens" von Objekten mit der Maus!`,
+        "en": `Makes the object react to mouse move events only if it contains the mouse pointer. Hint: use this method to create drag/drop-functionality.`,
     })
 
     static shapeOnMouseEnterComment = () => lm({
@@ -466,23 +466,23 @@ export class JRC {
     })
 
     static shapeDirectionRelativeToComment = () => lm({
-    "de": `Gibt die Richtung (top, right, bottom oder left) zurück, in der das graphische Objekt relativ zum übergebenen graphischen Objekt steht.`,
-    "en": `Returns direction (top, right, bottom, left) of this shape's position relative to the other shape's position.`,
+        "de": `Gibt die Richtung (top, right, bottom oder left) zurück, in der das graphische Objekt relativ zum übergebenen graphischen Objekt steht.`,
+        "en": `Returns direction (top, right, bottom, left) of this shape's position relative to the other shape's position.`,
     })
 
     static shapeAlreadyDestroyedError = () => lm({
-    "de": `Das im Parameter übergebene Shape wurde mit der Methode destroy() bereits zerstört.`,
-    "en": `Shape given in parameter is already destroyed.`,
+        "de": `Das im Parameter übergebene Shape wurde mit der Methode destroy() bereits zerstört.`,
+        "en": `Shape given in parameter is already destroyed.`,
     })
 
     static shapeNullError = () => lm({
-    "de": `Das im Parameter übergebene Shape hat den Wert null.`,
-    "en": `Shape given in parameter has value null.`,
+        "de": `Das im Parameter übergebene Shape hat den Wert null.`,
+        "en": `Shape given in parameter has value null.`,
     })
 
     static shapeMoveBackFromComment = () => lm({
-    "de": `Rückt das Objekt entlang der letzten durch Aufruf der Methode move() vorgegebenen Richtung zurück, bis es das übergebene Objekt gerade noch (keepColliding == true) bzw. gerade nicht mehr (keepColliding == false) berührt.`,
-    "en": `Moves the object back along the last direction specified by calls to method move() until it just (keepColliding == true) or no longer touches the passed object (keepColliding == false).`,
+        "de": `Rückt das Objekt entlang der letzten durch Aufruf der Methode move() vorgegebenen Richtung zurück, bis es das übergebene Objekt gerade noch (keepColliding == true) bzw. gerade nicht mehr (keepColliding == false) berührt.`,
+        "en": `Moves the object back along the last direction specified by calls to method move() until it just (keepColliding == true) or no longer touches the passed object (keepColliding == false).`,
     })
 
     static shapeForwardComment = () => lm({
@@ -511,8 +511,8 @@ export class JRC {
     })
 
     static shapeScaleFactorComment = () => lm({
-    "de": `Streckungsfaktor des Shapes`,
-    "en": `Scale factor of this Shape object`,
+        "de": `Streckungsfaktor des Shapes`,
+        "en": `Scale factor of this Shape object`,
     })
 
     static shapeContainsPointComment = () => lm({
@@ -571,23 +571,23 @@ export class JRC {
     })
 
     static shapeGetCollidingShapesComment = () => lm({
-    "de": `Gibt alle Elemente der Group zurück, die mit diesem graphischen Objekt kollidieren.`,
-    "en": `Returns each element of given Group whicht collide with this object.`,
+        "de": `Gibt alle Elemente der Group zurück, die mit diesem graphischen Objekt kollidieren.`,
+        "en": `Returns each element of given Group whicht collide with this object.`,
     })
 
     static shapeBringToFrontComment = () => lm({
-    "de": `Setzt das Grafikobjekt vor alle anderen innerhalb der Gruppe.`,
-    "en": `Displays this object in front of all others inside the same group.`,
+        "de": `Setzt das Grafikobjekt vor alle anderen innerhalb der Gruppe.`,
+        "en": `Displays this object in front of all others inside the same group.`,
     })
 
     static shapeSendToBackComment = () => lm({
-    "de": `Setzt das Grafikobjekt hinter alle anderen innerhalb der Gruppe.`,
-    "en": `Displays this object behind all others inside the same group.`,
+        "de": `Setzt das Grafikobjekt hinter alle anderen innerhalb der Gruppe.`,
+        "en": `Displays this object behind all others inside the same group.`,
     })
 
     static shapeTintComment = () => lm({
-    "de": `Überzieht das Grafikobjekt mit der angegebenen Farbe. Diese Methode wirkt nur bei denjenigen Grafikobjekten, die die Methode tint unterstützen.`,
-    "en": `Sets tint color of this object.`,
+        "de": `Überzieht das Grafikobjekt mit der angegebenen Farbe. Diese Methode wirkt nur bei denjenigen Grafikobjekten, die die Methode tint unterstützen.`,
+        "en": `Sets tint color of this object.`,
     })
 
     /**
@@ -610,8 +610,8 @@ export class JRC {
     })
 
     static fsColorIsNullException = () => lm({
-    "de": `Die angegebene Farbe ist null.`,
-    "en": `Color is null.`,
+        "de": `Die angegebene Farbe ist null.`,
+        "en": `Color is null.`,
     })
 
     static fsSetFillColorCommentIntDouble = () => lm({
@@ -748,50 +748,50 @@ export class JRC {
     })
 
     static groupRenderAsStaticBitmapComment = () => lm({
-    "de": `Erstellt eine Bitmap (Textur) und zeichnet alle in der Gruppe enthaltenen Elemente darauf. Zeichnet ab diesem Zeitpunkt statt der enthaltenen Elemente nur noch die Bitmap (=> schneller!). Alle enthaltenen Elemente werden bei dieser Operation zerstört.`,
-    "en": `Creates a bitmap (texture) and draws all elements onto it. Then it uses this bitmap to draw to screen instead of the elements (=> faster!). All elements are destroyed afterwards.`,
+        "de": `Erstellt eine Bitmap (Textur) und zeichnet alle in der Gruppe enthaltenen Elemente darauf. Zeichnet ab diesem Zeitpunkt statt der enthaltenen Elemente nur noch die Bitmap (=> schneller!). Alle enthaltenen Elemente werden bei dieser Operation zerstört.`,
+        "en": `Creates a bitmap (texture) and draws all elements onto it. Then it uses this bitmap to draw to screen instead of the elements (=> faster!). All elements are destroyed afterwards.`,
     })
 
     static groupCopyComment = () => lm({
-    "de": `Erstellt eine Kopie dieser Gruppe inclusive Kopien aller ihrer Elemente.`,
-    "en": `Creates a copy of this group containing copies of it's elements.`,
+        "de": `Erstellt eine Kopie dieser Gruppe inclusive Kopien aller ihrer Elemente.`,
+        "en": `Creates a copy of this group containing copies of it's elements.`,
     })
 
     static groupGetCollidingShapesComment = () => lm({
-    "de": `Gibt die Elemente der Gruppe zurück, die mit dem übergebenen Shape kollidieren.`,
-    "en": `Returns all elements of this group which collide with given Shape.`,
+        "de": `Gibt die Elemente der Gruppe zurück, die mit dem übergebenen Shape kollidieren.`,
+        "en": `Returns all elements of this group which collide with given Shape.`,
     })
 
     static groupGetCollisionPairsComment = () => lm({
-    "de": 'Überprüft, welche Objekte der Gruppe mit welchen der anderen kollidieren.' +
+        "de": 'Überprüft, welche Objekte der Gruppe mit welchen der anderen kollidieren.' +
             ' Gibt für jede Kollision ein Collisionpair-Objekt zurück, das die beiden kollidierenden Objekte enthält.' +
-        ' Falls maxOneCollisionPerShape == true ist jedes Objekt dabei aber nur in max. einem Collisionpair-Objekt enthalten.',
-    "en": `Checks which elements of this group collide with elements of the other one. For each detected collision ` + 
-          `it returns a Collisionpair-object that contains both elements.` + 
-          ` If maxOneCollisionPerShape == true then no shape of this group is contained two or more of the returned collisionpair-objects.`,
+            ' Falls maxOneCollisionPerShape == true ist jedes Objekt dabei aber nur in max. einem Collisionpair-Objekt enthalten.',
+        "en": `Checks which elements of this group collide with elements of the other one. For each detected collision ` +
+            `it returns a Collisionpair-object that contains both elements.` +
+            ` If maxOneCollisionPerShape == true then no shape of this group is contained two or more of the returned collisionpair-objects.`,
     })
 
     /**
      * class CollisionPair
      */
     static collisionPairClassComment = () => lm({
-    "de": `Speichert die Referenzen auf zwei Figuren, die gerade kollidiert sind. Diese Klasse von den Kollisionsmethden der Klasse Group benutzt.`,
-    "en": `Saves pointers to two graphical objects which have collided. This class is used by Group.getCollisionPairs(Group otherGroup).`,
+        "de": `Speichert die Referenzen auf zwei Figuren, die gerade kollidiert sind. Diese Klasse von den Kollisionsmethden der Klasse Group benutzt.`,
+        "en": `Saves pointers to two graphical objects which have collided. This class is used by Group.getCollisionPairs(Group otherGroup).`,
     })
 
     static collisionPairShapeAComment = () => lm({
-    "de": `Die erste der beiden kollidierenden Figuren. Sie gehört zu group1 des Methodenaufrufs group1.getCollisionPairs(group2).`,
-    "en": `First colliding Shape. It belongs to group1 of method call group1.getCollisionPairs(group2).`,
+        "de": `Die erste der beiden kollidierenden Figuren. Sie gehört zu group1 des Methodenaufrufs group1.getCollisionPairs(group2).`,
+        "en": `First colliding Shape. It belongs to group1 of method call group1.getCollisionPairs(group2).`,
     })
 
     static collisionPairShapeBComment = () => lm({
-    "de": `Die zweite der beiden kollidierenden Figuren. Sie gehört zu group2 des Methodenaufrufs group1.getCollisionPairs(group2).`,
-    "en": `Second colliding Shape. It belongs to group2 of method call group1.getCollisionPairs(group2).`,
+        "de": `Die zweite der beiden kollidierenden Figuren. Sie gehört zu group2 des Methodenaufrufs group1.getCollisionPairs(group2).`,
+        "en": `Second colliding Shape. It belongs to group2 of method call group1.getCollisionPairs(group2).`,
     })
 
     static collisionPairConstructorComment = () => lm({
-    "de": `Erzeugt ein paar zweier Shape-objekte.`,
-    "en": `Creates a tuple of two shapes.`,
+        "de": `Erzeugt ein paar zweier Shape-objekte.`,
+        "en": `Creates a tuple of two shapes.`,
     })
 
 
@@ -4504,78 +4504,78 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
     })
 
     static WebSocketOpenComment = () => lm({
-    "de": `Startet die Verbindung mit dem Server. Den SessionCode kannst Du frei wählen. Mit allen anderen Clients, die eine Verbindung mit demselben SessionCode aufbauen, kannst Du anschließend Daten austauschen. Auch der Nickname ist frei wählbar. Er ist für alle anderen Clients sichtbar.`,
-    "en": `Starts the connection to the server. You can freely choose the session code. You can then exchange data with all other clients that establish a connection with the same session code. The nickname can also be freely chosen. It is visible to all other clients.`,
+        "de": `Startet die Verbindung mit dem Server. Den SessionCode kannst Du frei wählen. Mit allen anderen Clients, die eine Verbindung mit demselben SessionCode aufbauen, kannst Du anschließend Daten austauschen. Auch der Nickname ist frei wählbar. Er ist für alle anderen Clients sichtbar.`,
+        "en": `Starts the connection to the server. You can freely choose the session code. You can then exchange data with all other clients that establish a connection with the same session code. The nickname can also be freely chosen. It is visible to all other clients.`,
     })
 
     static WebSocketSendToAllComment = () => lm({
-    "de": `Sendet Daten (message) an alle anderen Clients. Den messageType kannst Du frei wählen. Die empfangenden Clients bekommen ihn zusammen mit den Daten übermittelt. Tipp: Du kannst auch Objekte senden, musst sie dazu aber vorher serialisieren, d.h. mithilfe der Methode toJson in eine Zeichenkette verwandeln.`,
-    "en": `Sends data (message) to all other clients. You can freely choose the message type. The receiving clients receive it together with the data. Tip: You can also send objects, but you have to serialize them first, i.e. convert them into a string using the toJson method.`,
+        "de": `Sendet Daten (message) an alle anderen Clients. Den messageType kannst Du frei wählen. Die empfangenden Clients bekommen ihn zusammen mit den Daten übermittelt. Tipp: Du kannst auch Objekte senden, musst sie dazu aber vorher serialisieren, d.h. mithilfe der Methode toJson in eine Zeichenkette verwandeln.`,
+        "en": `Sends data (message) to all other clients. You can freely choose the message type. The receiving clients receive it together with the data. Tip: You can also send objects, but you have to serialize them first, i.e. convert them into a string using the toJson method.`,
     })
 
     static WebSocketFindClientsComment = () => lm({
-    "de": `Sucht die übergebene Anzahl von "kontaktbereiten" Clients, d.h. solchen Clients, die exakt dieselbe Suchanfrage abgegeben haben. Findet der Server die Clients, so ruft er bei allen beteiligten Clients onClientsFound auf.`,
-    "en": `Searches for the number of "ready to contact" clients, i.e. those clients that have submitted exactly the same search query. If the server finds the clients, it calls onClientsFound for all clients involved.`,
+        "de": `Sucht die übergebene Anzahl von "kontaktbereiten" Clients, d.h. solchen Clients, die exakt dieselbe Suchanfrage abgegeben haben. Findet der Server die Clients, so ruft er bei allen beteiligten Clients onClientsFound auf.`,
+        "en": `Searches for the number of "ready to contact" clients, i.e. those clients that have submitted exactly the same search query. If the server finds the clients, it calls onClientsFound for all clients involved.`,
     })
 
     static WebSocketFindClientsByNicknamesComment = () => lm({
-    "de": `Sucht die Clients mit den angegebenen Nicknames. Haben sie eine entsprechende Suchanfrage (d.h. dieselben Nicknames) abgegeben, so so ruft der Server bei allen beteiligten Clients onClientsFound auf.`,
-    "en": `Searches for the clients with the specified nicknames. If you have submitted a corresponding search query (i.e. the same nickname), the server calls onClientsFound for all clients involved.`,
+        "de": `Sucht die Clients mit den angegebenen Nicknames. Haben sie eine entsprechende Suchanfrage (d.h. dieselben Nicknames) abgegeben, so so ruft der Server bei allen beteiligten Clients onClientsFound auf.`,
+        "en": `Searches for the clients with the specified nicknames. If you have submitted a corresponding search query (i.e. the same nickname), the server calls onClientsFound for all clients involved.`,
     })
 
     static WebSocketFindClientComment = () => lm({
-    "de": `Sucht den Client mit dem angegebenen Nickname. Hat er eine entsprechende Suchanfrage (d.h. mit dem Nickname DIESES clients) abgegeben, so so ruft der Server bei beiden Clients onClientsFound auf.`,
-    "en": `Searches for the client with the specified nickname. If he has submitted a corresponding search query (i.e. with the nickname THIS client), the server calls onClientsFound for both clients.`,
+        "de": `Sucht den Client mit dem angegebenen Nickname. Hat er eine entsprechende Suchanfrage (d.h. mit dem Nickname DIESES clients) abgegeben, so so ruft der Server bei beiden Clients onClientsFound auf.`,
+        "en": `Searches for the client with the specified nickname. If he has submitted a corresponding search query (i.e. with the nickname THIS client), the server calls onClientsFound for both clients.`,
     })
 
     static WebSocketCloseComment = () => lm({
-    "de": `Beendet die Verbindung. Bei allen anderen Clients, die sich mit derselben sessionId verbunden haben, wird daraufhin die Methode onOtherClientDisconnected aufgerufen.`,
-    "en": `Terminates the connection. The onOtherClientDisconnected method is then called for all other clients that have connected with the same sessionId.`,
+        "de": `Beendet die Verbindung. Bei allen anderen Clients, die sich mit derselben sessionId verbunden haben, wird daraufhin die Methode onOtherClientDisconnected aufgerufen.`,
+        "en": `Terminates the connection. The onOtherClientDisconnected method is then called for all other clients that have connected with the same sessionId.`,
     })
 
     static WebSocketGetOtherClientsComment = () => lm({
-    "de": `Gibt alle bisher bei der selben Session angemeldeten Clients zurück.`,
-    "en": `Returns an Array of all clients connected to the same session.`,
+        "de": `Gibt alle bisher bei der selben Session angemeldeten Clients zurück.`,
+        "en": `Returns an Array of all clients connected to the same session.`,
     })
 
     static WebSocketOnOpenComment = () => lm({
-    "de": `Wird aufgerufen, sobald die Verbindung mit dem Server zustandegekommen ist.`,
-    "en": `Is called as soon as the connection to the server has been established.`,
+        "de": `Wird aufgerufen, sobald die Verbindung mit dem Server zustandegekommen ist.`,
+        "en": `Is called as soon as the connection to the server has been established.`,
     })
 
     static WebSocketOnCloseComment = () => lm({
-    "de": `Wird aufgerufen, nachdem die Verbindung geschlossen wurde.`,
-    "en": `This method is called after connection had been closed.`,
+        "de": `Wird aufgerufen, nachdem die Verbindung geschlossen wurde.`,
+        "en": `This method is called after connection had been closed.`,
     })
 
     static WebSocketOnMessageComment = () => lm({
-    "de": `Wird immer dann aufgerufen, wenn eine Nachricht eines anderen Clients empfangen wurde.`,
-    "en": `Called whenever a message from another client has been received.`,
+        "de": `Wird immer dann aufgerufen, wenn eine Nachricht eines anderen Clients empfangen wurde.`,
+        "en": `Called whenever a message from another client has been received.`,
     })
 
     static WebSocketOnOtherClientDisconnectedComment = () => lm({
-    "de": `Wird immer dann aufgerufen, wenn ein anderer Client unter Nutzung desselben sessionCodes die Verbindung mit dem Server beendet hat.`,
-    "en": `Is always called when another client using the same sessionCode has terminated the connection to the server.`,
+        "de": `Wird immer dann aufgerufen, wenn ein anderer Client unter Nutzung desselben sessionCodes die Verbindung mit dem Server beendet hat.`,
+        "en": `Is always called when another client using the same sessionCode has terminated the connection to the server.`,
     })
 
     static WebSocketOnOtherClientConnectedComment = () => lm({
-    "de": `Wird immer dann aufgerufen, wenn ein anderer Client unter Nutzung desselben sessionCodes die Verbindung mit dem Server öffnet.`,
-    "en": `Is always called when another client using the same sessionCode connects to the server.`,
+        "de": `Wird immer dann aufgerufen, wenn ein anderer Client unter Nutzung desselben sessionCodes die Verbindung mit dem Server öffnet.`,
+        "en": `Is always called when another client using the same sessionCode connects to the server.`,
     })
 
     static WebSocketOnClientsFoundComment = () => lm({
-    "de": `Wird aufgerufen, wenn die durch die Methoden findClient bzw. findClients zuvor gesuchten Clients gefunden wurden.`,
-    "en": `Called when the clients previously searched for by the findClient or findClients methods have been found.`,
+        "de": `Wird aufgerufen, wenn die durch die Methoden findClient bzw. findClients zuvor gesuchten Clients gefunden wurden.`,
+        "en": `Called when the clients previously searched for by the findClient or findClients methods have been found.`,
     })
 
     static WebSocketFunctionalityNotInEmbeddedModeException = () => lm({
-    "de": `Die Netzwerkfunktionalitäten stehen nur eingeloggten Nutzern in der Entwicklungsumgebung zur Verfügung und können daher leider hier nicht ausprobiert werden.`,
-    "en": `The network functionalities are only available to logged in users at www.online-ide.de and therefore unfortunately cannot be tried out here.`,
+        "de": `Die Netzwerkfunktionalitäten stehen nur eingeloggten Nutzern in der Entwicklungsumgebung zur Verfügung und können daher leider hier nicht ausprobiert werden.`,
+        "en": `The network functionalities are only available to logged in users at www.online-ide.de and therefore unfortunately cannot be tried out here.`,
     })
 
     static WebSocketCommunicationError = () => lm({
-    "de": `Kommunikationsfehler beim WebSocket: `,
-    "en": `The WebSocket object had a communication error: `,
+        "de": `Kommunikationsfehler beim WebSocket: `,
+        "en": `The WebSocket object had a communication error: `,
     })
 
     /**
@@ -4901,8 +4901,8 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
      * GraphicsManager
      */
     static GraphicSystemNotAvailableError = (systemOld: string, systemNew: string) => lm({
-    "de": "Die Grafikausgabe ist schon in Gebrauch durch " + systemOld + ", daher kann das Graphiksystem " + systemNew + " nicht gestartet werden.",
-    "en": "Graphic output is in use by " + systemOld + ", therefore it is not available for " + systemNew + ".",
+        "de": "Die Grafikausgabe ist schon in Gebrauch durch " + systemOld + ", daher kann das Graphiksystem " + systemNew + " nicht gestartet werden.",
+        "en": "Graphic output is in use by " + systemOld + ", therefore it is not available for " + systemNew + ".",
     })
 
 
@@ -4910,74 +4910,74 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
      * class DatabaseManager
      */
     static databaseManagerClassComment = () => lm({
-    "de": `Über die statische Methode DatabaseManager.getConnection(String code) kann die Verbindung zu einer Datenbank auf www.sql-ide.de aufgebaut werden.`,
-    "en": `A connection to a database on www.sql-ide.de can be established using the static method DatabaseManager.getConnection(String code).`,
+        "de": `Über die statische Methode DatabaseManager.getConnection(String code) kann die Verbindung zu einer Datenbank auf www.sql-ide.de aufgebaut werden.`,
+        "en": `A connection to a database on www.sql-ide.de can be established using the static method DatabaseManager.getConnection(String code).`,
     })
 
     static databaseManagerNotInEmbeddedVersionException = () => lm({
-    "de": `Verbindung zu einer Datenbank kann nur von www.online-ide.de aus aufgebaut werden.`,
-    "en": `You can reach databases at www.sql-ide.de only from the ide in www.online-ide.de.`,
+        "de": `Verbindung zu einer Datenbank kann nur von www.online-ide.de aus aufgebaut werden.`,
+        "en": `You can reach databases at www.sql-ide.de only from the ide in www.online-ide.de.`,
     })
 
     static databaseManagerGetConnectionComment = () => lm({
-    "de": `Baut eine Verbindung mit einer Datenbank auf www.sql-ide.de auf. Gibt ein Connection-Objekt zurück, das diese Verbindung repräsentiert.`,
-    "en": `Sets up a connection to a database on www.sql-ide.de. Returns a Connection object representing this connection.`,
+        "de": `Baut eine Verbindung mit einer Datenbank auf www.sql-ide.de auf. Gibt ein Connection-Objekt zurück, das diese Verbindung repräsentiert.`,
+        "en": `Sets up a connection to a database on www.sql-ide.de. Returns a Connection object representing this connection.`,
     })
 
     /**
      * class Connection
      */
     static connectionClassComment = () => lm({
-    "de": `Ein Connection-Objekt repräsentiert die Verbindung zu einer Datenbank auf www.sql-ide.de`,
-    "en": `A connection object represents the connection to a database on www.sql-ide.de`,
+        "de": `Ein Connection-Objekt repräsentiert die Verbindung zu einer Datenbank auf www.sql-ide.de`,
+        "en": `A connection object represents the connection to a database on www.sql-ide.de`,
     })
 
     static connectionCreateStatementComment = () => lm({
-    "de": `Erstellt ein Statement-Objekt, mit dem Statements zur Datenbank geschickt werden können.`,
-    "en": `Creates a Statement object that can be used to send statements to the database.`,
+        "de": `Erstellt ein Statement-Objekt, mit dem Statements zur Datenbank geschickt werden können.`,
+        "en": `Creates a Statement object that can be used to send statements to the database.`,
     })
 
     static connectionPrepareStatementComment = () => lm({
-    "de": `Erstellt ein PreparedStatement-Objekt, mit dem Anweisungen zur Datenbank geschickt werden können.`,
-    "en": `Creates a PreparedStatement object that can be used to send statements to the database.`,
+        "de": `Erstellt ein PreparedStatement-Objekt, mit dem Anweisungen zur Datenbank geschickt werden können.`,
+        "en": `Creates a PreparedStatement object that can be used to send statements to the database.`,
     })
 
     static connectionCloseComment = () => lm({
-    "de": `Schließt die Verbindung zur Datenbank.`,
-    "en": `Closes connection to the database.`,
+        "de": `Schließt die Verbindung zur Datenbank.`,
+        "en": `Closes connection to the database.`,
     })
 
     static connectionDatabaseConnectionError = () => lm({
-    "de": `Es besteht keine Verbindung zur Datenbank.`,
-    "en": `Connection to database lost.`,
+        "de": `Es besteht keine Verbindung zur Datenbank.`,
+        "en": `Connection to database lost.`,
     })
 
     /**
      * class Statement
      */
     static statementClassComment = () => lm({
-    "de": `Ein Statement-Objekt repräsentiert eine Anweisung an die Datenbank.`,
-    "en": `A Statement object represents a statement to the database.`,
+        "de": `Ein Statement-Objekt repräsentiert eine Anweisung an die Datenbank.`,
+        "en": `A Statement object represents a statement to the database.`,
     })
 
     static statementOnlySelectionStatementsWithQueryException = () => lm({
-    "de": `Mit der Methode executeQuery können nur select-Anweisungen ausgeführt werden. Benutze für datenverändernde Anweisungen die Methode executeUpdate.`,
-    "en": `The executeQuery method can only execute select statements. For data changing statements, use the executeUpdate method.`,
+        "de": `Mit der Methode executeQuery können nur select-Anweisungen ausgeführt werden. Benutze für datenverändernde Anweisungen die Methode executeUpdate.`,
+        "en": `The executeQuery method can only execute select statements. For data changing statements, use the executeUpdate method.`,
     })
 
     static statementExecuteQueryComment = () => lm({
-    "de": `Führt ein SQL-Statement aus, das eine selcet-Anweisung enthält.`,
-    "en": `Executes a SQL-statement containing a select-query.`,
+        "de": `Führt ein SQL-Statement aus, das eine selcet-Anweisung enthält.`,
+        "en": `Executes a SQL-statement containing a select-query.`,
     })
 
     static statementExecuteUpdateException = () => lm({
-    "de": `Mit der Methode executeUpdate können nur datenverändernde Anweisungen ausgeführt werden. Benutze für select-Anweisungen die Methode executeQuery.`,
-    "en": `Only statements that change data can be executed with the executeUpdate method. Use the executeQuery method for select statements.`,
+        "de": `Mit der Methode executeUpdate können nur datenverändernde Anweisungen ausgeführt werden. Benutze für select-Anweisungen die Methode executeQuery.`,
+        "en": `Only statements that change data can be executed with the executeUpdate method. Use the executeQuery method for select statements.`,
     })
 
     static statementExecuteUpdateComment = () => lm({
-    "de": `Führt ein SQL-Statement aus, das eine datenverändernde Anweisung enthält.`,
-    "en": `Executes a SQL-statement which manipulates data.`,
+        "de": `Führt ein SQL-Statement aus, das eine datenverändernde Anweisung enthält.`,
+        "en": `Executes a SQL-statement which manipulates data.`,
     })
 
     /**
@@ -4985,48 +4985,48 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
      */
 
     static resultSetClassComment = () => lm({
-    "de": `Ein ResultSet-Objekt speichert das Ergebnis einer Abfrage an die Datenbank.`,
-    "en": `A ResulSet object contains the result of a database query.`,
+        "de": `Ein ResultSet-Objekt speichert das Ergebnis einer Abfrage an die Datenbank.`,
+        "en": `A ResulSet object contains the result of a database query.`,
     })
 
     static resultSetNextComment = () => lm({
-    "de": `Bewegt den "Cursor" zum nächsten Datensatz und gibt genau dann true zurück, wenn noch ein Datensatz da ist.`,
-    "en": `Moves the "cursor" to the next record and returns true if there is another record.`,
+        "de": `Bewegt den "Cursor" zum nächsten Datensatz und gibt genau dann true zurück, wenn noch ein Datensatz da ist.`,
+        "en": `Moves the "cursor" to the next record and returns true if there is another record.`,
     })
 
     static resultSetSizeComment = () => lm({
-    "de": `Gibt die Anzahl der Zeilen der Ergebnistabelle zurück.`,
-    "en": `Returns number of rows of result table.`,
+        "de": `Gibt die Anzahl der Zeilen der Ergebnistabelle zurück.`,
+        "en": `Returns number of rows of result table.`,
     })
 
     static resultSetGetIndexComment = () => lm({
-    "de": `Gibt den Index zurück, auf dem der "Cursor" in der Liste der Zeilen der Ergebnistabelle steht. Vor dem ersten Aufruf von next() wird -1 zurückgegeben.`,
-    "en": `Returns the index where the "cursor" is located in the list of rows of the result table. -1 is returned before the first call to next().`,
+        "de": `Gibt den Index zurück, auf dem der "Cursor" in der Liste der Zeilen der Ergebnistabelle steht. Vor dem ersten Aufruf von next() wird -1 zurückgegeben.`,
+        "en": `Returns the index where the "cursor" is located in the list of rows of the result table. -1 is returned before the first call to next().`,
     })
 
     static resultSetWasNullComment = () => lm({
-    "de": `Gibt genau dann true zurück, wenn der zuletzt gelesene Wert null war.`,
-    "en": `Returns true if and only if the last value read was null.`,
+        "de": `Gibt genau dann true zurück, wenn der zuletzt gelesene Wert null war.`,
+        "en": `Returns true if and only if the last value read was null.`,
     })
 
     static resultSetGetByIndexComment = (type: string) => lm({
-    "de": `Gibt den Wert der Spalte mit dem angegebenen Spaltenindex als ${type} zurück.`,
-    "en": `Returns value of column with given index as ${type}.`,
+        "de": `Gibt den Wert der Spalte mit dem angegebenen Spaltenindex als ${type} zurück.`,
+        "en": `Returns value of column with given index as ${type}.`,
     })
 
     static resultSetGetByLabelComment = (type: string) => lm({
-    "de": `Gibt den Wert der Spalte mit dem angegebenen Spaltenlabel als ${type} zurück.`,
-    "en": `Returns value of column with given label as ${type}.`,
+        "de": `Gibt den Wert der Spalte mit dem angegebenen Spaltenlabel als ${type} zurück.`,
+        "en": `Returns value of column with given label as ${type}.`,
     })
 
     static resultHasNoColumnWithGivenIndexException = () => lm({
-    "de": `Die Ergebnistabelle hat keine Spalte mit dem angegebenen Index.`,
-    "en": `Resultset-table has no column with given index.`,
+        "de": `Die Ergebnistabelle hat keine Spalte mit dem angegebenen Index.`,
+        "en": `Resultset-table has no column with given index.`,
     })
 
     static cursorAfterLastRecordException = () => lm({
-    "de": `Der Cursor befindet sich hinter dem letzten Datensatz der Ergebnistabelle.`,
-    "en": `Cursor is located after last record of resultset table.`,
+        "de": `Der Cursor befindet sich hinter dem letzten Datensatz der Ergebnistabelle.`,
+        "en": `Cursor is located after last record of resultset table.`,
     })
 
 
@@ -5034,26 +5034,242 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
      * class PreparedStatement
      */
     static preparedStatementClassComment = () => lm({
-    "de": `Ein PreparedStatement-Objekt repräsentiert eine parametrisierte Anweisung an die Datenbank.`,
-    "en": `A SQL statement is precompiled and stored in a PreparedStatement object. This object can then be used to efficiently execute this statement multiple times.`,
+        "de": `Ein PreparedStatement-Objekt repräsentiert eine parametrisierte Anweisung an die Datenbank.`,
+        "en": `A SQL statement is precompiled and stored in a PreparedStatement object. This object can then be used to efficiently execute this statement multiple times.`,
     })
 
     static preparedStatementSetComment = (type: string) => lm({
-    "de": `Ersetzt den Parameter mit dem angegebenen Index durch den ${type}-Wert.`,
-    "en": `Replaces parameter with given index with given ${type}-value.`,
+        "de": `Ersetzt den Parameter mit dem angegebenen Index durch den ${type}-Wert.`,
+        "en": `Replaces parameter with given index with given ${type}-value.`,
     })
 
     static preparedStatementParametersMissingException = () => lm({
-    "de": `Es gibt keine Parameter (mit ? besetzte Stellen) in dieser Anweisung.`,
-    "en": `There are no parameters (given as ?) in this statement.`,
+        "de": `Es gibt keine Parameter (mit ? besetzte Stellen) in dieser Anweisung.`,
+        "en": `There are no parameters (given as ?) in this statement.`,
     })
 
     static preparedStatementWrongParameterIndex = (count: number, actual: number) => lm({
-    "de": "Es gibt nur die Parameterpositionen 1 bis " + count + " in der SQL-Anweisung, keine Position " + actual + ".",
-    "en": `In this statement parameter positions are numbered ${1} ... ${count}. There's no parameter with position ${actual}.`,
+        "de": "Es gibt nur die Parameterpositionen 1 bis " + count + " in der SQL-Anweisung, keine Position " + actual + ".",
+        "en": `In this statement parameter positions are numbered ${1} ... ${count}. There's no parameter with position ${actual}.`,
+    })
+
+    /**
+     * class Robot
+     */
+    static robotClassComment = () => lm({
+        "de": `Robot Karol`,
+        "en": `Carol the robot`,
+    })
+
+    static robotEmptyConstructorComment = () => lm({
+        "de": `Instanziert ein neues Robot-Objekt. Der Roboter steht anfangs an der Stelle (1/1)'`,
+        "en": `Creates a new Robot object. Start position is at (1, 1).`,
+    })
+
+    static robotConstructorStartXStartY = () => lm({
+        "de": `Instanziert ein neues Robot-Objekt. Der Roboter wird anfangs an die Stelle (startX/startY) gesetzt.`,
+        "en": `Creates a new Robot object. Start position is at (startX, startY).`,
+    })
+
+    static robotConstructorStartXStartYWorldXWorldY = () => lm({
+        "de": `Instanziert ein neues Robot-Objekt. Der Roboter wird anfangs an die Stelle (startX/startY) gesetzt. WorldX und WorldY sind die Ausmaße der Welt.`,
+        "en": `Creates a new Robot object. Start position is at (startX, startY). WorldX and WorldY define the extent of the world.`,
+    })
+
+    static robotConstructorStartXStartYinitialWorld = () => lm({
+    "de": `Instanziert ein neues Robot-Objekt. Der Roboter wird anfangs an die Stelle (startX/startY) gesetzt. Wenn die RobotWorld noch nicht instanziert ist, wird sie auf Grundlage des Strings initialeWelt erstellt.`,
+    "en": `Creates a new Robot object. Start position is at (startX, startY). World is generated from string initialWorld.`,
+    })
+
+    static robotGetWelt = () => lm({
+    "de": `Gibt das RobotWorld-Objekt zurück`,
+    })
+
+    static robotRechtsDrehen = () => lm({
+    "de": `Dreht den Roboter um 90° nach rechts.`,
+    })
+
+    static robotLinksDrehen = () => lm({
+    "de": `Dreht den Roboter um 90° nach links.`,
+    })
+
+    static robotSchritt = () => lm({
+    "de": `Lässt den Roboter einen Schritt nach vorne gehen.`,
+    })
+
+    static robotSchrittAnzahl = () => lm({
+    "de": `Lässt den Roboter anzahl Schritte nach vorne gehen.`,
+    })
+
+    static robotHinlegen = () => lm({
+    "de": `Lässt den Roboter einen roten Ziegel vor sich hinlegen.`,
+    })
+
+    static robotMarkeLöschen = () => lm({
+    "de": `Lässt den Roboter eine Marke, die direkt unter ihm liegt, löschen.`,
+    })
+
+    static robotMarkeSetzen = () => lm({
+    "de": `Lässt den Roboter eine gelbe Marke direkt unter sich setzen.`,
+    })
+
+    static robotMarkeSetzenFarbe = () => lm({
+    "de": `Lässt den Roboter eine Marke der angegebenen Farbe direkt unter sich setzen.`,
+    })
+
+    static robotHinlegenAnzahl = () => lm({
+    "de": `Lässt den Roboter Anzahl rote Ziegel vor sich hinlegen.`,
+    })
+
+    static robotHinlegenFarbe = () => lm({
+    "de": `Lässt den Roboter einen Ziegel der angegebenen Farbe vor sich hinlegen.`,
+    })
+
+    static robotAufheben = () => lm({
+    "de": `Lässt den Roboter einen roten Ziegel vor sich aufheben.`,
+    })
+
+    static robotAufhebenAnzahl = () => lm({
+    "de": `Lässt den Roboter Anzahl rote Ziegel vor sich aufheben.`,
+    })
+
+    static robotWarten = () => lm({
+    "de": `Pausiert das Programm für die angegebene Zeit in ms.`,
+    })
+
+    static robotSchnell = () => lm({
+    "de": `Setzt die Ausführungsgeschwindigkeit auf 'maximal'.`,
+    })
+
+    static robotBeenden = () => lm({
+    "de": `Beendet das Programm`,
+    })
+
+    static robotIstWand = () => lm({
+    "de": `Gibt genau dann true zurück, wenn der Roboter direkt vor einer Wand steht.`,
+    })
+
+    static robotNichtIstWand = () => lm({
+    "de": `Gibt genau dann true zurück, wenn der Roboter nicht direkt vor einer Wand steht.`,
+    })
+
+    static robotIstZiegel = () => lm({
+    "de": `Gibt genau dann true zurück, wenn direkt vor dem Roboter mindestens ein Ziegel liegt.`,
+    })
+
+    static robotIstZiegelAnzahl = () => lm({
+    "de": `Gibt genau dann true zurück, wenn direkt vor dem Roboter genau Anzahl Ziegel liegen.`,
+    })
+
+    static robotIstZiegelFarbe = () => lm({
+    "de": `Gibt genau dann true zurück, wenn auf dem Ziegelstapel direkt vor dem Roboter mindestens ein Ziegel mit der angegebenen Farbe liegt.`,
+    })
+
+    static robotNichtIstZiegel = () => lm({
+    "de": `Gibt genau dann true zurück, wenn direkt vor dem Roboter kein Ziegel liegt.`,
+    })
+
+    static robotNichtIstZiegelAnzahl = () => lm({
+    "de": `Gibt genau dann true zurück, wenn direkt vor dem Roboter nicht genau Anzahl Ziegel liegen.`,
+    })
+
+    static robotNichtIstZiegelFarbe = () => lm({
+    "de": `Gibt genau dann true zurück, wenn auf dem Ziegelstapel direkt vor dem Roboter kein Ziegel mit der angegebenen Farbe liegt.`,
+    })
+
+    static robotIstMarke = () => lm({
+    "de": `Gibt genau dann true zurück, wenn unter dem Roboter eine Marke (egal in welcher Farbe) liegt.`,
+    })
+
+    static robotIstMarkeFarbe = () => lm({
+    "de": `Gibt genau dann true zurück, wenn unter dem Roboter eine Marke in der angegebenen Farbe liegt.`,
+    })
+
+    static robotNichtIstMarkeFarbe = () => lm({
+    "de": `Gibt genau dann true zurück, wenn unter dem Roboter keine Marke in der angegebenen Farbe liegt.`,
+    })
+
+    static robotNichtIstMarke = () => lm({
+    "de": `Gibt genau dann true zurück, wenn unter dem Roboter keine Marke (egal in welcher Farbe) liegt.`,
+    })
+
+    static robotIstNorden = () => lm({
+    "de": `Gibt genau dann true zurück, wenn der Roboter nach Norden blickt.`,
+    })
+
+    static robotIstWesten = () => lm({
+    "de": `Gibt genau dann true zurück, wenn der Roboter nach Westen blickt.`,
+    })
+
+    static robotIstSueden = () => lm({
+    "de": `Gibt genau dann true zurück, wenn der Roboter nach Süden blickt.`,
+    })
+
+    static robotIstOsten = () => lm({
+    "de": `Gibt genau dann true zurück, wenn der Roboter nach Osten blickt.`,
+    })
+
+    static robotIstLeer = () => lm({
+    "de": `Gibt genau dann true zurück, wenn der Roboter keinen Stein mit sich trägt.`,
+    })
+
+    static robotIstVoll = () => lm({
+    "de": `Gibt genau dann true zurück, wenn der Roboter die maximale Anzahl von Steinen mit sich trägt.`,
+    })
+
+    static robotNichtIstLeer = () => lm({
+    "de": `Gibt genau dann true zurück, wenn der Roboter mindestens einen Stein mit sich trägt.`,
+    })
+
+    static robotHatZiegel = () => lm({
+    "de": `Gibt genau dann true zurück, wenn der Roboter mindestens einen Stein mit sich trägt.`,
+    })
+
+    static robotHatZiegelAnzahl = () => lm({
+    "de": `Gibt genau dann true zurück, wenn der Roboter mindestens Anzahl Steine mit sich trägt.`,
+    })
+
+    static robotNichtIstVoll = () => lm({
+    "de": `Gibt genau dann true zurück, wenn der Roboter weniger als die maximale Anzahl von Steinen mit sich trägt.`,
+    })
+
+    static robotSetzeAnzahlSteine = () => lm({
+    "de": `Befüllt den Rucksack des Roboters mit genau Anzahl Steinen.`,
+    })
+
+    static robotSetzeRucksackGroesse = () => lm({
+    "de": `Gibt dem Roboter einen Rucksack, der maximal Anzahl Steine fasst.`,
     })
 
 
-}  
+    /**
+     * class RobotWorld
+     */
+    static robotWorldClassComment = () => lm({
+    "de": `Welt für Robot Karol`,
+    })    
+
+    static robotWorldConstructorWorldXWorldY = () => lm({
+    "de": `Instanziert eine neue Robot-Welt`,
+    })
+
+    static robotWorldConstructorInitialWorld = () => lm({
+    "de": `Instanziert eine neue Robot-Welt`,
+    })
+
+    static robotWorldSetzeMaximalHoehe = () => lm({
+    "de": `Ändert die maximale Höhe der Ziegelstapel.`,
+    })
+
+    static robotWorldSetzeZiegel = () => lm({
+    "de": `Setzt Anzahl Ziegel an der angegebenen Position mit der angegebenen Farbe. Die x- und y-Koordinaten beginnen bei 1.`,
+    })
+
+    static robotWorldSetzeMarke = () => lm({
+    "de": `Setzt einen Marker an der angegebenen Position mit der angegebenen Farbe. Die x- und y-Koordinaten beginnen bei 1.`,
+    })
+
+    
+}
 
 

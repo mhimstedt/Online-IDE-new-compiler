@@ -48,6 +48,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
     mouseManager!: MouseManager;
 
+    scene: THREE.Scene;
 
 
     _cj$_constructor_$World$(t: Thread, callback: CallbackParameter) {
@@ -76,7 +77,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         this.graphicsDiv.innerHTML = "";
         this.changeResolution(this.width, this.height);
 
-        const scene = new THREE.Scene();
+        this.scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, this.width/this.height, 0.1, 1000);
         // size of 1 pixel: see https://discourse.threejs.org/t/solved-how-do-we-size-something-using-screen-pixels/1177
 
@@ -90,12 +91,14 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         const geometry = new THREE.BoxGeometry(1, 1, 1);
         const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
         const cube = new THREE.Mesh(geometry, material);
-        scene.add(cube);
+        this.scene.add(cube);
+
+        cube.geometry.translate(2, 0, 0);
 
         camera.position.z = 5;
 
-        function animate() {
-            renderer.render(scene, camera);
+        let animate = () => {
+            renderer.render(this.scene, camera);
             cube.rotation.x += 0.01;
             cube.rotation.y += 0.01;
         }
