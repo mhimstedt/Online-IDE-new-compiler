@@ -190,7 +190,7 @@ export class StringClass extends ObjectClass implements IPrimitiveTypeWrapper {
     static isPrimitiveTypeWrapper: boolean = true;
 
     static __javaDeclarations: LibraryDeclarations = [
-        { type: "declaration", signature: "class String extends Object implements Comparable<String>", comment: JRC.stringClassComment },
+        { type: "declaration", signature: "final class String extends Object implements Comparable<String>", comment: JRC.stringClassComment },
         { type: "method", signature: "public String()", native: StringClass.prototype._emptyConstructor, comment: JRC.stringConstructorComment },
         { type: "method", signature: "public String(String original)", native: StringClass.prototype._constructor2, comment: JRC.stringConstructorComment2 },
         { type: "method", signature: "public final String toString()", native: StringClass.prototype._nToString, template: "§1", comment: JRC.objectToStringComment },

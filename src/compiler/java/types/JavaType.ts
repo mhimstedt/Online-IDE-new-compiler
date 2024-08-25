@@ -35,10 +35,20 @@ export abstract class JavaType extends BaseType {
 
     abstract toString(): string;
 
+    /**
+     * This is used to generate method identifiers in runtime classes. It yields identifier for
+     * every type except for JavaArrayType, where e.g. int[][] yields int_I_I
+     */
     getInternalName(): string {
         return this.identifier;
     }
 
+    /**
+     * This is used for the type cache in class TypeResolver. It yields type identifiers with paths
+     * and generics, e.g.
+     * A.B.C<ArrayList<D.E>>
+     * Types with identical absolute name have to be identical in every detail.
+     */
     abstract getAbsoluteName(): string;
 
 

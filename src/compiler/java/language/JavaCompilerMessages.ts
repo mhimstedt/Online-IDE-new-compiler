@@ -631,6 +631,11 @@ export class JCM {
         "en": `Type ${type} is not visible here.`
     })
 
+    static cantExtendString = () => le({
+    "de": `In der Online-IDE können aus Performancegründen von der Klasse String keine Unterklassen gebildet werden.`,
+    "en": `For performance reasons, the String class cannot be subclassed in the online IDE.`,
+    })
+
     /**
      * class JavaClass
      */

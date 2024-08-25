@@ -65,6 +65,14 @@ export class ASTNodeFactory {
         if (!startRange) startRange = this.parser.cct.range;
         
         let ret: ASTArrayTypeNode;
+
+        /**
+         * Store String[] always as string[] for performance reasons and to reduce memory footprint?
+         * It suffices to uncomment this: 
+         */
+        // if(arrayOf.kind == TokenType.baseType && (<ASTBaseTypeNode>arrayOf).identifiers[0].identifier == "String"){
+        //     (<ASTBaseTypeNode>arrayOf).identifiers[0].identifier = "string";
+        // }
         
         if (arrayOf.kind == TokenType.arrayType) {
             let atype = <ASTArrayTypeNode>arrayOf;
