@@ -34,7 +34,7 @@ export class LoadController {
         // elapsed time since last call ourselves:
         if(this.lastTickTime){
             let dt = t0 - this.lastTickTime;
-            if(dt < 100) timerIntervalInMs = dt;
+            if(dt < 100) timerIntervalInMs = Math.min(dt, 40); // Chrome warns if setInterval-Handler takes longer than 50 ms
         }
         this.lastTickTime = t0;
 
