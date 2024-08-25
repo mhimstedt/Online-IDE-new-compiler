@@ -423,8 +423,8 @@ export class TypeResolver {
         if (declNode.extends) {
             let extType = this.resolveTypeNode(declNode.extends, module);
 
-            if(extType.identifier == "String"){
-                this.pushError(JCM.cantExtendString(), declNode.extends.range, module, "error");
+            if(extType instanceof NonPrimitiveType && extType.isFinal){
+                this.pushError(JCM.cantExtendFinalClass(), declNode.extends.range, module, "error");
             }
 
             if (extType instanceof IJavaClass) {
