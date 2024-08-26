@@ -1,12 +1,11 @@
-import * as THREE from 'three';
 import { CallbackParameter } from "../../../../common/interpreter/CallbackParameter";
 import { Thread } from "../../../../common/interpreter/Thread";
 import { JRC } from "../../../language/JavaRuntimeLibraryComments";
 import { LibraryDeclarations } from "../../../module/libraries/DeclareType";
 import { NonPrimitiveType } from "../../../types/NonPrimitiveType";
 import { ObjectClass } from "../../system/javalang/ObjectClassStringClass";
-import { World3dClass } from "../3d/World3dClass";
 import { RobotCubeFactory } from "./RobotCubeFactory";
+import { RobotWorldClass } from './RobotWorldClass';
 
 export class RobotClass extends ObjectClass {
 
@@ -25,8 +24,8 @@ export class RobotClass extends ObjectClass {
 
     static type: NonPrimitiveType;
 
-    world3d!: World3dClass;
     robotCubeFactory: RobotCubeFactory;
+    robotWorld: RobotWorldClass;
 
     constructor(){
         super();
@@ -42,23 +41,27 @@ export class RobotClass extends ObjectClass {
 
     _jc$_constructor_$Robot$int$int$int$int(t: Thread, callback: CallbackParameter, startX: number, startY: number, 
         worldX: number, worldY: number) {
-        
-        this.world3d = new World3dClass();
+        t.s.push(this);
 
-        this.world3d._cj$_constructor_$World$(t, async () => {
+        this.robotWorld = t.scheduler.interpreter.retrieveObject("robotWorldClass");
 
-            this.robotCubeFactory = new RobotCubeFactory();
-            await this.robotCubeFactory.loadTextures();
+        if(!this.robotWorld){
+            new RobotWorldClass()._cj$_constructor_$RobotWorld$int$int(t, () => {
+                this.robotWorld = t.s.pop();
+                this.init(startX, startY);
+                if(callback) callback();
+                return;
+            }, worldX, worldY);    
+        } else {
+            this.init(startX, startY);
+            if(callback) callback();
+            return;
+        }
 
-            const geometry = new THREE.BoxGeometry(1, 1, 1);
-            const material = this.robotCubeFactory.material.get("grassblock");
-            const cube = new THREE.Mesh(geometry, material);
-            this.world3d.scene.add(cube);
-            cube.geometry.rotateY(45);
+    }
 
-
-        })        
-
+    private init(startX: number, startY: number){
+        // TODO!
     }
 
     _jc$_constructor_$Robot$int$int$string(t: Thread, callback: CallbackParameter, startX: number, startY: number, initialWorld: string){

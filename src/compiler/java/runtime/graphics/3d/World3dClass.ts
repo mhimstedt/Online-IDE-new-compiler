@@ -1,5 +1,7 @@
 
 import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
 import { DOM } from '../../../../../tools/DOM';
 import { CallbackParameter } from '../../../../common/interpreter/CallbackParameter';
 import { Interpreter } from '../../../../common/interpreter/Interpreter';
@@ -49,7 +51,8 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
     mouseManager!: MouseManager;
 
     scene: THREE.Scene;
-
+    renderer: THREE.WebGLRenderer;
+    camera: THREE.PerspectiveCamera;
 
     _cj$_constructor_$World$(t: Thread, callback: CallbackParameter) {
 
@@ -78,31 +81,32 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         this.changeResolution(this.width, this.height);
 
         this.scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, this.width/this.height, 0.1, 1000);
+        this.camera = new THREE.PerspectiveCamera(75, this.width/this.height, 0.1, 1000);
         // size of 1 pixel: see https://discourse.threejs.org/t/solved-how-do-we-size-something-using-screen-pixels/1177
 
-        const renderer = new THREE.WebGLRenderer();
-        renderer.setSize(this.width, this.height);
-        this.graphicsDiv.appendChild(renderer.domElement);
+        this.renderer = new THREE.WebGLRenderer();
+        this.renderer.setSize(this.width, this.height);
+        this.graphicsDiv.appendChild(this.renderer.domElement);
         
-        renderer.domElement.style.width = "100%";
-        renderer.domElement.style.height = "100%";
+        this.renderer.domElement.style.width = "100%";
+        this.renderer.domElement.style.height = "100%";
 
-        const geometry = new THREE.BoxGeometry(1, 1, 1);
-        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-        const cube = new THREE.Mesh(geometry, material);
-        this.scene.add(cube);
+        // const geometry = new THREE.BoxGeometry(1, 1, 1);
+        // const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        // const cube = new THREE.Mesh(geometry, material);
+        // this.scene.add(cube);
 
-        cube.geometry.translate(2, 0, 0);
+        // cube.geometry.translate(0, 2, 0);
 
-        camera.position.z = 5;
+        this.camera.position.z = 3;
+
 
         let animate = () => {
-            renderer.render(this.scene, camera);
-            cube.rotation.x += 0.01;
-            cube.rotation.y += 0.01;
+            this.renderer.render(this.scene, this.camera);
+            // cube.rotation.x += 0.01;
+            // cube.rotation.y += 0.01;
         }
-        renderer.setAnimationLoop(animate);
+        this.renderer.setAnimationLoop(animate);
 
         this.resizeObserver = new ResizeObserver(() => { 
             this.changeResolution(this.width, this.height); 

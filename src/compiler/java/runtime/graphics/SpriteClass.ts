@@ -300,8 +300,8 @@ export class SpriteClass extends ShapeClass {
 
     setTexture(spriteLibrary?: string, imageIndex?: number) {
 
-        if (spriteLibrary == this.spriteLibrary && imageIndex == this.imageIndex) return;
         if (spriteLibrary == null) spriteLibrary = this.spriteLibrary;
+        if (spriteLibrary == this.spriteLibrary && imageIndex == this.imageIndex) return;
 
         if (imageIndex == null) imageIndex = 0;
         this.imageIndex = imageIndex;
