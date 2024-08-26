@@ -46,6 +46,12 @@ export class RobotClass extends ObjectClass {
         this.robotWorld = t.scheduler.interpreter.retrieveObject("robotWorldClass");
 
         if(!this.robotWorld){
+
+            t.scheduler.interpreter.eventManager.once("stop", () => {
+                this.robotWorld = undefined;
+                t.scheduler.interpreter.deleteObject("robotWorldClass");
+            })
+
             new RobotWorldClass()._cj$_constructor_$RobotWorld$int$int(t, () => {
                 this.robotWorld = t.s.pop();
                 this.init(startX, startY);

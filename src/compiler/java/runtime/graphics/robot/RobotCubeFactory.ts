@@ -1,10 +1,8 @@
 import * as THREE from 'three';
-import grassblock from '/include/graphics/robot/grass3d.png';
-import { Thread } from '../../../../common/interpreter/Thread';
-import { World3dClass } from '../3d/World3dClass';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { RobotWorldClass } from './RobotWorldClass';
 import { TextureManager3d } from '../3d/TextureManager3d';
+import { World3dClass } from '../3d/World3dClass';
+import { RobotWorldClass } from './RobotWorldClass';
+import grassblock from '/include/graphics/robot/grass3d.png';
 
 type TextureData = {
     key: string,
@@ -13,11 +11,11 @@ type TextureData = {
 
 export class RobotCubeFactory {
 
-    textureDataList: TextureData[] = [
-        { key: "grassblock", path: grassblock }
-    ]
+    // textureDataList: TextureData[] = [
+    //     { key: "grassblock", path: grassblock }
+    // ]
 
-    materials: Map<string, THREE.Material> = new Map();
+    // materials: Map<string, THREE.Material> = new Map();
 
     textureManager3d: TextureManager3d = new TextureManager3d();
 
@@ -29,43 +27,43 @@ export class RobotCubeFactory {
     }
 
     async init() {
-        await this.loadTextures();
+        // await this.loadTextures();
         await this.textureManager3d.init(this.world3d.renderer);
     }
 
 
-    private async loadTextures() {
-        const loader = new THREE.TextureLoader();
+    // private async loadTextures() {
+    //     const loader = new THREE.TextureLoader();
 
-        let pathPraefix: string = "";
-        //@ts-ignore
-        if (window.javaOnlineDir != null) {
-            //@ts-ignore
-            pathPraefix = window.javaOnlineDir;
-        }
+    //     let pathPraefix: string = "";
+    //     //@ts-ignore
+    //     if (window.javaOnlineDir != null) {
+    //         //@ts-ignore
+    //         pathPraefix = window.javaOnlineDir;
+    //     }
 
-        if (pathPraefix.endsWith("/")) {
-            pathPraefix = pathPraefix.substring(0, pathPraefix.length - 1);
-        }
+    //     if (pathPraefix.endsWith("/")) {
+    //         pathPraefix = pathPraefix.substring(0, pathPraefix.length - 1);
+    //     }
 
-        for (let textureData of this.textureDataList) {
-            let texture: THREE.Texture;
-            try {
-                texture = await loader.loadAsync(pathPraefix + textureData.path);
-                texture.colorSpace = THREE.SRGBColorSpace;
-                texture.magFilter = THREE.NearestFilter;
+    //     for (let textureData of this.textureDataList) {
+    //         let texture: THREE.Texture;
+    //         try {
+    //             texture = await loader.loadAsync(pathPraefix + textureData.path);
+    //             texture.colorSpace = THREE.SRGBColorSpace;
+    //             texture.magFilter = THREE.NearestFilter;
 
-            } catch (ex) {
-                console.log(ex);
-            }
-            const material = new THREE.MeshLambertMaterial({
-                map: texture,
-                side: THREE.DoubleSide
+    //         } catch (ex) {
+    //             console.log(ex);
+    //         }
+    //         const material = new THREE.MeshLambertMaterial({
+    //             map: texture,
+    //             side: THREE.DoubleSide
 
-            });
-            this.materials.set(textureData.key, material);
-        }
-    }
+    //         });
+    //         this.materials.set(textureData.key, material);
+    //     }
+    // }
 
     private grassCubeGeometry: THREE.BoxGeometry;
     private getGrassCubeGeometry() {
