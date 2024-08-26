@@ -91,20 +91,11 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         this.renderer.domElement.style.width = "100%";
         this.renderer.domElement.style.height = "100%";
 
-        // const geometry = new THREE.BoxGeometry(1, 1, 1);
-        // const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-        // const cube = new THREE.Mesh(geometry, material);
-        // this.scene.add(cube);
-
-        // cube.geometry.translate(0, 2, 0);
-
         this.camera.position.z = 3;
 
 
         let animate = () => {
             this.renderer.render(this.scene, this.camera);
-            // cube.rotation.x += 0.01;
-            // cube.rotation.y += 0.01;
         }
         this.renderer.setAnimationLoop(animate);
 

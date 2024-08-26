@@ -28,7 +28,6 @@ export class TextureManager3d {
         this.texture = await loader.loadAsync(pathPraefix + `${spritesheetpng}`);
         this.texture.colorSpace = THREE.SRGBColorSpace;
         this.texture.magFilter = THREE.NearestFilter;
-        this.texture.colorSpace = THREE.SRGBColorSpace;
 
         this.spritesheetData = await (await fetch(pathPraefix + `${spritesheetjson}`)).json();
 
@@ -40,7 +39,8 @@ export class TextureManager3d {
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.texture.image);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     }
 
     getTexture(spritesheet: string, index: number) {
@@ -50,11 +50,14 @@ export class TextureManager3d {
 
         let image = this.texture.image;
 
-        let t = new THREE.Texture(image);
+        let t = new THREE.Texture();
+        t.colorSpace = THREE.LinearSRGBColorSpace;
+        t.magFilter = THREE.NearestFilter;
+        
         t.repeat.set(data.w / image.width, data.h / image.height);
         t.offset.x = data.x / image.width;
         t.offset.y = 1 - data.h / image.height - data.y / image.height;
-
+        
         let textureProperties = this.renderer.properties.get(t);
         textureProperties.__webglTexture = this.webGLTexture;
         textureProperties.__webglInit = true;

@@ -4,6 +4,7 @@ import { Thread } from '../../../../common/interpreter/Thread';
 import { World3dClass } from '../3d/World3dClass';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { RobotWorldClass } from './RobotWorldClass';
+import { TextureManager3d } from '../3d/TextureManager3d';
 
 type TextureData = {
     key: string,
@@ -18,6 +19,8 @@ export class RobotCubeFactory {
 
     materials: Map<string, THREE.Material> = new Map();
 
+    textureManager3d: TextureManager3d = new TextureManager3d();
+
     world3d: World3dClass;
 
 
@@ -27,7 +30,7 @@ export class RobotCubeFactory {
 
     async init() {
         await this.loadTextures();
-
+        await this.textureManager3d.init(this.world3d.renderer);
     }
 
 
@@ -51,7 +54,7 @@ export class RobotCubeFactory {
                 texture = await loader.loadAsync(pathPraefix + textureData.path);
                 texture.colorSpace = THREE.SRGBColorSpace;
                 texture.magFilter = THREE.NearestFilter;
-                texture.colorSpace = THREE.SRGBColorSpace;
+
             } catch (ex) {
                 console.log(ex);
             }
@@ -85,7 +88,14 @@ export class RobotCubeFactory {
     }
 
     getGrassCube() {
-        const material = this.materials.get("grassblock");
+        // const material = this.materials.get("grassblock");
+
+        const material = new THREE.MeshLambertMaterial({
+            map: this.textureManager3d.getTexture("robot", 0),
+            side: THREE.DoubleSide
+        });
+
+
         const cube = new THREE.Mesh(this.getGrassCubeGeometry(), material);
         this.world3d.scene.add(cube);
         return cube;
