@@ -71,15 +71,15 @@ export class RobotCubeFactory {
             this.grassCubeGeometry = new THREE.BoxGeometry(1, 1, 1);
         
             let uvCoordinates = [
-                [1, 1], [2, 1], [1, 0], [2, 0],  // right side
-                [1, 1], [2, 1], [1, 0], [2, 0],  // left side
-                [2, 1], [3, 1], [2, 0], [3, 0], // top
-                [0, 1], [1, 1], [0, 0], [1, 0], // bottom
-                [1, 1], [2, 1], [1, 0], [2, 0],  // front
-                [1, 1], [2, 1], [1, 0], [2, 0],  // back
+                [2, 2], [3, 2], [2, 1], [3, 1],  // right side
+                [0, 2], [1, 2], [0, 1], [1, 1],  // left side
+                [1, 3], [2, 3], [1, 2], [2, 2], // top
+                [1, 1], [2, 1], [1, 0], [2, 0], // bottom
+                [1, 2], [2, 2], [1, 1], [2, 1],  // front
+                [3, 2], [4, 2], [3, 1], [4, 1],  // back
             ];
             for (let i = 0; i < uvCoordinates.length; i++) {
-                this.grassCubeGeometry.attributes.uv.setXY(i, uvCoordinates[i][0] / 3, uvCoordinates[i][1])
+                this.grassCubeGeometry.attributes.uv.setXY(i, uvCoordinates[i][0] / 4, uvCoordinates[i][1]/3)
             }
         }
         return this.grassCubeGeometry.clone();

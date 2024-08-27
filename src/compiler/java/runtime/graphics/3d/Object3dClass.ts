@@ -4,11 +4,12 @@ import { JRC } from "../../../language/JavaRuntimeLibraryComments";
 import { LibraryDeclarations } from "../../../module/libraries/DeclareType";
 import { NonPrimitiveType } from "../../../types/NonPrimitiveType";
 import { ObjectClass } from "../../system/javalang/ObjectClassStringClass";
+import { ActorClass } from "../ActorClass";
 import { Vector3Class } from "./Vector3Class";
 import { World3dClass } from "./World3dClass";
 import * as Three from 'three';
 
-export abstract class Object3dClass extends ObjectClass {
+export abstract class Object3dClass extends ActorClass {
 
     static __javaDeclarations: LibraryDeclarations = [
         { type: "declaration", signature: "abstract class Object3d extends Object", comment: JRC.Object3dClassComment },
@@ -24,7 +25,9 @@ export abstract class Object3dClass extends ObjectClass {
 
 
     _cj$_constructor_$Object3d$(t: Thread, callback: CallbackParameter){
-        super._constructor();
+
+        this._cj$_constructor_$Actor$(t, undefined);
+
         this.world3d = t.scheduler.interpreter.retrieveObject("World3dClass");
         if(!this.world3d){
             this.world3d = new World3dClass();

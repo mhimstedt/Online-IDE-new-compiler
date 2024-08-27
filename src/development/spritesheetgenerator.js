@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import Spritesmith from 'spritesmith';
-import {SpriteLibrary} from '../client/runtimelibrary/graphics/SpriteLibrary.js';
+import {SpriteLibrary} from '../compiler/java/runtime/graphics/SpriteLibrary.js';
 import * as marginExtruder from './marginExtruder.js';
 
 // Load in dependencies
@@ -56,7 +56,7 @@ for (let sle of SpriteLibrary) {
 
 Spritesmith.run({
     src: src,
-    padding: 2,
+    padding: 3,
     //   algorithm: 'alt-diagonal'
 }, function handleResult(err, result) {
     // If there was an error, throw it
