@@ -20,12 +20,25 @@ export abstract class Object3dClass extends ObjectClass {
     ];
 
     static type: NonPrimitiveType;
-    world3d!:World3dClass; 
+    world3d!:World3dClass;
+
 
     _cj$_constructor_$Object3d$(t: Thread, callback: CallbackParameter){
         super._constructor();
-        this.world3d = t.scheduler.interpreter.retrieveObject("World3dClass")
+        this.world3d = t.scheduler.interpreter.retrieveObject("World3dClass");
+        if(!this.world3d){
+            this.world3d = new World3dClass();
+            this.world3d._cj$_constructor_$World$(t, () => {
+                if(callback) callback();
+            })
+        } else {
+            if(callback) callback();
+        }
     }    
+
+    private constructorHelper(){
+
+    }
 
     abstract move(x:number,y:number,z:number):void;
     abstract moveTo(x:number,y:number,z:number):void;
