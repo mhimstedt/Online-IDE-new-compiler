@@ -65,7 +65,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
             t.s.push(existingWorld);
             return existingWorld;
         }
-        
+
         interpreter.storeObject("World3dClass", this);
 
         this.actorManager = new ActorManager(interpreter);
@@ -81,13 +81,13 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         this.changeResolution(this.width, this.height);
 
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(75, this.width/this.height, 0.1, 1000);
+        this.camera = new THREE.PerspectiveCamera(75, this.width / this.height, 0.1, 1000);
         // size of 1 pixel: see https://discourse.threejs.org/t/solved-how-do-we-size-something-using-screen-pixels/1177
 
         this.renderer = new THREE.WebGLRenderer();
         this.renderer.setSize(this.width, this.height);
         this.graphicsDiv.appendChild(this.renderer.domElement);
-        
+
         this.renderer.domElement.style.width = "100%";
         this.renderer.domElement.style.height = "100%";
 
@@ -99,10 +99,19 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         }
         this.renderer.setAnimationLoop(animate);
 
-        this.resizeObserver = new ResizeObserver(() => { 
-            this.changeResolution(this.width, this.height); 
+        this.resizeObserver = new ResizeObserver(() => {
+            this.changeResolution(this.width, this.height);
         });
+
         this.resizeObserver.observe(this.graphicsDiv!.parentElement!.parentElement!);
+
+        new OrbitControls(this.camera, this.renderer.domElement);
+
+        const light = new THREE.DirectionalLight(0xffffff, 1.5);
+        light.position.set(5, 5, 5);
+        this.scene.add(light);
+
+        this.scene.background = new THREE.Color(120, 120, 120);
 
         // interpreter.isExternalTimer = true;
         this.addCallbacks(interpreter);

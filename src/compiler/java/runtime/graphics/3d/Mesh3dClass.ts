@@ -10,11 +10,11 @@ export class Mesh3dClass extends Object3dClass {
 
     static __javaDeclarations: LibraryDeclarations = [
         { type: "declaration", signature: "class Mesh3d extends Object3d", comment: JRC.Mesh3dClassComment },
-        { type: "method", signature: "Mesh3dClass()", java: Mesh3dClass.prototype._cj$_constructor_$Mesh3d$ },
-        { type: "method", signature: "abstract move(double x,double y,double z)"},
-        { type: "method", signature: "final move(Vector3 v)", native:Mesh3dClass.prototype.vmove},
-        { type: "method", signature: "abstract moveTo(double x,double y,double z)"},
-        { type: "method", signature: "final moveTo(Vector3 p)", native:Mesh3dClass.prototype.vmoveTo},
+        { type: "method", signature: "Mesh3d()", java: Mesh3dClass.prototype._cj$_constructor_$Mesh3d$ },
+        { type: "method", signature: "abstract void move(double x,double y,double z)"},
+        { type: "method", signature: "final void move(Vector3 v)", native:Mesh3dClass.prototype.vmove},
+        { type: "method", signature: "abstract void moveTo(double x,double y,double z)"},
+        { type: "method", signature: "final void moveTo(Vector3 p)", native:Mesh3dClass.prototype.vmoveTo},
     ];
 
     static type: NonPrimitiveType;
@@ -33,4 +33,7 @@ export class Mesh3dClass extends Object3dClass {
         
     }
     
+    getBasicMaterial(): THREE.Material {
+        return new THREE.MeshStandardMaterial( {color: 0x00ff00, roughness: 0.7, metalness: 0.8, emissive: 0x104010 } ); 
+    }
 }

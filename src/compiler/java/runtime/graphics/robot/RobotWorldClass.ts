@@ -43,7 +43,7 @@ export class RobotWorldClass extends ObjectClass {
             this.robotCubeFactory = new RobotCubeFactory(this);
             await this.robotCubeFactory.init();
 
-            new OrbitControls(this.world3d.camera, this.world3d.renderer.domElement);
+            // new OrbitControls(this.world3d.camera, this.world3d.renderer.domElement);
 
             const ambientLight = new THREE.AmbientLight(0xeeeeee, 1);
             this.world3d.scene.add(ambientLight);

@@ -140,6 +140,11 @@ import { WebSocketClass } from "../network/WebSocketClass.ts";
 import { WebSocketClientClass } from "../network/WebSocketClientClass.ts";
 import { TextFieldClass } from "../graphics/gui/TextFieldClass.ts";
 import { RobotClass } from "../graphics/robot/RobotClass.ts";
+import { Object3D } from "three";
+import { Object3dClass } from "../graphics/3d/Object3dClass.ts";
+import { Mesh3dClass } from "../graphics/3d/Mesh3dClass.ts";
+import { Cube3dClass } from "../graphics/3d/Cube3dClass.ts";
+import { Vector3Class } from "../graphics/3d/Vector3Class.ts";
 
 export class SystemModule extends JavaLibraryModule {
 
@@ -224,7 +229,8 @@ export class SystemModule extends JavaLibraryModule {
             MethodOfDestroyedGOExceptionClass,
 
             // Graphics 3D
-            World3dClass,
+            Vector3Class,
+            World3dClass, Object3dClass, Mesh3dClass, Cube3dClass,
 
             // Processing
             PAppletClass,
