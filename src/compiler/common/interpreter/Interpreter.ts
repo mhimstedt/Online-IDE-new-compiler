@@ -1,3 +1,4 @@
+import { ActorManager } from "../../java/runtime/graphics/ActorManager.ts";
 import { IWorld } from "../../java/runtime/graphics/IWorld.ts";
 import { IAssertionObserver } from "../../java/runtime/unittests/IAssertionObserver.ts";
 import { BreakpointManager } from "../BreakpointManager.ts";
@@ -30,7 +31,7 @@ export class Interpreter {
 
     isExternalTimer: boolean = false;
     timerId: any;
-    timerIntervalMs: number = 10;
+    timerIntervalMs: number = 33;
 
     executable?: Executable;
 
@@ -45,6 +46,8 @@ export class Interpreter {
     public printManager: IPrintManager;
 
     eventManager: EventManager<InterpreterEvents> = new EventManager();
+
+    actorManager: ActorManager;
 
     private objectStore: Map<string, any> = new Map();
 
@@ -89,6 +92,8 @@ export class Interpreter {
         this.graphicsManager?.setInterpreter(this);
 
         this.registerActions();
+
+        this.actorManager = new ActorManager(this);
 
         if (breakpointManager) breakpointManager.attachToInterpreter(this);
 
@@ -145,6 +150,7 @@ export class Interpreter {
     }
 
     timerFunction(timerIntervalMs: number) {
+        this.actorManager.callActMethods(33);
         this.loadController.tick(timerIntervalMs);
     }
 
@@ -473,8 +479,7 @@ export class Interpreter {
         if (this.retrieveObject("PAppletClass")) return true;
 
         let world: IWorld = this.retrieveObject("WorldClass");
-        if (!world) return false;
-        return world.hasActors();
+        return this.actorManager.hasActors() || world?.hasActors();
     }
 
     setStepsPerSecond(value: number, isMaxSpeed: boolean) {

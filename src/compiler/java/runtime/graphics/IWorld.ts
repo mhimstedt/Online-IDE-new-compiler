@@ -27,8 +27,6 @@ export interface IWorld {
 
     gngEventlistenerManager: GNGEventlistenerManager;
 
-    registerActor(actor: IActor, type: ActorType): void;
-    unregisterActor(actor: IActor): void;
     registerShapeToDestroy(shape: ShapeClass);
     hasActors(): boolean;
 

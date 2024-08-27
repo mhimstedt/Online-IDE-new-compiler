@@ -13,6 +13,7 @@ import { DirectionEnum } from './DirectionEnum';
 import { FilledShapeDefaults } from './FilledShapeDefaults';
 import { GroupClass } from './GroupClass';
 import { updateWorldTransformRecursively } from './PixiHelper';
+import { IWorld } from './IWorld';
 
 export type MouseEventMethod = (t: Thread, callback: CallbackParameter, x: number, y: number, button: number) => void;
 
@@ -117,6 +118,8 @@ export class ShapeClass extends ActorClass {
     lastMoveDx: number = 0;
     lastMoveDy: number = 0;
 
+    world: IWorld;
+
     get centerX(): number {
         return this._getCenterX();
     }
@@ -158,8 +161,8 @@ export class ShapeClass extends ActorClass {
      * TermCodeGenerator.invokeConstructor does compiler magic to ensure that this method is called AFTER the constructor
      * of the child class of Shape is FULLY finished 
      */
-    _registerListeners() {
-        super._registerListeners();
+    _registerListeners(t: Thread) {
+        super._registerListeners(t);
         let atLeastOneMouseListenerOverridden = false;
         if (this._mj$onMouseDown$void$double$double$int != ShapeClass.prototype._mj$onMouseDown$void$double$double$int) {
             atLeastOneMouseListenerOverridden = true;
@@ -192,15 +195,24 @@ export class ShapeClass extends ActorClass {
     }
 
     _cj$_constructor_$Shape$(t: Thread, callback: CallbackParameter) {
-        this._cj$_constructor_$Actor$(t, () => {
+
+        this.world = t.scheduler.interpreter.retrieveObject("WorldClass");
+        t.s.push(this);
+
+        if (!this.world) {
+            new t.classes["World"]()._cj$_constructor_$World$(t, () => {
+                this.world = t.s.pop();
+                if (!this.world.defaultGroup) {
+                    this.world.shapesWhichBelongToNoGroup.push(this);
+                }
+                if (callback) callback();
+            });
+        } else {
             if (!this.world.defaultGroup) {
                 this.world.shapesWhichBelongToNoGroup.push(this);
             }
-
             if (callback) callback();
-
-        });   // call base class constructor
-
+        }
 
     }
 

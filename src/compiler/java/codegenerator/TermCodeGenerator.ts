@@ -345,7 +345,7 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
              * of the constructor: 
              */
             let callRegisterListeners: string = (!klassType.isLibraryType && klassType.fastExtendsImplements("Actor")) ?
-            `() => {${StepParams.stack}[${StepParams.stack}.length - 1]._registerListeners(); }` : "undefined";
+            `() => {${StepParams.stack}[${StepParams.stack}.length - 1]._registerListeners(${StepParams.thread}); }` : "undefined";
             
             template += `${StepParams.thread}, ${callRegisterListeners}` + (parameterValues.length > 0 ? ", " : "");
         }

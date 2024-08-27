@@ -1,10 +1,12 @@
 import { GamepadTool } from "../../../../tools/GamepadTool";
 import { CallbackParameter } from "../../../common/interpreter/CallbackParameter";
+import { Interpreter } from "../../../common/interpreter/Interpreter";
 import { Thread } from "../../../common/interpreter/Thread";
 import { JRC } from "../../language/JavaRuntimeLibraryComments";
 import { LibraryDeclarations } from "../../module/libraries/DeclareType";
 import { NonPrimitiveType } from "../../types/NonPrimitiveType";
 import { ObjectClass, StringClass } from "../system/javalang/ObjectClassStringClass";
+import { ActorManager } from "./ActorManager";
 import { IActor } from "./IActor";
 import { IWorld } from "./IWorld";
 
@@ -47,55 +49,44 @@ export class ActorClass extends ObjectClass implements IActor {
 
     isDestroyed: boolean = false;
 
-    world!: IWorld;
+    actorManager: ActorManager;
 
     copyFrom(otherActor: ActorClass) {
         this.isActing = otherActor.isActing;
         this.isDestroyed = otherActor.isDestroyed;
-        this.world = otherActor.world;
     }
 
     /*
     * TermCodeGenerator.invokeConstructor does compiler magic to ensure that this method is called AFTER the constructor
     * of the child class of actor is FULLY finished 
     */
-    _registerListeners() {
+    _registerListeners(t: Thread) {
+        this.actorManager = t.scheduler.interpreter.actorManager;
         if (this._mj$act$void$ != ActorClass.prototype._mj$act$void$) {
-            this.world.registerActor(this, "act");
+            this.actorManager.registerActor(this, "act");
         }
 
         if (this._mj$act$void$double != ActorClass.prototype._mj$act$void$double) {
-            this.world.registerActor(this, "actWithTime");
+            this.actorManager.registerActor(this, "actWithTime");
         }
 
         if (this._mj$onKeyDown$void$String$boolean$boolean$boolean != ActorClass.prototype._mj$onKeyDown$void$String$boolean$boolean$boolean) {
-            this.world.registerActor(this, "keyDown");
+            this.actorManager.registerActor(this, "keyDown");
         }
 
         if (this._mj$onKeyTyped$void$String != ActorClass.prototype._mj$onKeyTyped$void$String) {
-            this.world.registerActor(this, "keyPressed");
+            this.actorManager.registerActor(this, "keyPressed");
         }
 
         if (this._mj$onKeyUp$void$String != ActorClass.prototype._mj$onKeyUp$void$String) {
-            this.world.registerActor(this, "keyUp");
+            this.actorManager.registerActor(this, "keyUp");
         }
 
     }
 
     _cj$_constructor_$Actor$(t: Thread, callback: CallbackParameter) {
-
-        this.world = t.scheduler.interpreter.retrieveObject("WorldClass");
         t.s.push(this);
-
-        if (!this.world) {
-            new t.classes["World"]()._cj$_constructor_$World$(t, () => {
-                this.world = t.s.pop();
-                if (callback) callback();
-            });
-        } else {
-            if (callback) callback();
-        }
-
+        if(callback) callback();
     }
 
     _mj$act$void$(t: Thread, callback: () => {}): void {
@@ -162,7 +153,7 @@ export class ActorClass extends ObjectClass implements IActor {
     }
 
     destroy() {
-        this.world.unregisterActor(this);
+        this.actorManager.unregisterActor(this);
         this.isDestroyed = true;
     }
 

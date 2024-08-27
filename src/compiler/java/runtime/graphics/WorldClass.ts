@@ -76,7 +76,6 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
     graphicsDiv?: HTMLDivElement;
     resizeObserver?: ResizeObserver;
 
-    actorManager!: ActorManager;
     gngEventlistenerManager!: GNGEventlistenerManager;
 
     defaultGroup?: GroupClass;
@@ -84,6 +83,8 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
     shapesWhichBelongToNoGroup: ShapeClass[] = [];
 
     shapesNotAffectedByWorldTransforms: ShapeClass[] = [];
+
+    shapesToDestroy: ShapeClass[] = [];
 
     mouseManager!: MouseManager;
 
@@ -108,9 +109,6 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
             existingWorld.changeResolution(width, height);
             return existingWorld;
         }
-
-
-        this.actorManager = new ActorManager(interpreter);
 
         interpreter.storeObject("WorldClass", this);
 
@@ -160,7 +158,6 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
     }
 
     tick(elapsedMS: number, interpreter: Interpreter) {
-        this.actorManager.callActMethods(33);
         interpreter.timerFunction(33);
     }
 
@@ -185,7 +182,7 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
 
     destroyWorld(interpreter: Interpreter) {
 
-        this.actorManager.clear();
+        this.interpreter.actorManager.clear();
         this.gngEventlistenerManager.clear();
 
         interpreter.isExternalTimer = false;
@@ -265,20 +262,12 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
 
     }
 
-    registerActor(actor: IActor, type: ActorType): void {
-        this.actorManager.registerActor(actor, type);
-    }
-
-    unregisterActor(actor: IActor): void {
-        this.actorManager.unregisterActor(actor);
-    }
-
     registerShapeToDestroy(shape: ShapeClass){
-        this.actorManager.shapesToDestroy.push(shape);
+        this.shapesToDestroy.push(shape);
     }
 
     hasActors(): boolean {
-        return this.actorManager?.hasActors() || this.mouseManager.hasMouseListeners() || this.gngEventlistenerManager?.hasEventListeners();
+        return this.mouseManager.hasMouseListeners() || this.gngEventlistenerManager?.hasEventListeners();
     }
 
     registerGNGEventListener(listener: IGNGEventListener, type: GNGEventListenerType): void {
