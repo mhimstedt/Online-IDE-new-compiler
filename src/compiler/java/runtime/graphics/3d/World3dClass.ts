@@ -5,7 +5,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { DOM } from '../../../../../tools/DOM';
 import { CallbackParameter } from '../../../../common/interpreter/CallbackParameter';
 import { Interpreter } from '../../../../common/interpreter/Interpreter';
-import { Thread } from '../../../../common/interpreter/Thread';
+import { Thread, ThreadState } from '../../../../common/interpreter/Thread';
 import { JRC } from '../../../language/JavaRuntimeLibraryComments';
 import { LibraryDeclarations } from '../../../module/libraries/DeclareType';
 import { NonPrimitiveType } from '../../../types/NonPrimitiveType';
@@ -61,7 +61,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
     objects:Object3dClass[]=[];
 
-    textureManager3d: TextureManager3d = new TextureManager3d();
+    textureManager3d: TextureManager3d;
 
     coordinateSystemHelper: CoordinateSystemHelper3d;
 
@@ -119,8 +119,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
         this.orbitControls = new OrbitControls(this.camera, this.renderer.domElement);
 
-        this.coordinateSystemHelper = new CoordinateSystemHelper3d(this).show();
-
+        
         const light = new THREE.DirectionalLight(0xffffff, 1.5);
         light.position.set(10, 5, 3);
         this.scene.add(light);
@@ -128,15 +127,22 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         this.scene.add(light2);
         
         this.scene.background = new THREE.Color(0, 0, 0);
-
+        
         // interpreter.isExternalTimer = true;
         this.addCallbacks(interpreter);
-
+        
         // this.mouseManager = new MouseManager(this);
-
-        t.s.push(this);
-
-        if (callback) callback();
+        
+        
+        this.textureManager3d = new TextureManager3d();
+        
+        t.state = ThreadState.waiting;
+        this.textureManager3d.init(this.renderer).then(() => {
+            this.coordinateSystemHelper = new CoordinateSystemHelper3d(this).show();
+            t.state = ThreadState.runnable;
+            t.s.push(this);
+            if (callback) callback();
+        })
 
     }
 
