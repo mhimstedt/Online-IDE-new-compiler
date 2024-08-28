@@ -31,11 +31,11 @@ export class RobotCubeFactory {
 
     async init() {
         // await this.loadTextures();
-        await this.textureManager3d.init(this.world3d.renderer);
+        await this.world3d.textureManager3d.init(this.world3d.renderer);
 
         for(let i = 0; i < this.farben.length; i++){
             this.farbeToBrickMaterialMap.set(this.farben[i], new THREE.MeshLambertMaterial({
-                map: this.textureManager3d.getTexture("robot", 4 + i),
+                map: this.world3d.textureManager3d.getTexture("robot", 4 + i),
                 side: THREE.DoubleSide
             }));
             this.farbeToMarkerMaterialMap.set(this.farben[i], new THREE.MeshStandardMaterial({
@@ -88,7 +88,7 @@ export class RobotCubeFactory {
     getGrassCube() {
 
         const material = new THREE.MeshLambertMaterial({
-            map: this.textureManager3d.getTexture("robot", 0),
+            map: this.world3d.textureManager3d.getTexture("robot", 0),
             side: THREE.DoubleSide
         });
 
@@ -134,7 +134,7 @@ export class RobotCubeFactory {
         geometry.rotateZ(-Math.PI/2);
         geometry.translate(-this.robotWorld.maxX/2 - 1.5, 0, -this.robotWorld.maxY/2 + 2.5)
         const material = new THREE.MeshBasicMaterial({ 
-            map: this.textureManager3d.getTexture("robot", 11),
+            map: this.world3d.textureManager3d.getTexture("robot", 11),
             side: THREE.DoubleSide,
             transparent: true
         });

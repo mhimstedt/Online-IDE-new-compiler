@@ -18,6 +18,7 @@ import { GraphicSystem } from '../../../../common/interpreter/GraphicsManager';
 import { ColorHelper } from '../../../lexer/ColorHelper';
 import { ColorClass } from '../ColorClass';
 import { NullPointerExceptionClass } from '../../system/javalang/NullPointerExceptionClass';
+import { TextureManager3d } from './TextureManager3d';
 
 
 export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem {
@@ -34,9 +35,6 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         { type: "method", signature: "void clear()", native: World3dClass.prototype._clear, comment: JRC.worldClearComment },
 
         { type: "method", signature: "void addMouseListener(MouseListener mouseListener)", template: `§1.mouseListener.addMouseListener(§2);`, comment: JRC.worldAddMouseListenerComment },
-
-
-
 
     ]
 
@@ -58,6 +56,9 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
     renderer: THREE.WebGLRenderer;
     camera: THREE.PerspectiveCamera;
     orbitControls: OrbitControls;
+
+    textureManager3d: TextureManager3d = new TextureManager3d();
+
 
     _cj$_constructor_$World$(t: Thread, callback: CallbackParameter) {
 
