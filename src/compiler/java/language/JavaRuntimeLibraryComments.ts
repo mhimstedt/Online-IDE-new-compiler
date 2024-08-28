@@ -306,6 +306,21 @@ export class JRC {
      * Class Actor
      */
 
+    static actorWorld2dDoesntexistException = () => lm({
+        "de": "Es ist derzeit kein World-Objekt vorhanden. Diese wird automatisch erstellt, sobald ein Grafikobjekt erstellt wird.",
+        "en": "There is currently no World object. It will be automatically created once a graphics object is created.",
+    })
+    
+    static actorWorld2dDoesntexistOn3dObjectException = () => lm({
+        "de": "Es ist derzeit kein World-Objekt vorhanden. Diese wird automatisch erstellt, sobald ein Grafikobjekt erstellt wird. Um das World3d-Objekt zu erhalten, nutze stattdessen .get3dWorld().",
+        "en": "There is currently no World object. It will be automatically created once a graphics object is created. To get the World3d object, use .getWorld3d() instead.",
+    })
+    
+    static actorWorld3dDoesntexistException = () => lm({
+        "de": "Es ist derzeit kein World3d-Objekt vorhanden. Diese wird automatisch erstellt, sobald ein 3d-Grafikobjekt erstellt wird.",
+        "en": "There is currently no World3d object. It will be automatically created once a 3d graphics object is created.",
+    })
+
     static actorActMethodComment = () => lm({
         "de": "Die Methode act wird 30-mal pro Sekunde aufgerufen. Wenn Sie sie in einer Unterklasse überschreiben, so wird Ihre Methode 30-mal pro Sekunde aufgerufen.",
         "en": "Method act is called 30 times per second. Overwrite it to get your own method being called 30 times per second.",
@@ -333,7 +348,12 @@ export class JRC {
 
     static getWorldComment = () => lm({
         "de": "Gibt das aktuelle World-Objekt zurück.",
-        "en": "Returns current world object.",
+        "en": "Returns current World object.",
+    })
+
+    static getWorld3dComment = () => lm({
+        "de": "Gibt das aktuelle World3d-Objekt zurück.",
+        "en": "Returns current World3d object.",
     })
 
     static actorIsActingComment = () => lm({

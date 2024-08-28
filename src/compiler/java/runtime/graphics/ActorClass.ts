@@ -1,3 +1,4 @@
+import { Object3D } from "three";
 import { GamepadTool } from "../../../../tools/GamepadTool";
 import { CallbackParameter } from "../../../common/interpreter/CallbackParameter";
 import { Interpreter } from "../../../common/interpreter/Interpreter";
@@ -5,7 +6,9 @@ import { Thread } from "../../../common/interpreter/Thread";
 import { JRC } from "../../language/JavaRuntimeLibraryComments";
 import { LibraryDeclarations } from "../../module/libraries/DeclareType";
 import { NonPrimitiveType } from "../../types/NonPrimitiveType";
+import { NullPointerExceptionClass } from "../system/javalang/NullPointerExceptionClass";
 import { ObjectClass, StringClass } from "../system/javalang/ObjectClassStringClass";
+import { RuntimeExceptionClass } from "../system/javalang/RuntimeException";
 import { ActorManager } from "./ActorManager";
 import { IActor } from "./IActor";
 import { IWorld } from "./IWorld";
@@ -28,6 +31,7 @@ export class ActorClass extends ObjectClass implements IActor {
         { type: "method", signature: "final boolean isKeyUp(string key)", java: ActorClass.prototype._mj$isKeyUp$boolean$string, comment: JRC.actorOnKeyUpComment },
         { type: "method", signature: "final boolean isKeyDown(string key)", java: ActorClass.prototype._mj$isKeyDown$boolean$string, comment: JRC.actorOnKeyDownComment },
         { type: "method", signature: "final World getWorld()", java: ActorClass.prototype._mj$getWorld$World, comment: JRC.getWorldComment },
+        { type: "method", signature: "final World3d getWorld3d()", java: ActorClass.prototype._mj$getWorld3d$World3d, comment: JRC.getWorld3dComment },
         { type: "method", signature: "final boolean isActing()", native: ActorClass.prototype._isActing, comment: JRC.actorIsActingComment },
         { type: "method", signature: "final boolean isDestroyed()", native: ActorClass.prototype._isDestroyed, comment: JRC.actorIsDestroyedComment },
         { type: "method", signature: "final void stopActing()", native: ActorClass.prototype._stopActing, comment: JRC.actorStopActingComment },
@@ -107,7 +111,6 @@ export class ActorClass extends ObjectClass implements IActor {
 
     _mj$onKeyDown$void$String$boolean$boolean$boolean(t: Thread, callback: CallbackParameter,
         key: StringClass, isShift: boolean, isCtrl: boolean, isAlt: boolean): void {
-
     }
 
     _mj$destroy$void$(t: Thread) {
@@ -133,7 +136,22 @@ export class ActorClass extends ObjectClass implements IActor {
     }
 
     _mj$getWorld$World(t: Thread, callback: CallbackParameter) {
-        t.s.push(t.scheduler.interpreter.retrieveObject("WorldClass"));
+        const w = t.scheduler.interpreter.retrieveObject("WorldClass");
+        if(w==undefined){
+            if(this instanceof Object3D){//optional: t.scheduler.interpreter.retrieveObject("World3dClass") !== undefined
+                throw new RuntimeExceptionClass(JRC.actorWorld2dDoesntexistOn3dObjectException());
+            }
+        }else{
+            t.s.push(w);
+        }
+    }
+    _mj$getWorld3d$World3d(t: Thread, callback: CallbackParameter) {
+        const w = t.scheduler.interpreter.retrieveObject("World3dClass");
+        if(w==undefined){
+            throw new RuntimeExceptionClass(JRC.actorWorld3dDoesntexistException());
+        }else{
+            t.s.push(w);
+        }
     }
 
     _isDestroyed(): boolean {
