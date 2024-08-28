@@ -114,9 +114,8 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         this.scene.add(light);
         const light2 = new THREE.AmbientLight(0xffffff, 0.5);
         this.scene.add(light2);
-        let i=0;
-        [new THREE.Vector3(1,0,0),new THREE.Vector3(0,1,0),new THREE.Vector3(0,0,1)].forEach((v)=>{
-            this.scene.add(new THREE.ArrowHelper(v,new THREE.Vector3(0,0,0),1,0xff0000>>(i++*8)));
+        [new THREE.Vector3(1,0,0),new THREE.Vector3(0,1,0),new THREE.Vector3(0,0,1)].forEach((v,i)=>{
+            this.scene.add(new THREE.ArrowHelper(v,new THREE.Vector3(0,0,0),1,[0xff0000,0x00ff00,0x1515ff][i]));
         })
         
         this.scene.background = new THREE.Color(0, 0, 0);

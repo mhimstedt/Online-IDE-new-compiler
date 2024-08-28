@@ -6,6 +6,7 @@ import { NonPrimitiveType } from "../../../types/NonPrimitiveType";
 import { Vector2Class } from "../../system/additional/Vector2Class";
 import { NullPointerExceptionClass } from "../../system/javalang/NullPointerExceptionClass";
 import { ObjectClass, StringClass } from "../../system/javalang/ObjectClassStringClass";
+import * as THREE from 'three';
 
 export class Vector3Class extends ObjectClass {
     static __javaDeclarations: LibraryDeclarations = [
@@ -35,141 +36,133 @@ export class Vector3Class extends ObjectClass {
         { type: "method", signature: "final double distanceTo(Vector3 otherVector)", native: Vector3Class.prototype._distanceTo, comment: JRC.Vector3DistanceToComment },
         { type: "method", signature: "final static double distance(double x1, double y1, double z1, double x2, double y2, double z2)", native: Vector3Class._distance, comment: JRC.Vector3DistanceComment },
 
-        { type: "method", signature: "public boolean equals(Vector3 otherVector)", native: Vector3Class.prototype._equals , comment: JRC.objectEqualsComment},
+        { type: "method", signature: "public boolean equals(Vector3 otherVector)", native: Vector3Class.prototype._equals, comment: JRC.objectEqualsComment },
         { type: "method", signature: "String toString()", java: Vector3Class.prototype._mj$toString$String$, comment: JRC.Vector3ToStringComment },
     ];
 
     static type: NonPrimitiveType;
-
-    constructor(public x: number, public y: number, public z:number) {
+    v: THREE.Vector3;
+    constructor(x: number, y: number, z: number) {
         super();
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        this.v = new THREE.Vector3(x, y, z)
     }
 
-    _constructor2(x: number, y: number,z:number) {
-        this.x = x;
-        this.y = y;
-        this.z=z;
+    _constructor2(x: number, y: number, z: number) {
+        this.v = new THREE.Vector3(x, y, z)
         return this;
     }
-    _constructor2xy(xy:Vector2Class,z:number) {
-        if(xy===null){
+    _constructor2xy(xy: Vector2Class, z: number) {
+        if (xy === null) {
             throw new NullPointerExceptionClass(JRC.Vector3xyNullPointerComment("xy"))
         }
-        this.x = xy.x;
-        this.y = xy.y;
-        this.z=z;
+        this.v=new THREE.Vector3(xy.x,xy.y,z);
         return this;
     }
-    _constructor2yz(x:number,yz:Vector2Class) {
-        if(yz===null){
+    _constructor2yz(x: number, yz: Vector2Class) {
+        if (yz === null) {
             throw new NullPointerExceptionClass(JRC.Vector3xyNullPointerComment("yz"))
         }
-        this.x=x;
-        this.y = yz.x;
-        this.z = yz.y;
+        this.v=new THREE.Vector3(x,yz.x,yz.y);
         return this;
     }
 
     _equals(other: Vector3Class): boolean {
-        return Math.abs(this.x - other.x) + Math.abs(this.y - other.y)+ Math.abs(this.z - other.z) < 1e-14;
+        return Math.abs(this.v.x - other.v.x) + Math.abs(this.v.y - other.v.y) + Math.abs(this.v.z - other.v.z) < 1e-14;
     }
 
     _plus(other: Vector3Class) {
-        return new Vector3Class(this.x + other.x, this.y + other.y, this.z + other.z);
+        return new Vector3Class(this.v.x + other.v.x, this.v.y + other.v.y, this.v.z + other.v.z);
     }
 
     _minus(other: Vector3Class) {
-        return new Vector3Class(this.x - other.x, this.y - other.y, this.z - other.z);
+        return new Vector3Class(this.v.x - other.v.x, this.v.y - other.v.y, this.v.z - other.v.z);
     }
 
     _getLength() {
-        return Math.sqrt(this.x*this.x + this.y*this.y + this.z*this.z);
+        return Math.sqrt(this.v.x * this.v.x + this.v.y * this.v.y + this.v.z * this.v.z);
     }
 
-    _getUnitVector(){
-        let length2 = this.x * this.x + this.y * this.y + this.z * this.z;
-        if(length2 < 1e-14) return new Vector3Class(0, 0,0);
-        
+    _getUnitVector() {
+        let length2 = this.v.x * this.v.x + this.v.y * this.v.y + this.v.z * this.v.z;
+        if (length2 < 1e-14) return new Vector3Class(0, 0, 0);
+
         let length: number = Math.sqrt(length2);
 
-        return new Vector3Class(this.x/length, this.y/length, this.z/length);
+        return new Vector3Class(this.v.x / length, this.v.y / length, this.v.z / length);
 
     }
 
-    _xy():Vector2Class{
-        return new Vector2Class(this.x,this.y);
+    _xy(): Vector2Class {
+        return new Vector2Class(this.v.x, this.v.y);
     }
-    _xz():Vector2Class{
-        return new Vector2Class(this.x,this.z);
+    _xz(): Vector2Class {
+        return new Vector2Class(this.v.x, this.v.z);
     }
-    _yz():Vector2Class{
-        return new Vector2Class(this.y,this.z);
+    _yz(): Vector2Class {
+        return new Vector2Class(this.v.y, this.v.z);
     }
 
     _setLength(newLength: number): Vector3Class {
-        let oldLength = Math.sqrt(this.x*this.x + this.y*this.y + this.z*this.z);
-        if(oldLength > 0){
-            let factor = newLength/oldLength;
-            this.x *= factor;
-            this.y *= factor;
-            this.z *= factor;
+        let oldLength = Math.sqrt(this.v.x * this.v.x + this.v.y * this.v.y + this.v.z * this.v.z);
+        if (oldLength > 0) {
+            let factor = newLength / oldLength;
+            this.v.x *= factor;
+            this.v.y *= factor;
+            this.v.z *= factor;
         }
         return this;
     }
 
     _add(other: Vector3Class): Vector3Class {
-        this.x += other.x;
-        this.y += other.y;
-        this.z += other.z;
+        this.v.x += other.v.x;
+        this.v.y += other.v.y;
+        this.v.z += other.v.z;
         return this;
     }
 
     _sub(other: Vector3Class): Vector3Class {
-        this.x -= other.x;
-        this.y -= other.y;
-        this.z -= other.z;
+        this.v.x -= other.v.x;
+        this.v.y -= other.v.y;
+        this.v.z -= other.v.z;
         return this;
     }
 
     _scalarProduct(other: Vector3Class): number {
-        return this.x*other.x + this.y*other.y + this.z*other.z;
+        return this.v.x * other.v.x + this.v.y * other.v.y + this.v.z * other.v.z;
     }
 
     _scaledBy(factor: number): Vector3Class {
-        return new Vector3Class(this.x*factor, this.y*factor, this.z*factor);
+        return new Vector3Class(this.v.x * factor, this.v.y * factor, this.v.z * factor);
     }
 
     _scale(factor: number): Vector3Class {
-        this.x *= factor;
-        this.y *= factor;
-        this.z *= factor;
+        this.v.x *= factor;
+        this.v.y *= factor;
+        this.v.z *= factor;
         return this;
     }
 
     _distanceTo(other: Vector3Class): number {
-        let dx = other.x - this.x;
-        let dy = other.y - this.y;
-        let dz = other.z - this.z;
-        return Math.sqrt(dx*dx + dy*dy+ dz*dz);
+        let dx = other.v.x - this.v.x;
+        let dy = other.v.y - this.v.y;
+        let dz = other.v.z - this.v.z;
+        return Math.sqrt(dx * dx + dy * dy + dz * dz);
     }
 
     static _distance(x1: number, y1: number, z1: number, x2: number, y2: number, z2: number): number {
         let dx = x2 - x1;
         let dy = y2 - y1;
         let dz = z2 - z1;
-        return Math.sqrt(dx*dx + dy*dy+ dz*dz);
+        return Math.sqrt(dx * dx + dy * dy + dz * dz);
     }
 
     _mj$toString$String$(t: Thread, callback: CallbackFunction) {
-        t.s.push(new StringClass("(" + this.x + ", " + this.y + ", " + this.z + ")"));
+        t.s.push(new StringClass("(" + this.v.x + ", " + this.v.y + ", " + this.v.z + ")"));
         if (callback) callback();
     }
 
     _debugOutput(): string {
-        return `{x = ${this.x}, y = ${this.y}, z = ${this.z}}`;
+        return `{x = ${this.v.x}, y = ${this.v.y}, z = ${this.v.z}}`;
     }
 
 

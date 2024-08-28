@@ -5,6 +5,7 @@ import { JRC } from "../../../language/JavaRuntimeLibraryComments";
 import { LibraryDeclarations } from "../../../module/libraries/DeclareType";
 import { NonPrimitiveType } from "../../../types/NonPrimitiveType";
 import { Object3dClass } from "./Object3dClass";
+import { Material3dClass } from './Material3dClass';
 import { Vector3Class } from './Vector3Class';
 
 export class Mesh3dClass extends Object3dClass {
@@ -12,6 +13,8 @@ export class Mesh3dClass extends Object3dClass {
     static __javaDeclarations: LibraryDeclarations = [
         { type: "declaration", signature: "class Mesh3d extends Object3d", comment: JRC.Mesh3dClassComment },
         { type: "method", signature: "Mesh3d()", java: Mesh3dClass.prototype._cj$_constructor_$Mesh3d$ },
+        { type: "field", signature: "public Material3d material", template:"_material" },
+
         
         { type: "method", signature: "void move(double x,double y,double z)"},
         { type: "method", signature: "final void move(Vector3 v)", native:Mesh3dClass.prototype.vmove},
@@ -32,6 +35,12 @@ export class Mesh3dClass extends Object3dClass {
     static type: NonPrimitiveType;
 
     mesh: THREE.Mesh;
+    _material: Material3dClass;
+
+    set material(material: Material3dClass) {
+        this._material = material;
+        this.mesh.material = material.material;
+    }
 
     _cj$_constructor_$Mesh3d$(t: Thread, callback: CallbackParameter){
         super._cj$_constructor_$Object3d$(t, callback);
