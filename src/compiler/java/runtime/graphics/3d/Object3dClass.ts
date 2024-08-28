@@ -42,16 +42,17 @@ export class Object3dClass extends ActorClass {
         
         t.s.push(this);
         this.world3d = t.scheduler.interpreter.retrieveObject("World3dClass");
-        this.world3d.objects.push(this);
         if (!this.world3d) {
             this.world3d = new World3dClass();
             this.world3d._cj$_constructor_$World$(t, () => {
                 t.s.pop(); // constructor of world3d pushed it's this-object
                 if(callback) callback();
+                this.world3d.objects.push(this);
             })
             return;
         }
         if(callback)callback();
+        this.world3d.objects.push(this);
         return;
     }
 
