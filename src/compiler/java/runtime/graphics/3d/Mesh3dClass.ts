@@ -20,7 +20,7 @@ export class Mesh3dClass extends Object3dClass {
         { type: "method", signature: "final void move(Vector3 v)", native:Mesh3dClass.prototype.vmove},
         { type: "method", signature: "void moveTo(double x,double y,double z)"},
         { type: "method", signature: "final void moveTo(Vector3 p)", native:Mesh3dClass.prototype.vmoveTo},
-        
+        { type: "method", signature: "void destroy()", java: Mesh3dClass.prototype.destroy },
         { type: "method", signature: "void rotateX(double angleDeg)",native: Mesh3dClass.prototype.rotateX },
         { type: "method", signature: "void rotateY(double angleDeg)",native: Mesh3dClass.prototype.rotateY },
         { type: "method", signature: "void rotateZ(double angleDeg)",native: Mesh3dClass.prototype.rotateZ },
