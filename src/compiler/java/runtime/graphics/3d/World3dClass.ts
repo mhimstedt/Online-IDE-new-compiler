@@ -230,7 +230,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         //     renderer.background.color.setValue(color);
         // }
         if(color===null){
-            throw new NullPointerExceptionClass()
+            throw new NullPointerExceptionClass(JRC.worldColorNull)
         }
         if(typeof color==="number"){
             this.scene.background=new THREE.Color(color);
