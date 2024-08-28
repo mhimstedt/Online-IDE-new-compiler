@@ -2,25 +2,31 @@ import * as THREE from 'three';
 import { TextureManager3d } from '../3d/TextureManager3d';
 import { World3dClass } from '../3d/World3dClass';
 import { RobotWorldClass } from './RobotWorldClass';
-import grassblock from '/include/graphics/robot/grass3d.png';
 
 type TextureData = {
     key: string,
     path: string,
 }
 
+type CubeColor = "rot" | "gelb" | "grün" | "blau";
+
 export class RobotCubeFactory {
-
-    // textureDataList: TextureData[] = [
-    //     { key: "grassblock", path: grassblock }
-    // ]
-
-    // materials: Map<string, THREE.Material> = new Map();
 
     textureManager3d: TextureManager3d = new TextureManager3d();
 
     world3d: World3dClass;
 
+    farben: string[] = ["rot", "gelb", "grün", "blau"];
+
+    farbeToColorInfoMap: { [farbe: string]: number } = {
+        "rot": 0xff0000,
+        "gelb": 0xffff00,
+        "grün": 0x00ff00,
+        "blau": 0x0000ff
+    }
+
+    farbeToMarkerMaterialMap: Map<string, THREE.Material> = new Map();
+    farbeToBrickMaterialMap: Map<string, THREE.Material> = new Map();
 
     constructor(private robotWorld: RobotWorldClass){
         this.world3d = robotWorld.world3d;
@@ -29,41 +35,18 @@ export class RobotCubeFactory {
     async init() {
         // await this.loadTextures();
         await this.textureManager3d.init(this.world3d.renderer);
+
+        for(let i = 0; i < this.farben.length; i++){
+            this.farbeToBrickMaterialMap.set(this.farben[i], new THREE.MeshLambertMaterial({
+                map: this.textureManager3d.getTexture("robot", 4 + i),
+                side: THREE.DoubleSide
+            }));
+            this.farbeToMarkerMaterialMap.set(this.farben[i], new THREE.MeshStandardMaterial({
+                color: new THREE.Color(this.farbeToColorInfoMap[this.farben[i]])
+            }))
+        }
+
     }
-
-
-    // private async loadTextures() {
-    //     const loader = new THREE.TextureLoader();
-
-    //     let pathPraefix: string = "";
-    //     //@ts-ignore
-    //     if (window.javaOnlineDir != null) {
-    //         //@ts-ignore
-    //         pathPraefix = window.javaOnlineDir;
-    //     }
-
-    //     if (pathPraefix.endsWith("/")) {
-    //         pathPraefix = pathPraefix.substring(0, pathPraefix.length - 1);
-    //     }
-
-    //     for (let textureData of this.textureDataList) {
-    //         let texture: THREE.Texture;
-    //         try {
-    //             texture = await loader.loadAsync(pathPraefix + textureData.path);
-    //             texture.colorSpace = THREE.SRGBColorSpace;
-    //             texture.magFilter = THREE.NearestFilter;
-
-    //         } catch (ex) {
-    //             console.log(ex);
-    //         }
-    //         const material = new THREE.MeshLambertMaterial({
-    //             map: texture,
-    //             side: THREE.DoubleSide
-
-    //         });
-    //         this.materials.set(textureData.key, material);
-    //     }
-    // }
 
     private grassCubeGeometry: THREE.BoxGeometry;
     private getGrassCubeGeometry() {
@@ -85,18 +68,58 @@ export class RobotCubeFactory {
         return this.grassCubeGeometry.clone();
     }
 
+    private brickGeometry: THREE.BoxGeometry;
+    private getBrickGeometry() {
+        if(!this.brickGeometry){
+            this.brickGeometry = new THREE.BoxGeometry(1, 0.5, 1);
+        
+            let uvCoordinates = [
+                [1, 1], [2, 1], [1, 0.5], [2, 0.5],  // right side
+                [1, 1], [2, 1], [1, 0.5], [2, 0.5],  // left side
+                [2, 1], [3, 1], [2, 0], [3, 0], // top
+                [0, 1], [1, 1], [0, 0], [1, 0], // bottom
+                [1, 1], [2, 1], [1, 0.5], [2, 0.5],  // front
+                [1, 1], [2, 1], [1, 0.5], [2, 0.5],  // back
+            ];
+            for (let i = 0; i < uvCoordinates.length; i++) {
+                this.brickGeometry.attributes.uv.setXY(i, uvCoordinates[i][0] / 3, uvCoordinates[i][1])
+            }
+        }
+        return this.brickGeometry.clone();
+    }
+
     getGrassCube() {
-        // const material = this.materials.get("grassblock");
 
         const material = new THREE.MeshLambertMaterial({
             map: this.textureManager3d.getTexture("robot", 0),
             side: THREE.DoubleSide
         });
 
-
         const cube = new THREE.Mesh(this.getGrassCubeGeometry(), material);
         this.world3d.scene.add(cube);
         return cube;
+    }
+
+    getBrick(farbe, x: number, y: number, z: number){
+        let brick = new THREE.Mesh(this.getBrickGeometry(), this.farbeToBrickMaterialMap.get(farbe));
+        brick.translateX(-this.robotWorld.maxX/2 + x - 1);
+        brick.translateZ(-this.robotWorld.maxY/2 + y - 1);
+        brick.translateY(0.75 + z/2);
+        brick.userData["farbe"] = farbe;
+        this.world3d.scene.add(brick);
+        return brick;
+    }
+
+    getMarker(farbe, x: number, y: number, z: number){
+        let geometry = new THREE.BoxGeometry(1, 0.1, 1);
+        let marker = new THREE.Mesh(geometry, this.farbeToMarkerMaterialMap.get(farbe));
+        marker.translateX(-this.robotWorld.maxX/2 + x - 1);
+        marker.translateZ(-this.robotWorld.maxY/2 + y - 1);
+        marker.translateY(0.55 + z/2);
+        marker.userData["farbe"] = farbe;
+        marker.userData["z"] = z;
+        this.world3d.scene.add(marker);
+        return marker;
     }
 
     getGrassPlane(x: number, y: number){
@@ -108,4 +131,20 @@ export class RobotCubeFactory {
         }
     }
 
+    public initNorthArrow() {
+        const geometry = new THREE.PlaneGeometry(6, 1);
+        geometry.rotateY(-Math.PI/2);
+        geometry.rotateZ(-Math.PI/2);
+        geometry.translate(-this.robotWorld.maxX/2 - 1.5, 0, -this.robotWorld.maxY/2 + 2.5)
+        const material = new THREE.MeshBasicMaterial({ 
+            map: this.textureManager3d.getTexture("robot", 11),
+            side: THREE.DoubleSide,
+            transparent: true
+        });
+        const plane = new THREE.Mesh(geometry, material);
+        this.world3d.scene.add(plane);
+    }
+
+
 } 
+

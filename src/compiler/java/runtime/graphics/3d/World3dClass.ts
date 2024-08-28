@@ -53,6 +53,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
     scene: THREE.Scene;
     renderer: THREE.WebGLRenderer;
     camera: THREE.PerspectiveCamera;
+    orbitControls: OrbitControls;
 
     _cj$_constructor_$World$(t: Thread, callback: CallbackParameter) {
 
@@ -105,7 +106,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
         this.resizeObserver.observe(this.graphicsDiv!.parentElement!.parentElement!);
 
-        new OrbitControls(this.camera, this.renderer.domElement);
+        this.orbitControls = new OrbitControls(this.camera, this.renderer.domElement);
 
         const light = new THREE.DirectionalLight(0xffffff, 1.5);
         light.position.set(5, 5, 5);

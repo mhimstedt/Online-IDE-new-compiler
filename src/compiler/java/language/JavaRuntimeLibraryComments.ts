@@ -5077,168 +5077,223 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
     })
 
     static robotConstructorStartXStartYinitialWorld = () => lm({
-    "de": `Instanziert ein neues Robot-Objekt. Der Roboter wird anfangs an die Stelle (startX/startY) gesetzt. Wenn die RobotWorld noch nicht instanziert ist, wird sie auf Grundlage des Strings initialeWelt erstellt.`,
-    "en": `Creates a new Robot object. Start position is at (startX, startY). World is generated from string initialWorld.`,
+        "de": `Instanziert ein neues Robot-Objekt. Der Roboter wird anfangs an die Stelle (startX/startY) gesetzt. Wenn die RobotWorld noch nicht instanziert ist, wird sie auf Grundlage des Strings initialeWelt erstellt.`,
+        "en": `Creates a new Robot object. Start position is at (startX, startY). World is generated from string initialWorld.`,
     })
 
     static robotGetWelt = () => lm({
-    "de": `Gibt das RobotWorld-Objekt zurück`,
+        "de": `Gibt das RobotWorld-Objekt zurück`,
     })
 
     static robotRechtsDrehen = () => lm({
-    "de": `Dreht den Roboter um 90° nach rechts.`,
+        "de": `Dreht den Roboter um 90° nach rechts.`,
     })
 
     static robotLinksDrehen = () => lm({
-    "de": `Dreht den Roboter um 90° nach links.`,
+        "de": `Dreht den Roboter um 90° nach links.`,
     })
 
     static robotSchritt = () => lm({
-    "de": `Lässt den Roboter einen Schritt nach vorne gehen.`,
+        "de": `Lässt den Roboter einen Schritt nach vorne gehen.`,
+    })
+
+    static robotHitWall = () => lm({
+    "de": `Der Roboter ist gegen eine Wand geprallt.`,
+    "en": ``,
+    })
+
+    static robotMaximumJumpHeightUp = () => lm({
+    "de": `Der Roboter kann maximal einen Ziegel hoch springen.`,
+    "en": ``,
+    })
+
+    static robotMaximumJumpHeightDown = () => lm({
+    "de": `Der Roboter kann maximal einen Ziegel nach unten springen.`,
+    "en": ``,
+    })
+
+    static robotCantPlaceBricksIntoWall = () => lm({
+    "de": `Der Roboter steht direkt vor einer Wand. Da kann er keine Ziegel hinlegen.`,
+    "en": ``,
+    })
+
+    static robotPickUpBricksFromWall = () => lm({
+    "de": `Der Roboter steht direkt vor einer Wand. Da kann er keine Ziegel aufheben.`,
+    "en": ``,
+    })
+
+    static robotColorUnknown = () => lm({
+    "de": `Es gibt nur Ziegel der Farben rot, gelb, blau und grün.`,
+    "en": ``,
+    })
+
+    static robotOutOfBricks = () => lm({
+    "de": `Der Roboter hat keine Ziegel mehr bei sich und kann daher keinen mehr hinlegen.`,
+    "en": ``,
+    })
+
+    static robotNoBricksToPickUp = () => lm({
+    "de": `Vor dem Roboter liegt kein Ziegel, er kann daher keinen aufheben.`,
+    "en": ``,
+    })
+
+    static robotCapacityExceeded = () => lm({
+    "de": `Der Roboter kann nicht mehr Steine aufheben, da er keinen Platz mehr in seinem Rucksack hat.`,
+    "en": ``,
+    })
+
+    static robotMaximumHeightExceeded = (maximumheight: number) => lm({
+    "de": `Der Ziegelstapel darfd die maximale Höhe von ${maximumheight} nicht überschreiten.`,
+    "en": ``,
+    })
+
+    static robotStoppedProgram = () => lm({
+    "de": `Das Programm wurde durch einen Roboter angehalten.`,
+    "en": ``,
     })
 
     static robotSchrittAnzahl = () => lm({
-    "de": `Lässt den Roboter anzahl Schritte nach vorne gehen.`,
+        "de": `Lässt den Roboter anzahl Schritte nach vorne gehen.`,
     })
 
     static robotHinlegen = () => lm({
-    "de": `Lässt den Roboter einen roten Ziegel vor sich hinlegen.`,
+        "de": `Lässt den Roboter einen roten Ziegel vor sich hinlegen.`,
     })
 
     static robotMarkeLöschen = () => lm({
-    "de": `Lässt den Roboter eine Marke, die direkt unter ihm liegt, löschen.`,
+        "de": `Lässt den Roboter eine Marke, die direkt unter ihm liegt, löschen.`,
     })
 
     static robotMarkeSetzen = () => lm({
-    "de": `Lässt den Roboter eine gelbe Marke direkt unter sich setzen.`,
+        "de": `Lässt den Roboter eine gelbe Marke direkt unter sich setzen.`,
     })
 
     static robotMarkeSetzenFarbe = () => lm({
-    "de": `Lässt den Roboter eine Marke der angegebenen Farbe direkt unter sich setzen.`,
+        "de": `Lässt den Roboter eine Marke der angegebenen Farbe direkt unter sich setzen.`,
     })
 
     static robotHinlegenAnzahl = () => lm({
-    "de": `Lässt den Roboter Anzahl rote Ziegel vor sich hinlegen.`,
+        "de": `Lässt den Roboter Anzahl rote Ziegel vor sich hinlegen.`,
     })
 
     static robotHinlegenFarbe = () => lm({
-    "de": `Lässt den Roboter einen Ziegel der angegebenen Farbe vor sich hinlegen.`,
+        "de": `Lässt den Roboter einen Ziegel der angegebenen Farbe vor sich hinlegen.`,
     })
 
     static robotAufheben = () => lm({
-    "de": `Lässt den Roboter einen roten Ziegel vor sich aufheben.`,
+        "de": `Lässt den Roboter einen roten Ziegel vor sich aufheben.`,
     })
 
     static robotAufhebenAnzahl = () => lm({
-    "de": `Lässt den Roboter Anzahl rote Ziegel vor sich aufheben.`,
+        "de": `Lässt den Roboter Anzahl rote Ziegel vor sich aufheben.`,
     })
 
     static robotWarten = () => lm({
-    "de": `Pausiert das Programm für die angegebene Zeit in ms.`,
+        "de": `Pausiert das Programm für die angegebene Zeit in ms.`,
     })
 
     static robotSchnell = () => lm({
-    "de": `Setzt die Ausführungsgeschwindigkeit auf 'maximal'.`,
+        "de": `Setzt die Ausführungsgeschwindigkeit auf 'maximal'.`,
     })
 
     static robotBeenden = () => lm({
-    "de": `Beendet das Programm`,
+        "de": `Beendet das Programm`,
     })
 
     static robotIstWand = () => lm({
-    "de": `Gibt genau dann true zurück, wenn der Roboter direkt vor einer Wand steht.`,
+        "de": `Gibt genau dann true zurück, wenn der Roboter direkt vor einer Wand steht.`,
     })
 
     static robotNichtIstWand = () => lm({
-    "de": `Gibt genau dann true zurück, wenn der Roboter nicht direkt vor einer Wand steht.`,
+        "de": `Gibt genau dann true zurück, wenn der Roboter nicht direkt vor einer Wand steht.`,
     })
 
     static robotIstZiegel = () => lm({
-    "de": `Gibt genau dann true zurück, wenn direkt vor dem Roboter mindestens ein Ziegel liegt.`,
+        "de": `Gibt genau dann true zurück, wenn direkt vor dem Roboter mindestens ein Ziegel liegt.`,
     })
 
     static robotIstZiegelAnzahl = () => lm({
-    "de": `Gibt genau dann true zurück, wenn direkt vor dem Roboter genau Anzahl Ziegel liegen.`,
+        "de": `Gibt genau dann true zurück, wenn direkt vor dem Roboter genau Anzahl Ziegel liegen.`,
     })
 
     static robotIstZiegelFarbe = () => lm({
-    "de": `Gibt genau dann true zurück, wenn auf dem Ziegelstapel direkt vor dem Roboter mindestens ein Ziegel mit der angegebenen Farbe liegt.`,
+        "de": `Gibt genau dann true zurück, wenn auf dem Ziegelstapel direkt vor dem Roboter mindestens ein Ziegel mit der angegebenen Farbe liegt.`,
     })
 
     static robotNichtIstZiegel = () => lm({
-    "de": `Gibt genau dann true zurück, wenn direkt vor dem Roboter kein Ziegel liegt.`,
+        "de": `Gibt genau dann true zurück, wenn direkt vor dem Roboter kein Ziegel liegt.`,
     })
 
     static robotNichtIstZiegelAnzahl = () => lm({
-    "de": `Gibt genau dann true zurück, wenn direkt vor dem Roboter nicht genau Anzahl Ziegel liegen.`,
+        "de": `Gibt genau dann true zurück, wenn direkt vor dem Roboter nicht genau Anzahl Ziegel liegen.`,
     })
 
     static robotNichtIstZiegelFarbe = () => lm({
-    "de": `Gibt genau dann true zurück, wenn auf dem Ziegelstapel direkt vor dem Roboter kein Ziegel mit der angegebenen Farbe liegt.`,
+        "de": `Gibt genau dann true zurück, wenn auf dem Ziegelstapel direkt vor dem Roboter kein Ziegel mit der angegebenen Farbe liegt.`,
     })
 
     static robotIstMarke = () => lm({
-    "de": `Gibt genau dann true zurück, wenn unter dem Roboter eine Marke (egal in welcher Farbe) liegt.`,
+        "de": `Gibt genau dann true zurück, wenn unter dem Roboter eine Marke (egal in welcher Farbe) liegt.`,
     })
 
     static robotIstMarkeFarbe = () => lm({
-    "de": `Gibt genau dann true zurück, wenn unter dem Roboter eine Marke in der angegebenen Farbe liegt.`,
+        "de": `Gibt genau dann true zurück, wenn unter dem Roboter eine Marke in der angegebenen Farbe liegt.`,
     })
 
     static robotNichtIstMarkeFarbe = () => lm({
-    "de": `Gibt genau dann true zurück, wenn unter dem Roboter keine Marke in der angegebenen Farbe liegt.`,
+        "de": `Gibt genau dann true zurück, wenn unter dem Roboter keine Marke in der angegebenen Farbe liegt.`,
     })
 
     static robotNichtIstMarke = () => lm({
-    "de": `Gibt genau dann true zurück, wenn unter dem Roboter keine Marke (egal in welcher Farbe) liegt.`,
+        "de": `Gibt genau dann true zurück, wenn unter dem Roboter keine Marke (egal in welcher Farbe) liegt.`,
     })
 
     static robotIstNorden = () => lm({
-    "de": `Gibt genau dann true zurück, wenn der Roboter nach Norden blickt.`,
+        "de": `Gibt genau dann true zurück, wenn der Roboter nach Norden blickt.`,
     })
 
     static robotIstWesten = () => lm({
-    "de": `Gibt genau dann true zurück, wenn der Roboter nach Westen blickt.`,
+        "de": `Gibt genau dann true zurück, wenn der Roboter nach Westen blickt.`,
     })
 
     static robotIstSueden = () => lm({
-    "de": `Gibt genau dann true zurück, wenn der Roboter nach Süden blickt.`,
+        "de": `Gibt genau dann true zurück, wenn der Roboter nach Süden blickt.`,
     })
 
     static robotIstOsten = () => lm({
-    "de": `Gibt genau dann true zurück, wenn der Roboter nach Osten blickt.`,
+        "de": `Gibt genau dann true zurück, wenn der Roboter nach Osten blickt.`,
     })
 
     static robotIstLeer = () => lm({
-    "de": `Gibt genau dann true zurück, wenn der Roboter keinen Stein mit sich trägt.`,
+        "de": `Gibt genau dann true zurück, wenn der Roboter keinen Stein mit sich trägt.`,
     })
 
     static robotIstVoll = () => lm({
-    "de": `Gibt genau dann true zurück, wenn der Roboter die maximale Anzahl von Steinen mit sich trägt.`,
+        "de": `Gibt genau dann true zurück, wenn der Roboter die maximale Anzahl von Steinen mit sich trägt.`,
     })
 
     static robotNichtIstLeer = () => lm({
-    "de": `Gibt genau dann true zurück, wenn der Roboter mindestens einen Stein mit sich trägt.`,
+        "de": `Gibt genau dann true zurück, wenn der Roboter mindestens einen Stein mit sich trägt.`,
     })
 
     static robotHatZiegel = () => lm({
-    "de": `Gibt genau dann true zurück, wenn der Roboter mindestens einen Stein mit sich trägt.`,
+        "de": `Gibt genau dann true zurück, wenn der Roboter mindestens einen Stein mit sich trägt.`,
     })
 
     static robotHatZiegelAnzahl = () => lm({
-    "de": `Gibt genau dann true zurück, wenn der Roboter mindestens Anzahl Steine mit sich trägt.`,
+        "de": `Gibt genau dann true zurück, wenn der Roboter mindestens Anzahl Steine mit sich trägt.`,
     })
 
     static robotNichtIstVoll = () => lm({
-    "de": `Gibt genau dann true zurück, wenn der Roboter weniger als die maximale Anzahl von Steinen mit sich trägt.`,
+        "de": `Gibt genau dann true zurück, wenn der Roboter weniger als die maximale Anzahl von Steinen mit sich trägt.`,
     })
 
     static robotSetzeAnzahlSteine = () => lm({
-    "de": `Befüllt den Rucksack des Roboters mit genau Anzahl Steinen.`,
+        "de": `Befüllt den Rucksack des Roboters mit genau Anzahl Steinen.`,
     })
 
     static robotSetzeRucksackGroesse = () => lm({
-    "de": `Gibt dem Roboter einen Rucksack, der maximal Anzahl Steine fasst.`,
+        "de": `Gibt dem Roboter einen Rucksack, der maximal Anzahl Steine fasst.`,
     })
 
 
@@ -5246,27 +5301,32 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
      * class RobotWorld
      */
     static robotWorldClassComment = () => lm({
-    "de": `Welt für Robot Karol`,
-    })    
+        "de": `Welt für Robot Karol`,
+    })
 
     static robotWorldConstructorWorldXWorldY = () => lm({
-    "de": `Instanziert eine neue Robot-Welt`,
+        "de": `Instanziert eine neue Robot-Welt`,
     })
 
     static robotWorldConstructorInitialWorld = () => lm({
-    "de": `Instanziert eine neue Robot-Welt`,
+        "de": `Instanziert eine neue Robot-Welt`,
     })
 
     static robotWorldSetzeMaximalHoehe = () => lm({
-    "de": `Ändert die maximale Höhe der Ziegelstapel.`,
+        "de": `Ändert die maximale Höhe der Ziegelstapel.`,
     })
 
     static robotWorldSetzeZiegel = () => lm({
-    "de": `Setzt Anzahl Ziegel an der angegebenen Position mit der angegebenen Farbe. Die x- und y-Koordinaten beginnen bei 1.`,
+        "de": `Setzt Anzahl Ziegel an der angegebenen Position mit der angegebenen Farbe. Die x- und y-Koordinaten beginnen bei 1.`,
     })
 
     static robotWorldSetzeMarke = () => lm({
-    "de": `Setzt einen Marker an der angegebenen Position mit der angegebenen Farbe. Die x- und y-Koordinaten beginnen bei 1.`,
+        "de": `Setzt einen Marker an der angegebenen Position mit der angegebenen Farbe. Die x- und y-Koordinaten beginnen bei 1.`,
+    })
+
+    static robotWorldPositionOutsideWorldError = (x: number, y: number) => lm({
+        "de": `Die Position (${x}/${y}) ist außerhalb der Weltgrenzen.`,
+        "en": ``,
     })
 
     /**
@@ -5274,18 +5334,18 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
      */
 
     static cube3dClassComment = () => lm({
-    "de": `Würfel (3D)`,
-    "en": `Cube (3D)`,
+        "de": `Würfel (3D)`,
+        "en": `Cube (3D)`,
     })
 
     static cube3dConstructorXYZComment = () => lm({
-    "de": `Erzeugt einen neuen Würfel mit der Kantenlänge 1. (x, y, z) ist der Ort seines Mittelpunkts (genauer: seines Diagonalenschnittpunkts).`,
-    "en": `Creates a new Cube with edge length 1. (x, y, z) is it's center.`,
+        "de": `Erzeugt einen neuen Würfel mit der Kantenlänge 1. (x, y, z) ist der Ort seines Mittelpunkts (genauer: seines Diagonalenschnittpunkts).`,
+        "en": `Creates a new Cube with edge length 1. (x, y, z) is it's center.`,
     })
 
     static cube3dConstructorComment = () => lm({
-    "de": `Erzeugt einen neuen Würfel mit der Kantenlänge 1. Sein Mittelpunkt befindet sich bei (0, 0, 0)`,
-    "en": `Creates a new Cube with edge length 1 and center (0, 0, 0).`,
+        "de": `Erzeugt einen neuen Würfel mit der Kantenlänge 1. Sein Mittelpunkt befindet sich bei (0, 0, 0)`,
+        "en": `Creates a new Cube with edge length 1 and center (0, 0, 0).`,
     })
 
 }
