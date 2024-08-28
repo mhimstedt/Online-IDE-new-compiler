@@ -8,8 +8,9 @@ type Axis = {
     vector: THREE.Vector3,
     color: number,
     caption: string,
+    textureIndex: number,
     arrowHelper?: THREE.ArrowHelper,
-    mesh?: THREE.Mesh
+    sprite?: THREE.Sprite
 }
 
 export class CoordinateSystemHelper3d {
@@ -18,17 +19,20 @@ export class CoordinateSystemHelper3d {
         {
             vector: new THREE.Vector3(1, 0, 0),
             color: 0xff0000,
-            caption: "x"
+            caption: "x",
+            textureIndex: 0
         },
         {
             vector: new THREE.Vector3(1, 0, 0),
             color: 0x00ff00,
-            caption: "y"
+            caption: "y",
+            textureIndex: 1
         },
         {
             vector: new THREE.Vector3(1, 0, 0),
             color: 0x2020ff,
-            caption: "z"
+            caption: "z",
+            textureIndex: 2
         },
     ]
 
@@ -37,18 +41,23 @@ export class CoordinateSystemHelper3d {
     }
 
 
-    async show(): Promise<CoordinateSystemHelper3d> {
+    show(): CoordinateSystemHelper3d {
         let origin = new THREE.Vector3(0, 0, 0);
 
         if (!this.axes[0].arrowHelper) {
 
             for (let axis of this.axes) {
+                const texture = this.world3d.textureManager3d.getTexture("standard_textures", axis.textureIndex);
+                const material = new THREE.SpriteMaterial({ map: texture, color: 0xffffff, transparent: true });
+                axis.sprite = new THREE.Sprite(material);
+
                 axis.arrowHelper = new THREE.ArrowHelper(axis.vector, origin, 1, axis.color);
 
+                this.world3d.scene.add(axis.sprite, axis.arrowHelper);
             }
         }
 
-        for(let axis of this.axes){
+        for (let axis of this.axes) {
             this.world3d.scene.add(axis.arrowHelper!);
         }
 
