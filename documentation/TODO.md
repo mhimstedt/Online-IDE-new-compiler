@@ -12,7 +12,6 @@
 
 
   * 3d-classes
-    * bugfix: course resolution when scaling canvas
   * add more compiler-tests
 
 # Done:

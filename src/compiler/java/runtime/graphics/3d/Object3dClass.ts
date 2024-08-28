@@ -14,13 +14,22 @@ export class Object3dClass extends ActorClass {
     static __javaDeclarations: LibraryDeclarations = [
         { type: "declaration", signature: "abstract class Object3d extends Actor", comment: JRC.Object3dClassComment },
         { type: "method", signature: "Object3d()", java: Object3dClass.prototype._cj$_constructor_$Object3d$ },
+        
         { type: "method", signature: "abstract void move(double x,double y,double z)", native:Object3dClass.prototype.move },
         { type: "method", signature: "final void move(Vector3 v)", native: Object3dClass.prototype.vmove },
+        
         { type: "method", signature: "abstract void moveTo(double x,double y,double z)", native: Object3dClass.prototype.moveTo},
+        { type: "method", signature: "final void moveTo(Vector3 p)", native: Object3dClass.prototype.vmoveTo },
+        
         { type: "method", signature: "abstract void rotateX(double angleDeg)",native: Object3dClass.prototype.rotateX },
         { type: "method", signature: "abstract void rotateY(double angleDeg)",native: Object3dClass.prototype.rotateY },
         { type: "method", signature: "abstract void rotateZ(double angleDeg)",native: Object3dClass.prototype.rotateZ },
-        { type: "method", signature: "final void moveTo(Vector3 p)", native: Object3dClass.prototype.vmoveTo },
+        
+        { type: "method", signature: "abstract void scaleX(double angleDeg)",native: Object3dClass.prototype.scaleX },
+        { type: "method", signature: "abstract void scaleY(double angleDeg)",native: Object3dClass.prototype.scaleY },
+        { type: "method", signature: "abstract void scaleZ(double angleDeg)",native: Object3dClass.prototype.scaleZ },
+        { type: "method", signature: "abstract void scale(Vector3 v)", native: Object3dClass.prototype.vscale },
+        { type: "method", signature: "abstract void scale(double d)", native: Object3dClass.prototype.scaleDouble },
     ];
 
     static type: NonPrimitiveType;
@@ -51,15 +60,29 @@ export class Object3dClass extends ActorClass {
     rotateX(angleDeg:number): void{}
     rotateY(angleDeg:number): void{}
     rotateZ(angleDeg:number): void{}
+
+    scaleX(factor:number): void{} 
+    scaleY(factor:number): void{}
+    scaleZ(factor:number): void{}
+
+    scaleDouble(factor: number): void{};
+
+    vscale(v: Vector3Class) {
+        this.scaleX(v.v.x);
+        this.scaleY(v.v.y);
+        this.scaleZ(v.v.z);
+    }
+
     move(x: number, y: number, z: number): void{}
     moveTo(x: number, y: number, z: number): void {}
 
     vmove(v: Vector3Class) {
-        this.move(v.x, v.y, v.z);
+        this.move(v.v.x, v.v.y, v.v.z);
     }
 
+
     vmoveTo(p: Vector3Class) {
-        this.moveTo(p.x, p.y, p.z);
+        this.moveTo(p.v.x, p.v.y, p.v.z);
     }
 
 }

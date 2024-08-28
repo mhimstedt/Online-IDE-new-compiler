@@ -85,7 +85,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         this.camera = new THREE.PerspectiveCamera(75, this.width / this.height, 0.1, 1000);
         // size of 1 pixel: see https://discourse.threejs.org/t/solved-how-do-we-size-something-using-screen-pixels/1177
 
-        this.renderer = new THREE.WebGLRenderer();
+        this.renderer = new THREE.WebGLRenderer({antialias:true});
         this.renderer.setSize(this.width, this.height);
         this.graphicsDiv.appendChild(this.renderer.domElement);
 
@@ -186,9 +186,11 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         newCanvasHeight = Math.min(newCanvasHeight, rect.height);
         newCanvasWidth = Math.min(newCanvasWidth, rect.width);
 
-        this.graphicsDiv.style.width = newCanvasWidth + "px";
-        this.graphicsDiv.style.height = newCanvasHeight + "px";
+        // this.graphicsDiv.style.width = newCanvasWidth + "px";
+        // this.graphicsDiv.style.height = newCanvasHeight + "px";
 
+        this.camera?.updateProjectionMatrix();
+        this.renderer?.setSize(newCanvasWidth, newCanvasHeight);
 
         // this.app!.canvas.style.width = newCanvasWidth + "px";
         // this.app!.canvas.style.height = newCanvasHeight + "px";
