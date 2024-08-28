@@ -48,7 +48,7 @@ export class Mesh3dClass extends Object3dClass {
     }
 
     _cj$_constructor_$Mesh3d$(t: Thread, callback: CallbackParameter){
-        this._material
+        this._material=new Material3dClass(this.getBasicMaterial());
         super._cj$_constructor_$Object3d$(t, callback);
     }    
 

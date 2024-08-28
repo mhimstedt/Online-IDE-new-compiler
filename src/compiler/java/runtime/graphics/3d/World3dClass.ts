@@ -234,7 +234,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
     }
 
     _clear() {
-        // TODO!
+        this.scene.clear();
     }
 
     getIdentifier(): string {

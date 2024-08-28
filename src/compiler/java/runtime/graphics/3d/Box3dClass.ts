@@ -31,7 +31,7 @@ export class Box3dClass extends Mesh3dClass {
         super._cj$_constructor_$Mesh3d$(t, ()=>{
             const geometry = new THREE.BoxGeometry();
         
-            this.mesh = new THREE.Mesh(geometry, this.getBasicMaterial());
+            this.mesh = new THREE.Mesh(geometry, this.material.material);
             this.world3d.scene.add(this.mesh);
             if(callback)callback();
         });
