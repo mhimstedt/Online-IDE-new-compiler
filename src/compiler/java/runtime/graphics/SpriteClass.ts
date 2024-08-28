@@ -14,7 +14,6 @@ import { SpriteLibraryEnum } from './SpriteLibraryEnum';
 import { JRC } from '../../language/JavaRuntimeLibraryComments';
 import { ExceptionPrinter } from '../../../common/interpreter/ExceptionPrinter';
 import { CallbackParameter } from '../../../common/interpreter/CallbackParameter';
-import { Exception } from '../../../common/interpreter/ExceptionInfo';
 
 export class SpriteClass extends ShapeClass {
     static __javaDeclarations: LibraryDeclarations = [
