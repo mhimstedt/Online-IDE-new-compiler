@@ -18,7 +18,7 @@ export class GraphicsManager {
     public pixiUserSpritesheet?: PIXI.Spritesheet;
 
     // if 3d world is used then this is defined:
-    
+
 
     currentGraphicSystem?: GraphicSystem;
 
@@ -54,7 +54,7 @@ export class GraphicsManager {
 
     async initPixiUserSpritesheet() {
 
-        if(!this.pixiUserSpritesheet){
+        if(!this.pixiUserSpritesheet && this.pixiSpritesheetData && this.pngImageData){
             // see https://pixijs.com/8.x/guides/migrations/v8
             let textureNew = PIXI.Texture.from(new PIXI.BufferImageSource({
                 resource: this.pngImageData,
