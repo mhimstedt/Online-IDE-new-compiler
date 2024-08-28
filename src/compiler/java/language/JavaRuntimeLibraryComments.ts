@@ -625,7 +625,7 @@ export class JRC {
 
     static fsGetFillColorComment = () => lm({
         "de": "Gibt die Füllfarbe dieses Objekts als Color-Objekt zurück.",
-        "en": "Returns fill color of this object as ",
+        "en": "Returns fill color of this object as a Color object.",
     })
 
     static fsSetFillColorCommentInt = () => lm({

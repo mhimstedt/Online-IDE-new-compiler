@@ -76,12 +76,18 @@ export class FilledShapeClass extends ShapeClass {
     }
 
     _getFillColor(): ColorClass {
+        if(this.fillColor==null){
+            return null;
+        }
         let c = new ColorClass();
         c.fromIntAndAlpha(this.fillColor, this.fillAlpha);
         return c;
     }
-
+    
     _getBorderColor(): ColorClass {
+        if(this.borderColor==null){
+            return null;
+        }
         let c = new ColorClass();
         c.fromIntAndAlpha(this.borderColor, this.borderAlpha);
         return c;
@@ -114,20 +120,20 @@ export class FilledShapeClass extends ShapeClass {
     _setFillColorColor(color: ColorClass, alpha?: number) {
         if(color == null){
             this.fillColor = null;
-            return;
-        } 
-        this.fillColor = color.red * 0x10000 + color.green * 0x100 + color.blue;
-        if(alpha) this.fillAlpha = alpha;
+        } else{
+            this.fillColor = color.red * 0x10000 + color.green * 0x100 + color.blue;
+            if(alpha) this.fillAlpha = alpha;
+        }
         this.render();
     }
 
     _setBorderColorColor(color: ColorClass, alpha?: number) {
         if(color == null){
             this.borderColor = null;
-            return;
+        }else{
+            this.borderColor = color.red * 0x10000 + color.green * 0x100 + color.blue;
+            if(alpha) this.borderAlpha = alpha;
         }
-        this.borderColor = color.red * 0x10000 + color.green * 0x100 + color.blue;
-        if(alpha) this.borderAlpha = alpha;
         this.render();
     }
 
