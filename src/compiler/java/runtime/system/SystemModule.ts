@@ -147,6 +147,7 @@ import { Box3dClass } from "../graphics/3d/Box3dClass.ts";
 import { Vector3Class } from "../graphics/3d/Vector3Class.ts";
 import { Sphere3dClass } from "../graphics/3d/Sphere3dClass.ts";
 import { RobotWorldClass } from "../graphics/robot/RobotWorldClass.ts";
+import { Material3dClass } from "../graphics/3d/Material3dClass.ts";
 
 export class SystemModule extends JavaLibraryModule {
 
@@ -231,7 +232,7 @@ export class SystemModule extends JavaLibraryModule {
             MethodOfDestroyedGOExceptionClass,
 
             // Graphics 3D
-            Vector3Class,
+            Vector3Class, Material3dClass,
             World3dClass, Object3dClass, Mesh3dClass, Box3dClass, Sphere3dClass,
 
             // Processing
