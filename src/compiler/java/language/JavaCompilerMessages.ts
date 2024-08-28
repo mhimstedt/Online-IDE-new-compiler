@@ -123,6 +123,11 @@ export class JCM {
         "en": `Cant find constructor.`,
     })
 
+    static cantInstantiateFromAbstractClass = () => le({
+    "de": `Von einer abstrakten Klasse kann man keine Objekte instanzieren.`,
+    "en": `You can't create objects of an abstract class.`,
+    })
+
     static interfacesDontHaveConstructors = () => le({
         "de": `Interfaces haben keinen Konstruktor.`,
         "en": `Interfaces don't have construtctors.`,

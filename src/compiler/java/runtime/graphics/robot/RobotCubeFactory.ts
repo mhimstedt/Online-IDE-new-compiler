@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { TextureManager3d } from '../3d/TextureManager3d';
 import { World3dClass } from '../3d/World3dClass';
 import { RobotWorldClass } from './RobotWorldClass';
 
@@ -11,8 +10,6 @@ type TextureData = {
 type CubeColor = "rot" | "gelb" | "grün" | "blau";
 
 export class RobotCubeFactory {
-
-    textureManager3d: TextureManager3d = new TextureManager3d();
 
     world3d: World3dClass;
 
