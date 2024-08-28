@@ -19,7 +19,7 @@ export class CoordinateSystemHelper3d {
     axes: Axis[] = [
         {
             vector: new THREE.Vector3(1, 0, 0),
-            vector2: new THREE.Vector3(0, 1, 0),
+            vector2: new THREE.Vector3(0, -1, 0),
             color: 0xff0000,
             caption: "x",
             textureIndex: 0
@@ -33,7 +33,7 @@ export class CoordinateSystemHelper3d {
         },
         {
             vector: new THREE.Vector3(0, 0, 1),
-            vector2: new THREE.Vector3(1, 0, 0),
+            vector2: new THREE.Vector3(-1, 0, 0),
             color: 0x2020ff,
             caption: "z",
             textureIndex: 2
