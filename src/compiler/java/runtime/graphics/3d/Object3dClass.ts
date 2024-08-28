@@ -30,6 +30,7 @@ export class Object3dClass extends ActorClass {
         { type: "method", signature: "abstract void scaleZ(double angleDeg)",native: Object3dClass.prototype.scaleZ },
         { type: "method", signature: "abstract void scale(Vector3 v)", native: Object3dClass.prototype.vscale },
         { type: "method", signature: "abstract void scale(double d)", native: Object3dClass.prototype.scaleDouble },
+        { type: "method", signature: "abstract void destroy()", native: Object3dClass.prototype.destroy },
     ];
 
     static type: NonPrimitiveType;
@@ -41,6 +42,7 @@ export class Object3dClass extends ActorClass {
         
         t.s.push(this);
         this.world3d = t.scheduler.interpreter.retrieveObject("World3dClass");
+        this.world3d.objects.push(this);
         if (!this.world3d) {
             this.world3d = new World3dClass();
             this.world3d._cj$_constructor_$World$(t, () => {
@@ -84,5 +86,8 @@ export class Object3dClass extends ActorClass {
     vmoveTo(p: Vector3Class) {
         this.moveTo(p.v.x, p.v.y, p.v.z);
     }
-
+    destroy(){
+        super.destroy();
+        this.world3d.objects.splice(this.world3d.objects.indexOf(this), 1);
+    }
 }

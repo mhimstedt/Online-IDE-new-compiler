@@ -5,6 +5,8 @@ import { NonPrimitiveType } from "../../../types/NonPrimitiveType";
 import { ObjectClass } from "../../system/javalang/ObjectClassStringClass";
 import { ColorClass } from "../ColorClass";
 import { ColorHelper } from "../../../lexer/ColorHelper";
+import { JRC } from "../../../language/JavaRuntimeLibraryComments";
+import { NullPointerExceptionClass } from "../../system/javalang/NullPointerExceptionClass";
 
 export class Material3dClass extends ObjectClass {
     static __javaDeclarations: LibraryDeclarations = [
@@ -22,6 +24,9 @@ export class Material3dClass extends ObjectClass {
         this.material = material;
     }
     setColorColor(color: ColorClass) {
+        if(color===null){
+            throw new NullPointerExceptionClass(JRC.world3dColorNull())
+        }
         if (this.material["color"]!==undefined) {
             this.material["color"]?.set(color.red, color.green, color.blue);
         }

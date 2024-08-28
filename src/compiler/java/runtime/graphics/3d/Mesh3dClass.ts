@@ -100,4 +100,8 @@ export class Mesh3dClass extends Object3dClass {
     getBasicMaterial(): THREE.Material {
         return new THREE.MeshStandardMaterial( {color: 0x00ff00 } ); 
     }
+    destroy(){
+        super.destroy();
+        //TODO: destroy mesh
+    }
 }

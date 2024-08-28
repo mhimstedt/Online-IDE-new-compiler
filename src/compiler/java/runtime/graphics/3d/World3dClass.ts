@@ -19,6 +19,7 @@ import { ColorHelper } from '../../../lexer/ColorHelper';
 import { ColorClass } from '../ColorClass';
 import { NullPointerExceptionClass } from '../../system/javalang/NullPointerExceptionClass';
 import { TextureManager3d } from './TextureManager3d';
+import { Object3dClass } from './Object3dClass';
 
 
 export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem {
@@ -56,6 +57,8 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
     renderer: THREE.WebGLRenderer;
     camera: THREE.PerspectiveCamera;
     orbitControls: OrbitControls;
+
+    objects:Object3dClass[]=[];
 
     textureManager3d: TextureManager3d = new TextureManager3d();
 
@@ -228,7 +231,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         //     renderer.background.color.setValue(color);
         // }
         if(color===null){
-            throw new NullPointerExceptionClass()
+            throw new NullPointerExceptionClass(JRC.world3dColorNull())
         }
         if(typeof color==="number"){
             this.scene.background=new THREE.Color(color);
@@ -244,7 +247,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
 
     _setCursor(cursor: string) {
-        // this.app.canvas.style.cursor = cursor;
+        this.graphicsDiv.style.cursor = cursor;
     }
 
     _clear() {

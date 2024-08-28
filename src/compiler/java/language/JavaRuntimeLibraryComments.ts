@@ -310,12 +310,12 @@ export class JRC {
         "de": "Es ist derzeit kein World-Objekt vorhanden. Diese wird automatisch erstellt, sobald ein Grafikobjekt erstellt wird.",
         "en": "There is currently no World object. It will be automatically created once a graphics object is created.",
     })
-    
+
     static actorWorld2dDoesntexistOn3dObjectException = () => lm({
         "de": "Es ist derzeit kein World-Objekt vorhanden. Diese wird automatisch erstellt, sobald ein Grafikobjekt erstellt wird. Um das World3d-Objekt zu erhalten, nutze stattdessen .get3dWorld().",
         "en": "There is currently no World object. It will be automatically created once a graphics object is created. To get the World3d object, use .getWorld3d() instead.",
     })
-    
+
     static actorWorld3dDoesntexistException = () => lm({
         "de": "Es ist derzeit kein World3d-Objekt vorhanden. Diese wird automatisch erstellt, sobald ein 3d-Grafikobjekt erstellt wird.",
         "en": "There is currently no World3d object. It will be automatically created once a 3d graphics object is created.",
@@ -389,6 +389,15 @@ export class JRC {
     static actorGetGamepadAxisValueComment = () => lm({
         "de": `Gibt den Wert des Gamepad-Steuerknüppels mit Index axisIndex zurück.`,
         "en": `Returns value of Gamepad-stick with given index on given axis.`,
+    })
+
+    /**
+     * class World3d
+    */
+
+    static world3dColorNull = () => lm({
+        "de": `Null kann nicht als Farbe übergeben werden.`,
+        "en": `Null cannot be used as a color.`,
     })
 
     /**
@@ -616,7 +625,7 @@ export class JRC {
 
     static fsGetFillColorComment = () => lm({
         "de": "Gibt die Füllfarbe dieses Objekts als Color-Objekt zurück.",
-        "en": "Returns fill color of this object as ",
+        "en": "Returns fill color of this object as a Color object.",
     })
 
     static fsSetFillColorCommentInt = () => lm({
@@ -5118,58 +5127,58 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
     })
 
     static robotHitWall = () => lm({
-    "de": `Der Roboter ist gegen eine Wand geprallt.`,
-    "en": ``,
+        "de": `Der Roboter ist gegen eine Wand geprallt.`,
+        "en": ``,
     })
 
     static robotMaximumJumpHeightUp = () => lm({
-    "de": `Der Roboter kann maximal einen Ziegel hoch springen.`,
-    "en": ``,
+        "de": `Der Roboter kann maximal einen Ziegel hoch springen.`,
+        "en": ``,
     })
 
     static robotMaximumJumpHeightDown = () => lm({
-    "de": `Der Roboter kann maximal einen Ziegel nach unten springen.`,
-    "en": ``,
+        "de": `Der Roboter kann maximal einen Ziegel nach unten springen.`,
+        "en": ``,
     })
 
     static robotCantPlaceBricksIntoWall = () => lm({
-    "de": `Der Roboter steht direkt vor einer Wand. Da kann er keine Ziegel hinlegen.`,
-    "en": ``,
+        "de": `Der Roboter steht direkt vor einer Wand. Da kann er keine Ziegel hinlegen.`,
+        "en": ``,
     })
 
     static robotPickUpBricksFromWall = () => lm({
-    "de": `Der Roboter steht direkt vor einer Wand. Da kann er keine Ziegel aufheben.`,
-    "en": ``,
+        "de": `Der Roboter steht direkt vor einer Wand. Da kann er keine Ziegel aufheben.`,
+        "en": ``,
     })
 
     static robotColorUnknown = () => lm({
-    "de": `Es gibt nur Ziegel der Farben rot, gelb, blau und grün.`,
-    "en": ``,
+        "de": `Es gibt nur Ziegel der Farben rot, gelb, blau und grün.`,
+        "en": ``,
     })
 
     static robotOutOfBricks = () => lm({
-    "de": `Der Roboter hat keine Ziegel mehr bei sich und kann daher keinen mehr hinlegen.`,
-    "en": ``,
+        "de": `Der Roboter hat keine Ziegel mehr bei sich und kann daher keinen mehr hinlegen.`,
+        "en": ``,
     })
 
     static robotNoBricksToPickUp = () => lm({
-    "de": `Vor dem Roboter liegt kein Ziegel, er kann daher keinen aufheben.`,
-    "en": ``,
+        "de": `Vor dem Roboter liegt kein Ziegel, er kann daher keinen aufheben.`,
+        "en": ``,
     })
 
     static robotCapacityExceeded = () => lm({
-    "de": `Der Roboter kann nicht mehr Steine aufheben, da er keinen Platz mehr in seinem Rucksack hat.`,
-    "en": ``,
+        "de": `Der Roboter kann nicht mehr Steine aufheben, da er keinen Platz mehr in seinem Rucksack hat.`,
+        "en": ``,
     })
 
     static robotMaximumHeightExceeded = (maximumheight: number) => lm({
-    "de": `Der Ziegelstapel darfd die maximale Höhe von ${maximumheight} nicht überschreiten.`,
-    "en": ``,
+        "de": `Der Ziegelstapel darfd die maximale Höhe von ${maximumheight} nicht überschreiten.`,
+        "en": ``,
     })
 
     static robotStoppedProgram = () => lm({
-    "de": `Das Programm wurde durch einen Roboter angehalten.`,
-    "en": ``,
+        "de": `Das Programm wurde durch einen Roboter angehalten.`,
+        "en": ``,
     })
 
     static robotSchrittAnzahl = () => lm({
