@@ -146,6 +146,7 @@ import { Mesh3dClass } from "../graphics/3d/Mesh3dClass.ts";
 import { Box3dClass } from "../graphics/3d/Box3dClass.ts";
 import { Vector3Class } from "../graphics/3d/Vector3Class.ts";
 import { Sphere3dClass } from "../graphics/3d/Sphere3dClass.ts";
+import { RobotWorldClass } from "../graphics/robot/RobotWorldClass.ts";
 
 export class SystemModule extends JavaLibraryModule {
 
@@ -253,7 +254,7 @@ export class SystemModule extends JavaLibraryModule {
             WebSocketClass, WebSocketClientClass,
 
             // Robot
-            RobotClass,
+            RobotClass, RobotWorldClass,
 
             // Graphics'n Games (GNG)
             GNGBaseFigur, GNGKreis, GNGRechteck, GNGDreieck, GNGText, GNGFigur,

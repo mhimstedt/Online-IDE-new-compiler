@@ -364,6 +364,7 @@ export class Interpreter {
             this.hideProgrampointerPosition();
             this.keyboardManager?.unsubscribeAllListeners();
             this.eventManager.fire("stop");
+            this.actorManager.clear();
             // TODO
             // this.closeAllWebsockets();
         }

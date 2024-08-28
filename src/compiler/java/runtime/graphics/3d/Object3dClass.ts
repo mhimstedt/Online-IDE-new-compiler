@@ -12,7 +12,7 @@ import * as Three from 'three';
 export class Object3dClass extends ActorClass {
 
     static __javaDeclarations: LibraryDeclarations = [
-        { type: "declaration", signature: "abstract class Object3d extends Object", comment: JRC.Object3dClassComment },
+        { type: "declaration", signature: "abstract class Object3d extends Actor", comment: JRC.Object3dClassComment },
         { type: "method", signature: "Object3d()", java: Object3dClass.prototype._cj$_constructor_$Object3d$ },
         { type: "method", signature: "abstract void move(double x,double y,double z)", native:Object3dClass.prototype.move },
         { type: "method", signature: "final void move(Vector3 v)", native: Object3dClass.prototype.vmove },
@@ -29,12 +29,15 @@ export class Object3dClass extends ActorClass {
 
     _cj$_constructor_$Object3d$(t: Thread, callback: CallbackParameter) {
 
+        
         t.s.push(this);
-
         this.world3d = t.scheduler.interpreter.retrieveObject("World3dClass");
         if (!this.world3d) {
             this.world3d = new World3dClass();
-            this.world3d._cj$_constructor_$World$(t, callback)
+            this.world3d._cj$_constructor_$World$(t, () => {
+                t.s.pop(); // constructor of world3d pushed it's this-object
+                if(callback) callback();
+            })
             return;
         }
         if(callback)callback();
