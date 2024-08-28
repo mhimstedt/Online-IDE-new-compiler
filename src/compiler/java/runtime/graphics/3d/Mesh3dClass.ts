@@ -102,6 +102,8 @@ export class Mesh3dClass extends Object3dClass {
     }
     destroy(){
         super.destroy();
-        //TODO: destroy mesh
+        this.world3d.scene.remove(this.mesh);
+        this.mesh.geometry.dispose();
+        //TODO: destroy mesh?
     }
 }
