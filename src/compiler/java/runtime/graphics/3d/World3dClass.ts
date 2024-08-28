@@ -20,6 +20,7 @@ import { ColorClass } from '../ColorClass';
 import { NullPointerExceptionClass } from '../../system/javalang/NullPointerExceptionClass';
 import { TextureManager3d } from './TextureManager3d';
 import { Object3dClass } from './Object3dClass';
+import { CoordinateSystemHelper3d } from './CoordinateSystemHelper3d';
 
 
 export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem {
@@ -62,6 +63,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
     textureManager3d: TextureManager3d = new TextureManager3d();
 
+    coordinateSystemHelper: CoordinateSystemHelper3d;
 
     _cj$_constructor_$World$(t: Thread, callback: CallbackParameter) {
 
@@ -116,6 +118,8 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         this.resizeObserver.observe(this.graphicsDiv!.parentElement!.parentElement!);
 
         this.orbitControls = new OrbitControls(this.camera, this.renderer.domElement);
+
+        this.coordinateSystemHelper = new CoordinateSystemHelper3d(this).show();
 
         const light = new THREE.DirectionalLight(0xffffff, 1.5);
         light.position.set(10, 5, 3);
