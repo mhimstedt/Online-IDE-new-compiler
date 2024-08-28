@@ -396,8 +396,8 @@ export class JRC {
     */
 
     static world3dColorNull = () => lm({
-        "de": `Gibt den Wert des Gamepad-Steuerknüppels mit Index axisIndex zurück.`,
-        "en": `Returns value of Gamepad-stick with given index on given axis.`,
+        "de": `Null kann nicht als Farbe übergeben werden.`,
+        "en": `Null cannot be used as a color.`,
     })
 
     /**
