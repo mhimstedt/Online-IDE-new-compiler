@@ -150,7 +150,12 @@ export var SpriteLibrary = [
     {filename: "3d/rock.png", name: "robot", tilesX: 1, tilesY: 1, index: 8},
     {filename: "3d/bedrock.png", name: "robot", tilesX: 1, tilesY: 1, index: 9},
     {filename: "3d/earth.png", name: "robot", tilesX: 1, tilesY: 1, index: 10},
-    {filename: "3d/north.png", name: "robot", tilesX: 1, tilesY: 1, index: 11}, 
+    {filename: "3d/north.png", name: "robot", tilesX: 1, tilesY: 1, index: 11},
+    
+    {filename: "3d/axis_x.png", name: "standard_textures", tilesX: 1, tilesY: 1, index: 0},
+    {filename: "3d/axis_y.png", name: "standard_textures", tilesX: 1, tilesY: 1, index: 1},
+    {filename: "3d/axis_z.png", name: "standard_textures", tilesX: 1, tilesY: 1, index: 2},
+    
     
     {filename: "pixelmon/creature1.png", name: "pixelmon", index: 0}, 
     {filename: "pixelmon/creature2.png", name: "pixelmon", index: 1}, 
