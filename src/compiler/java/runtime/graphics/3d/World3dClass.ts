@@ -92,7 +92,8 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         this.renderer.domElement.style.width = "100%";
         this.renderer.domElement.style.height = "100%";
 
-        this.camera.position.z = 3;
+        this.camera.position.set(2,2,2);
+        this.camera.lookAt(new THREE.Vector3(0,0,0));
 
 
         let animate = () => {
@@ -109,10 +110,12 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         this.orbitControls = new OrbitControls(this.camera, this.renderer.domElement);
 
         const light = new THREE.DirectionalLight(0xffffff, 1.5);
-        light.position.set(5, 5, 5);
+        light.position.set(10, 5, 3);
         this.scene.add(light);
+        const light2 = new THREE.AmbientLight(0xffffff, 0.5);
+        this.scene.add(light2);
 
-        this.scene.background = new THREE.Color(120, 120, 120);
+        this.scene.background = new THREE.Color(0, 0, 0);
 
         // interpreter.isExternalTimer = true;
         this.addCallbacks(interpreter);

@@ -5330,22 +5330,22 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
     })
 
     /**
-     * Cube3d
+     * Box3d
      */
 
-    static cube3dClassComment = () => lm({
+    static box3dClassComment = () => lm({
         "de": `Würfel (3D)`,
-        "en": `Cube (3D)`,
+        "en": `Box (3D)`,
     })
 
-    static cube3dConstructorXYZComment = () => lm({
+    static box3dConstructorXYZComment = () => lm({
         "de": `Erzeugt einen neuen Würfel mit der Kantenlänge 1. (x, y, z) ist der Ort seines Mittelpunkts (genauer: seines Diagonalenschnittpunkts).`,
-        "en": `Creates a new Cube with edge length 1. (x, y, z) is it's center.`,
+        "en": `Creates a new Box with edge length 1. (x, y, z) is it's center.`,
     })
 
-    static cube3dConstructorComment = () => lm({
+    static box3dConstructorComment = () => lm({
         "de": `Erzeugt einen neuen Würfel mit der Kantenlänge 1. Sein Mittelpunkt befindet sich bei (0, 0, 0)`,
-        "en": `Creates a new Cube with edge length 1 and center (0, 0, 0).`,
+        "en": `Creates a new Box with edge length 1 and center (0, 0, 0).`,
     })
 
 }

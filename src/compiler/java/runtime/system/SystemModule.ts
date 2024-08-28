@@ -143,7 +143,7 @@ import { RobotClass } from "../graphics/robot/RobotClass.ts";
 import { Object3D } from "three";
 import { Object3dClass } from "../graphics/3d/Object3dClass.ts";
 import { Mesh3dClass } from "../graphics/3d/Mesh3dClass.ts";
-import { Cube3dClass } from "../graphics/3d/Cube3dClass.ts";
+import { Box3dClass } from "../graphics/3d/Box3dClass.ts";
 import { Vector3Class } from "../graphics/3d/Vector3Class.ts";
 
 export class SystemModule extends JavaLibraryModule {
@@ -230,7 +230,7 @@ export class SystemModule extends JavaLibraryModule {
 
             // Graphics 3D
             Vector3Class,
-            World3dClass, Object3dClass, Mesh3dClass, Cube3dClass,
+            World3dClass, Object3dClass, Mesh3dClass, Box3dClass,
 
             // Processing
             PAppletClass,

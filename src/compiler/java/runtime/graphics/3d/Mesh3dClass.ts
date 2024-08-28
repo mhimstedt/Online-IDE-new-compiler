@@ -11,10 +11,13 @@ export class Mesh3dClass extends Object3dClass {
     static __javaDeclarations: LibraryDeclarations = [
         { type: "declaration", signature: "class Mesh3d extends Object3d", comment: JRC.Mesh3dClassComment },
         { type: "method", signature: "Mesh3d()", java: Mesh3dClass.prototype._cj$_constructor_$Mesh3d$ },
-        { type: "method", signature: "abstract void move(double x,double y,double z)"},
+        { type: "method", signature: "void move(double x,double y,double z)"},
         { type: "method", signature: "final void move(Vector3 v)", native:Mesh3dClass.prototype.vmove},
-        { type: "method", signature: "abstract void moveTo(double x,double y,double z)"},
+        { type: "method", signature: "void moveTo(double x,double y,double z)"},
         { type: "method", signature: "final void moveTo(Vector3 p)", native:Mesh3dClass.prototype.vmoveTo},
+        { type: "method", signature: "void rotateX(double angleDeg)",native: Mesh3dClass.prototype.rotateX },
+        { type: "method", signature: "void rotateY(double angleDeg)",native: Mesh3dClass.prototype.rotateY },
+        { type: "method", signature: "void rotateZ(double angleDeg)",native: Mesh3dClass.prototype.rotateZ },
     ];
 
     static type: NonPrimitiveType;
@@ -26,14 +29,23 @@ export class Mesh3dClass extends Object3dClass {
     }    
 
     move(x:number,y:number,z:number):void{
-
+        // this.mesh.position.add(new THREE.Vector3(x,y,z));
+        this.mesh.position.set(this.mesh.position.x+x,this.mesh.position.y+y,this.mesh.position.z+z)
     }
-    
+    rotateX(angleDeg: number): void {
+        this.mesh.rotateX(angleDeg/180*Math.PI);
+    }
+    rotateY(angleDeg: number): void {
+        this.mesh.rotateY(angleDeg/180*Math.PI);
+    }
+    rotateZ(angleDeg: number): void {
+        this.mesh.rotateZ(angleDeg/180*Math.PI);
+    }
     moveTo(x:number,y:number,z:number):void{
-        
+        this.mesh.position.set(x,y,z);
     }
     
     getBasicMaterial(): THREE.Material {
-        return new THREE.MeshStandardMaterial( {color: 0x00ff00, roughness: 0.7, metalness: 0.8, emissive: 0x104010 } ); 
+        return new THREE.MeshStandardMaterial( {color: 0x00ff00 } ); 
     }
 }

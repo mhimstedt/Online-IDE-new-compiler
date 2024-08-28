@@ -14,17 +14,19 @@ export class Cube3dClass extends Mesh3dClass {
 
     _cj$_constructor_$Cube3d$double$double$double(t: Thread, callback: CallbackParameter, x: number, y: number, z: number) {
         this._cj$_constructor_$Cube3d$(t, () => {
-            // TODO
+            this.moveTo(x, y, z);
         })
 
     }
 
     _cj$_constructor_$Cube3d$(t: Thread, callback: CallbackParameter) {
-        super._cj$_constructor_$Mesh3d$(t, undefined);
-        const geometry = new THREE.BoxGeometry();
-    
-        this.mesh = new THREE.Mesh(geometry, this.getBasicMaterial());
-        this.world3d.scene.add(this.mesh);
+        super._cj$_constructor_$Mesh3d$(t, ()=>{
+            const geometry = new THREE.BoxGeometry();
+        
+            this.mesh = new THREE.Mesh(geometry, this.getBasicMaterial());
+            this.world3d.scene.add(this.mesh);
+            if(callback)callback();
+        });
     }
 
 }

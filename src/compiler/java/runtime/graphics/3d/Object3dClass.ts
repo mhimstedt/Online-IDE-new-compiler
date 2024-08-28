@@ -14,9 +14,12 @@ export class Object3dClass extends ActorClass {
     static __javaDeclarations: LibraryDeclarations = [
         { type: "declaration", signature: "abstract class Object3d extends Object", comment: JRC.Object3dClassComment },
         { type: "method", signature: "Object3d()", java: Object3dClass.prototype._cj$_constructor_$Object3d$ },
-        { type: "method", signature: "abstract void move(double x,double y,double z)" },
+        { type: "method", signature: "abstract void move(double x,double y,double z)", native:Object3dClass.prototype.move },
         { type: "method", signature: "final void move(Vector3 v)", native: Object3dClass.prototype.vmove },
-        { type: "method", signature: "abstract void moveTo(double x,double y,double z)" },
+        { type: "method", signature: "abstract void moveTo(double x,double y,double z)", native: Object3dClass.prototype.moveTo},
+        { type: "method", signature: "abstract void rotateX(double angleDeg)",native: Object3dClass.prototype.rotateX },
+        { type: "method", signature: "abstract void rotateY(double angleDeg)",native: Object3dClass.prototype.rotateY },
+        { type: "method", signature: "abstract void rotateZ(double angleDeg)",native: Object3dClass.prototype.rotateZ },
         { type: "method", signature: "final void moveTo(Vector3 p)", native: Object3dClass.prototype.vmoveTo },
     ];
 
@@ -34,6 +37,7 @@ export class Object3dClass extends ActorClass {
             this.world3d._cj$_constructor_$World$(t, callback)
             return;
         }
+        if(callback)callback();
         return;
     }
 
@@ -41,6 +45,9 @@ export class Object3dClass extends ActorClass {
 
     }
 
+    rotateX(angleDeg:number): void{}
+    rotateY(angleDeg:number): void{}
+    rotateZ(angleDeg:number): void{}
     move(x: number, y: number, z: number): void{}
     moveTo(x: number, y: number, z: number): void {}
 
