@@ -30,8 +30,6 @@ export class RobotCubeFactory {
     }
 
     async init() {
-        // await this.loadTextures();
-        await this.world3d.textureManager3d.init(this.world3d.renderer);
 
         for(let i = 0; i < this.farben.length; i++){
             this.farbeToBrickMaterialMap.set(this.farben[i], new THREE.MeshLambertMaterial({
@@ -61,6 +59,7 @@ export class RobotCubeFactory {
             for (let i = 0; i < uvCoordinates.length; i++) {
                 this.grassCubeGeometry.attributes.uv.setXY(i, uvCoordinates[i][0] / 4, uvCoordinates[i][1]/3)
             }
+            this.grassCubeGeometry.attributes.uv.needsUpdate = true;
         }
         return this.grassCubeGeometry.clone();
     }
@@ -81,6 +80,7 @@ export class RobotCubeFactory {
             for (let i = 0; i < uvCoordinates.length; i++) {
                 this.brickGeometry.attributes.uv.setXY(i, uvCoordinates[i][0] / 3, uvCoordinates[i][1])
             }
+            this.brickGeometry.attributes.uv.needsUpdate = true;
         }
         return this.brickGeometry.clone();
     }

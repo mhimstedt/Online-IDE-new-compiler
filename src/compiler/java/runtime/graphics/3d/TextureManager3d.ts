@@ -42,7 +42,7 @@ export class TextureManager3d {
          * Create userTexture
          */
         let graphicsManager = interpreter.graphicsManager;
-        if (graphicsManager) {
+        if (graphicsManager && graphicsManager.pixiSpritesheetData) {
             this.userSpritesheetData = graphicsManager.pixiSpritesheetData;
             this.userTexture = new THREE.DataTexture(graphicsManager.pngImageData, this.userSpritesheetData.meta.size.w, this.userSpritesheetData.meta.size.h,
                 THREE.RGBAFormat, THREE.ByteType, undefined, undefined, undefined, THREE.NearestFilter, THREE.NearestFilter, undefined, THREE.SRGBColorSpace
@@ -60,7 +60,7 @@ export class TextureManager3d {
         if (frame) {
             t = this.systemTexture.clone();
         } else {
-            frame = this.userSpritesheetData.frames[key];
+            frame = this.userSpritesheetData?.frames[key];
             if (!frame) {
                 throw new RuntimeExceptionClass(JRC.textureNotFoundError(spritesheet, index));
             }

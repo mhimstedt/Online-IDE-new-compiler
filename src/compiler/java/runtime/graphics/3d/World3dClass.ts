@@ -137,7 +137,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         this.textureManager3d = new TextureManager3d();
         
         t.state = ThreadState.waiting;
-        this.textureManager3d.init(this.renderer).then(() => {
+        this.textureManager3d.init(interpreter).then(() => {
             this.coordinateSystemHelper = new CoordinateSystemHelper3d(this).show();
             t.state = ThreadState.runnable;
             t.s.push(this);

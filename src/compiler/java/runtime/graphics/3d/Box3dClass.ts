@@ -4,14 +4,37 @@ import { Thread } from "../../../../common/interpreter/Thread";
 import { JRC } from "../../../language/JavaRuntimeLibraryComments";
 import { LibraryDeclarations } from "../../../module/libraries/DeclareType";
 import { Mesh3dClass } from "./Mesh3dClass";
+import { SpriteLibraryEnum } from '../SpriteLibraryEnum';
 
 export class Box3dClass extends Mesh3dClass {
     static __javaDeclarations: LibraryDeclarations = [
         { type: "declaration", signature: "class Box3d extends Mesh3d", comment: JRC.box3dClassComment },
         { type: "method", signature: "Box3d(double x, double y, double z, double width, double height, double depth)", java: Box3dClass.prototype._cj$_constructor_$Box3d$double$double$double$double$double$double, comment: JRC.box3dConstructorXYZComment },
         { type: "method", signature: "Box3d(double x, double y, double z)", java: Box3dClass.prototype._cj$_constructor_$Box3d$double$double$double, comment: JRC.box3dConstructorXYZComment },
-        { type: "method", signature: "Box3d()", java: Box3dClass.prototype._cj$_constructor_$Box3d$, comment: JRC.box3dConstructorComment }
+        { type: "method", signature: "Box3d()", java: Box3dClass.prototype._cj$_constructor_$Box3d$, comment: JRC.box3dConstructorComment },
+        { type: "method", signature: "void setCubemapTexture(SpriteLibrary spriteLibrary, int imageIndex)", native: Box3dClass.prototype._setCubemapTexture },
+        { type: "method", signature: "void setSingleTextureForAllSides(SpriteLibrary spriteLibrary, int imageIndex)", native: Box3dClass.prototype._setSingleTextureForAllSides },
+        // { type: "method", signature: "setTextures(SpriteLibrary[] spriteLibrarys, int[] imageIndices)", native: Box3dClass.prototype._setTextures },
+
     ];
+
+    static cubemapUvCoordinates = new Float32Array([
+        2/4, 2/3, 3/4, 2/3, 2/4, 1/3, 3/4, 1/3,  // right side
+        0/4, 2/3, 1/4, 2/3, 0/4, 1/3, 1/4, 1/3,  // left side
+        1/4, 3/3, 2/4, 3/3, 1/4, 2/3, 2/4, 2/3, // top
+        1/4, 1/3, 2/4, 1/3, 1/4, 0/3, 2/4, 0/3, // bottom
+        1/4, 2/3, 2/4, 2/3, 1/4, 1/3, 2/4, 1/3,  // front
+        3/4, 2/3, 4/4, 2/3, 3/4, 1/3, 4/4, 1/3,  // back
+    ]);
+
+    static singleTextureUvCoordinates = new Float32Array([
+        0, 1, 1, 1, 0, 0, 1, 0,
+        0, 1, 1, 1, 0, 0, 1, 0,
+        0, 1, 1, 1, 0, 0, 1, 0,
+        0, 1, 1, 1, 0, 0, 1, 0,
+        0, 1, 1, 1, 0, 0, 1, 0,
+        0, 1, 1, 1, 0, 0, 1, 0,
+    ]);
 
     _cj$_constructor_$Box3d$double$double$double(t: Thread, callback: CallbackParameter, x: number, y: number, z: number) {
         this._cj$_constructor_$Box3d$(t, () => {
@@ -36,5 +59,56 @@ export class Box3dClass extends Mesh3dClass {
             if(callback)callback();
         });
     }
+
+    _setCubemapTexture(spriteLibrary: SpriteLibraryEnum, imageIndex: number){
+        let texture = this.world3d.textureManager3d.getTexture(spriteLibrary.name, imageIndex);
+
+        // let uvCoordinates = [
+        //     [2, 2], [3, 2], [2, 1], [3, 1],  // right side
+        //     [0, 2], [1, 2], [0, 1], [1, 1],  // left side
+        //     [1, 3], [2, 3], [1, 2], [2, 2], // top
+        //     [1, 1], [2, 1], [1, 0], [2, 0], // bottom
+        //     [1, 2], [2, 2], [1, 1], [2, 1],  // front
+        //     [3, 2], [4, 2], [3, 1], [4, 1],  // back
+        // ];
+        // for (let i = 0; i < uvCoordinates.length; i++) {
+        //     this.mesh.geometry.attributes.uv.setXY(i, uvCoordinates[i][0] / 4, uvCoordinates[i][1]/3)
+        // }
+
+        this.mesh.geometry.attributes.uv = new THREE.BufferAttribute(Box3dClass.cubemapUvCoordinates , 2 );
+
+        this.mesh.geometry.attributes.uv.needsUpdate = true;
+
+        this.mesh.material = new THREE.MeshLambertMaterial({
+            map: texture
+        })
+
+    }
+
+    _setSingleTextureForAllSides(spriteLibrary: SpriteLibraryEnum, imageIndex: number){
+        let texture = this.world3d.textureManager3d.getTexture(spriteLibrary.name, imageIndex);
+
+        // let uvCoordinates = [
+        //     [2, 2], [3, 2], [2, 1], [3, 1],  // right side
+        //     [0, 2], [1, 2], [0, 1], [1, 1],  // left side
+        //     [1, 3], [2, 3], [1, 2], [2, 2], // top
+        //     [1, 1], [2, 1], [1, 0], [2, 0], // bottom
+        //     [1, 2], [2, 2], [1, 1], [2, 1],  // front
+        //     [3, 2], [4, 2], [3, 1], [4, 1],  // back
+        // ];
+        // for (let i = 0; i < uvCoordinates.length; i++) {
+        //     this.mesh.geometry.attributes.uv.setXY(i, uvCoordinates[i][0] / 4, uvCoordinates[i][1]/3)
+        // }
+
+        this.mesh.geometry.attributes.uv = new THREE.BufferAttribute(Box3dClass.singleTextureUvCoordinates , 2 );
+
+        this.mesh.geometry.attributes.uv.needsUpdate = true;
+
+        this.mesh.material = new THREE.MeshLambertMaterial({
+            map: texture
+        })
+
+    }
+
 
 }
