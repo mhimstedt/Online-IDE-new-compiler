@@ -78,9 +78,16 @@ export class Mesh3dClass extends Object3dClass {
 
     vscale(factor: Vector3Class) {
         let scale = this.mesh.scale;
-        scale.setX(scale.x * factor.x);
-        scale.setY(scale.y * factor.y);
-        scale.setZ(scale.z * factor.z);
+        scale.setX(scale.x * factor.v.x);
+        scale.setY(scale.y * factor.v.y);
+        scale.setZ(scale.z * factor.v.z);
+    }
+
+    scaleDouble(factor: number) {
+        let scale = this.mesh.scale;
+        scale.setX(scale.x * factor);
+        scale.setY(scale.y * factor);
+        scale.setZ(scale.z * factor);
     }
 
     

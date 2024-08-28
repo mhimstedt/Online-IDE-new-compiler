@@ -61,30 +61,28 @@ export class Object3dClass extends ActorClass {
     rotateY(angleDeg:number): void{}
     rotateZ(angleDeg:number): void{}
 
-    scaleX(angleDeg:number): void{} 
-    scaleY(angleDeg:number): void{}
-    scaleZ(angleDeg:number): void{}
+    scaleX(factor:number): void{} 
+    scaleY(factor:number): void{}
+    scaleZ(factor:number): void{}
 
-    scaleDouble(){
-        
-    }
+    scaleDouble(factor: number): void{};
 
     vscale(v: Vector3Class) {
-        this.scaleX(v.x);
-        this.scaleY(v.x);
-        this.scaleZ(v.x);
+        this.scaleX(v.v.x);
+        this.scaleY(v.v.y);
+        this.scaleZ(v.v.z);
     }
 
     move(x: number, y: number, z: number): void{}
     moveTo(x: number, y: number, z: number): void {}
 
     vmove(v: Vector3Class) {
-        this.move(v.x, v.y, v.z);
+        this.move(v.v.x, v.v.y, v.v.z);
     }
 
 
     vmoveTo(p: Vector3Class) {
-        this.moveTo(p.x, p.y, p.z);
+        this.moveTo(p.v.x, p.v.y, p.v.z);
     }
 
 }
