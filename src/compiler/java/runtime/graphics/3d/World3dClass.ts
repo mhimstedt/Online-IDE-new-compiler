@@ -261,6 +261,9 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
     }
 
     _clear() {
+        this.objects.forEach((o)=>{
+            o.destroy();
+        })
         this.scene.clear();
         //TODO: set all Object3d-instances to destroyed
     }

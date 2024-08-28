@@ -171,7 +171,7 @@ export class ActorClass extends ObjectClass implements IActor {
     }
 
     destroy() {
-        this.actorManager.unregisterActor(this);
+        this.actorManager?.unregisterActor(this);
         this.isDestroyed = true;
     }
 
