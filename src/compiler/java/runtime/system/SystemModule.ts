@@ -138,9 +138,7 @@ import { PreparedStatementClass } from "../database/PreparedStatementClass.ts";
 import { ResultSetClass } from "../database/ResultSetClass.ts";
 import { WebSocketClass } from "../network/WebSocketClass.ts";
 import { WebSocketClientClass } from "../network/WebSocketClientClass.ts";
-import { TextFieldClass } from "../graphics/gui/TextFieldClass.ts";
 import { RobotClass } from "../graphics/robot/RobotClass.ts";
-import { Object3D } from "three";
 import { Object3dClass } from "../graphics/3d/Object3dClass.ts";
 import { Mesh3dClass } from "../graphics/3d/Mesh3dClass.ts";
 import { Box3dClass } from "../graphics/3d/Box3dClass.ts";
@@ -148,6 +146,7 @@ import { Vector3Class } from "../graphics/3d/Vector3Class.ts";
 import { Sphere3dClass } from "../graphics/3d/Sphere3dClass.ts";
 import { RobotWorldClass } from "../graphics/robot/RobotWorldClass.ts";
 import { Material3dClass } from "../graphics/3d/Material3dClass.ts";
+import { TextFieldClass } from "../graphics/gui/TextfieldClass.ts";
 
 export class SystemModule extends JavaLibraryModule {
 
