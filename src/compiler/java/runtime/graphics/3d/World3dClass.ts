@@ -15,6 +15,9 @@ import { ActorType, IActor } from '../IActor';
 import { MouseManager } from '../MouseManager';
 import { IWorld3d } from './IWorld3d';
 import { GraphicSystem } from '../../../../common/interpreter/GraphicsManager';
+import { ColorHelper } from '../../../lexer/ColorHelper';
+import { ColorClass } from '../ColorClass';
+import { NullPointerExceptionClass } from '../../system/javalang/NullPointerExceptionClass';
 
 
 export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem {
@@ -25,6 +28,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
         { type: "method", signature: "void setBackgroundColor(int colorAsRGBInt)", native: World3dClass.prototype._setBackgroundColor, comment: JRC.worldSetBackgroundColorIntComment },
         { type: "method", signature: "void setBackgroundColor(String colorAsString)", native: World3dClass.prototype._setBackgroundColor, comment: JRC.worldSetBackgroundColorStringComment },
+        { type: "method", signature: "void setBackgroundColor(Color colorObject)", native: World3dClass.prototype._setBackgroundColor, comment: JRC.worldSetBackgroundColorStringComment },
 
         { type: "method", signature: "void setCursor(string cursor)", native: World3dClass.prototype._setCursor, comment: JRC.worldSetCursorComment },
         { type: "method", signature: "void clear()", native: World3dClass.prototype._clear, comment: JRC.worldClearComment },
@@ -213,7 +217,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
     }
 
 
-    _setBackgroundColor(color: string | number) {
+    _setBackgroundColor(color: string | number | ColorClass) {
         // let renderer = (<PIXI.Renderer>(this.app.renderer));
         // if (typeof color == "string") {
         //     let c = ColorHelper.parseColorToOpenGL(color);
@@ -222,7 +226,19 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         // } else {
         //     renderer.background.color.setValue(color);
         // }
-
+        if(color===null){
+            throw new NullPointerExceptionClass()
+        }
+        if(typeof color==="number"){
+            this.scene.background=new THREE.Color(color);
+        }
+        if(typeof color==="string"){
+            let c = ColorHelper.parseColorToOpenGL(color);
+            this.scene.background=new THREE.Color(c.color);
+        }
+        if(typeof color==="object"){
+            this.scene.background=new THREE.Color(color.red,color.green,color.blue);
+        }
     }
 
 
@@ -232,6 +248,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
     _clear() {
         this.scene.clear();
+        //TODO: set all Object3d-instances to destroyed
     }
 
     getIdentifier(): string {
