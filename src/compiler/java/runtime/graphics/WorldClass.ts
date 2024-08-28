@@ -118,7 +118,7 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
 
         t.state = ThreadState.waiting;
         this.app = new PIXI.Application();
-        this.app.init({ background: '#000000', width: width, height: height, resizeTo: undefined, antialias: true }).then(() => {
+        this.app.init({ background: '#000000', width: width, height: height, resizeTo: undefined, antialias: true }).then( async () => {
 
             this.app!.canvas.style.width = "10px";
             this.app!.canvas.style.height = "10px";
@@ -147,6 +147,8 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
             this.mouseManager.registerListeners();
 
             this.gngEventlistenerManager = new GNGEventlistenerManager(interpreter, this);
+
+            await interpreter.graphicsManager?.initPixiUserSpritesheet();
 
             t.state = ThreadState.runnable;
 

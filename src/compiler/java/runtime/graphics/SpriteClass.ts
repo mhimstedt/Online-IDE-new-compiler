@@ -68,7 +68,7 @@ export class SpriteClass extends ShapeClass {
         x: number, y: number, spriteLibrary: string | SpriteLibraryEnum | undefined, imageIndex: number,
         scaleMode?: ScaleModeEnum, copyFromOtherShape?: ShapeClass
     ) {
-        this._cj$_constructor_$Shape$(t, () => {
+        this._cj$_constructor_$Shape$(t, async () => {
             this.x = x;
             this.y = y;
             this.scaleModeOrdinal = scaleMode?.ordinal || ScaleMode.nearest_neighbour;
@@ -313,7 +313,7 @@ export class SpriteClass extends ShapeClass {
         let nameWithIndex = spriteLibrary + "#" + imageIndex;
         let texture: PIXI.Texture | undefined = sheet.textures[nameWithIndex];
         if (texture == null) {
-            let sheet1 = this.world.interpreter?.graphicsManager?.userSpritesheet;
+            let sheet1 = this.world.interpreter?.graphicsManager?.pixiUserSpritesheet;
             texture = sheet1?.textures[nameWithIndex];
         }
 

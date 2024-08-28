@@ -5377,6 +5377,13 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
         "en": `Creates a new Box with edge length 1 and center (0, 0, 0).`,
     })
 
+    /**
+     * World3d
+     */
+    static textureNotFoundError = (textureIdentifier: string, index: number) => lm({
+    "de": `Die Textur mit Identifier ${textureIdentifier} und Index ${index} konnte nicht gefunden werden.`,
+    "en": `Can't find texture with identifier ${textureIdentifier} and index ${index}.`,
+    })
 }
 
 
