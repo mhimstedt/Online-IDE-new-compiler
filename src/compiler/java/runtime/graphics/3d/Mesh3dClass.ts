@@ -4,10 +4,9 @@ import { Thread } from "../../../../common/interpreter/Thread";
 import { JRC } from "../../../language/JavaRuntimeLibraryComments";
 import { LibraryDeclarations } from "../../../module/libraries/DeclareType";
 import { NonPrimitiveType } from "../../../types/NonPrimitiveType";
-import { Object3dClass } from "./Object3dClass";
 import { Material3dClass } from './Material3dClass';
+import { Object3dClass } from "./Object3dClass";
 import { Vector3Class } from './Vector3Class';
-import { TextureManager3d } from './TextureManager3d';
 
 export class Mesh3dClass extends Object3dClass {
 
