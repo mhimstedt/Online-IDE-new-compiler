@@ -19,13 +19,13 @@ export class CoordinateSystemHelper3d {
     axes: Axis[] = [
         {
             vector: new THREE.Vector3(1, 0, 0),
-            vector2: new THREE.Vector3(0, 1, 0),
+            vector2: new THREE.Vector3(0, -1, 0),
             color: 0xff0000,
             caption: "x",
             textureIndex: 0
         },
         {
-            vector: new THREE.Vector3(0, 1, 0),
+            vector: new THREE.Vector3(0, 1, 0), 
             vector2: new THREE.Vector3(-1, 0, 0),
             color: 0x00ff00,
             caption: "y",
@@ -33,7 +33,7 @@ export class CoordinateSystemHelper3d {
         },
         {
             vector: new THREE.Vector3(0, 0, 1),
-            vector2: new THREE.Vector3(1, 0, 0),
+            vector2: new THREE.Vector3(-1, 0, 0),
             color: 0x2020ff,
             caption: "z",
             textureIndex: 2
@@ -51,7 +51,7 @@ export class CoordinateSystemHelper3d {
         if (!this.axes[0].arrowHelper) {
 
             for (let axis of this.axes) {
-                const texture = this.world3d.textureManager3d.getTexture("standard_textures", axis.textureIndex);
+                const texture = this.world3d.textureManager3d.getTexture("standard_textures", axis.textureIndex, this.world3d.renderer);
                 const material = new THREE.SpriteMaterial({ map: texture, color: 0xffffff, transparent: true });
                 axis.sprite = new THREE.Sprite(material);
                 axis.sprite.scale.set(0.2, 0.2, 0.2);

@@ -14,7 +14,6 @@ import { SpriteLibraryEnum } from './SpriteLibraryEnum';
 import { JRC } from '../../language/JavaRuntimeLibraryComments';
 import { ExceptionPrinter } from '../../../common/interpreter/ExceptionPrinter';
 import { CallbackParameter } from '../../../common/interpreter/CallbackParameter';
-import { Exception } from '../../../common/interpreter/ExceptionInfo';
 
 export class SpriteClass extends ShapeClass {
     static __javaDeclarations: LibraryDeclarations = [
@@ -68,7 +67,7 @@ export class SpriteClass extends ShapeClass {
         x: number, y: number, spriteLibrary: string | SpriteLibraryEnum | undefined, imageIndex: number,
         scaleMode?: ScaleModeEnum, copyFromOtherShape?: ShapeClass
     ) {
-        this._cj$_constructor_$Shape$(t, () => {
+        this._cj$_constructor_$Shape$(t, async () => {
             this.x = x;
             this.y = y;
             this.scaleModeOrdinal = scaleMode?.ordinal || ScaleMode.nearest_neighbour;
@@ -300,8 +299,8 @@ export class SpriteClass extends ShapeClass {
 
     setTexture(spriteLibrary?: string, imageIndex?: number) {
 
-        if (spriteLibrary == null) spriteLibrary = this.spriteLibrary;
         if (spriteLibrary == this.spriteLibrary && imageIndex == this.imageIndex) return;
+        if (spriteLibrary == null) spriteLibrary = this.spriteLibrary;
 
         if (imageIndex == null) imageIndex = 0;
         this.imageIndex = imageIndex;
@@ -313,7 +312,7 @@ export class SpriteClass extends ShapeClass {
         let nameWithIndex = spriteLibrary + "#" + imageIndex;
         let texture: PIXI.Texture | undefined = sheet.textures[nameWithIndex];
         if (texture == null) {
-            let sheet1 = this.world.interpreter?.graphicsManager?.userSpritesheet;
+            let sheet1 = this.world.interpreter?.graphicsManager?.pixiUserSpritesheet;
             texture = sheet1?.textures[nameWithIndex];
         }
 

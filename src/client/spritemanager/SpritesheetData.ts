@@ -22,24 +22,11 @@ export class SpritesheetData {
         if (workspace.spritesheetId != null || spritesheetURL != null) {
             await this.load(workspace.spritesheetId != null ? workspace.spritesheetId : spritesheetURL);
 
-            let graphicsManager = main.getInterpreter().graphicsManager;
-
-            if (graphicsManager.userSpritesheet != null) {
-                graphicsManager.userSpritesheet.destroy();
-                graphicsManager.userSpritesheet = null;
-            }
-
+            
             if (this.pngImageData != null && this.pixiSpritesheetData != null) {
-
-                // see https://pixijs.com/8.x/guides/migrations/v8
-                let textureNew = PIXI.Texture.from(new PIXI.BufferImageSource({
-                    resource: this.pngImageData,
-                    width: this.pixiSpritesheetData.meta.size.w,
-                    height: this.pixiSpritesheetData.meta.size.h
-                }))
-
-                graphicsManager.userSpritesheet = new PIXI.Spritesheet(textureNew, this.pixiSpritesheetData);
-                graphicsManager.userSpritesheet.parse().then(() => { });
+                
+                let graphicsManager = main.getInterpreter().graphicsManager;
+                graphicsManager.setUserData(this.pixiSpritesheetData, this.pngImageData);
 
                 for (let identifier in this.pixiSpritesheetData.frames) {
                     let hashIndex = identifier.indexOf('#');
