@@ -5,6 +5,7 @@ import { JRC } from "../../../language/JavaRuntimeLibraryComments";
 import { LibraryDeclarations } from "../../../module/libraries/DeclareType";
 import { Mesh3dClass } from "./Mesh3dClass";
 import { SpriteLibraryEnum } from '../SpriteLibraryEnum';
+import { RuntimeExceptionClass } from '../../system/javalang/RuntimeException';
 
 export class Box3dClass extends Mesh3dClass {
     static __javaDeclarations: LibraryDeclarations = [
@@ -14,7 +15,8 @@ export class Box3dClass extends Mesh3dClass {
         { type: "method", signature: "Box3d()", java: Box3dClass.prototype._cj$_constructor_$Box3d$, comment: JRC.box3dConstructorComment },
         { type: "method", signature: "void setCubemapTexture(SpriteLibrary spriteLibrary, int imageIndex)", native: Box3dClass.prototype._setCubemapTexture },
         { type: "method", signature: "void setSingleTextureForAllSides(SpriteLibrary spriteLibrary, int imageIndex)", native: Box3dClass.prototype._setSingleTextureForAllSides },
-        // { type: "method", signature: "setTextures(SpriteLibrary[] spriteLibrarys, int[] imageIndices)", native: Box3dClass.prototype._setTextures },
+        { type: "method", signature: "void setTextures(SpriteLibrary spriteLibrary, int[] imageIndices)", native: Box3dClass.prototype._setTextures },
+
 
     ];
 
@@ -63,18 +65,6 @@ export class Box3dClass extends Mesh3dClass {
     _setCubemapTexture(spriteLibrary: SpriteLibraryEnum, imageIndex: number){
         let texture = this.world3d.textureManager3d.getTexture(spriteLibrary.name, imageIndex);
 
-        // let uvCoordinates = [
-        //     [2, 2], [3, 2], [2, 1], [3, 1],  // right side
-        //     [0, 2], [1, 2], [0, 1], [1, 1],  // left side
-        //     [1, 3], [2, 3], [1, 2], [2, 2], // top
-        //     [1, 1], [2, 1], [1, 0], [2, 0], // bottom
-        //     [1, 2], [2, 2], [1, 1], [2, 1],  // front
-        //     [3, 2], [4, 2], [3, 1], [4, 1],  // back
-        // ];
-        // for (let i = 0; i < uvCoordinates.length; i++) {
-        //     this.mesh.geometry.attributes.uv.setXY(i, uvCoordinates[i][0] / 4, uvCoordinates[i][1]/3)
-        // }
-
         this.mesh.geometry.attributes.uv = new THREE.BufferAttribute(Box3dClass.cubemapUvCoordinates , 2 );
 
         this.mesh.geometry.attributes.uv.needsUpdate = true;
@@ -88,18 +78,6 @@ export class Box3dClass extends Mesh3dClass {
     _setSingleTextureForAllSides(spriteLibrary: SpriteLibraryEnum, imageIndex: number){
         let texture = this.world3d.textureManager3d.getTexture(spriteLibrary.name, imageIndex);
 
-        // let uvCoordinates = [
-        //     [2, 2], [3, 2], [2, 1], [3, 1],  // right side
-        //     [0, 2], [1, 2], [0, 1], [1, 1],  // left side
-        //     [1, 3], [2, 3], [1, 2], [2, 2], // top
-        //     [1, 1], [2, 1], [1, 0], [2, 0], // bottom
-        //     [1, 2], [2, 2], [1, 1], [2, 1],  // front
-        //     [3, 2], [4, 2], [3, 1], [4, 1],  // back
-        // ];
-        // for (let i = 0; i < uvCoordinates.length; i++) {
-        //     this.mesh.geometry.attributes.uv.setXY(i, uvCoordinates[i][0] / 4, uvCoordinates[i][1]/3)
-        // }
-
         this.mesh.geometry.attributes.uv = new THREE.BufferAttribute(Box3dClass.singleTextureUvCoordinates , 2 );
 
         this.mesh.geometry.attributes.uv.needsUpdate = true;
@@ -109,6 +87,28 @@ export class Box3dClass extends Mesh3dClass {
         })
 
     }
+
+    _setTextures(spriteLibrary: SpriteLibraryEnum, imageIndices: number[]){
+        if(imageIndices?.length != 6){
+            throw new RuntimeExceptionClass(JRC.box3dYouNeedSixTexturesError());
+        }   
+
+        let textures: THREE.Texture[] = [];
+        for(let i = 0; i < 6; i++){
+            textures[i] = this.world3d.textureManager3d.getTexture(spriteLibrary.name, imageIndices[i]);
+        }
+
+        this.mesh.geometry.attributes.uv = new THREE.BufferAttribute(Box3dClass.singleTextureUvCoordinates , 2 );
+
+        this.mesh.geometry.attributes.uv.needsUpdate = true;
+
+        this.mesh.material = textures.map(texture => new THREE.MeshLambertMaterial({
+            map: texture
+        }))
+
+    }
+
+
 
 
 }

@@ -5377,6 +5377,11 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
         "en": `Creates a new Box with edge length 1 and center (0, 0, 0).`,
     })
 
+    static box3dYouNeedSixTexturesError = () => lm({
+    "de": `Es ist ein Array mit exakt sechs Indices für diese Art von Methodenaufruf nötig.`,
+    "en": `You need an array with exactly six indices for this method call.`,
+    })
+
     /**
      * World3d
      */

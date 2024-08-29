@@ -7,6 +7,7 @@ import { NonPrimitiveType } from "../../../types/NonPrimitiveType";
 import { Object3dClass } from "./Object3dClass";
 import { Material3dClass } from './Material3dClass';
 import { Vector3Class } from './Vector3Class';
+import { TextureManager3d } from './TextureManager3d';
 
 export class Mesh3dClass extends Object3dClass {
 
@@ -31,12 +32,17 @@ export class Mesh3dClass extends Object3dClass {
         { type: "method", signature: "final void scale(Vector3 v)", native: Mesh3dClass.prototype.vscale },
         { type: "method", signature: "final void scale(double d)", native: Mesh3dClass.prototype.scaleDouble },
 
+        { type: "method", signature: "final void enableFrontBackSide(boolean frontSideVisible, boolean backSideVisible)", native: Mesh3dClass.prototype.enableFrontBackSide },
+        { type: "method", signature: "final void repeatTexture(int repeatX, int repeatY)", native: Mesh3dClass.prototype.repeatTexture },
+        
+
     ];
 
     static type: NonPrimitiveType;
 
     mesh: THREE.Mesh;
     _material: Material3dClass;
+    side: THREE.Side = THREE.FrontSide;
 
     set material(material: Material3dClass) {
         this._material = material;
@@ -100,6 +106,45 @@ export class Mesh3dClass extends Object3dClass {
     getBasicMaterial(): THREE.Material {
         return new THREE.MeshStandardMaterial( {color: 0x00ff00 } ); 
     }
+
+    enableFrontBackSide(frontSideVisible: boolean, backSideVisible: boolean){
+        if(frontSideVisible){
+            this.side = THREE.FrontSide;
+            if(backSideVisible){
+                this.side = THREE.DoubleSide;
+            }
+        } else {
+            this.side = THREE.BackSide;
+        }
+
+        let materials = this.mesh.material;
+        if(!Array.isArray(materials)) materials = [materials];
+        for(let material of materials){
+            material.side = this.side;
+            material.needsUpdate = true;
+        }
+    }
+
+    repeatTexture(repeatX: number, repeatY: number){
+        let materials = this.mesh.material;
+        if(!Array.isArray(materials)) materials = [materials];
+        for(let material of materials){
+            if(material["map"]){
+                let texture: THREE.Texture = material["map"];
+
+                if(texture.userData["isPartOfSpritesheet"]){
+                    texture = TextureManager3d.cutoutTexture(texture, this.world3d.renderer);
+                    material["map"] = texture;
+                    material.needsUpdate = true;
+                } 
+
+                texture.repeat = new THREE.Vector2(repeatX, repeatY);
+                texture.needsUpdate = true;
+            }
+        }
+
+    }
+
     destroy(){
         super.destroy();
         this.world3d.scene.remove(this.mesh);

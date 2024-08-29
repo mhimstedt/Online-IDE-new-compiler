@@ -69,6 +69,8 @@ export class TextureManager3d {
 
         let data = frame.frame;
 
+        t.userData["isPartOfSpritesheet"] = true;
+
         t.repeat.set(data.w / this.systemTexture.image.width, data.h / this.systemTexture.image.height);
         t.offset.x = data.x / this.systemTexture.image.width;
         t.offset.y = 1 - data.h / this.systemTexture.image.height - data.y / this.systemTexture.image.height;
@@ -77,6 +79,31 @@ export class TextureManager3d {
         t.magFilter = THREE.NearestFilter;
 
         return t;
+    }
+
+    static cutoutTexture(t: THREE.Texture, renderer: THREE.WebGLRenderer): THREE.Texture {
+
+        let imageWidth: number = t.image.width;
+        let imageHeight: number = t.image.height;
+
+        let textureWidth = Math.round(t.repeat.x*imageWidth);
+        let textureHeight = Math.round(t.repeat.y * imageHeight);
+
+        let v = new THREE.Vector2(textureWidth, textureHeight);
+        let offset = new THREE.Vector2(imageWidth * t.offset.x, imageHeight * t.offset.y);
+        let max = offset.clone().add(v);
+
+        let srcRegion = new THREE.Box2(offset, max);
+
+        const data = new Uint8Array(4 * textureWidth * textureHeight);
+        const destTexture = new THREE.DataTexture(data, textureWidth, textureHeight,
+            THREE.RGBAFormat, THREE.ByteType, undefined, undefined, undefined, THREE.NearestFilter, THREE.NearestFilter, undefined, THREE.SRGBColorSpace
+        );
+
+        renderer.copyTextureToTexture(t , destTexture, srcRegion)
+        destTexture.needsUpdate = true;
+
+        return destTexture;
     }
 
 }
