@@ -91,6 +91,15 @@ export class TextureManager3d {
         let texture = this.textureCache.get(key);
         if(texture) return texture;
 
+        texture = this.getUncachedTexture(key, renderer);
+
+        this.textureCache.set(key, texture);
+
+        return texture;
+
+    }
+
+    getUncachedTexture(key: string, renderer: THREE. WebGLRenderer){
         let frame = this.systemSpritesheetData.frames[key];
         let t: THREE.Texture;
         if (frame) {
@@ -98,7 +107,7 @@ export class TextureManager3d {
         } else {
             frame = this.userSpritesheetData?.frames[key];
             if (!frame) {
-                throw new RuntimeExceptionClass(JRC.textureNotFoundError(spritesheet, index));
+                throw new RuntimeExceptionClass(JRC.textureNotFoundError(key));
             }
             t = this.userTexture;
         }
@@ -126,9 +135,9 @@ export class TextureManager3d {
         renderer.initRenderTarget(renderTarget);
         renderer.copyTextureToTexture(t, newTexture, new THREE.Box2(topLeft, bottomRight))
 
-        this.textureCache.set(key, newTexture);
         newTexture.userData["width"] = data.w;
         newTexture.userData["height"] = data.h;
+        newTexture.userData["key"] = key;
 
         return newTexture;
 

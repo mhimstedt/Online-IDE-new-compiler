@@ -34,7 +34,7 @@ export class Mesh3dClass extends Object3dClass {
 
         { type: "method", signature: "final void enableFrontBackSide(boolean frontSideVisible, boolean backSideVisible)", native: Mesh3dClass.prototype.enableFrontBackSide },
         { type: "method", signature: "final void repeatTexture(int repeatX, int repeatY)", native: Mesh3dClass.prototype.repeatTexture },
-        // { type: "method", signature: "final void renderTransparent(boolean transparent)", native: Mesh3dClass.prototype.renderTransparent },
+        { type: "method", signature: "final void renderTransparent(boolean transparent)", native: Mesh3dClass.prototype.renderTransparent },
 
 
     ];
@@ -133,35 +133,27 @@ export class Mesh3dClass extends Object3dClass {
             if (material["map"]) {
                 let texture: THREE.Texture = material["map"];
 
-                // if (texture.userData["width"] !== undefined) {
+                if (texture.userData["key"] !== undefined) {
 
-                //     let width = texture.userData["width"];
-                //     let height = texture.userData["height"];
+                    texture = this.world3d.textureManager3d.getUncachedTexture(texture.userData["key"], this.world3d.renderer);
 
-                //     // see https://github.com/mrdoob/three.js/issues/28282
-                //     let renderTarget = new THREE.WebGLRenderTarget(width, height,
-                //         {
-                //             minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, format: THREE.RGBAFormat,
-                //             colorSpace: THREE.SRGBColorSpace
-                //         }
-                //     );
-
-                //     let newTexture = renderTarget.texture;
-                //     newTexture.wrapS = THREE.RepeatWrapping;
-                //     newTexture.wrapT = THREE.RepeatWrapping;
-
-                //     this.world3d.renderer.initRenderTarget(renderTarget);
-                //     this.world3d.renderer.copyTextureToTexture(texture, newTexture, new THREE.Box2(new THREE.Vector2(), new THREE.Vector2(width, height)))
-            
-                //     texture = newTexture;
-                //     material["map"] = texture;
-                //     material.needsUpdate = true;
-                // }
+                    material["map"] = texture;
+                    material.needsUpdate = true;
+                }
 
                 texture.repeat.set(repeatX, repeatY);
             }
         }
 
+    }
+
+    renderTransparent(isTransparent: boolean) {
+        let materials = this.mesh.material;
+        if (!Array.isArray(materials)) materials = [materials];
+        for (let material of materials) {
+            material.transparent = isTransparent;
+            material.needsUpdate = true;
+        }
     }
 
     destroy() {
