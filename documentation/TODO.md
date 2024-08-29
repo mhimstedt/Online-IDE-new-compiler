@@ -2,17 +2,16 @@
 
 # TODO
   * Test Repository-functionality
-  * Robot class
   * Test all library classes, add missing methods, fix bugs
   * missing methods:
     * Program must not stop after program end if Timer-object is running (Test-file Timer)
   * In CodeGenerator: use CodeSnippetContainer instead of CodeSnippet[] throughout the code to make inserting nextStepMark() easier and avoid extremely nested CodeSnippetContainers
   * more private fields for graphical objects to get better debugger output
-
-
-
   * 3d-classes
   * add more compiler-tests
+
+
+
 
 # Done:
   * Fix API-documentation 
@@ -38,6 +37,7 @@
   * Serialize object to/from JSON
   * Test and debug homework-functionality
   * Test Pruefung-functionality -> Seems to be ok...
+  * Robot class
     
 
 
