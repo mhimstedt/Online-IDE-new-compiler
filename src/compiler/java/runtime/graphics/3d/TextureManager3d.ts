@@ -83,27 +83,29 @@ export class TextureManager3d {
 
     static cutoutTexture(t: THREE.Texture, renderer: THREE.WebGLRenderer): THREE.Texture {
 
-        let imageWidth: number = t.image.width;
-        let imageHeight: number = t.image.height;
+        let imageWidth: number = Math.round(t.image.width);
+        let imageHeight: number = Math.round(t.image.height);
 
-        let textureWidth = Math.round(t.repeat.x*imageWidth);
+        let textureWidth = Math.round(t.repeat.x * imageWidth);
         let textureHeight = Math.round(t.repeat.y * imageHeight);
 
         let v = new THREE.Vector2(textureWidth, textureHeight);
-        let offset = new THREE.Vector2(imageWidth * t.offset.x, imageHeight * t.offset.y);
+        let offset = new THREE.Vector2(Math.round(imageWidth * t.offset.x), imageHeight - Math.round(imageHeight * t.offset.y) - textureHeight);
         let max = offset.clone().add(v);
 
         let srcRegion = new THREE.Box2(offset, max);
 
-        const data = new Uint8Array(4 * textureWidth * textureHeight);
-        const destTexture = new THREE.DataTexture(data, textureWidth, textureHeight,
-            THREE.RGBAFormat, THREE.ByteType, undefined, undefined, undefined, THREE.NearestFilter, THREE.NearestFilter, undefined, THREE.SRGBColorSpace
+        // see https://github.com/mrdoob/three.js/issues/28282
+        let renderTarget = new THREE.WebGLRenderTarget(textureWidth, textureHeight,
+            { minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, format: THREE.RGBAFormat,
+                colorSpace: THREE.SRGBColorSpace
+             }
         );
 
-        renderer.copyTextureToTexture(t , destTexture, srcRegion)
-        destTexture.needsUpdate = true;
+        renderer.initRenderTarget(renderTarget);
+        renderer.copyTextureToTexture(t, renderTarget.texture, srcRegion)
 
-        return destTexture;
+        return renderTarget.texture;
     }
 
 }

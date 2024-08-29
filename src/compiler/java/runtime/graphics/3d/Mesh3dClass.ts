@@ -134,12 +134,14 @@ export class Mesh3dClass extends Object3dClass {
 
                 if(texture.userData["isPartOfSpritesheet"]){
                     texture = TextureManager3d.cutoutTexture(texture, this.world3d.renderer);
+                    texture.needsUpdate = true;
                     material["map"] = texture;
                     material.needsUpdate = true;
                 } 
 
-                texture.repeat = new THREE.Vector2(repeatX, repeatY);
-                texture.needsUpdate = true;
+                texture.wrapS = THREE.RepeatWrapping;
+                texture.wrapT = THREE.RepeatWrapping;
+                texture.repeat.set(repeatX, repeatY);
             }
         }
 
