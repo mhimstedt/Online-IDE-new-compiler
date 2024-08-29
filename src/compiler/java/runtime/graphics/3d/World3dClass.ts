@@ -69,6 +69,10 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
         let interpreter = t.scheduler.interpreter;
 
+        interpreter.eventManager.once("resetRuntime", () => {
+            this.destroyWorld(interpreter);
+        })
+
         interpreter.graphicsManager?.registerGraphicSystem(this);
 
         let existingWorld = <World3dClass>interpreter.retrieveObject("World3dClass");
@@ -171,7 +175,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
     }
 
     destroyWorld(interpreter: Interpreter) {
-
+        this.objects.forEach(obj => obj.destroy());
         this.resizeObserver?.disconnect();
     }
 

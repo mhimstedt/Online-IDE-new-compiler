@@ -57,49 +57,38 @@ export class TextureManager3d {
 
     }
 
-    // getTextureOld(spritesheet: string, index: number) {
-    //     let key: string = spritesheet + "#" + index;
-    //     let frame = this.systemSpritesheetData.frames[key];
-    //     let t: THREE.Texture;
-    //     if (frame) {
-    //         t = this.systemTexture.clone();
-    //     } else {
-    //         frame = this.userSpritesheetData?.frames[key];
-    //         if (!frame) {
-    //             throw new RuntimeExceptionClass(JRC.textureNotFoundError(spritesheet, index));
-    //         }
-    //         t = this.userTexture.clone();
-    //     }
-
-    //     let data = frame.frame;
-
-    //     t.userData["isPartOfSpritesheet"] = true;
-
-    //     t.repeat.set(data.w / this.systemTexture.image.width, data.h / this.systemTexture.image.height);
-    //     t.offset.x = data.x / this.systemTexture.image.width;
-    //     t.offset.y = 1 - data.h / this.systemTexture.image.height - data.y / this.systemTexture.image.height;
-
-    //     t.colorSpace = THREE.SRGBColorSpace;
-    //     t.magFilter = THREE.NearestFilter;
-
-    //     return t;
-    // }
-
-    getTexture(spritesheet: string, index: number, renderer: THREE.WebGLRenderer) {
+    getSpritesheetBasedTexture(spritesheet: string, index: number) {
         let key: string = spritesheet + "#" + index;
+        let frame = this.systemSpritesheetData.frames[key];
+        let t: THREE.Texture;
+        if (frame) {
+            t = this.systemTexture.clone();
+        } else {
+            frame = this.userSpritesheetData?.frames[key];
+            if (!frame) {
+                throw new RuntimeExceptionClass(JRC.textureNotFoundError(spritesheet, index));
+            }
+            t = this.userTexture.clone();
+        }
 
-        let texture = this.textureCache.get(key);
-        if(texture) return texture;
+        let data = frame.frame;
 
-        texture = this.getUncachedTexture(key, renderer);
+        t.userData["isPartOfSpritesheet"] = true;
+        t.userData["width"] = data.w;
+        t.userData["height"] = data.h;
+        t.userData["key"] = key;
 
-        this.textureCache.set(key, texture);
+        t.repeat.set(data.w / this.systemTexture.image.width, data.h / this.systemTexture.image.height);
+        t.offset.x = data.x / this.systemTexture.image.width;
+        t.offset.y = 1 - data.h / this.systemTexture.image.height - data.y / this.systemTexture.image.height;
 
-        return texture;
+        t.colorSpace = THREE.SRGBColorSpace;
+        t.magFilter = THREE.NearestFilter;
 
+        return t;
     }
 
-    getUncachedTexture(key: string, renderer: THREE. WebGLRenderer){
+    getTextureWithOwnData(key: string, renderer: THREE. WebGLRenderer){
         let frame = this.systemSpritesheetData.frames[key];
         let t: THREE.Texture;
         if (frame) {
@@ -107,7 +96,7 @@ export class TextureManager3d {
         } else {
             frame = this.userSpritesheetData?.frames[key];
             if (!frame) {
-                throw new RuntimeExceptionClass(JRC.textureNotFoundError(key));
+                throw new RuntimeExceptionClass(JRC.textureNotFoundError(key, 0));
             }
             t = this.userTexture;
         }
@@ -143,31 +132,33 @@ export class TextureManager3d {
 
     }
 
-    static cutoutTexture(t: THREE.Texture, renderer: THREE.WebGLRenderer): THREE.Texture {
+    // static cutoutTexture(t: THREE.Texture, renderer: THREE.WebGLRenderer): THREE.Texture {
 
-        let imageWidth: number = Math.round(t.image.width);
-        let imageHeight: number = Math.round(t.image.height);
+    //     let imageWidth: number = Math.round(t.image.width);
+    //     let imageHeight: number = Math.round(t.image.height);
 
-        let textureWidth = Math.round(t.repeat.x * imageWidth);
-        let textureHeight = Math.round(t.repeat.y * imageHeight);
+    //     let textureWidth = Math.round(t.repeat.x * imageWidth);
+    //     let textureHeight = Math.round(t.repeat.y * imageHeight);
 
-        let v = new THREE.Vector2(textureWidth, textureHeight);
-        let offset = new THREE.Vector2(Math.round(imageWidth * t.offset.x), imageHeight - Math.round(imageHeight * t.offset.y) - textureHeight);
-        let max = offset.clone().add(v);
+    //     let v = new THREE.Vector2(textureWidth, textureHeight);
+    //     let offset = new THREE.Vector2(Math.round(imageWidth * t.offset.x), imageHeight - Math.round(imageHeight * t.offset.y) - textureHeight);
+    //     let max = offset.clone().add(v);
 
-        let srcRegion = new THREE.Box2(offset, max);
+    //     let srcRegion = new THREE.Box2(offset, max);
 
-        // see https://github.com/mrdoob/three.js/issues/28282
-        let renderTarget = new THREE.WebGLRenderTarget(textureWidth, textureHeight,
-            { minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, format: THREE.RGBAFormat,
-                colorSpace: THREE.SRGBColorSpace
-             }
-        );
+    //     // see https://github.com/mrdoob/three.js/issues/28282
+    //     let renderTarget = new THREE.WebGLRenderTarget(textureWidth, textureHeight,
+    //         { minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, format: THREE.RGBAFormat,
+    //             colorSpace: THREE.SRGBColorSpace
+    //          }
+    //     );
 
-        renderer.initRenderTarget(renderTarget);
-        renderer.copyTextureToTexture(t, renderTarget.texture, srcRegion)
+    //     renderer.initRenderTarget(renderTarget);
+    //     renderer.copyTextureToTexture(t, renderTarget.texture, srcRegion)
 
-        return renderTarget.texture;
-    }
+    //     return renderTarget.texture;
+    // }
+
+
 
 }

@@ -63,7 +63,7 @@ export class Box3dClass extends Mesh3dClass {
     }
 
     _setCubemapTexture(spriteLibrary: SpriteLibraryEnum, imageIndex: number){
-        let texture = this.world3d.textureManager3d.getTexture(spriteLibrary.name, imageIndex, this.world3d.renderer);
+        let texture = this.world3d.textureManager3d.getSpritesheetBasedTexture(spriteLibrary.name, imageIndex, this.world3d.renderer);
 
         this.mesh.geometry.attributes.uv = new THREE.BufferAttribute(Box3dClass.cubemapUvCoordinates , 2 );
 
@@ -76,7 +76,7 @@ export class Box3dClass extends Mesh3dClass {
     }
 
     _setSingleTextureForAllSides(spriteLibrary: SpriteLibraryEnum, imageIndex: number){
-        let texture = this.world3d.textureManager3d.getTexture(spriteLibrary.name, imageIndex, this.world3d.renderer);
+        let texture = this.world3d.textureManager3d.getSpritesheetBasedTexture(spriteLibrary.name, imageIndex, this.world3d.renderer);
 
         this.mesh.geometry.attributes.uv = new THREE.BufferAttribute(Box3dClass.singleTextureUvCoordinates , 2 );
 
@@ -95,7 +95,7 @@ export class Box3dClass extends Mesh3dClass {
 
         let textures: THREE.Texture[] = [];
         for(let i = 0; i < 6; i++){
-            textures[i] = this.world3d.textureManager3d.getTexture(spriteLibrary.name, imageIndices[i], this.world3d.renderer);
+            textures[i] = this.world3d.textureManager3d.getSpritesheetBasedTexture(spriteLibrary.name, imageIndices[i], this.world3d.renderer);
         }
 
         this.mesh.geometry.attributes.uv = new THREE.BufferAttribute(Box3dClass.singleTextureUvCoordinates , 2 );

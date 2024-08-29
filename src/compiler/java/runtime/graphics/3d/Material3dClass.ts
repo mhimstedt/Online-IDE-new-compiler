@@ -18,11 +18,15 @@ export class Material3dClass extends ObjectClass {
 
     static type: NonPrimitiveType;
 
-    material: THREE.Material;
+    private material: THREE.Material;
+    private usageCounter: number = 0;
+
+
     constructor(material: THREE.Material) {
         super();
         this.material = material;
     }
+
     setColorColor(color: ColorClass) {
         if(color===null){
             throw new NullPointerExceptionClass(JRC.world3dColorNull())
@@ -42,6 +46,21 @@ export class Material3dClass extends ObjectClass {
         if (this.material["color"]!==undefined) {
             let c = ColorHelper.parseColorToOpenGL(color);
             this.material["color"]?.set(c.color);
+        }
+    }
+
+    attachToMesh(mesh: THREE.Mesh){
+        mesh.material = this.material;
+        this.usageCounter++;
+    }
+
+    destroyIfNotUsedByOtherMesh(){
+        if(--this.usageCounter == 0){
+            let texture = this.material["map"];
+            if(texture){
+                if(texture["isPartOfSpritesheet"]) return;
+                texture.dispose();
+            }
         }
     }
 

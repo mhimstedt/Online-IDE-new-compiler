@@ -20,7 +20,6 @@ export class Mesh3dClass extends Object3dClass {
         { type: "method", signature: "final void move(Vector3 v)", native: Mesh3dClass.prototype.vmove },
         { type: "method", signature: "void moveTo(double x,double y,double z)" },
         { type: "method", signature: "final void moveTo(Vector3 p)", native: Mesh3dClass.prototype.vmoveTo },
-        { type: "method", signature: "void destroy()", java: Mesh3dClass.prototype.destroy },
         { type: "method", signature: "void rotateX(double angleDeg)", native: Mesh3dClass.prototype.rotateX },
         { type: "method", signature: "void rotateY(double angleDeg)", native: Mesh3dClass.prototype.rotateY },
         { type: "method", signature: "void rotateZ(double angleDeg)", native: Mesh3dClass.prototype.rotateZ },
@@ -35,18 +34,24 @@ export class Mesh3dClass extends Object3dClass {
         { type: "method", signature: "final void repeatTexture(int repeatX, int repeatY)", native: Mesh3dClass.prototype.repeatTexture },
         { type: "method", signature: "final void renderTransparent(boolean transparent)", native: Mesh3dClass.prototype.renderTransparent },
 
+        { type: "method", signature: "void destroy()", java: Mesh3dClass.prototype.destroy },
 
     ];
 
     static type: NonPrimitiveType;
 
     mesh: THREE.Mesh;
-    _material: Material3dClass;
+    private _material: Material3dClass;
     side: THREE.Side = THREE.FrontSide;
 
-    set material(material: Material3dClass) {
-        this._material = material;
-        this.mesh.material = material.material;
+    set material(newMaterial: Material3dClass) {
+        if (this._material === newMaterial) return;
+
+        if (this._material) this.material.destroyIfNotUsedByOtherMesh();
+
+        this._material = newMaterial;
+        newMaterial.attachToMesh(this.mesh);
+
     }
 
     get material(): Material3dClass {
@@ -54,7 +59,7 @@ export class Mesh3dClass extends Object3dClass {
     }
 
     _cj$_constructor_$Mesh3d$(t: Thread, callback: CallbackParameter) {
-        this._material = new Material3dClass(this.getBasicMaterial());
+        this.material = new Material3dClass(this.getBasicMaterial());
         super._cj$_constructor_$Object3d$(t, callback);
     }
 
@@ -134,7 +139,7 @@ export class Mesh3dClass extends Object3dClass {
 
                 if (texture.userData["key"] !== undefined) {
 
-                    texture = this.world3d.textureManager3d.getUncachedTexture(texture.userData["key"], this.world3d.renderer);
+                    texture = this.world3d.textureManager3d.getTextureWithOwnData(texture.userData["key"], this.world3d.renderer);
 
                     material["map"] = texture;
                     material.needsUpdate = true;
@@ -159,6 +164,6 @@ export class Mesh3dClass extends Object3dClass {
         super.destroy();
         this.world3d.scene.remove(this.mesh);
         this.mesh.geometry.dispose();
-        //TODO: destroy mesh?
+        this._material.destroyIfNotUsedByOtherMesh();
     }
 }
