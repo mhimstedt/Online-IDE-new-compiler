@@ -37,6 +37,8 @@ export class TextureManager3d {
         this.systemTexture.colorSpace = THREE.SRGBColorSpace;
         this.systemTexture.magFilter = THREE.NearestFilter;
 
+        this.systemTexture.needsUpdate = true;
+
         this.systemSpritesheetData = await (await fetch(pathPraefix + `${spritesheetjson}`)).json();
 
 
@@ -55,33 +57,33 @@ export class TextureManager3d {
 
     }
 
-    getTextureOld(spritesheet: string, index: number) {
-        let key: string = spritesheet + "#" + index;
-        let frame = this.systemSpritesheetData.frames[key];
-        let t: THREE.Texture;
-        if (frame) {
-            t = this.systemTexture.clone();
-        } else {
-            frame = this.userSpritesheetData?.frames[key];
-            if (!frame) {
-                throw new RuntimeExceptionClass(JRC.textureNotFoundError(spritesheet, index));
-            }
-            t = this.userTexture.clone();
-        }
+    // getTextureOld(spritesheet: string, index: number) {
+    //     let key: string = spritesheet + "#" + index;
+    //     let frame = this.systemSpritesheetData.frames[key];
+    //     let t: THREE.Texture;
+    //     if (frame) {
+    //         t = this.systemTexture.clone();
+    //     } else {
+    //         frame = this.userSpritesheetData?.frames[key];
+    //         if (!frame) {
+    //             throw new RuntimeExceptionClass(JRC.textureNotFoundError(spritesheet, index));
+    //         }
+    //         t = this.userTexture.clone();
+    //     }
 
-        let data = frame.frame;
+    //     let data = frame.frame;
 
-        t.userData["isPartOfSpritesheet"] = true;
+    //     t.userData["isPartOfSpritesheet"] = true;
 
-        t.repeat.set(data.w / this.systemTexture.image.width, data.h / this.systemTexture.image.height);
-        t.offset.x = data.x / this.systemTexture.image.width;
-        t.offset.y = 1 - data.h / this.systemTexture.image.height - data.y / this.systemTexture.image.height;
+    //     t.repeat.set(data.w / this.systemTexture.image.width, data.h / this.systemTexture.image.height);
+    //     t.offset.x = data.x / this.systemTexture.image.width;
+    //     t.offset.y = 1 - data.h / this.systemTexture.image.height - data.y / this.systemTexture.image.height;
 
-        t.colorSpace = THREE.SRGBColorSpace;
-        t.magFilter = THREE.NearestFilter;
+    //     t.colorSpace = THREE.SRGBColorSpace;
+    //     t.magFilter = THREE.NearestFilter;
 
-        return t;
-    }
+    //     return t;
+    // }
 
     getTexture(spritesheet: string, index: number, renderer: THREE.WebGLRenderer) {
         let key: string = spritesheet + "#" + index;
@@ -103,7 +105,7 @@ export class TextureManager3d {
 
         let data = frame.frame;
 
-        let topLeft = new THREE.Vector2(data.x, data.y);
+        let topLeft = new THREE.Vector2(data.x, t.image.height - data.y - data.h);
         let bottomRight = topLeft.clone();
         bottomRight.x += data.w;
         bottomRight.y += data.h;
@@ -114,6 +116,10 @@ export class TextureManager3d {
                 colorSpace: THREE.SRGBColorSpace
              }
         );
+        renderTarget.texture.wrapS = THREE.RepeatWrapping;
+        renderTarget.texture.wrapT = THREE.RepeatWrapping;
+        renderTarget.texture.flipY = true;
+
 
         renderer.initRenderTarget(renderTarget);
         renderer.copyTextureToTexture(t, renderTarget.texture, new THREE.Box2(topLeft, bottomRight))
