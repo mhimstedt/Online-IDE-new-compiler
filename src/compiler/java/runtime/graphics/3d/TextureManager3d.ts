@@ -116,17 +116,21 @@ export class TextureManager3d {
                 colorSpace: THREE.SRGBColorSpace
              }
         );
-        renderTarget.texture.wrapS = THREE.RepeatWrapping;
-        renderTarget.texture.wrapT = THREE.RepeatWrapping;
-        renderTarget.texture.flipY = true;
+
+        let newTexture = renderTarget.texture;
+        newTexture.wrapS = THREE.RepeatWrapping;
+        newTexture.wrapT = THREE.RepeatWrapping;
+        newTexture.flipY = true;
 
 
         renderer.initRenderTarget(renderTarget);
-        renderer.copyTextureToTexture(t, renderTarget.texture, new THREE.Box2(topLeft, bottomRight))
+        renderer.copyTextureToTexture(t, newTexture, new THREE.Box2(topLeft, bottomRight))
 
-        this.textureCache.set(key, renderTarget.texture);
+        this.textureCache.set(key, newTexture);
+        newTexture.userData["width"] = data.w;
+        newTexture.userData["height"] = data.h;
 
-        return renderTarget.texture;
+        return newTexture;
 
     }
 
