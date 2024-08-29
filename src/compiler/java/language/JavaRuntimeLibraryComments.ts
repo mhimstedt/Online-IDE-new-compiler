@@ -638,7 +638,7 @@ export class JRC {
         "en": "Set fill color from Color object value.",
     })
 
-    static fsColorIsNullException = () => lm({
+    static fsColorIsNullException = () => lm({   // used twice, both times OUTSIDE of FilledShape
         "de": `Die angegebene Farbe ist null.`,
         "en": `Color is null.`,
     })

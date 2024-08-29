@@ -1,12 +1,13 @@
 import * as THREE from 'three';
 import { CallbackParameter } from "../../../../common/interpreter/CallbackParameter";
 import { Thread } from "../../../../common/interpreter/Thread";
-import { JRC } from "../../../language/JavaRuntimeLibraryComments";
 import { LibraryDeclarations } from "../../../module/libraries/DeclareType";
 import { NonPrimitiveType } from "../../../types/NonPrimitiveType";
 import { Object3dClass } from "./Object3dClass";
-import { Material3dClass } from './Material3dClass';
-import { Vector3Class } from './Vector3Class';
+import { ColorClass } from '../ColorClass';
+import { ColorHelper } from '../../../lexer/ColorHelper';
+import { RuntimeExceptionClass } from '../../system/javalang/RuntimeException';
+import { JRC } from '../../../language/JavaRuntimeLibraryComments';
 
 export class Light3dClass extends Object3dClass {
 
@@ -24,13 +25,11 @@ export class Light3dClass extends Object3dClass {
         { type: "method", signature: "void rotateX(double angleDeg)",native: Light3dClass.prototype.rotateX },
         { type: "method", signature: "void rotateY(double angleDeg)",native: Light3dClass.prototype.rotateY },
         { type: "method", signature: "void rotateZ(double angleDeg)",native: Light3dClass.prototype.rotateZ },
-
-        { type: "method", signature: "final void scaleX(double angleDeg)",native: Light3dClass.prototype.scaleX },
-        { type: "method", signature: "final void scaleY(double angleDeg)",native: Light3dClass.prototype.scaleY },
-        { type: "method", signature: "final void scaleZ(double angleDeg)",native: Light3dClass.prototype.scaleZ },
-        { type: "method", signature: "final void scale(Vector3 v)", native: Light3dClass.prototype.vscale },
-        { type: "method", signature: "final void scale(double d)", native: Light3dClass.prototype.scaleDouble },
-
+        { type: "method", signature: "void setIntensity(double intensity)",native: Light3dClass.prototype.setIntensity },
+        { type: "method", signature: "double getIntensity()",native: Light3dClass.prototype.getIntensity },
+        { type: "method", signature: "void setColor(int color)",native: Light3dClass.prototype.setColor },
+        { type: "method", signature: "void setColor(String color)",native: Light3dClass.prototype.setColor },
+        { type: "method", signature: "void setColor(Color color)",native: Light3dClass.prototype.setColor },
     ];
 
     static type: NonPrimitiveType;
@@ -39,10 +38,10 @@ export class Light3dClass extends Object3dClass {
 
     _cj$_constructor_$Light3d$(t: Thread, callback: CallbackParameter){
         super._cj$_constructor_$Object3d$(t, callback);
+        this.world3d.scene.add(this.light);
     }    
 
     move(x:number,y:number,z:number):void{
-        // this.light.position.add(new THREE.Vector3(x,y,z));
         this.light.position.set(this.light.position.x+x,this.light.position.y+y,this.light.position.z+z)
     }
     moveTo(x:number,y:number,z:number):void{
@@ -58,31 +57,27 @@ export class Light3dClass extends Object3dClass {
     rotateZ(angleDeg: number): void {
         this.light.rotateZ(angleDeg/180*Math.PI);
     }
-
-    scaleX(factor:number): void{
-        this.light.scale.setX(this.light.scale.x * factor);
+    setIntensity(i:number){
+        this.light.intensity = i;
     }
-
-    scaleY(factor:number): void{
-        this.light.scale.setY(this.light.scale.y * factor);
+    getIntensity(){
+        return this.light.intensity;
     }
-
-    scaleZ(factor:number): void{
-        this.light.scale.setZ(this.light.scale.z * factor);
-    }
-
-    vscale(factor: Vector3Class) {
-        let scale = this.light.scale;
-        scale.setX(scale.x * factor.v.x);
-        scale.setY(scale.y * factor.v.y);
-        scale.setZ(scale.z * factor.v.z);
-    }
-
-    scaleDouble(factor: number) {
-        let scale = this.light.scale;
-        scale.setX(scale.x * factor);
-        scale.setY(scale.y * factor);
-        scale.setZ(scale.z * factor);
+    setColor(color:number|string|ColorClass){
+        switch (typeof color) {
+            case "number":
+                this.light.color.set(color);
+                break;
+            case "string":
+                this.light.color.set(ColorHelper.parseColorToOpenGL(color).color);
+                break;
+            case "object":
+                if(color==null){
+                    throw new RuntimeExceptionClass(JRC.fsColorIsNullException())
+                }
+                this.light.color.set(color.red/255,color.green/255,color.blue/255);
+                break;
+        }
     }
 
     destroy(){

@@ -28,7 +28,7 @@ export class Material3dClass extends ObjectClass {
             throw new NullPointerExceptionClass(JRC.world3dColorNull())
         }
         if (this.material["color"]!==undefined) {
-            this.material["color"]?.set(color.red, color.green, color.blue);
+            this.material["color"]?.set(color.red/255, color.green/255, color.blue/255);
         }
     }
 

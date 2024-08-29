@@ -147,6 +147,8 @@ import { Sphere3dClass } from "../graphics/3d/Sphere3dClass.ts";
 import { RobotWorldClass } from "../graphics/robot/RobotWorldClass.ts";
 import { Material3dClass } from "../graphics/3d/Material3dClass.ts";
 import { TextFieldClass } from "../graphics/gui/TextfieldClass.ts";
+import { Light3dClass } from "../graphics/3d/Light3dClass.ts";
+import { PointLight3dClass } from "../graphics/3d/PointLight3dClass.ts";
 
 export class SystemModule extends JavaLibraryModule {
 
@@ -232,7 +234,7 @@ export class SystemModule extends JavaLibraryModule {
 
             // Graphics 3D
             Vector3Class, Material3dClass,
-            World3dClass, Object3dClass, Mesh3dClass, Box3dClass, Sphere3dClass,
+            World3dClass, Object3dClass, Mesh3dClass, Box3dClass, Sphere3dClass,Light3dClass,PointLight3dClass,
 
             // Processing
             PAppletClass,
