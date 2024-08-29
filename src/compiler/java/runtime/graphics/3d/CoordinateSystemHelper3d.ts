@@ -51,7 +51,7 @@ export class CoordinateSystemHelper3d {
         if (!this.axes[0].arrowHelper) {
 
             for (let axis of this.axes) {
-                const texture = this.world3d.textureManager3d.getTexture("standard_textures", axis.textureIndex);
+                const texture = this.world3d.textureManager3d.getTexture("standard_textures", axis.textureIndex, this.world3d.renderer);
                 const material = new THREE.SpriteMaterial({ map: texture, color: 0xffffff, transparent: true });
                 axis.sprite = new THREE.Sprite(material);
                 axis.sprite.scale.set(0.2, 0.2, 0.2);

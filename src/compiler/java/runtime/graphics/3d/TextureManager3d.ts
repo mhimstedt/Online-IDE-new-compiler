@@ -14,6 +14,8 @@ export class TextureManager3d {
     userSpritesheetData: PixiSpritesheetData;
     userTexture: THREE.Texture;
 
+    textureCache: Map<string, THREE.Texture> = new Map();
+
 
     async init(interpreter: Interpreter) {
 
@@ -45,7 +47,7 @@ export class TextureManager3d {
         if (graphicsManager && graphicsManager.pixiSpritesheetData) {
             this.userSpritesheetData = graphicsManager.pixiSpritesheetData;
             this.userTexture = new THREE.DataTexture(graphicsManager.pngImageData, this.userSpritesheetData.meta.size.w, this.userSpritesheetData.meta.size.h,
-                THREE.RGBAFormat, THREE.ByteType, undefined, undefined, undefined, THREE.NearestFilter, THREE.NearestFilter, undefined, THREE.SRGBColorSpace
+                THREE.RGBAFormat, THREE.ByteType, undefined, undefined, undefined, THREE.NearestFilter, THREE.NearestFilter, undefined, THREE.SRGBColorSpace,
             )
             this.userTexture.needsUpdate = true;
         }
@@ -53,7 +55,7 @@ export class TextureManager3d {
 
     }
 
-    getTexture(spritesheet: string, index: number) {
+    getTextureOld(spritesheet: string, index: number) {
         let key: string = spritesheet + "#" + index;
         let frame = this.systemSpritesheetData.frames[key];
         let t: THREE.Texture;
@@ -79,6 +81,47 @@ export class TextureManager3d {
         t.magFilter = THREE.NearestFilter;
 
         return t;
+    }
+
+    getTexture(spritesheet: string, index: number, renderer: THREE.WebGLRenderer) {
+        let key: string = spritesheet + "#" + index;
+
+        let texture = this.textureCache.get(key);
+        if(texture) return texture;
+
+        let frame = this.systemSpritesheetData.frames[key];
+        let t: THREE.Texture;
+        if (frame) {
+            t = this.systemTexture;
+        } else {
+            frame = this.userSpritesheetData?.frames[key];
+            if (!frame) {
+                throw new RuntimeExceptionClass(JRC.textureNotFoundError(spritesheet, index));
+            }
+            t = this.userTexture;
+        }
+
+        let data = frame.frame;
+
+        let topLeft = new THREE.Vector2(data.x, data.y);
+        let bottomRight = topLeft.clone();
+        bottomRight.x += data.w;
+        bottomRight.y += data.h;
+
+        // see https://github.com/mrdoob/three.js/issues/28282
+        let renderTarget = new THREE.WebGLRenderTarget(data.w, data.h,
+            { minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, format: THREE.RGBAFormat,
+                colorSpace: THREE.SRGBColorSpace
+             }
+        );
+
+        renderer.initRenderTarget(renderTarget);
+        renderer.copyTextureToTexture(t, renderTarget.texture, new THREE.Box2(topLeft, bottomRight))
+
+        this.textureCache.set(key, renderTarget.texture);
+
+        return renderTarget.texture;
+
     }
 
     static cutoutTexture(t: THREE.Texture, renderer: THREE.WebGLRenderer): THREE.Texture {
