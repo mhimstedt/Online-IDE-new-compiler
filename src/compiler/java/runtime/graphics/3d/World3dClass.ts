@@ -56,7 +56,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
     scene: THREE.Scene;
     renderer: THREE.WebGLRenderer;
-    camera: THREE.PerspectiveCamera;
+    camera: THREE.PerspectiveCamera; 
     orbitControls: OrbitControls;
 
     objects:Object3dClass[]=[];

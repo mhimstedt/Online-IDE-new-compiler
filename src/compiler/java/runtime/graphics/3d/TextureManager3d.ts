@@ -127,6 +127,7 @@ export class TextureManager3d {
         newTexture.userData["width"] = data.w;
         newTexture.userData["height"] = data.h;
         newTexture.userData["key"] = key;
+        newTexture.userData["renderTarget"] = renderTarget;
 
         return newTexture;
 

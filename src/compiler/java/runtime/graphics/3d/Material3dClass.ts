@@ -59,6 +59,10 @@ export class Material3dClass extends ObjectClass {
             let texture = this.material["map"];
             if(texture){
                 if(texture["isPartOfSpritesheet"]) return;
+                let rt: THREE.WebGLRenderTarget = texture["renderTarget"];
+                if(rt){
+                    rt.dispose();
+                }
                 texture.dispose();
             }
         }
