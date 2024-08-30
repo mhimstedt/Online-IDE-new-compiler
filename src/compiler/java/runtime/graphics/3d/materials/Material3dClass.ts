@@ -60,15 +60,20 @@ export class Material3dClass extends ObjectClass {
         }
     }
 
+    getMaterialAndIncreaseUsageCounter(){
+        this.usageCounter++;
+        return this.material;
+    }
+
+    getMaterialWithoutIncreasingUsageCounter(){
+        this.usageCounter++;
+        return this.material;
+    }
+
     getColor(): number {
         let c = (<THREE.Color>this.material["color"]);
         if(!c) return 0x000000;
         return Math.round(c.r*0xff0000 + c.g*0xff00 + c.b*0xff);
-    }
-
-    attachToMesh(mesh: THREE.Mesh){
-        mesh.material = this.material;
-        this.usageCounter++;
     }
 
     destroyIfNotUsedByOtherMesh(){

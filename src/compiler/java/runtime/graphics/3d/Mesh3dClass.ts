@@ -51,7 +51,7 @@ export class Mesh3dClass extends Object3dClass {
         if (this._material) this.material.destroyIfNotUsedByOtherMesh();
 
         this._material = newMaterial;
-        newMaterial.attachToMesh(this.mesh);
+        this.mesh.material = this._material.getMaterialAndIncreaseUsageCounter();
 
     }
 
@@ -60,8 +60,6 @@ export class Mesh3dClass extends Object3dClass {
     }
 
     _cj$_constructor_$Mesh3d$(t: Thread, callback: CallbackParameter) {
-        this.material = this.getBasicMaterial();
-        this.material.attachToMesh(this.mesh);
         super._cj$_constructor_$Object3d$(t, callback);
     }
 
@@ -110,7 +108,7 @@ export class Mesh3dClass extends Object3dClass {
     }
 
 
-    getBasicMaterial(): Material3dClass {
+    getInitialMaterial(): Material3dClass {
 
         return new PhongMaterial3dClass()._phongMaterialConstructor(0x00ff00, 100);
 

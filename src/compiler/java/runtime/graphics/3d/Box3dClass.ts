@@ -46,24 +46,28 @@ export class Box3dClass extends Mesh3dClass {
     }
     _cj$_constructor_$Box3d$double$double$double$double$double$double(t: Thread, callback: CallbackParameter, x: number, y: number, z: number, sx: number, sy: number, sz: number) {
         this._cj$_constructor_$Box3d$(t, () => {
+
             this.moveTo(x, y, z);
             this.mesh.scale.set(sx, sy, sz);
+        
         })
 
     }
 
     _cj$_constructor_$Box3d$(t: Thread, callback: CallbackParameter) {
         super._cj$_constructor_$Mesh3d$(t, ()=>{
-            const geometry = new THREE.BoxGeometry();
-        
-            this.mesh = new THREE.Mesh(geometry, this.material.material);
+
+            const geometry = new THREE.BoxGeometry();        
+            this.mesh = new THREE.Mesh(geometry, this.getInitialMaterial().getMaterialAndIncreaseUsageCounter());
             this.world3d.scene.add(this.mesh);
+            
             if(callback)callback();
+
         });
     }
 
     _setCubemapTexture(spriteLibrary: SpriteLibraryEnum, imageIndex: number){
-        let texture = this.world3d.textureManager3d.getSpritesheetBasedTexture(spriteLibrary.name, imageIndex, this.world3d.renderer);
+        let texture = this.world3d.textureManager3d.getSpritesheetBasedTexture(spriteLibrary.name, imageIndex);
 
         this.mesh.geometry.attributes.uv = new THREE.BufferAttribute(Box3dClass.cubemapUvCoordinates , 2 );
 
@@ -76,7 +80,7 @@ export class Box3dClass extends Mesh3dClass {
     }
 
     _setSingleTextureForAllSides(spriteLibrary: SpriteLibraryEnum, imageIndex: number){
-        let texture = this.world3d.textureManager3d.getSpritesheetBasedTexture(spriteLibrary.name, imageIndex, this.world3d.renderer);
+        let texture = this.world3d.textureManager3d.getSpritesheetBasedTexture(spriteLibrary.name, imageIndex);
 
         this.mesh.geometry.attributes.uv = new THREE.BufferAttribute(Box3dClass.singleTextureUvCoordinates , 2 );
 
@@ -95,7 +99,7 @@ export class Box3dClass extends Mesh3dClass {
 
         let textures: THREE.Texture[] = [];
         for(let i = 0; i < 6; i++){
-            textures[i] = this.world3d.textureManager3d.getSpritesheetBasedTexture(spriteLibrary.name, imageIndices[i], this.world3d.renderer);
+            textures[i] = this.world3d.textureManager3d.getSpritesheetBasedTexture(spriteLibrary.name, imageIndices[i]);
         }
 
         this.mesh.geometry.attributes.uv = new THREE.BufferAttribute(Box3dClass.singleTextureUvCoordinates , 2 );
