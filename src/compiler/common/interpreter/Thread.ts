@@ -292,7 +292,7 @@ export class Thread {
     private throwException(exception: Exception & IThrowable, step: Step) {
 
         exception.file = this.currentProgramState.program.module.file;
-        exception.range = step.getValidRangeOrUndefined();
+        exception.range = exception.range || step.getValidRangeOrUndefined();
         exception.thread = this;
 
         if(this.isExecutingReplProgram) this.returnFromREPLProgram(exception, step);
@@ -709,6 +709,18 @@ export class Thread {
      *  java: a[3][4] = 17 -> javascript: __t.Array1(a, 3)[__t.CheckLastIndex(4)] = 17   (__t stores result of __t.Array1(a, 3))
      *  java: a[3][4][5] = 17 -> javascript: __t.Array2(a, 3, 4)[__t.CheckLastIndex(5)] = 17 (__t stores result of __t.Array2(a, 3, 4))
      */
+    IOBE(startLineNumber: number, startColumn: number, endLineNumber: number, endColumn: number){
+        let range: IRange = {
+            startLineNumber: startLineNumber,
+            startColumn: startColumn,
+            endLineNumber: endLineNumber,
+            endColumn: endColumn
+        }
+        let exception = new IndexOutOfBoundsExceptionClass(InterpreterMessages.SimpleArrayIndexOutOfBoundsException());
+        exception.range = range;
+        throw exception;
+    }
+
     ArrayValue1(array: any[], index: number) {
         if (index < 0 || index >= array.length) throw new IndexOutOfBoundsExceptionClass(InterpreterMessages.ArrayIndexOutOfBoundsException(index, array.length, 1));
         return array[index];

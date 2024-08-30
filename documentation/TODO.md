@@ -9,6 +9,9 @@
   * more private fields for graphical objects to get better debugger output
   * 3d-classes
   * add more compiler-tests
+  * reading and writing of array elements with ?? operator:
+    * read-acces: ((__s[__sb + 3][x]??__t.IOB())[y]??__t.IOB())
+    * write-access: ??-operator on all dimensions except the last one
 
 
 

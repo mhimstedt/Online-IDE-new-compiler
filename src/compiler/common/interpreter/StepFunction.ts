@@ -25,6 +25,7 @@ export class Helpers {
     static endTryBlock = StepParams.thread + "." + Thread.prototype.endCatchTryBlock.name;
     static throwArithmeticException = StepParams.thread + "." + Thread.prototype.AE.name;
 
+    static IOBE = StepParams.thread + "." + Thread.prototype.IOBE.name;
     static arrayValue1 = StepParams.thread + "." + Thread.prototype.ArrayValue1.name;
     static arrayValue2 = StepParams.thread + "." + Thread.prototype.ArrayValue2.name;
     static arrayValue3 = StepParams.thread + "." + Thread.prototype.ArrayValue3.name;
