@@ -392,86 +392,6 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
         this.currentSymbolTable = this.symbolTableStack[this.symbolTableStack.length - 1];
     }
 
-    // compileSelectArrayElementOld(node: ASTSelectArrayElementNode, isLeftSideOfAssignment: boolean): CodeSnippet | undefined {
-    //     let arraySnippet = this.compileTerm(node.array);
-    //     let arrayType = arraySnippet?.type;
-    //     if (!arraySnippet || !arrayType || !(arrayType instanceof JavaArrayType)) {
-    //         this.pushError(JCM.noArrayBracketAfterType(arrayType?.identifier || "---"), "error", node.array)
-    //         return undefined;
-    //     }
-
-    //     if (arrayType.dimension < node.indices.length) {
-    //         this.pushError(JCM.wrongArrayDimensionCount(arrayType.dimension, node.indices.length), "error", node);
-    //         return undefined;
-    //     }
-
-    //     let remainingDimensions = arrayType.dimension - node.indices.length;
-    //     let remainingType = remainingDimensions > 0 ? (new JavaArrayType(arrayType.elementType, remainingDimensions, arrayType.module, EmptyRange.instance))
-    //         : arrayType.elementType;
-
-    //     let indexSnippets: CodeSnippet[] = [];
-    //     for (let index of node.indices) {
-    //         let indsnip = this.compileTerm(index);
-
-    //         if (!(indsnip?.type?.isUsableAsIndex())) {
-    //             if (indsnip) this.pushError(JCM.indexMustHaveIntegerValue(), "error", index);
-
-    //             // set dummy replacement to keep on compiling...
-    //             indsnip = new StringCodeSnippet('0', index.range, this.intType);
-    //         }
-
-    //         indexSnippets.push(indsnip);
-
-    //     }
-
-    //     /*
-    //      *  java: 17 + a[3][4]   -> javascript: 17 + __t.ArrayValue2(a, 3, 4)
-    //      *
-    //      *  java: a[4] = 17 -> javascript: (__t.lastCheckedArray = a)[__t.CheckLastIndex(4)] = 17   (__t stores result of __t.Array1(a, 3))
-    //      *  java: a[3][4] = 17 -> javascript: __t.Array1(a, 3)[__t.CheckLastIndex(4)] = 17   (__t stores result of __t.Array1(a, 3))
-    //      *  java: a[3][4][5] = 17 -> javascript: __t.Array2(a, 3, 4)[__t.CheckLastIndex(5)] = 17 (__t stores result of __t.Array2(a, 3, 4))
-    //      */
-    //     let returnSnippet!: CodeSnippet;
-
-    //     if (isLeftSideOfAssignment) {
-    //         if (indexSnippets.length == 1) {
-    //             returnSnippet = new TwoParameterTemplate(`${Helpers.array0}(§1)[${Helpers.checkLastIndex}(§2, 1)]`).applyToSnippet(remainingType, node.range, arraySnippet, indexSnippets[0]);
-    //         } else {
-    //             let lastIndexSnippet = indexSnippets.pop();
-    //             let indexSnippet = ParametersJoinedTemplate.applyToSnippet(this.voidType, node.range, '', ', ', '', ...indexSnippets);
-    //             let checkAndReturnArrayMethod = "";
-    //             switch (indexSnippets.length) {
-    //                 case 1: checkAndReturnArrayMethod = Helpers.array1; break;
-    //                 case 2: checkAndReturnArrayMethod = Helpers.array2; break;
-    //                 default: checkAndReturnArrayMethod = Helpers.arrayN; break;
-    //             }
-
-    //             returnSnippet = new SeveralParameterTemplate(`${checkAndReturnArrayMethod}(§1, §2)[${Helpers.checkLastIndex}(§3, ${indexSnippets.length + 1})]`)
-    //                 .applyToSnippet(remainingType, node.range, arraySnippet, indexSnippet, lastIndexSnippet!);
-    //         }
-    //     } else {
-    //         let indexSnippet = ParametersJoinedTemplate.applyToSnippet(this.voidType, node.range, '', ', ', '', ...indexSnippets);
-    //         let checkerMethod = "";
-    //         switch (indexSnippets.length) {
-    //             case 1: checkerMethod = Helpers.arrayValue1; break;
-    //             case 2: checkerMethod = Helpers.arrayValue2; break;
-    //             case 3: checkerMethod = Helpers.arrayValue3; break;
-    //             default: checkerMethod = Helpers.arrayValueN; break;
-    //         }
-
-    //         returnSnippet = new TwoParameterTemplate(`${checkerMethod}(§1, §2)`).applyToSnippet(remainingType, node.range, arraySnippet, indexSnippet);
-    //     }
-
-    //     if (node.parenthesisNeeded) {
-    //         returnSnippet = SnippetFramer.frame(returnSnippet, '($)');
-    //     }
-
-    //     returnSnippet.isLefty = true;
-
-    //     return returnSnippet;
-    // }
-
-
     compileSelectArrayElement(node: ASTSelectArrayElementNode, isLeftSideOfAssignment: boolean): CodeSnippet | undefined {
         let arraySnippet = this.compileTerm(node.array);
         let arrayType = arraySnippet?.type;
@@ -503,6 +423,62 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
             indexSnippets.push(indsnip);
 
         }
+
+        if(arrayType.elementType.isPrimitive) return this.compileSelectArrayElementFast(node, isLeftSideOfAssignment,
+            arraySnippet, indexSnippets, remainingType
+        )
+
+        /*
+         *  java: 17 + a[3][4]   -> javascript: 17 + __t.ArrayValue2(a, 3, 4)
+         *
+         *  java: a[4] = 17 -> javascript: (__t.lastCheckedArray = a)[__t.CheckLastIndex(4)] = 17   (__t stores result of __t.Array1(a, 3))
+         *  java: a[3][4] = 17 -> javascript: __t.Array1(a, 3)[__t.CheckLastIndex(4)] = 17   (__t stores result of __t.Array1(a, 3))
+         *  java: a[3][4][5] = 17 -> javascript: __t.Array2(a, 3, 4)[__t.CheckLastIndex(5)] = 17 (__t stores result of __t.Array2(a, 3, 4))
+         */
+        let returnSnippet!: CodeSnippet;
+
+        if (isLeftSideOfAssignment) {
+            if (indexSnippets.length == 1) {
+                returnSnippet = new TwoParameterTemplate(`${Helpers.array0}(§1)[${Helpers.checkLastIndex}(§2, 1)]`).applyToSnippet(remainingType, node.range, arraySnippet, indexSnippets[0]);
+            } else {
+                let lastIndexSnippet = indexSnippets.pop();
+                let indexSnippet = ParametersJoinedTemplate.applyToSnippet(this.voidType, node.range, '', ', ', '', ...indexSnippets);
+                let checkAndReturnArrayMethod = "";
+                switch (indexSnippets.length) {
+                    case 1: checkAndReturnArrayMethod = Helpers.array1; break;
+                    case 2: checkAndReturnArrayMethod = Helpers.array2; break;
+                    default: checkAndReturnArrayMethod = Helpers.arrayN; break;
+                }
+
+                returnSnippet = new SeveralParameterTemplate(`${checkAndReturnArrayMethod}(§1, §2)[${Helpers.checkLastIndex}(§3, ${indexSnippets.length + 1})]`)
+                    .applyToSnippet(remainingType, node.range, arraySnippet, indexSnippet, lastIndexSnippet!);
+            }
+        } else {
+            let indexSnippet = ParametersJoinedTemplate.applyToSnippet(this.voidType, node.range, '', ', ', '', ...indexSnippets);
+            let checkerMethod = "";
+            switch (indexSnippets.length) {
+                case 1: checkerMethod = Helpers.arrayValue1; break;
+                case 2: checkerMethod = Helpers.arrayValue2; break;
+                case 3: checkerMethod = Helpers.arrayValue3; break;
+                default: checkerMethod = Helpers.arrayValueN; break;
+            }
+
+            returnSnippet = new TwoParameterTemplate(`${checkerMethod}(§1, §2)`).applyToSnippet(remainingType, node.range, arraySnippet, indexSnippet);
+        }
+
+        if (node.parenthesisNeeded) {
+            returnSnippet = SnippetFramer.frame(returnSnippet, '($)');
+        }
+
+        returnSnippet.isLefty = true;
+
+        return returnSnippet;
+    }
+
+
+    compileSelectArrayElementFast(node: ASTSelectArrayElementNode, isLeftSideOfAssignment: boolean,
+        arraySnippet: CodeSnippet, indexSnippets: CodeSnippet[], remainingType: JavaType
+    ): CodeSnippet | undefined {
 
         /*
          *  java: 17 + a[3][4]   -> javascript: 17 + __t.ArrayValue2(a, 3, 4)
