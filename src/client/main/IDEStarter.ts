@@ -24,6 +24,10 @@ import spritesheetjson from '/include/graphics/spritesheet.json.txt';
 import spritesheetpng from '/include/graphics/spritesheet.png';
 import { PixiSpritesheetData } from "../spritemanager/PixiSpritesheetData.js";
 
+declare var BUILD_DATE: string;
+declare var APP_VERSION: string;
+
+
 function loadSpritesheet() {
     fetch(`${spritesheetjson}`)
         .then((response) => response.json())
@@ -75,9 +79,11 @@ async function initMonacoEditor(): Promise<void> {
 
 
 window.onload = () => {
+
+    document.getElementById('versionDiv').textContent = "Version " + APP_VERSION + " vom " + BUILD_DATE;
+
     //@ts-ignore
     p5.disableFriendlyErrors = true
-
 
     let main = new Main();
     loadSpritesheet();
