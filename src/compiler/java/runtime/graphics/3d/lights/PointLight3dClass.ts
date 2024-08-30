@@ -1,12 +1,12 @@
-import { CallbackParameter } from "../../../../common/interpreter/CallbackParameter";
-import { Thread } from "../../../../common/interpreter/Thread";
-import { LibraryDeclarations } from "../../../module/libraries/DeclareType";
-import { NonPrimitiveType } from "../../../types/NonPrimitiveType";
-import { Light3dClass } from "./Light3dClass";
 import * as THREE from 'three';
-import { Vector3Class } from "./Vector3Class";
-import { ColorHelper } from "../../../lexer/ColorHelper";
-import { ColorClass } from "../ColorClass";
+import { CallbackParameter } from '../../../../../common/interpreter/CallbackParameter';
+import { Thread } from '../../../../../common/interpreter/Thread';
+import { ColorHelper } from '../../../../lexer/ColorHelper';
+import { LibraryDeclarations } from '../../../../module/libraries/DeclareType';
+import { NonPrimitiveType } from '../../../../types/NonPrimitiveType';
+import { ColorClass } from '../../ColorClass';
+import { Vector3Class } from '../Vector3Class';
+import { Light3dClass } from './Light3dClass';
 
 export class PointLight3dClass extends Light3dClass {
     static __javaDeclarations: LibraryDeclarations = [

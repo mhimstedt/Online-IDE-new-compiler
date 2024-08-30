@@ -145,10 +145,14 @@ import { Box3dClass } from "../graphics/3d/Box3dClass.ts";
 import { Vector3Class } from "../graphics/3d/Vector3Class.ts";
 import { Sphere3dClass } from "../graphics/3d/Sphere3dClass.ts";
 import { RobotWorldClass } from "../graphics/robot/RobotWorldClass.ts";
-import { Material3dClass } from "../graphics/3d/Material3dClass.ts";
-import { TextFieldClass } from "../graphics/gui/TextfieldClass.ts";
-import { Light3dClass } from "../graphics/3d/Light3dClass.ts";
-import { PointLight3dClass } from "../graphics/3d/PointLight3dClass.ts";
+import { Material3dClass } from "../graphics/3d/materials/Material3dClass.ts";
+import { BasicMaterial3dClass } from "../graphics/3d/materials/BasicMaterial3dClass.ts";
+import { LambertMaterial3dClass } from "../graphics/3d/materials/LambertMaterial3dClass.ts";
+import { PhongMaterial3dClass } from "../graphics/3d/materials/PhongMaterial3dClass.ts";
+import { Light3dClass } from "../graphics/3d/lights/Light3dClass.ts";
+import { PointLight3dClass } from "../graphics/3d/lights/PointLight3dClass.ts";
+import { TextFieldClass } from "../graphics/gui/TextFieldClass.ts";
+import { PhysicallyBasedMaterial3dClass } from "../graphics/3d/materials/PhysikcallyBasedMaterial3d.ts";
 
 export class SystemModule extends JavaLibraryModule {
 
@@ -233,8 +237,8 @@ export class SystemModule extends JavaLibraryModule {
             MethodOfDestroyedGOExceptionClass,
 
             // Graphics 3D
-            Vector3Class, Material3dClass,
-            World3dClass, Object3dClass, Mesh3dClass, Box3dClass, Sphere3dClass,Light3dClass,PointLight3dClass,
+            Vector3Class, Material3dClass, BasicMaterial3dClass, LambertMaterial3dClass, PhongMaterial3dClass, PhysicallyBasedMaterial3dClass,
+            World3dClass, Object3dClass, Mesh3dClass, Box3dClass, Sphere3dClass, Light3dClass, PointLight3dClass,
 
             // Processing
             PAppletClass,

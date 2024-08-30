@@ -5389,6 +5389,144 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
     "de": `Die Textur mit Identifier ${textureIdentifier} und Index ${index} konnte nicht gefunden werden.`,
     "en": `Can't find texture with identifier ${textureIdentifier} and index ${index}.`,
     })
+
+    /**
+     * Material3d
+     */
+    static material3dClassComment = () => lm({
+    "de": `Oberklasse aller Material3d-Klassen`,
+    "en": `Base class of all Material3d classes`,
+    })
+
+    static material3dSetColorComment = () => lm({
+    "de": `Setzt die Farbe des Materials. Zum Setzen der Durchsichtigkeit (Alpha-Value) benutze setAlpha.`,
+    "en": `Set material color. To set alpha-value (transparency) use setAlpha.`,
+    })
+
+    static material3dGetColorComment = () => lm({
+    "de": `Gibt die Farbe als int-Wert zurück.`,
+    "en": `Returns the color of this material as int-value.`,
+    })
+
+    static material3dIsTransparentComment = () => lm({
+    "de": `Gibt true zurück, falls transparente Teile des Körpers auch transparent gezeichnet werden sollen.`,
+    "en": `Returns true if transparent parts of the 3d-object get rendered transparent.`,
+    })    
+
+    static material3dSetTransparentComment = () => lm({
+    "de": `Falls der Wert true ist, werden transparente Teile des 3d-Körpers auch transparent gezeichnet. Nachteil ist eine etwas geringere Performance.`,
+    "en": `If this value is true, then transparent parts of the 3d object get rendered transparent. Setting 'true' is less performant than setting 'false'.`,
+    })
+    
+    static material3dAlphaComment = () => lm({
+    "de": `Der Alphawert (0 ... 1) bestimmt die Durchsichtigkeit des Objekts. Tipp: Damit die Durchsichtigkeit sichtbar wird, musst Du noch setTransparent(true) aufrufen.`,
+    "en": `The alpha value (0 ... 1) determines the transparency of the object. Hint: To make the transparency visible, you have to call setTransparent(true).`,
+    })
+
+    static material3dFlatShadingComment = () => lm({
+    "de": `Wenn flatShading == true ist, wird der Farbwert nur jeweils pro gerendertem Dreieck berechnet, nicht per Fragment (Pixel). Das hat eine etwas höhere Performance zur Folge.`,
+    "en": `If flatShading == true then color is calculated for each triangle, not for each fragment (pixel). This leads to increased performance.`,
+    })
+
+
+    /**
+     * BasicMaterial3d
+     */
+    static basicMaterial3dClassComment = () => lm({
+    "de": `Ein Material, das keine Lichtquelle berücksichtigt, sondern jede Fläche einfach nur mit ihrer Farbe füllt. Geeignet vor allem für Wireframe-Darstellung. Im Vergleich zu den anderen Materialien bietet es die beste Performance.`,
+    "en": `This material doesn't take light into account but fills every surface with it's given color. Usesful for drawing wireframes. Compared to all other materials this one has best performance.`,
+    })
+
+    static basicMaterial3dConstructorComment = () => lm({
+    "de": `Erzeugt ein BasicMaterial-Objekt. Wireframe == true bewirkt, dass nur die Kanten gezeichnet werden.`,
+    "en": `Creates a BasicMaterial object. Wireframe == true leads to surfaces not being filled.`,
+    })
+
+    static colorMustNotBeNull = () => lm({
+    "de": `Der Wert null ist als Farbe hier nicht möglich.`,
+    "en": `color must not be null.`,
+    })
+
+    /**
+     * PhongMaterial
+     */
+    static phongMaterial3dClassComment = () => lm({
+    "de": `Dieses Material verwendet ein nichtphysikalisches Blinn-Phong-Modell zur Berechnung des Reflexionsgrads. kann glänzende Oberflächen mit spiegelnden Glanzlichtern simulieren (z. B. lackiertes Holz). MeshPhongMaterial berechnet die Schattierung je Fragment (entspricht ca. einem Bildschirmpixel). Der Parameter Shininess (0...1000) definiert die Intensität dieser Glanzlichter.`,
+    "en": `This material uses a non-physically based Blinn-Phong model for calculating reflectance. can simulate shiny surfaces with specular highlights (such as varnished wood). MeshPhongMaterial uses per-fragment shading. Parameter shininess (0...1000) defines the intensity of these specular highlights.`,
+    })
+
+    static phongMaterial3dConstructorComment = () => lm({
+    "de": `Erzeugt ein PhongMaterial-Objekt. Der Parameter Shininess (0...1000) definiert die Intensität der Glanzlichter.`,
+    "en": `Creates a PhongMaterial object. The Shininess parameter (0...1000) defines the intensity of the highlights.`,
+    })
+
+    static phongMaterial3dShininessComment = () => lm({
+    "de": `Die Shininess (0...1000) des Materials definiert die Intensität der Glanzlichter.`,
+    "en": `The shininess value (0...1000) defines the intensity of the highlights.`,
+    })
+
+    static phongMaterial3dSpecularComment = () => lm({
+    "de": `Farbe der Glanzlichter`,
+    "en": `Color of specular highlights`,
+    })
+
+    static material3dEmissiveComment = () => lm({
+    "de": `Farbe, mit der das Objekt selbst leuchtet.`,
+    "en": `Color with which the object itself emits light.`,
+    })
+
+    static materialWireframeComment = () => lm({
+    "de": `Legt fest, ob das Objekt ungefüllt (nur als Gitter) gezeichnet werden soll.`,
+    "en": `If true, then the object is renderd as wireframe (without filling).`,
+    })
+
+    /**
+     * Lambert Material
+     */
+    static lambertMaterial3dClassComment = () => lm({
+    "de": `Das Material verwendet ein nichtphysikalisches Lambertmodell zur Berechnung des Reflexionsgrads. Dadurch können einige Oberflächen (z. B. unbehandeltes Holz oder Stein) gut simuliert werden. 
+    Glänzende Oberflächen mit Glanzlichtern (z. B. lackiertes Holz) können jedoch nicht simuliert werden. MeshLambertMaterial berechnet die Schattierung je Fragment (d.h. ca. je Bildschirmpixel).
+    Aufgrund der Einfachheit der Reflexions- und Beleuchtungsmodelle ist die Performance bei Verwendung dieses Materials höher als bei PhongMaterial oder StandardMaterial, allerdings auf Kosten einer gewissen grafischen Genauigkeit.
+    `,
+    "en": `The material uses a non-physically based Lambertian model for calculating reflectance. This can simulate some surfaces (such as untreated wood or stone) well, 
+    but cannot simulate shiny surfaces with specular highlights (such as varnished wood). MeshLambertMaterial uses per-fragment shading.
+    Due to the simplicity of the reflectance and illumination models, performance will be greater when using this material over the PhongMaterial or StandardMaterial, at the cost of some graphical accuracy.`,
+    })
+
+    static lambertMaterial3dConstructorComment = () => lm({
+    "de": `Erzeugt ein neues LambertMaterial-Objekt`,
+    "en": `Creates a new LambertMaterial object.`,
+    })
+
+    /**
+     * PhysicallyBasedMaterial
+     */
+
+    static physicallyBasedMaterial3dClassComment = () => lm({
+    "de": `in Standardmaterial auf physikalischer Basis. Physically Based Rendering (PBR) ist in vielen 3D-Anwendungen wie Unity, Unreal und 3D Studio Max in letzter Zeit zum Standard geworden. 
+    Dieser Ansatz unterscheidet sich von älteren Ansätzen dadurch, dass statt Näherungen für die Art und Weise, wie Licht mit einer Oberfläche interagiert, ein physikalisch korrektes Modell verwendet wird. 
+    In der Praxis liefert dies ein genaueres und realistischeres Ergebnis als LambertMaterial oder PhongMaterial, allerdings ist der Rechenaufwand etwas höher.`,
+    "en": `A standard physically based material, using Metallic-Roughness workflow. Physically based rendering (PBR) has recently become the standard in many 3D applications, such as Unity, Unreal and 3D Studio Max. 
+    This approach differs from older approaches in that instead of using approximations for the way in which light interacts with a surface, a physically correct model is used. 
+    In practice this gives a more accurate and realistic looking result than the LambertMaterial or PhongMaterial, at the cost of being somewhat more computationally expensive.`,
+    })
+
+    static physicallyBasedMaterial3dConstructorComment = () => lm({
+    "de": `Erzeugt ein neues PhysicallyBasedMaterial-Objekt`,
+    "en": `Creates a new PhysicallyBasedMaterial object.`,
+    })
+
+    static physicallyBasedMaterial3dRoughnessComment = () => lm({
+    "de": `Rauheit des Materials (Wert zwischen 0 und 1)`,
+    "en": `Roughness value between 0 and 1`,
+    })
+
+    static physicallyBasedMaterial3dMetalnessComment = () => lm({
+    "de": `Metallisches Reflektieren des Materials (Wert zwischen 0 und 1)`,
+    "en": `Metalness value between 0 and 1`,
+    })
+
+
 }
 
 

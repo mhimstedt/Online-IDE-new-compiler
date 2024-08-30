@@ -4,9 +4,10 @@ import { Thread } from "../../../../common/interpreter/Thread";
 import { JRC } from "../../../language/JavaRuntimeLibraryComments";
 import { LibraryDeclarations } from "../../../module/libraries/DeclareType";
 import { NonPrimitiveType } from "../../../types/NonPrimitiveType";
-import { Material3dClass } from './Material3dClass';
+import { Material3dClass } from './materials/Material3dClass';
 import { Object3dClass } from "./Object3dClass";
 import { Vector3Class } from './Vector3Class';
+import { PhongMaterial3dClass } from './materials/PhongMaterial3dClass';
 
 export class Mesh3dClass extends Object3dClass {
 
@@ -59,7 +60,8 @@ export class Mesh3dClass extends Object3dClass {
     }
 
     _cj$_constructor_$Mesh3d$(t: Thread, callback: CallbackParameter) {
-        this.material = new Material3dClass(this.getBasicMaterial());
+        this.material = this.getBasicMaterial();
+        this.material.attachToMesh(this.mesh);
         super._cj$_constructor_$Object3d$(t, callback);
     }
 
@@ -108,8 +110,10 @@ export class Mesh3dClass extends Object3dClass {
     }
 
 
-    getBasicMaterial(): THREE.Material {
-        return new THREE.MeshStandardMaterial({ color: 0x00ff00 });
+    getBasicMaterial(): Material3dClass {
+
+        return new PhongMaterial3dClass()._phongMaterialConstructor(0x00ff00, 100);
+
     }
 
     enableFrontBackSide(frontSideVisible: boolean, backSideVisible: boolean) {

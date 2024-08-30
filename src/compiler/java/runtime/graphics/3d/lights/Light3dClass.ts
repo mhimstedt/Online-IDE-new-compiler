@@ -1,13 +1,15 @@
 import * as THREE from 'three';
-import { CallbackParameter } from "../../../../common/interpreter/CallbackParameter";
-import { Thread } from "../../../../common/interpreter/Thread";
-import { LibraryDeclarations } from "../../../module/libraries/DeclareType";
-import { NonPrimitiveType } from "../../../types/NonPrimitiveType";
-import { Object3dClass } from "./Object3dClass";
-import { ColorClass } from '../ColorClass';
-import { ColorHelper } from '../../../lexer/ColorHelper';
-import { RuntimeExceptionClass } from '../../system/javalang/RuntimeException';
-import { JRC } from '../../../language/JavaRuntimeLibraryComments';
+import { CallbackParameter } from '../../../../../common/interpreter/CallbackParameter';
+import { Thread } from '../../../../../common/interpreter/Thread';
+import { JRC } from '../../../../language/JavaRuntimeLibraryComments';
+import { ColorHelper } from '../../../../lexer/ColorHelper';
+import { LibraryDeclarations } from '../../../../module/libraries/DeclareType';
+import { NonPrimitiveType } from '../../../../types/NonPrimitiveType';
+import { RuntimeExceptionClass } from '../../../system/javalang/RuntimeException';
+import { ColorClass } from '../../ColorClass';
+import { Object3dClass } from '../Object3dClass';
+import { ColorConverter } from '../../ColorConverter';
+
 
 export class Light3dClass extends Object3dClass {
 
@@ -25,8 +27,13 @@ export class Light3dClass extends Object3dClass {
         { type: "method", signature: "void rotateX(double angleDeg)",native: Light3dClass.prototype.rotateX },
         { type: "method", signature: "void rotateY(double angleDeg)",native: Light3dClass.prototype.rotateY },
         { type: "method", signature: "void rotateZ(double angleDeg)",native: Light3dClass.prototype.rotateZ },
+        
+        { type: "field", signature: "private double intensity"},
         { type: "method", signature: "void setIntensity(double intensity)",native: Light3dClass.prototype.setIntensity },
         { type: "method", signature: "double getIntensity()",native: Light3dClass.prototype.getIntensity },
+        
+        
+        { type: "field", signature: "private int color"},
         { type: "method", signature: "void setColor(int color)",native: Light3dClass.prototype.setColor },
         { type: "method", signature: "void setColor(String color)",native: Light3dClass.prototype.setColor },
         { type: "method", signature: "void setColor(Color color)",native: Light3dClass.prototype.setColor },
@@ -35,6 +42,16 @@ export class Light3dClass extends Object3dClass {
     static type: NonPrimitiveType;
 
     light: THREE.Light;
+
+    get color(): number {
+        let c = (<THREE.Color>this.light.color);
+        if(!c) return 0x000000;
+        return Math.round(c.r*0xff0000 + c.g*0xff00 + c.b*0xff);
+    }
+
+    get intensity(): number {
+        return this.light.intensity;
+    }
 
     _cj$_constructor_$Light3d$(t: Thread, callback: CallbackParameter){
         super._cj$_constructor_$Object3d$(t, callback);
