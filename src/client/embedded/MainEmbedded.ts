@@ -561,7 +561,9 @@ export class MainEmbedded implements MainBase {
         this.language = new JavaLanguage(this, errorMarker);
         this.language.registerLanguageAtMonacoEditor(this);
 
-        new JUnitTestrunner(this,this.$junitDiv[0]);
+        if(this.$junitDiv){
+            new JUnitTestrunner(this,this.$junitDiv[0]);
+        }
 
         this.getCompiler().eventManager.on("compilationFinished", this.onCompilationFinished, this);
 
@@ -926,7 +928,7 @@ export class MainEmbedded implements MainBase {
 
     showFile(file?: CompilerFile): void {
         if(!file) return;
-        this.fileExplorer.selectFile(<File>file, false);
+        this.fileExplorer?.selectFile(<File>file, false);
     }
 
     getDisassembler(): Disassembler | undefined {

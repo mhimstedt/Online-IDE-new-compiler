@@ -40,7 +40,7 @@ function loadSpritesheet() {
         fetch(pathPraefix + `${spritesheetjson}`)
             .then((response) => response.json())
             .then((spritesheetData: PixiSpritesheetData) => {
-                PIXI.Assets.load(`${spritesheetpng}`).then((texture: PIXI.Texture) => {
+                PIXI.Assets.load(pathPraefix + `${spritesheetpng}`).then((texture: PIXI.Texture) => {
                     let source: PIXI.ImageSource = texture.source;
                     source.minFilter = "nearest";
                     source.magFilter = "nearest";

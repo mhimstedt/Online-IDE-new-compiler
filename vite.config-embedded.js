@@ -18,6 +18,7 @@ var minute = d.getMinutes();
 var buildDate = curr_date + "." + curr_month + "." + curr_year + ", " + hour + ":" + minute + " Uhr";
 
 export default defineConfig({
+  // base: "/javaonline",
   define: {
     'APP_VERSION': JSON.stringify(pkg.version),
     'BUILD_DATE': JSON.stringify(buildDate)
