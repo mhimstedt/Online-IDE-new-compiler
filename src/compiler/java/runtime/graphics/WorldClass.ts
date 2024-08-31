@@ -84,8 +84,6 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
 
     shapesNotAffectedByWorldTransforms: ShapeClass[] = [];
 
-    shapesToDestroy: ShapeClass[] = [];
-
     mouseManager!: MouseManager;
 
     tickerFunction?: (ticker: PIXI.Ticker) => void;
@@ -265,7 +263,7 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
     }
 
     registerShapeToDestroy(shape: ShapeClass){
-        this.shapesToDestroy.push(shape);
+        this.interpreter.actorManager.shapesToDestroy.push(shape);
     }
 
     hasActors(): boolean {
