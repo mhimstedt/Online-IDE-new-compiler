@@ -147,13 +147,13 @@ export class RobotClass extends ObjectClass {
     }
 
     setZ(z: number){
-        this.steve.translateY(z/2 - this.z);
+        this.steve.position.y += z/2 - this.z;
         this.z = z/2;
     }
 
     moveTo(x: number, y: number){
-        this.steve.translateX(x - this.x);
-        this.steve.translateZ(y - this.y);
+        this.steve.position.x += x - this.x;
+        this.steve.position.z += y - this.y;
         this.x = x;
         this.y = y;
     }
@@ -221,7 +221,7 @@ export class RobotClass extends ObjectClass {
             throw new RuntimeExceptionClass(JRC.robotOutOfBricks());
         }
 
-        if(this.robotWorld.bricks[newX][newY].length > this.robotWorld.maximumHeight){
+        if(this.robotWorld.getBrickCount(newX, newY) > this.robotWorld.maximumHeight){
             throw new ExceptionClass(JRC.robotMaximumHeightExceeded(this.robotWorld.maximumHeight));
         }
 
