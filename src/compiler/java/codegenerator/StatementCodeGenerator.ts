@@ -682,7 +682,7 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
             case 'String':
             case 'string':
             case 'char':
-                caseSnippet.addStringPart(`case "${constantValue}": \n`, node.range); break;
+                caseSnippet.addStringPart(`case ${JSON.stringify(constantValue)}: \n`, node.range); break;
             default:
                 caseSnippet.addStringPart(`case ${constantValue}: \n`, node.range);
         }
