@@ -27,7 +27,6 @@ export interface IWorld {
 
     gngEventlistenerManager: GNGEventlistenerManager;
 
-    registerShapeToDestroy(shape: ShapeClass);
     hasActors(): boolean;
 
     _setBackgroundColor(color: string | number): void;
