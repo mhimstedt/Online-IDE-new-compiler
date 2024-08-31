@@ -26,7 +26,7 @@ export class ActorClass extends ObjectClass implements IActor {
         { type: "method", signature: "void act(double deltaTime)", java: ActorClass.prototype._mj$act$void$double, comment: JRC.actorActMethodComment2 },
         { type: "method", signature: "void onKeyTyped(String key)", java: ActorClass.prototype._mj$onKeyTyped$void$String, comment: JRC.actorOnKeyTypedComment },
         { type: "method", signature: "void onKeyUp(String key)", java: ActorClass.prototype._mj$onKeyUp$void$String },
-        { type: "method", signature: "void onKeyDown(String key, boolean isShift, boolean isCtrl, boolean isAlt)", java: ActorClass.prototype._mj$onKeyDown$void$String$boolean$boolean$boolean },
+        { type: "method", signature: "void onKeyDown(String key)", java: ActorClass.prototype._mj$onKeyDown$void$String },
         { type: "method", signature: "void destroy()", java: ActorClass.prototype._mj$destroy$void$ },
         { type: "method", signature: "final boolean isKeyUp(string key)", java: ActorClass.prototype._mj$isKeyUp$boolean$string, comment: JRC.actorOnKeyUpComment },
         { type: "method", signature: "final boolean isKeyDown(string key)", java: ActorClass.prototype._mj$isKeyDown$boolean$string, comment: JRC.actorOnKeyDownComment },
@@ -74,7 +74,7 @@ export class ActorClass extends ObjectClass implements IActor {
             this.actorManager.registerActor(this, "actWithTime");
         }
 
-        if (this._mj$onKeyDown$void$String$boolean$boolean$boolean != ActorClass.prototype._mj$onKeyDown$void$String$boolean$boolean$boolean) {
+        if (this._mj$onKeyDown$void$String != ActorClass.prototype._mj$onKeyDown$void$String) {
             this.actorManager.registerActor(this, "keyDown");
         }
 
@@ -109,8 +109,7 @@ export class ActorClass extends ObjectClass implements IActor {
 
     }
 
-    _mj$onKeyDown$void$String$boolean$boolean$boolean(t: Thread, callback: CallbackParameter,
-        key: StringClass, isShift: boolean, isCtrl: boolean, isAlt: boolean): void {
+    _mj$onKeyDown$void$String(t: Thread, callback: CallbackParameter, key: StringClass): void {
     }
 
     _mj$destroy$void$(t: Thread) {

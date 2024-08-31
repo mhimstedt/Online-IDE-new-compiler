@@ -10,6 +10,6 @@ export interface IActor {
     _mj$act$void$double(t: Thread, callback: (() => {}) | undefined, dt: number): void;
     _mj$onKeyTyped$void$String(t: Thread, callback: (() => {}) | undefined, key: StringClass): void;
     _mj$onKeyUp$void$String(t: Thread, callback: (() => {}) | undefined, key: StringClass): void;
-    _mj$onKeyDown$void$String$boolean$boolean$boolean(t: Thread, callback: (() => {}) | undefined, 
-        key: StringClass, isShift: boolean, isCtrl: boolean, isAlt: boolean): void;
+    _mj$onKeyDown$void$String(t: Thread, callback: (() => {}) | undefined, 
+        key: StringClass): void;
 }

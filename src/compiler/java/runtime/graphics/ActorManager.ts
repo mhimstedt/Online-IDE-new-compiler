@@ -148,7 +148,7 @@ export class ActorManager {
         let t = this.interpreter.scheduler.createThread("key down event thread");
 
         for (let actor of this.actors["keyDown"]) {
-            actor._mj$onKeyDown$void$String$boolean$boolean$boolean(t, undefined, new StringClass(key), isShift, isCtrl, isAlt);
+            actor._mj$onKeyDown$void$String(t, undefined, new StringClass(key));
         }
         t.state = ThreadState.runnable;
 
