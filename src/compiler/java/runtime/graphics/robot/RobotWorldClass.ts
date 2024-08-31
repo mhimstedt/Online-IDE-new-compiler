@@ -39,11 +39,9 @@ export class RobotWorldClass extends ObjectClass {
 
     _cj$_constructor_$RobotWorld$int$int(t: Thread, callback: CallbackParameter, worldX: number | string, worldY?: number) {
 
-        let existingWorld = t.scheduler.interpreter.retrieveObject("robotWorldClass");
+        let existingWorld: RobotWorldClass = t.scheduler.interpreter.retrieveObject("robotWorldClass");
         if (existingWorld) {
-            t.s.push(existingWorld);
-            if (callback) callback();
-            return;
+            existingWorld.clear();
         }
 
         t.s.push(this);
@@ -190,8 +188,8 @@ export class RobotWorldClass extends ObjectClass {
 
     clear() {
         for (let x = 0; x < this.bricks.length; x++) {
-            for (let y = 0; y < this.bricks[x-1].length; y++) {
-                let brickList = this.bricks[x-1][y-1];
+            for (let y = 0; y < this.bricks[x].length; y++) {
+                let brickList = this.bricks[x][y];
                 while (brickList.length > 0) {
                     this.removeMesh(brickList.pop());
                 }
@@ -199,10 +197,10 @@ export class RobotWorldClass extends ObjectClass {
         }
 
         for (let x = 0; x < this.markers.length; x++) {
-            for (let y = 0; y < this.markers[x-1].length; y++) {
-                let marker = this.markers[x-1][y-1];
+            for (let y = 0; y < this.markers[x].length; y++) {
+                let marker = this.markers[x][y];
                 if (marker != null) {
-                    this.markers[x-1][y-1] = null;
+                    this.markers[x][y] = null;
                     this.removeMesh(marker);
                 }
             }
@@ -216,6 +214,7 @@ export class RobotWorldClass extends ObjectClass {
                 }
             }
         })
+
     }
 
     getNumberOfBricks(x: number, y: number) {
@@ -273,10 +272,10 @@ export class RobotWorldClass extends ObjectClass {
                 let index = digits.indexOf(c1);
                 if (index >= 0) {
                     for (let i = 0; i < index + 1; i++) {
-                        this.addBrick(x, y, brickColor);
+                        this.addBrick(x+1, y+1, brickColor);
                     }
                     if (c2 == "m") {
-                        this.setMarker(x, y, markerColor);
+                        this.setMarker(x+1, y+1, markerColor);
                         pos++;
                     }
                     x++;
@@ -287,7 +286,7 @@ export class RobotWorldClass extends ObjectClass {
                     continue;
                 }
                 if (c1 == "_") {
-                    this.setMarker(x, y, markerColor);
+                    this.setMarker(x+1, y+1, markerColor);
                     x++;
                     continue;
                 }
@@ -324,12 +323,12 @@ export class RobotWorldClass extends ObjectClass {
     }
 
     _setzeZiegel(x: number, y: number, farbe: string, anzahl: number){
-        if(x < 1 || x > this.maxX || y < 1 || y < this.maxY){
+        if(x < 1 || x > this.maxX || y < 1 || y > this.maxY){
             throw new RuntimeExceptionClass(JRC.robotWorldPositionOutsideWorldError(x, y));
         }
 
         for(let i = 0; i < anzahl; i++){
-            this.addBrick(x-1, y-1, farbe);
+            this.addBrick(x, y, farbe);
         }
 
     }
