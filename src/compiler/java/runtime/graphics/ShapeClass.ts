@@ -439,7 +439,7 @@ export class ShapeClass extends ActorClass {
         let index2 = world.shapesNotAffectedByWorldTransforms.indexOf(this);
         if (index2 >= 0) world.shapesNotAffectedByWorldTransforms.splice(index2, 1);
 
-        this.world.interpreter.actorManager.shapesToDestroy.push(this);
+        this.world.interpreter.actorManager.shapesToDestroySafely.push(this);
 
         if (this.mouseEventsImplemented) {
             this.world.mouseManager.removeShapeWithImplementedMouseMethods(this);

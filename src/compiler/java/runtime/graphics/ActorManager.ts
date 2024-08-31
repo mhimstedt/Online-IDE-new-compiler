@@ -29,7 +29,7 @@ export class ActorManager {
         this.onKeyPressed(key);
     }
 
-    shapesToDestroy: ShapeClass[] = [];
+    shapesToDestroySafely: ShapeClass[] = [];
 
     constructor(private interpreter: Interpreter) {
         this.clear();
@@ -61,11 +61,11 @@ export class ActorManager {
             return;
         }
 
-        this.shapesToDestroy.forEach( shape => {
+        this.shapesToDestroySafely.forEach( shape => {
             shape.container.destroy();
             shape.container = ContainerProxy.instance;
         });
-        this.shapesToDestroy = [];
+        this.shapesToDestroySafely = [];
 
         this.tickHappenedWhenThreadNotEmpty = false;
 

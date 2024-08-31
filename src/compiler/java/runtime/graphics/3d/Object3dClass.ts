@@ -9,10 +9,10 @@ import { Vector3Class } from "./Vector3Class";
 import { World3dClass } from "./World3dClass";
 import * as Three from 'three';
 
-export class Object3dClass extends ActorClass {
+export abstract class Object3dClass extends ActorClass {
 
     static __javaDeclarations: LibraryDeclarations = [
-        { type: "declaration", signature: "abstract class Object3d extends Actor", comment: JRC.Object3dClassComment },
+        { type: "declaration", signature: "abstract final class Object3d extends Actor", comment: JRC.Object3dClassComment },
         { type: "method", signature: "Object3d()", java: Object3dClass.prototype._cj$_constructor_$Object3d$ },
         
         { type: "method", signature: "abstract void move(double x,double y,double z)", native:Object3dClass.prototype.move },
@@ -83,12 +83,13 @@ export class Object3dClass extends ActorClass {
         this.move(v.v.x, v.v.y, v.v.z);
     }
 
-
     vmoveTo(p: Vector3Class) {
         this.moveTo(p.v.x, p.v.y, p.v.z);
     }
+
     destroy(){
         super.destroy();
         this.world3d.objects.splice(this.world3d.objects.indexOf(this), 1);
     }
+
 }
