@@ -8,9 +8,7 @@ import { NonPrimitiveType } from "../../../types/NonPrimitiveType";
 import { ObjectClass } from "../../system/javalang/ObjectClassStringClass";
 import { RobotCubeFactory } from "./RobotCubeFactory";
 import { RobotWorldClass } from './RobotWorldClass';
-
 import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import stevegltf from '/include/graphics/robot/minecraft_steve/scene.gltf.txt';
 import { RobotDirection } from './RobotDirection';
 import { RuntimeExceptionClass } from '../../system/javalang/RuntimeException';
 import { ExceptionClass } from '../../system/javalang/ExceptionClass';
@@ -136,7 +134,7 @@ export class RobotClass extends ObjectClass {
 
     public async init(startX: number, startY: number){
         const loader = new GLTFLoader();
-        this.steve = (await loader.loadAsync(stevegltf)).scene;
+        this.steve = (await loader.loadAsync('/assets/graphics/robot/minecraft_steve/scene.gltf')).scene;
         this.steve.translateX(-this.robotWorld.maxX/2 + startX - 1);
         this.steve.translateY(1.45);
         this.steve.translateZ(-this.robotWorld.maxY/2 + startY - 1);
