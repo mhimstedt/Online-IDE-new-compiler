@@ -52,7 +52,7 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
 
         { type: "method", signature: "void follow(Shape shape, double margin, double xMin, double xMax, double yMin, double yMax)", native: WorldClass.prototype._follow, comment: JRC.worldFollowComment },
 
-        { type: "method", signature: "void addMouseListener(MouseListener mouseListener)", template: `§1.mouseListener.addMouseListener(§2);`, comment: JRC.worldAddMouseListenerComment },
+        { type: "method", signature: "void addMouseListener(MouseListener mouseListener)", template: `§1.mouseManager.${MouseManager.prototype.addJavaMouseListener.name}(§2);`, comment: JRC.worldAddMouseListenerComment },
 
 
 

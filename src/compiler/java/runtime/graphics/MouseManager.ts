@@ -29,6 +29,12 @@ export class MouseManager {
         for (let mouseEventKind of ["mouseup", "mousedown", "mousemove", "mouseenter", "mouseleave"]) {
             canvas.removeEventListener(mouseEventKind, this.listeners.get(mouseEventKind));
         }
+
+        this.internalMouseListeners = [];
+        this.javaMouseListeners = [];
+        this.shapesWithImplementedMouseMethods = [];
+        this.listeners = new Map();
+    
     }
 
     registerListeners() {
@@ -66,11 +72,11 @@ export class MouseManager {
 
                     for (let listener of that.javaMouseListeners) {
                         switch (mouseEventKind) {
-                            case "onmousedown": listener._mj$onMouseDown$void$double$double$int(t, undefined, x, y, e.button); break;
-                            case "onmouseup": listener._mj$onMouseUp$void$double$double$int(t, undefined, x, y, e.button); break;
-                            case "onmouseenter": listener._mj$onMouseEnter$void$double$double(t, undefined, x, y); break;
-                            case "onmouseleave": listener._mj$onMouseLeave$void$double$double(t, undefined, x, y); break;
-                            case "onmousemove": listener._mj$onMouseMove$void$double$double(t, undefined, x, y); break;
+                            case "mousedown": listener._mj$onMouseDown$void$double$double$int(t, undefined, x, y, e.button); break;
+                            case "mouseup": listener._mj$onMouseUp$void$double$double$int(t, undefined, x, y, e.button); break;
+                            case "mouseenter": listener._mj$onMouseEnter$void$double$double(t, undefined, x, y); break;
+                            case "mouseleave": listener._mj$onMouseLeave$void$double$double(t, undefined, x, y); break;
+                            case "mousemove": listener._mj$onMouseMove$void$double$double(t, undefined, x, y); break;
                         }
                     }
 
@@ -92,11 +98,11 @@ export class MouseManager {
 
     }
 
-    addMouseListener(mouseListener: MouseListenerInterface) {
+    addJavaMouseListener(mouseListener: MouseListenerInterface) {
         this.javaMouseListeners.push(mouseListener);
     }
 
-    removeMouseListener(mouseListener: MouseListenerInterface) {
+    removeJavaMouseListener(mouseListener: MouseListenerInterface) {
         this.javaMouseListeners.splice(this.javaMouseListeners.indexOf(mouseListener));
     }
 
