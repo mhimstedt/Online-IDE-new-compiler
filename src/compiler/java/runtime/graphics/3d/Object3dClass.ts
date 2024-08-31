@@ -9,7 +9,7 @@ import { Vector3Class } from "./Vector3Class";
 import { World3dClass } from "./World3dClass";
 import * as Three from 'three';
 
-export abstract class Object3dClass extends ActorClass {
+export class Object3dClass extends ActorClass {
 
     static __javaDeclarations: LibraryDeclarations = [
         { type: "declaration", signature: "abstract final class Object3d extends Actor", comment: JRC.Object3dClassComment },

@@ -33,6 +33,10 @@ export class ActorManager {
 
     constructor(private interpreter: Interpreter) {
         this.clear();
+        this.registerKeyboardListeners(interpreter);
+    }
+
+    registerKeyboardListeners(interpreter: Interpreter){
         if (interpreter.keyboardManager) {
             interpreter.keyboardManager.addKeyDownListener(this.keyDownListener);
             interpreter.keyboardManager.addKeyUpListener(this.keyUpListener);

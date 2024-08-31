@@ -362,9 +362,10 @@ export class Interpreter {
 
         if (state == SchedulerState.stopped) {
             this.hideProgrampointerPosition();
-            this.keyboardManager?.unsubscribeAllListeners();
             this.eventManager.fire("stop");
+            this.keyboardManager?.unsubscribeAllListeners();
             this.actorManager.clear();
+            this.actorManager.registerKeyboardListeners(this);
             // TODO
             // this.closeAllWebsockets();
         }
