@@ -12,6 +12,7 @@ import { JavaCompiledModule } from "./JavaCompiledModule";
 export class JavaTypeStore {
 
     private typeMap: Map<string, JavaType> = new Map();
+    private mainClasses: JavaClass[] = [];
 
     constructor() {
 
@@ -29,14 +30,20 @@ export class JavaTypeStore {
 
     empty() {
         this.typeMap = new Map();
+        this.mainClasses = [];
     }
 
     addType(type: JavaType) {
         if (type instanceof NonPrimitiveType) {
             this.typeMap.set(type.pathAndIdentifier, type);
+            if(type.isMainClass) this.mainClasses.push(<JavaClass>type);
         } else {
             this.typeMap.set(type.identifier, type);
         }
+    }
+
+    getMainClasses(): JavaClass[] {
+        return this.mainClasses;
     }
 
     getType(identifierWithPath: string): JavaType | undefined {

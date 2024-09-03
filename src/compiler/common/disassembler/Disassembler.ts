@@ -12,6 +12,7 @@ import { IRange } from "../range/Range";
 import '/include/css/disassembler.css';
 import { Klass } from "../interpreter/StepFunction";
 import { NonPrimitiveType } from "../../java/types/NonPrimitiveType";
+import { JavaClass } from "../../java/types/JavaClass.ts";
 
 type DisassembledStep = {
     element: HTMLElement;
@@ -197,7 +198,7 @@ export class Disassembler {
     insertTypeHeading(type: BaseType, marginLeft: number) {
         let headingDiv = DOM.makeDiv(this.disassemblerDiv, "jo_disassemblerHeading");
         headingDiv.style.marginLeft = marginLeft + "px";
-        if (type.identifier == "main class") {
+        if (type instanceof JavaClass && type.isMainClass) {
             headingDiv.textContent = "Main method:";
         } else {
             headingDiv.textContent = type.getDeclaration();

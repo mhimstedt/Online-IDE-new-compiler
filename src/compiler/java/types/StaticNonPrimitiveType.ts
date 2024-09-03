@@ -7,6 +7,8 @@ import { NonPrimitiveType } from "./NonPrimitiveType";
 import { Visibility } from "./Visibility.ts";
 
 export class StaticNonPrimitiveType extends JavaType {
+
+    isMainClass: boolean = false;
     
     getAbsoluteName(): string {
         return this.nonPrimitiveType.getAbsoluteName();

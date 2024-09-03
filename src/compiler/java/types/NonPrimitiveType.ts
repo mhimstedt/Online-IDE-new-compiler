@@ -41,6 +41,7 @@ export abstract class NonPrimitiveType extends JavaType implements BaseObjectTyp
     visibility: Visibility = TokenType.keywordPublic;
     isStatic: boolean = false; // static inner classes behave differently from non-static inner classes
     isFinal: boolean = false;
+    isMainClass?: boolean;
 
     private _outerType?: NonPrimitiveType | StaticNonPrimitiveType;      // a local class defined inside a static method has a StaticNonPrimitiveType outerType
 

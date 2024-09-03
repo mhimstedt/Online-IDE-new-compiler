@@ -59,9 +59,6 @@ export class JavaCompiledModule extends JavaBaseModule {
         let fragments: CodeFragment[] = [];
         let mainClassType = this.mainClass?.resolvedType;
         if (mainClassType && this.types.indexOf(mainClassType) < 0) {
-            if (mainClassType.identifier == "") {
-                mainClassType.identifier = "main class";
-            }
             this.getCodeFragmentsForType(mainClassType, fragments);
         }
 

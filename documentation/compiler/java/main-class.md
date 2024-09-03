@@ -19,6 +19,16 @@
 ## Resolving types:
   * `TypeResolver` builds `JavaClass` instance for main class and stores a reference to it in `classNode.resolvedType`
   * It then builds a `JavaMethod`-object for each global method and stores it in `methodNode.method`.
+  * class types are stored in `TypeResolver.moduleManager.typeStore`.
+
+## Compiling:
+
+
+## JavaCompiler:
+  * In `JavaCompiler.compileIfDirty()` the classObjectRegistry is populated with Main classes in it. They get keys like "$MainClass12".
+```javascript
+        this.moduleManager.typestore.populateClassObjectRegistry(klassObjectRegistry);
+```
 
 
 

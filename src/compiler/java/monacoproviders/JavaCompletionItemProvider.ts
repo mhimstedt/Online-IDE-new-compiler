@@ -543,7 +543,7 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
             ]);
         }
 
-        if (!this.isConsole && (symbolTable == null || symbolTable.classContext == null || symbolTable.classContext.identifier == '')) {
+        if (!this.isConsole && (symbolTable == null || symbolTable.classContext == null || symbolTable.classContext.isMainClass)) {
             keywordCompletionItems = keywordCompletionItems.concat([
                 {
                     label: "class",

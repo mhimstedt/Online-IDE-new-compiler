@@ -97,6 +97,10 @@ export class TypeResolver {
             resolvedType.isStatic = klassNode.isStatic;
             resolvedType._isAbstract = klassNode.isAbstract;
             resolvedType.documentation = klassNode.documentation;
+            if(klassNode.isMainClass){
+                resolvedType.isMainClass = true;
+                resolvedType.staticType.isMainClass = true;
+            } 
 
             if(klassNode.identifier != ""){
                 this.moduleManager.typestore.addType(resolvedType);
@@ -574,7 +578,7 @@ export class TypeResolver {
                     let parameter = new JavaParameter(p.identifier, p.identifierRange,
                         module, type, p.isFinal, p.isEllipsis, p.trackMissingReadAccess);
 
-                    if(node.identifier == '' && methodNode.identifier == 'main' && parameter.identifier == 'args'){
+                    if((<ASTClassDefinitionNode>node).isMainClass && methodNode.identifier == 'main' && parameter.identifier == 'args'){
                         parameter.hiddenWhenDebugging = true;
                     }
 

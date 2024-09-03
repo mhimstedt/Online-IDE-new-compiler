@@ -139,7 +139,7 @@ export class CodeGenerator extends InnerClassCodeGenerator {
             } else {
                 cdef.symbolTable = this.pushAndGetNewSymbolTable(cdef.range, false, type);
                 //@ts-ignore
-                if (cdef.identifier == "" && cdef.parent["mainProgramNode"]) {
+                if ((<ASTClassDefinitionNode>cdef).isMainClass && cdef.parent["mainProgramNode"]) {
                     cdef.symbolTable.hiddenWhenDebugging = true;
                 }
 

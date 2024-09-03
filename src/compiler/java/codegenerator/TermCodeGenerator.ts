@@ -1068,7 +1068,16 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
             return undefined;
         }
 
-        let methods = this.searchMethod(node.identifier, objectSnippet.type, parameterValueSnippet.map(p => p?.type), methodIsConstructor, objectSnippet.type instanceof StaticNonPrimitiveType, true, node.identifierRange);
+        let methods = this.searchMethod(node.identifier, objectSnippet.type, parameterValueSnippet.map(p => p?.type), methodIsConstructor, 
+        objectSnippet.type instanceof StaticNonPrimitiveType, true, node.identifierRange);
+        if((<NonPrimitiveType>objectSnippet.type).isMainClass && !methods.best){
+            let globalMethod = this.searchGlobalMethod(node.identifier, parameterValueSnippet.map(p => p?.type), node.identifierRange);
+            if(globalMethod){
+                methods.best = globalMethod.method;
+                objectSnippet = new StringCodeSnippet(`${Helpers.classes}["${globalMethod.staticMainClass.identifier}"]`, node.identifierRange, globalMethod.staticMainClass);
+            }
+        }
+
         let method = methods?.best;
 
         if (node.identifier == "assertCodeReached" && (!method || objectSnippet.type.identifier == "Assertions")) {
@@ -1218,6 +1227,25 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
         }
 
         return snippet;
+    }
+
+    /**
+     * 
+     */
+    searchGlobalMethod(identifier: string, parameterTypes: JavaType[], methodCallRange: IRange): {method: JavaMethod, staticMainClass: StaticNonPrimitiveType} | undefined {
+        for(let mainClass of this.compiledTypesTypestore.getMainClasses()){
+            let methods = this.searchMethod(identifier, mainClass.staticType,
+                parameterTypes, false, true, false, methodCallRange
+            )
+            if(methods.best){
+                return {
+                    method: methods.best, 
+                    staticMainClass: mainClass.staticType
+                }
+            }
+        }
+
+        return undefined;
     }
 
     isStringOrChar(type: JavaType) {
