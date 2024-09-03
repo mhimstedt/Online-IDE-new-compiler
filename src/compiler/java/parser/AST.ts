@@ -211,6 +211,8 @@ export interface ASTClassDefinitionNode
     resolvedType: JavaClass | undefined;
     isAnonymousInnerType: boolean;
 
+    isMainClass: boolean;
+
     staticInitializer?: Program       // only for debugging purposes,
 }
 

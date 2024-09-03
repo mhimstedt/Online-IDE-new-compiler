@@ -31,6 +31,8 @@ export class Parser extends StatementParser {
 
     static visibilityModifiersOrTopLevelTypeDeclaration = Parser.visibilityModifiers.concat(Parser.classOrInterfaceOrEnum).concat([TokenType.keywordAbstract]);
 
+    static mainClassCounter = 0;
+
     collectedAnnotations: ASTAnnotationNode[] = [];
 
     mainMethodStatements: ASTStatementNode[] = [];
@@ -57,8 +59,9 @@ export class Parser extends StatementParser {
         }
 
         this.javaCompiledModule.mainClass = this.nodeFactory.buildClassNode(this.nodeFactory.buildNodeWithModifiers(EmptyRange.instance),
-            undefined, this.javaCompiledModule.ast!, [], this.javaCompiledModule);
+        { tt: TokenType.identifier, value: "$MainClass" + (Parser.mainClassCounter++), range: EmptyRange.instance }, this.javaCompiledModule.ast!, [], this.javaCompiledModule);
         this.javaCompiledModule.mainClass.range = globalRange;
+        this.javaCompiledModule.mainClass.isMainClass = true;
 
         let mainMethod = this.nodeFactory.buildMethodNode(undefined, false, this.nodeFactory.buildNodeWithModifiers(EmptyRange.instance),
             { tt: TokenType.identifier, value: "main", range: EmptyRange.instance }, globalRange, [], this.javaCompiledModule.mainClass);

@@ -173,7 +173,8 @@ export class ASTNodeFactory {
             annotations: [],
             resolvedType: undefined,
             module: module, 
-            isAnonymousInnerType: false
+            isAnonymousInnerType: false,
+            isMainClass: false
         }
 
         if (annotations.length > 0) {
