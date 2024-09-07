@@ -208,12 +208,11 @@ export class JavaCompiledModule extends JavaBaseModule {
         if(!this.ast) return undefined;
 
         for(let innerType of this.ast.innerTypes){
-            if(innerType.kind != TokenType.keywordClass) continue;
-            if(innerType.isMainClass) continue;
-            if(!innerType.resolvedType) continue;
+            if(innerType.kind != TokenType.keywordClass || innerType.isMainClass || !innerType.resolvedType) continue;
             if(innerType.resolvedType.getMainMethod()) return innerType.resolvedType;
         }
 
+        return undefined;
     }
 
     startMainProgram(thread: Thread): boolean {
