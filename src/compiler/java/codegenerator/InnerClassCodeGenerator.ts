@@ -3,6 +3,7 @@ import { Program } from "../../common/interpreter/Program";
 import { CallbackFunction, Helpers, StepParams } from "../../common/interpreter/StepFunction.ts";
 import { Thread } from "../../common/interpreter/Thread.ts";
 import { EmptyRange, IRange, Range } from "../../common/range/Range.ts";
+import { JavaCompilerStringConstants } from "../JavaCompilerStringConstants.ts";
 import { TokenType } from "../TokenType";
 import { JCM } from "../language/JavaCompilerMessages.ts";
 import { JavaCompiledModule } from "../module/JavaCompiledModule";
@@ -507,7 +508,7 @@ export class InnerClassCodeGenerator extends StatementCodeGenerator {
 
     compileMethodDeclaration(methodNode: ASTMethodDeclarationNode, classContext: JavaClass | JavaEnum | JavaInterface) {
 
-        if (methodNode.identifier != 'main' || !methodNode.parentTypeScope["isMainClass"]) {
+        if (methodNode.identifier != JavaCompilerStringConstants.mainMethodIdentifier || !methodNode.parentTypeScope["isMainClass"]) {
             this.module.methodDeclarationRanges.push(methodNode.range);
         }
 

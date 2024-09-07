@@ -7,6 +7,7 @@ import { Thread } from "../../common/interpreter/Thread.ts";
 import { CompilerFile } from "../../common/module/CompilerFile";
 import { Position } from "../../common/range/Position.ts";
 import { IRange } from "../../common/range/Range.ts";
+import { JavaCompilerStringConstants } from "../JavaCompilerStringConstants.ts";
 import { JavaSymbolTable } from "../codegenerator/JavaSymbolTable.ts";
 import { JavaCompiledModuleMessages } from "../language/JavaCompiledModuleMessages.ts";
 import { LexerOutput } from "../lexer/Lexer.ts";
@@ -188,7 +189,7 @@ export class JavaCompiledModule extends JavaBaseModule {
 
     hasMainProgram(): boolean {
         if (!this.mainClass) return false;
-        let mainMethod = this.mainClass.methods.find(m => m.isStatic && m.identifier == "main")
+        let mainMethod = this.mainClass.methods.find(m => m.isStatic && m.identifier == JavaCompilerStringConstants.mainMethodIdentifier)
 
         if (mainMethod) {
             let statements = mainMethod.statement as ASTBlockNode;

@@ -18,6 +18,7 @@ import {
 } from "./AST.ts";
 import { ASTNodeFactory } from "./ASTNodeFactory.ts";
 import { StatementParser } from "./StatementParser.ts";
+import { JavaCompilerStringConstants} from "../JavaCompilerStringConstants.ts";
 
 export class Parser extends StatementParser {
 
@@ -64,7 +65,7 @@ export class Parser extends StatementParser {
         this.javaCompiledModule.mainClass.isMainClass = true;
 
         let mainMethod = this.nodeFactory.buildMethodNode(undefined, false, this.nodeFactory.buildNodeWithModifiers(EmptyRange.instance),
-            { tt: TokenType.identifier, value: "main", range: EmptyRange.instance }, globalRange, [], this.javaCompiledModule.mainClass);
+            { tt: TokenType.identifier, value: JavaCompilerStringConstants.mainMethodIdentifier, range: EmptyRange.instance }, globalRange, [], this.javaCompiledModule.mainClass);
 
         mainMethod.isStatic = true;
 

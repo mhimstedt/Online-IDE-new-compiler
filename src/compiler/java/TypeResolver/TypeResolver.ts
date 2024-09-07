@@ -22,6 +22,7 @@ import { NonPrimitiveType } from "../types/NonPrimitiveType";
 import { JavaParameter } from "../types/JavaParameter";
 import { CycleFinder } from "./CycleFinder";
 import { JCM } from "../language/JavaCompilerMessages.ts";
+import { JavaCompilerStringConstants } from "../JavaCompilerStringConstants.ts";
 
 
 export class TypeResolver {
@@ -578,7 +579,7 @@ export class TypeResolver {
                     let parameter = new JavaParameter(p.identifier, p.identifierRange,
                         module, type, p.isFinal, p.isEllipsis, p.trackMissingReadAccess);
 
-                    if((<ASTClassDefinitionNode>node).isMainClass && methodNode.identifier == 'main' && parameter.identifier == 'args'){
+                    if((<ASTClassDefinitionNode>node).isMainClass && methodNode.identifier == JavaCompilerStringConstants.mainMethodIdentifier && parameter.identifier == 'args'){
                         parameter.hiddenWhenDebugging = true;
                     }
 
