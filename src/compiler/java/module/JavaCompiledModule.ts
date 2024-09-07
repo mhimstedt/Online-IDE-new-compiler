@@ -1,26 +1,25 @@
 import { BaseSymbol } from "../../common/BaseSymbolTable.ts";
 import { Error } from "../../common/Error";
 import { UsagePosition } from "../../common/UsagePosition.ts";
-import { Program, Step } from "../../common/interpreter/Program";
+import { CodeFragment } from "../../common/disassembler/CodeFragment.ts";
+import { Step } from "../../common/interpreter/Program";
 import { Thread } from "../../common/interpreter/Thread.ts";
 import { CompilerFile } from "../../common/module/CompilerFile";
 import { Position } from "../../common/range/Position.ts";
+import { IRange } from "../../common/range/Range.ts";
 import { JavaSymbolTable } from "../codegenerator/JavaSymbolTable.ts";
+import { JavaCompiledModuleMessages } from "../language/JavaCompiledModuleMessages.ts";
 import { LexerOutput } from "../lexer/Lexer.ts";
 import { TokenList } from "../lexer/Token";
 import { ASTBlockNode, ASTClassDefinitionNode, ASTGlobalNode } from "../parser/AST";
 import { JavaArrayType } from "../types/JavaArrayType.ts";
-import { JavaType } from "../types/JavaType";
 import { JavaMethod } from "../types/JavaMethod.ts";
+import { JavaType } from "../types/JavaType";
 import { NonPrimitiveType } from "../types/NonPrimitiveType";
 import { StaticNonPrimitiveType } from "../types/StaticNonPrimitiveType.ts";
 import { JavaBaseModule } from "./JavaBaseModule";
 import { JavaModuleManager } from "./JavaModuleManager";
 import { TypePosition } from "./TypePosition.ts";
-import { IRange, Range } from "../../common/range/Range.ts";
-import { CodeFragment } from "../../common/disassembler/CodeFragment.ts";
-import { JavaCompiledModuleMessages } from "../language/JavaCompiledModuleMessages.ts";
-import { JavaTypeWithInstanceInitializer } from "../types/JavaTypeWithInstanceInitializer.ts";
 
 export type JavaMethodCallPosition = {
     identifierRange: monaco.IRange,

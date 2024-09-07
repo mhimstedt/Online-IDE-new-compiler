@@ -507,7 +507,7 @@ export class InnerClassCodeGenerator extends StatementCodeGenerator {
 
     compileMethodDeclaration(methodNode: ASTMethodDeclarationNode, classContext: JavaClass | JavaEnum | JavaInterface) {
 
-        if (methodNode.path != '.main') {
+        if (methodNode.identifier != 'main' || !methodNode.parentTypeScope["isMainClass"]) {
             this.module.methodDeclarationRanges.push(methodNode.range);
         }
 
