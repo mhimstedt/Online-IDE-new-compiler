@@ -35,6 +35,7 @@ export default defineConfig({
         manualChunks: {}
       }
     },
+    modulePreload: false,
     chunkSizeWarningLimit: 4912,
     emptyOutDir: false
   }
