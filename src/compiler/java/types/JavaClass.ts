@@ -1,4 +1,5 @@
 import { IRange } from "../../common/range/Range";
+import { JavaCompilerStringConstants } from "../JavaCompilerStringConstants.ts";
 import { TokenType, TokenTypeReadable } from "../TokenType";
 import { JCM } from "../language/JavaCompilerMessages.ts";
 import { ColorHelper } from "../lexer/ColorHelper.ts";
@@ -526,6 +527,13 @@ export class JavaClass extends IJavaClass {
         
         return new GenericVariantOfJavaClass(this, typeMap);
     }
+
+    getMainMethod(): JavaMethod | undefined {
+        let method: JavaMethod | undefined = this.methods.find(m => m.identifier == JavaCompilerStringConstants.mainMethodIdentifier);
+        if(method) return method;
+        return this.methods.find(m => m.isStatic && m.identifier == 'main' && m.getSignature().toLocaleLowerCase() == 'void main(string[])')
+    }
+
  
 }
 
@@ -813,7 +821,6 @@ export class GenericVariantOfJavaClass extends IJavaClass {
 
         return null;
     }
-
 
 
 }

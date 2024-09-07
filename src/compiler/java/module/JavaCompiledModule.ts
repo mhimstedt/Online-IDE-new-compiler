@@ -8,12 +8,14 @@ import { CompilerFile } from "../../common/module/CompilerFile";
 import { Position } from "../../common/range/Position.ts";
 import { IRange } from "../../common/range/Range.ts";
 import { JavaCompilerStringConstants } from "../JavaCompilerStringConstants.ts";
+import { TokenType } from "../TokenType.ts";
 import { JavaSymbolTable } from "../codegenerator/JavaSymbolTable.ts";
 import { JavaCompiledModuleMessages } from "../language/JavaCompiledModuleMessages.ts";
 import { LexerOutput } from "../lexer/Lexer.ts";
 import { TokenList } from "../lexer/Token";
 import { ASTBlockNode, ASTClassDefinitionNode, ASTGlobalNode } from "../parser/AST";
 import { JavaArrayType } from "../types/JavaArrayType.ts";
+import { JavaClass } from "../types/JavaClass.ts";
 import { JavaMethod } from "../types/JavaMethod.ts";
 import { JavaType } from "../types/JavaType";
 import { NonPrimitiveType } from "../types/NonPrimitiveType";
@@ -188,22 +190,39 @@ export class JavaCompiledModule extends JavaBaseModule {
     }
 
     hasMainProgram(): boolean {
-        if (!this.mainClass) return false;
-        let mainMethod = this.mainClass.methods.find(m => m.isStatic && m.identifier == JavaCompilerStringConstants.mainMethodIdentifier)
+        return this.getClassWithStartableMainMethod() != null;
+ 
+    }
 
-        if (mainMethod) {
-            let statements = mainMethod.statement as ASTBlockNode;
-            return statements.statements.length > 0;
+    getClassWithStartableMainMethod(): JavaClass | undefined {
+        if(this.mainClass){
+            let mainMethod = this.mainClass.methods.find(m => m.identifier == JavaCompilerStringConstants.mainMethodIdentifier)
+    
+            if (mainMethod) {
+                let statements = mainMethod.statement as ASTBlockNode;
+                if(statements.statements.length > 0) return this.mainClass.resolvedType;
+            }
+    
         }
 
-        return false;
+        if(!this.ast) return undefined;
+
+        for(let innerType of this.ast.innerTypes){
+            if(innerType.kind != TokenType.keywordClass) continue;
+            if(innerType.isMainClass) continue;
+            if(!innerType.resolvedType) continue;
+            if(innerType.resolvedType.getMainMethod()) return innerType.resolvedType;
+        }
 
     }
 
     startMainProgram(thread: Thread): boolean {
-        let mainRuntimeClass = this.mainClass?.resolvedType?.runtimeClass;
+        let startableMainClass = this.getClassWithStartableMainMethod();
+        if(!startableMainClass) return false;
+        let mainRuntimeClass = startableMainClass.runtimeClass;
         if (!mainRuntimeClass) return false;
-        let mainMethod = this.mainClass?.resolvedType?.methods.find(m => m.getSignature().toLocaleLowerCase() == "void main(string[])" && m.isStatic);
+
+        let mainMethod = startableMainClass.getMainMethod();
 
         if (!mainMethod) return false;
 

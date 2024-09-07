@@ -98,6 +98,7 @@ export class TurtleClass extends FilledShapeClass {
             this.calculateCenter();
 
             this.borderColor = 0xffffff;
+            this.borderWidth = 2;
 
             this.hitPolygonInitial = [];
 
