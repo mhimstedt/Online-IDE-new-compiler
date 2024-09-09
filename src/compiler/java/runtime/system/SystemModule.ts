@@ -152,7 +152,7 @@ import { PhongMaterial3dClass } from "../graphics/3d/materials/PhongMaterial3dCl
 import { Light3dClass } from "../graphics/3d/lights/Light3dClass.ts";
 import { PointLight3dClass } from "../graphics/3d/lights/PointLight3dClass.ts";
 import { TextFieldClass } from "../graphics/gui/TextFieldClass.ts";
-import { PhysicallyBasedMaterial3dClass } from "../graphics/3d/materials/PhysikcallyBasedMaterial3d.ts";
+import { PhysicallyBasedMaterial3dClass } from "../graphics/3d/materials/PhysicallyBasedMaterial3d.ts";
 
 export class SystemModule extends JavaLibraryModule {
 
