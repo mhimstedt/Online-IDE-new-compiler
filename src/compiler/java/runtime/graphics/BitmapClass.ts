@@ -202,7 +202,7 @@ export class BitmapClass extends ShapeClass {
 
         let c = this.data[i];
 
-        return (c & 0xff << 16) + (c & 0xff00) + (c & 0xff0000 >> 16)
+        return ((c & 0xff) << 16) + (c & 0xff00) + ((c & 0xff0000) >> 16)
 
     }
 
@@ -307,8 +307,8 @@ export class BitmapClass extends ShapeClass {
     }
 
     _worldCoordinatesToBitmapCoordinates(x: number, y: number){
-        let xb = Math.round((x - this.top)/this.width * this.anzahlX);
-        let yb = Math.round((y - this.top)/this.width * this.anzahlY);
+        let xb = Math.trunc((x - this.top)/this.width * this.anzahlX);
+        let yb = Math.trunc((y - this.top)/this.width * this.anzahlY);
 
         return new PositionClass(xb, yb);
     }
