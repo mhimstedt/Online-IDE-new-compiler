@@ -1585,6 +1585,13 @@ export class JRC {
         "en": "Returns true if and only if color at point (x, y) matches given color.",
     })
 
+    static BitmapWorldCoordinatesToBitmapCoordinatesComment = () => lm({
+        "de": "Wandelt die Weltkoordinaten (x,y) in Koordinaten innerhalb der Bitmap um.",
+        "en": "Converts world coordinates to coordinates inside this bitmap.",
+    })
+
+
+
     static BitmapFillAllComment = () => lm({
         "de": "Füllt die ganze Bitmap mit der angegebenen Farbe.",
         "en": "Fills whole Bitmap with given color.",

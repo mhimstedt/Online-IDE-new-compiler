@@ -7,7 +7,7 @@ import { ObjectClass, StringClass } from "../system/javalang/ObjectClassStringCl
 
 export class PositionClass extends ObjectClass {
     static __javaDeclarations: LibraryDeclarations = [
-        { type: "declaration", signature: "class Position extends FilledShape", comment: JRC.PositionClassComment },
+        { type: "declaration", signature: "class Position extends Object", comment: JRC.PositionClassComment },
 
         {type: "field", signature: "int x", comment: JRC.PositionXComment},
         {type: "field", signature: "int y", comment: JRC.PositionYComment},
@@ -22,6 +22,11 @@ export class PositionClass extends ObjectClass {
     x!: number;
     y!: number;
 
+    constructor(x?: number, y?: number){
+        super();
+        this.x = x || 0;
+        this.y = y || 0;
+    }
     
     _cj$_constructor_$Position$int$int(t: Thread, callback: CallbackFunction, x: number, y: number){
         this.x = x;

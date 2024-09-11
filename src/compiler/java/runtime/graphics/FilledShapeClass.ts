@@ -16,6 +16,7 @@ export class FilledShapeClass extends ShapeClass {
 
         { type: "method", signature: "FilledShape()", java: FilledShapeClass.prototype._cj$_constructor_$FilledShape$ },
         { type: "method", signature: "Color getFillColor()", native: FilledShapeClass.prototype._getFillColor , comment: JRC.fsGetFillColorComment},
+        { type: "method", signature: "int getFillColorAsInt()", native: FilledShapeClass.prototype._getFillColorAsInt , comment: JRC.fsGetFillColorComment},
         { type: "method", signature: "void setFillColor(Color color)", native: FilledShapeClass.prototype._setFillColorColor , comment: JRC.fsSetFillColorCommentColor},
         { type: "method", signature: "void setFillColor(Color color, double alpha)", native: FilledShapeClass.prototype._setFillColorColor , comment: JRC.fsSetFillColorCommentColor},
         { type: "method", signature: "void setFillColor(int color)", native: FilledShapeClass.prototype._setFillColorInt , comment: JRC.fsSetFillColorCommentInt},
@@ -23,6 +24,7 @@ export class FilledShapeClass extends ShapeClass {
         { type: "method", signature: "void setFillColor(string color)", native: FilledShapeClass.prototype._setFillColorString , comment: JRC.fsSetFillColorCommentString},
         { type: "method", signature: "void setFillColor(string color, double alpha)", native: FilledShapeClass.prototype._setFillColorStringDouble , comment: JRC.fsSetFillColorCommentStringDouble},
         { type: "method", signature: "Color getBorderColor()", native: FilledShapeClass.prototype._getBorderColor , comment: JRC.fsGetBorderColorComment},
+        { type: "method", signature: "int getBorderColorAsInt()", native: FilledShapeClass.prototype._getBorderColorAsInt , comment: JRC.fsGetBorderColorComment},
         { type: "method", signature: "void setBorderColor(Color color)", native: FilledShapeClass.prototype._setBorderColorColor , comment: JRC.fsSetBorderColorCommentColor},
         { type: "method", signature: "void setBorderColor(Color color, double alpha)", native: FilledShapeClass.prototype._setBorderColorColor , comment: JRC.fsSetBorderColorCommentColor},
         { type: "method", signature: "void setBorderColor(int color)", native: FilledShapeClass.prototype._setBorderColorInt , comment: JRC.fsSetBorderColorCommentInt},
@@ -84,6 +86,10 @@ export class FilledShapeClass extends ShapeClass {
         return c;
     }
     
+    _getFillColorAsInt(): number {
+        return this.fillColor || 0x0;
+    }
+    
     _getBorderColor(): ColorClass {
         if(this.borderColor==null){
             return null;
@@ -91,6 +97,10 @@ export class FilledShapeClass extends ShapeClass {
         let c = new ColorClass();
         c.fromIntAndAlpha(this.borderColor, this.borderAlpha);
         return c;
+    }
+
+    _getBorderColorAsInt(): number {
+        return this.borderColor || 0x0;
     }
 
     _setBorderWidth(borderWidth: number) {
