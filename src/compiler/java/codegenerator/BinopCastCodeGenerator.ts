@@ -478,7 +478,14 @@ export abstract class BinopCastCodeGenerator {
         // from here on type is primitive!
         if (!castTo.isPrimitive) {
             let boxedTypeIndex = boxedTypesMap[castTo.identifier];
-            if (primitiveTypeMap[type.identifier] == boxedTypeIndex) {
+            let fromIndex = primitiveTypeMap[type.identifier];
+            let toIndex = boxedTypeIndex;
+            if (fromIndex == toIndex) {
+                return this.box(snippet);
+            }
+
+            if(fromIndex >= nByte && fromIndex <= nDouble && toIndex >= nByte && toIndex <= nDouble && fromIndex <= toIndex){
+                snippet.type = this.primitiveTypes[boxedTypeIndex];
                 return this.box(snippet);
             }
 
