@@ -52,7 +52,6 @@ export class InputManager implements IInputManager {
 
                     inputField.selectionStart = 0;
                     inputField.selectionEnd = (inputField.value || '').length;
-                    return;
                 } else {
                     printManager.$outputDiv.off('mousedown.inputmanager');
                     printManager.print(value, true, 0xffffff);
@@ -61,7 +60,10 @@ export class InputManager implements IInputManager {
 
                     successCallback(validatorRet.convertedValue);
                 }
+                // e.preventDefault();
+                // return false;
             }
+            
         })
 
         setTimeout(() => {

@@ -50,11 +50,12 @@ export class KeyboardManager {
             }
 
             // prevent <html>-Element from scrolling in embedded mode
-            if (this.main.isEmbedded() && this.main.getInterpreter().scheduler.state == SchedulerState.running && !this.main.getMainEditor().hasTextFocus()) {
-                if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].indexOf(e.key) >= 0)
-                    e.preventDefault();
-                return false;
-            }
+            // if (this.main.isEmbedded() && this.main.getInterpreter().scheduler.state == SchedulerState.running && !this.main.getMainEditor().hasTextFocus()) {
+            //     if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].indexOf(e.key) >= 0) {
+            //         e.preventDefault();
+            //         return false;
+            //     }
+            // }
 
             return true;
         });
@@ -133,24 +134,24 @@ export class KeyboardManager {
         this.keyDownCallbacks.push(listener);
     }
 
-    addInternalKeyboardListener(listener: InternalKeyboardListener){
+    addInternalKeyboardListener(listener: InternalKeyboardListener) {
         this.internalKeyboardListeners.push(listener);
     }
 
-    removeInternalKeyboardListener(listener: InternalKeyboardListener){
-        let  index = this.internalKeyboardListeners.indexOf(listener);
-        if(index >= 0) this.internalKeyboardListeners.splice(index, 1);
+    removeInternalKeyboardListener(listener: InternalKeyboardListener) {
+        let index = this.internalKeyboardListeners.indexOf(listener);
+        if (index >= 0) this.internalKeyboardListeners.splice(index, 1);
     }
 
-    removeKeyPressedListener(listener: KeyPressedListener){
+    removeKeyPressedListener(listener: KeyPressedListener) {
         this.keyPressedCallbacks.splice(this.keyPressedCallbacks.indexOf(listener), 1);
     }
 
-    removeKeyUpListener(listener: KeyUpListener){
+    removeKeyUpListener(listener: KeyUpListener) {
         this.keyUpCallbacks.splice(this.keyUpCallbacks.indexOf(listener), 1);
     }
 
-    removeKeyDownListener(listener: KeyDownListener){
+    removeKeyDownListener(listener: KeyDownListener) {
         this.keyDownCallbacks.splice(this.keyDownCallbacks.indexOf(listener), 1);
     }
 
