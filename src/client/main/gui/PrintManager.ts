@@ -2,6 +2,8 @@ import jQuery from 'jquery';
 import { MainBase } from "../MainBase.js";
 import { InputManager } from './InputManager.js';
 import { IPrintManager } from '../../../compiler/common/interpreter/IPrintManager.js';
+import { ColorClass } from '../../../compiler/java/runtime/graphics/ColorClass.js';
+import { ColorConverter } from '../../../compiler/java/runtime/graphics/ColorConverter.js';
 
 type PrintCommand = {
     text: string;
@@ -198,12 +200,18 @@ export class PrintManager implements IPrintManager {
         this.printCommands = [];
     }
 
-    print(text: string | null, withNewline: boolean, color: string|number|undefined) {
+    print(text: string | null, withNewline: boolean, color: string|number|ColorClass) {
         if (text == null) text = "";
 
         if(withNewline) text += "\n";
 
         if(text == '') return;
+
+        if(color == null){
+            color = 0xffffff;
+        } else {
+            color = ColorConverter.convertToInt(color);
+        }
 
         if(typeof color == "number"){
             color = color.toString(16);
