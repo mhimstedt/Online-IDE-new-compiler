@@ -59,6 +59,7 @@ export class SchoolsWithAdminsMI extends AdminMenuItem {
                 { field: 'id', text: 'ID', size: '20px', sortable: true, hidden: true },
                 { field: 'name', text: 'Bezeichnung', size: '30%', sortable: true, resizable: true, editable: { type: 'text' }, sortMode: 'i18n' },
                 { field: 'kuerzel', text: 'Kürzel', size: '10%', sortable: true, resizable: true, editable: { type: 'text', maxlength: "10" } },
+                { field: 'vidis_schulkennung', text: 'Vidis-Kennung', size: '30%', sortable: true, resizable: true, editable: { type: 'text', maxlength: "256" } },
                 { field: 'numberOfClasses', text: 'Klassen', size: '30%', sortable: true, resizable: true },
                 { field: 'numberOfUsers', text: 'User', size: '30%', sortable: true, resizable: true },
                 { field: 'userMinutesLastMonth', text: 'Hours(m)', size: '20%', sortable: true, resizable: true },
@@ -276,6 +277,8 @@ export class SchoolsWithAdminsMI extends AdminMenuItem {
     }
 
     onUpdateSchool(event: any) {
+
+        if(event.phase == 'after') return;
 
         let data: SchoolData = <SchoolData>this.schoolGrid.records[event.detail.index];
         let field = this.schoolGrid.columns[event.detail.column]["field"];
