@@ -1,3 +1,4 @@
+import { isBoxedPrimitive } from "util/types";
 import { BaseSymbol, SymbolOnStackframe } from "../../common/BaseSymbolTable";
 import { CodeReacedAssertion } from "../../common/interpreter/CodeReachedAssertions.ts";
 import { Helpers, StepParams } from "../../common/interpreter/StepFunction";
@@ -412,6 +413,10 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
         let indexSnippets: CodeSnippet[] = [];
         for (let index of node.indices) {
             let indsnip = this.compileTerm(index);
+
+            if(!(indsnip?.type?.isPrimitive)){
+                indsnip = this.unbox(indsnip);
+            }
 
             if (!(indsnip?.type?.isUsableAsIndex())) {
                 if (indsnip) this.pushError(JCM.indexMustHaveIntegerValue(), "error", index);
@@ -868,6 +873,14 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
             if (!operand.isLefty) {
                 this.pushError(JCM.plusPlusMinusMinusOnlyForVariables(), "error", ast);
                 return undefined;
+            }
+
+            if(this.hasBoxedType(operand)){
+                if(["Double", "Float", "Integer", "Byte"].indexOf(operand.type.identifier) >= 0){
+                    let template: CodeTemplate = ast.operator == TokenType.plusPlus ? new OneParameterTemplate(`${Helpers.checkNPE('§1', operand.range)}.value++`) : new OneParameterTemplate(`${Helpers.checkNPE('§1', operand.range)}.value--`);
+
+                    return template.applyToSnippet( this.getUnboxedType(operand.type), ast.range, operand);        
+                }
             }
 
             if (!this.isNumberPrimitiveType(operand.type)) {
