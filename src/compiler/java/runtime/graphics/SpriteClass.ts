@@ -358,6 +358,25 @@ export class SpriteClass extends ShapeClass {
                 this.hitPolygonInitial = HitPolygonStore.getPolygonForTexture(spriteLibrary, imageIndex, this, new PIXI.Sprite(sheet.textures[nameWithIndex]));
                 this.hitPolygonDirty = true;
             }
+        
+            let oldCenterX = this.centerXInitial;
+            let oldCenterY = this.centerYInitial;
+
+            this.centerXInitial = sprite.width / 2;
+            this.centerYInitial = sprite.height / 2;
+
+            if(this.container.parent){
+
+                this.container.setFromMatrix(this.container.localTransform.append(new PIXI.Matrix().translate(oldCenterX - this.centerXInitial, oldCenterY - this.centerYInitial)));
+
+                this.container.updateLocalTransform();
+                //@ts-ignore
+                this.container._didLocalTransformChangeId = this.container._didChangeId;
+        
+                this.setWorldTransformAndHitPolygonDirty();
+        
+            }
+
 
         } else {
             throw new RuntimeExceptionClass(JRC.spriteErrorImageNotFound(spriteLibrary, imageIndex));
