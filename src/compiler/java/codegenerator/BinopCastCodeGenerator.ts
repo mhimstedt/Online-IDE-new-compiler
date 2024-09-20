@@ -678,6 +678,23 @@ export abstract class BinopCastCodeGenerator {
         return SnippetFramer.frame(snippet, `(§1 || {value: ${unboxedNullValuesMap[snippet.type.identifier]}}).value`, unboxedType);
     }
 
+    getUnboxedType(type: JavaType): JavaType {
+        if (!type) return undefined;
+        let boxedTypeIndex: number | undefined = boxedTypesMap[type.identifier];
+        if (!boxedTypeIndex) return undefined;  // type is not boxed
+
+        return this.primitiveTypes[boxedTypeIndex];
+
+    }
+
+    hasBoxedType(snippet: CodeSnippet): boolean {
+        if (!snippet.type) return false;
+        let unboxedTypeIndex = boxedTypesMap[snippet.type.identifier];
+
+        return unboxedTypeIndex != null;
+
+    }
+
     box(snippet: CodeSnippet): CodeSnippet {
         if (!snippet.type) return snippet;
         let unboxedTypeIndex = primitiveTypeMap[snippet.type.identifier];
