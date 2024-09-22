@@ -58,13 +58,13 @@ export class SchoolsWithAdminsMI extends AdminMenuItem {
             columns: [
                 { field: 'id', text: 'ID', size: '20px', sortable: true, hidden: true },
                 { field: 'name', text: 'Bezeichnung', size: '30%', sortable: true, resizable: true, editable: { type: 'text' }, sortMode: 'i18n' },
-                { field: 'kuerzel', text: 'Kürzel', size: '10%', sortable: true, resizable: true, editable: { type: 'text', maxlength: "10" } },
+                { field: 'kuerzel', text: 'Kürzel', size: '10%', sortable: true, resizable: true, editable: { type: 'text', maxlength: "10" }, hidden: true },
                 { field: 'vidis_schulkennung', text: 'Vidis-Kennung', size: '30%', sortable: true, resizable: true, editable: { type: 'text', maxlength: "256" } },
                 { field: 'numberOfClasses', text: 'Klassen', size: '30%', sortable: true, resizable: true },
-                { field: 'numberOfUsers', text: 'User', size: '30%', sortable: true, resizable: true },
-                { field: 'userMinutesLastMonth', text: 'Hours(m)', size: '20%', sortable: true, resizable: true },
-                { field: 'userMinutesLastYear', text: 'Hours(y)', size: '20%', sortable: true, resizable: true },
-                { field: 'userMinutesOverall', text: 'Hours(all)', size: '20%', sortable: true, resizable: true },
+                { field: 'numberOfUsers', text: 'Users', size: '30%', sortable: true, resizable: true },
+                { field: 'userMinutesLastMonth', text: '(m)', size: '20%', sortable: true, resizable: true },
+                { field: 'userMinutesLastYear', text: '(y)', size: '20%', sortable: true, resizable: true },
+                { field: 'userMinutesOverall', text: '(all)', size: '20%', sortable: true, resizable: true },
             ],
             searches: [
                 { field: 'name', label: 'Bezeichnung', type: 'text' }

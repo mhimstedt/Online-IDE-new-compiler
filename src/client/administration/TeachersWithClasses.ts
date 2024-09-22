@@ -37,6 +37,8 @@ export class TeachersWithClassesMI extends AdminMenuItem {
 
         let that = this;
         this.$tableRight = $tableRight;
+        $tableLeft.css('flex', '3');
+        $tableRight.css('flex', '2');
 
         this.teachersGrid = new w2grid({
             name: "teachersGrid",
@@ -66,12 +68,13 @@ export class TeachersWithClassesMI extends AdminMenuItem {
             recid: "id",
             columns: [
                 { field: 'id', text: 'ID', size: '20px', sortable: true, hidden: true },
-                { field: 'username', text: 'Benutzername', size: '30%', sortable: true, resizable: true, editable: { type: 'text' } },
-                { field: 'rufname', text: 'Rufname', size: '30%', sortable: true, resizable: true, editable: { type: 'text' } },
-                { field: 'familienname', text: 'Familienname', size: '30%', sortable: true, resizable: true, editable: { type: 'text' } },
+                { field: 'username', text: 'Benutzername', size: '20%', sortable: true, resizable: true, editable: { type: 'text' } },
+                { field: 'rufname', text: 'Rufname', size: '20%', sortable: true, resizable: true, editable: { type: 'text' } },
+                { field: 'familienname', text: 'Familienname', size: '20%', sortable: true, resizable: true, editable: { type: 'text' } },
                 { field: 'locked', text: 'Locked', size: '15%', sortable: true, resizable: false, editable: { type: 'checkbox', style: 'text-align: center' } },
+                { field: 'is_schooladmin', text: 'Admin', size: '15%', sortable: true, resizable: false, editable: { type: 'checkbox', style: 'text-align: center' } },
                 {
-                    field: 'numberOfClasses', text: 'Klassen', size: '30%', sortable: true, resizable: true,
+                    field: 'numberOfClasses', text: 'Klassen', size: '10%', sortable: true, resizable: true,
                     render: function (record: TeacherData) {
                         return '<div>' + record.classes.length + '</div>';
                     }
@@ -403,6 +406,7 @@ export class TeachersWithClassesMI extends AdminMenuItem {
             teacher["rufname"] = teacher.userData.rufname;
             teacher["locked"] = teacher.userData.locked;
             teacher["text"] = teacher.userData.rufname + " " + teacher.userData.familienname
+            teacher["is_schooladmin"] = teacher.userData.is_schooladmin;
         }
 
         this.teachersGrid.add(this.teacherData);
