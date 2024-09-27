@@ -76,6 +76,8 @@ export abstract class BinopCastCodeGenerator {
     voidType: JavaType;
     charType: JavaType;
     intType: JavaType;
+    floatType: JavaType;
+    doubleType: JavaType;
     booleanType: JavaType;
     stringType: JavaType;
     nullType: JavaType;
@@ -98,6 +100,8 @@ export abstract class BinopCastCodeGenerator {
         this.voidType = this.libraryTypestore.getType("void")!;
         this.charType = this.libraryTypestore.getType("char")!;
         this.intType = this.libraryTypestore.getType("int")!;
+        this.floatType = this.libraryTypestore.getType("float")!;
+        this.doubleType = this.libraryTypestore.getType("double")!;
         this.booleanType = this.libraryTypestore.getType("boolean")!;
         this.stringType = this.libraryTypestore.getType("string")!;
         this.nullType = this.libraryTypestore.getType("null")!;

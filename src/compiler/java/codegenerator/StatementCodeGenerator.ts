@@ -908,7 +908,12 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
 
         if (initValueSnippet && accesLocalVariableSnippet) {
             if (node.type.kind == TokenType.varType) {
-                variable.type = initValueSnippet.type!;
+                let valueType = initValueSnippet.type!;
+                variable.type = valueType;
+                if(valueType == this.floatType && initValueSnippet.isConstant()){
+                    variable.type = this.doubleType;
+                }
+                
             }
 
             let snippet = new BinaryOperatorTemplate('=', false)
