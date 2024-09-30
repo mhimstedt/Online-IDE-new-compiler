@@ -3,7 +3,7 @@
  * { "expectedOutput": "12\nNick\nEmma\n14\n" }
  */
 
-new A().test(12, "Nick", "Emma",14);
+new A().test(12, "Nick", "Emma", "14");
 
 class A {
    void test(int x, String... names){

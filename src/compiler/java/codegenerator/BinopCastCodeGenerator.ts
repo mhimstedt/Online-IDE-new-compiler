@@ -628,7 +628,9 @@ export abstract class BinopCastCodeGenerator {
         let typeFromIndex = primitiveTypeMap[typeFrom.identifier] || boxedTypesMap[typeFrom.identifier];
         let typeToIndex = primitiveTypeMap[typeTo.identifier] || boxedTypesMap[typeTo.identifier];
         
-        if (typeToIndex == nString && castType == "explicit") return true;
+        if (typeToIndex == nString ){
+            if(castType == "explicit" || typeFromIndex == nString) return true;
+        }
 
 
         if ((!typeFrom.isPrimitive || typeFrom == this.stringType) && !typeTo.isPrimitive) {

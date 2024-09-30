@@ -641,7 +641,10 @@ export class Thread {
         }
 
         if (Array.isArray(object)) {
-            this._arrayOfObjectsToString(object, callback, maximumLength);
+            this._arrayOfObjectsToString(object, () => {
+                this.s.push(new StringClass(this.s.pop()));
+                if(callback) callback();
+            }, maximumLength);
             return;
         }
 
