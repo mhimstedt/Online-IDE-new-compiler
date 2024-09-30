@@ -709,6 +709,7 @@ export class GenericVariantOfJavaClass extends IJavaClass {
 
         // ArrayList<Integer> can cast to List or to raw type ArrayList or to raw type List
         if (otherType instanceof JavaInterface || otherType instanceof JavaClass) {
+            if(otherType.toString() == "Object") return true;
             if (this.isGenericVariantOf.canExplicitlyCastTo(otherType)) return true;
             return false;
         }

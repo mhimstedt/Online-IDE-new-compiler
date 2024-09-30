@@ -22,6 +22,21 @@ import { BinaryOperatorTemplate, OneParameterTemplate, TwoParameterTemplate } fr
 import { LabelCodeSnippet } from "./LabelManager";
 
 var nOtherClass = 0, nVoid = 1, nBoolean = 2, nChar = 3, nByte = 4, nShort = 5, nInteger = 6, nLong = 7, nFloat = 8, nDouble = 9, nString = 10;
+
+var canCastImplicit: boolean[][] = [
+    /*otherClass to ...*/ [false, false, false /* boolean */, false, false /* byte */, false, false, false, false, false, false],
+    /*void to ...      */ [false, true, false /* boolean */, false, false /* byte */, false, false, false, false, false, false],
+    /*boolean to ...   */ [false, false, true /* boolean */, false, false /* byte */, false, false, false, false, false, false],
+    /*char to ...      */ [false, false, false /* boolean */, true, true /* byte */, true, true, true, true, true, true],
+    /*byte to ...      */ [false, false, false /* boolean */, false, true /* byte */, true, true, true, true, true, false],
+    /*short to ...     */ [false, false, false /* boolean */, false, false /* byte */, true, true, true, true, true, false],
+    /*int to ...       */ [false, false, false /* boolean */, false, false /* byte */, false, true, true, true, true, false],
+    /*long to ...      */ [false, false, false /* boolean */, false, false /* byte */, false, false, true, true, true, false],
+    /*float to ...     */ [false, false, false /* boolean */, false, false /* byte */, false, false, false, true, true, false],
+    /*double to ...     */ [false, false, false /* boolean */, false, false /* byte */, false, false, false, false, true, false],
+    /*string to ...     */ [false, false, false /* boolean */, false, false /* byte */, false, false, false, false, false, true]
+];
+
 var primitiveTypeIdentifiers: string[] = ["", "void", "boolean", "char", "byte", "short", "int", "long", "float", "double", "string"];
 var boxedTypeIdentifiers: string[] = ["", "", "Boolean", "Character", "Byte", "Short", "Integer", "Long", "Float", "Double", "String"];
 
@@ -612,8 +627,11 @@ export abstract class BinopCastCodeGenerator {
 
         let typeFromIndex = primitiveTypeMap[typeFrom.identifier] || boxedTypesMap[typeFrom.identifier];
         let typeToIndex = primitiveTypeMap[typeTo.identifier] || boxedTypesMap[typeTo.identifier];
+        
+        if (typeToIndex == nString ){
+            if(castType == "explicit" || typeFromIndex == nString) return true;
+        }
 
-        if (typeToIndex == nString) return true;
 
         if ((!typeFrom.isPrimitive || typeFrom == this.stringType) && !typeTo.isPrimitive) {
             if (typeFrom == this.nullType) return true;
@@ -642,7 +660,7 @@ export abstract class BinopCastCodeGenerator {
         }
 
         if (castType == "explicit") return true;
-        return typeFromIndex <= typeToIndex;
+        return canCastImplicit[typeFromIndex][typeToIndex];
     }
 
     anyOperandHasVoidType(lTypeIndex: number, rTypeIndex: number, operator: TokenType, operatorRange: IRange): boolean {

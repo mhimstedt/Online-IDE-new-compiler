@@ -35,14 +35,14 @@ int[][] testArray = {{1, 2}, {3, 4}};
 
 assertEquals(2, testArray.length, "Test length of array literal");
 
-String s = testArray;
+String s = "" + testArray;
 
 assertEquals("[[1, 2], [3, 4]]", s, "Cast from array to string doesn't work.");
 
 int[][][] threeDimensional = {testArray, testArray};
 
-String s1 = threeDimensional;
-assertEquals("[[[1, 2], [3, 4]], [[1, 2], [3, 4]]]", threeDimensional, "Cast from array to string doesn't work.");
+String s1 = "" + threeDimensional;
+assertEquals("[[[1, 2], [3, 4]], [[1, 2], [3, 4]]]", "" + threeDimensional, "Cast from array to string doesn't work.");
 
 // cast arrays of objects to string:
 class Test {
@@ -62,8 +62,8 @@ Test[] a1 = { new Test(0), new Test(1), new Test(2) };
 
 Test[][] a2 = { a1, a1 };
 
-String a1String = a1;
-String a2String = a2;
+String a1String = "" + a1;
+String a2String = "" + a2;
 
 assertEquals("[Zahl: 0, Zahl: 1, Zahl: 2]", a1String, "Casting array of objects to string doesn't work.");
 assertEquals("[[Zahl: 0, Zahl: 1, Zahl: 2], [Zahl: 0, Zahl: 1, Zahl: 2]]", a2String, "Casting array of objects to string doesn't work.");

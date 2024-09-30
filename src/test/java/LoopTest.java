@@ -184,7 +184,7 @@ class A implements Iterable<String> {
          }
 
          String next(){
-            return counter++;
+            return "" + counter++;
          }
       }
    }
@@ -244,7 +244,7 @@ class A implements Iterable<String> {
          }
 
          String next(){
-            return counter++;
+            return "" + counter++;
          }
       }
    }
