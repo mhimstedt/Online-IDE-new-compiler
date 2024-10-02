@@ -23,13 +23,13 @@ export class RobotClass extends ObjectClass {
         { type: "method", signature: "Robot(int startX, int startY)", java: RobotClass.prototype._jc$_constructor_$Robot$int$int, comment: JRC.robotConstructorStartXStartY },
         { type: "method", signature: "Robot(int startX, int startY, int worldX, int worldY)", java: RobotClass.prototype._jc$_constructor_$Robot$int$int$int$int, comment: JRC.robotConstructorStartXStartYWorldXWorldY },
         { type: "method", signature: "Robot(int startX, int startY, string initialWorld)", java: RobotClass.prototype._jc$_constructor_$Robot$int$int$string, comment: JRC.robotConstructorStartXStartYinitialWorld },
-        
+
         { type: "method", signature: "RobotWorld getWelt()", native: RobotClass.prototype._getWelt, comment: JRC.robotGetWelt },
         { type: "method", signature: "void rechtsDrehen()", native: RobotClass.prototype._rechtsDrehen, comment: JRC.robotRechtsDrehen },
         { type: "method", signature: "void linksDrehen()", native: RobotClass.prototype._linksDrehen, comment: JRC.robotLinksDrehen },
         { type: "method", signature: "void schritt()", native: RobotClass.prototype._schritt, comment: JRC.robotSchritt },
         { type: "method", signature: "void schritt(int anzahl)", native: RobotClass.prototype._schrittAnzahl, comment: JRC.robotSchrittAnzahl },
-        
+
         { type: "method", signature: "void hinlegen()", native: RobotClass.prototype._hinlegen, comment: JRC.robotHinlegen },
         { type: "method", signature: "void hinlegen(string farbe)", native: RobotClass.prototype._hinlegen, comment: JRC.robotHinlegenFarbe },
 
@@ -50,19 +50,19 @@ export class RobotClass extends ObjectClass {
         { type: "method", signature: "boolean istMarke(string farbe)", native: RobotClass.prototype._istMarke, comment: JRC.robotIstMarkeFarbe },
         { type: "method", signature: "boolean nichtIstMarke()", native: RobotClass.prototype._nichtIstMarke, comment: JRC.robotNichtIstMarke },
         { type: "method", signature: "boolean nichtIstMarke(string farbe)", native: RobotClass.prototype._nichtIstMarke, comment: JRC.robotNichtIstMarkeFarbe },
-        
+
         { type: "method", signature: "boolean istNorden()", native: RobotClass.prototype._isNorth, comment: JRC.robotIstNorden },
         { type: "method", signature: "boolean istSüden()", native: RobotClass.prototype._isSouth, comment: JRC.robotIstSueden },
         { type: "method", signature: "boolean istOsten()", native: RobotClass.prototype._isEast, comment: JRC.robotIstOsten },
         { type: "method", signature: "boolean istWesten()", native: RobotClass.prototype._isWest, comment: JRC.robotIstWesten },
-        
+
         { type: "method", signature: "boolean istLeer()", native: RobotClass.prototype._istLeer, comment: JRC.robotIstLeer },
         { type: "method", signature: "boolean nichtIstLeer()", native: RobotClass.prototype._nichtIstLeer, comment: JRC.robotNichtIstLeer },
         { type: "method", signature: "boolean istVoll()", native: RobotClass.prototype._istVoll, comment: JRC.robotIstVoll },
         { type: "method", signature: "boolean nichtIstVoll()", native: RobotClass.prototype._nichtIstVoll, comment: JRC.robotNichtIstVoll },
-        
+
         { type: "method", signature: "boolean hatZiegel()", native: RobotClass.prototype._hatZiegel, comment: JRC.robotHatZiegel },
-        
+
         { type: "method", signature: "void setzeAnzahlSteine(int anzahl)", native: RobotClass.prototype._setzeAnzahlSteine, comment: JRC.robotSetzeAnzahlSteine },
         { type: "method", signature: "void setzeRucksackGröße(int anzahl)", native: RobotClass.prototype._setzeRucksackGroesse, comment: JRC.robotSetzeRucksackGroesse },
 
@@ -75,7 +75,7 @@ export class RobotClass extends ObjectClass {
 
     steve: THREE.Group<THREE.Object3DEventMap>;
     x: number;
-    y: number; 
+    y: number;
     z: number;
 
     direction: RobotDirection = new RobotDirection(this);
@@ -83,7 +83,7 @@ export class RobotClass extends ObjectClass {
     maxSteine: number = 1e7;
 
 
-    constructor(){
+    constructor() {
         super();
     }
 
@@ -95,18 +95,18 @@ export class RobotClass extends ObjectClass {
         this._jc$_constructor_$Robot$int$int$int$int(t, callback, startX, startY, 5, 10);
     }
 
-    _jc$_constructor_$Robot$int$int$string(t: Thread, callback: CallbackParameter, startX: number, startY: number, initialWorld: string){
+    _jc$_constructor_$Robot$int$int$string(t: Thread, callback: CallbackParameter, startX: number, startY: number, initialWorld: string) {
         this._jc$_constructor_$Robot$int$int$int$int(t, callback, startX, startY, initialWorld, undefined);
     }
 
 
-    _jc$_constructor_$Robot$int$int$int$int(t: Thread, callback: CallbackParameter, startX: number, startY: number, 
+    _jc$_constructor_$Robot$int$int$int$int(t: Thread, callback: CallbackParameter, startX: number, startY: number,
         worldX: number | string, worldY?: number) {
         t.s.push(this);
 
         this.robotWorld = t.scheduler.interpreter.retrieveObject("robotWorldClass");
 
-        if(!this.robotWorld){
+        if (!this.robotWorld) {
 
             t.scheduler.interpreter.eventManager.once("stop", () => {
                 this.robotWorld = undefined;
@@ -118,59 +118,70 @@ export class RobotClass extends ObjectClass {
                 t.state = ThreadState.waiting;
                 await this.init(startX, startY);
                 t.state = ThreadState.runnable;
-                if(callback) callback();
+                if (callback) callback();
                 return;
-            }, worldX, worldY);    
+            }, worldX, worldY);
         } else {
             t.state = ThreadState.waiting;
             this.init(startX, startY).then(() => {
                 t.state = ThreadState.runnable;
-                if(callback) callback();
+                if (callback) callback();
             })
             return;
         }
 
     }
 
-    public async init(startX: number, startY: number){
+    public async init(startX: number, startY: number) {
         const loader = new GLTFLoader();
-        this.steve = (await loader.loadAsync('/assets/graphics/robot/minecraft_steve/scene.gltf')).scene;
-        this.steve.translateX(-this.robotWorld.maxX/2 + startX - 1);
+        let pathPraefix: string = "";
+        //@ts-ignore
+        if (window.javaOnlineDir != null) {
+            //@ts-ignore
+            pathPraefix = window.javaOnlineDir;
+        }
+
+        if (pathPraefix.endsWith("/")) {
+            pathPraefix = pathPraefix.substring(0, pathPraefix.length - 1);
+        }
+
+        this.steve = (await loader.loadAsync(pathPraefix + '/assets/graphics/robot/minecraft_steve/scene.gltf')).scene;
+        this.steve.translateX(-this.robotWorld.maxX / 2 + startX - 1);
         this.steve.translateY(1.45);
-        this.steve.translateZ(-this.robotWorld.maxY/2 + startY - 1);
+        this.steve.translateZ(-this.robotWorld.maxY / 2 + startY - 1);
         this.steve.scale.set(0.06, 0.06, 0.06);
         this.robotWorld.world3d.scene.add(this.steve);
-        
+
         this.x = startX;
         this.y = startY;
         this.z = 0;
     }
 
-    setZ(z: number){
-        this.steve.position.y += z/2 - this.z;
-        this.z = z/2;
+    setZ(z: number) {
+        this.steve.position.y += z / 2 - this.z;
+        this.z = z / 2;
     }
 
-    moveTo(x: number, y: number){
+    moveTo(x: number, y: number) {
         this.steve.position.x += x - this.x;
         this.steve.position.z += y - this.y;
         this.x = x;
         this.y = y;
     }
 
-    _getWelt(){
+    _getWelt() {
         return this.robotWorld;
     }
-    
-    _rechtsDrehen(){
+
+    _rechtsDrehen() {
         this.direction.turnRight();
     }
 
-    _linksDrehen(){
+    _linksDrehen() {
         this.direction.turnLeft();
     }
 
-    _schritt(){
+    _schritt() {
         let deltas = this.direction.getDeltas();
         let newX = this.x + deltas.dx;
         let newY = this.y + deltas.dy;
@@ -178,14 +189,14 @@ export class RobotClass extends ObjectClass {
         if (newX < 1 || newX > this.robotWorld.maxX || newY < 1 || newY > this.robotWorld.maxY) {
             throw new RuntimeExceptionClass(JRC.robotHitWall());
         }
-        
+
         let oldHeight = this.robotWorld.getNumberOfBricks(this.x, this.y);
         let newHeight = this.robotWorld.getNumberOfBricks(newX, newY);
-        
+
         if (newHeight < oldHeight - 1) {
             throw new RuntimeExceptionClass(JRC.robotMaximumJumpHeightDown());
         }
-        
+
         if (newHeight > oldHeight + 1) {
             throw new RuntimeExceptionClass(JRC.robotMaximumJumpHeightUp());
         }
@@ -195,13 +206,13 @@ export class RobotClass extends ObjectClass {
 
     }
 
-    _schrittAnzahl(n: number){
-        for(let i = 0; i < n; i++){
+    _schrittAnzahl(n: number) {
+        for (let i = 0; i < n; i++) {
             this._schritt();
         }
     }
 
-    _hinlegen(farbe?: string){
+    _hinlegen(farbe?: string) {
         let deltas = this.direction.getDeltas();
         let newX = this.x + deltas.dx;
         let newY = this.y + deltas.dy;
@@ -221,7 +232,7 @@ export class RobotClass extends ObjectClass {
             throw new RuntimeExceptionClass(JRC.robotOutOfBricks());
         }
 
-        if(this.robotWorld.getBrickCount(newX, newY) > this.robotWorld.maximumHeight){
+        if (this.robotWorld.getBrickCount(newX, newY) > this.robotWorld.maximumHeight) {
             throw new ExceptionClass(JRC.robotMaximumHeightExceeded(this.robotWorld.maximumHeight));
         }
 
@@ -241,7 +252,7 @@ export class RobotClass extends ObjectClass {
             throw new RuntimeExceptionClass(JRC.robotCantPlaceBricksIntoWall());
         }
 
-        if(this.robotWorld.getNumberOfBricks(newX, newY) < 1){
+        if (this.robotWorld.getNumberOfBricks(newX, newY) < 1) {
             throw new RuntimeExceptionClass(JRC.robotNoBricksToPickUp());
         }
 
@@ -255,7 +266,7 @@ export class RobotClass extends ObjectClass {
 
     }
 
-   _markeSetzen(farbe: string) {
+    _markeSetzen(farbe: string) {
         farbe = farbe || "rot";
         farbe = farbe.toLocaleLowerCase();
 
@@ -309,69 +320,69 @@ export class RobotClass extends ObjectClass {
         return false;
     }
 
-    _mj$beenden$void$(t: Thread, callback: CallbackParameter){
+    _mj$beenden$void$(t: Thread, callback: CallbackParameter) {
         t.scheduler.interpreter.printManager?.print(JRC.robotStoppedProgram(), true, 0x808080);
         t.state = ThreadState.terminated;
         t.scheduler.exit(0);
     }
 
-    _nichtIstWand(){
+    _nichtIstWand() {
         return !this._istWand();
     }
 
-    _nichtIstMarke(param: string | null){
+    _nichtIstMarke(param: string | null) {
         return !this._istMarke(param);
     }
 
-    _nichtIstZiegel(param: number | string | null){
+    _nichtIstZiegel(param: number | string | null) {
         return !this._istZiegel(param);
     }
 
-    _isNorth(){
+    _isNorth() {
         return this.direction.is("north");
     }
 
-    _isEast(){
+    _isEast() {
         return this.direction.is("east");
     }
 
-    _isSouth(){
+    _isSouth() {
         return this.direction.is("south");
     }
 
-    _isWest(){
+    _isWest() {
         return this.direction.is("west");
     }
 
-    _istLeer(){
+    _istLeer() {
         return this.hatSteine == 0;
     }
 
-    _istVoll(){
+    _istVoll() {
         return this.hatSteine == this.maxSteine;
     }
 
-    _nichtIstLeer(){
+    _nichtIstLeer() {
         return !this._istLeer();
     }
 
-    _nichtIstVoll(){
+    _nichtIstVoll() {
         return !this._istVoll();
     }
 
-    _hatZiegel(){
+    _hatZiegel() {
         return this.hatSteine > 0;
     }
 
-    _hatZiegelAnzahl(anzahl: number){
+    _hatZiegelAnzahl(anzahl: number) {
         return this.hatSteine >= anzahl;
     }
 
-    _setzeAnzahlSteine(anzahl: number){
+    _setzeAnzahlSteine(anzahl: number) {
         this.hatSteine = anzahl;
     }
 
-    _setzeRucksackGroesse(groesse: number){
+    _setzeRucksackGroesse(groesse: number) {
         this.maxSteine = groesse;
     }
 
