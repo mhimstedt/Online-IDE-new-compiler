@@ -15,7 +15,7 @@ import { IRange, Range } from '../../compiler/common/range/Range.js';
 import { JavaLanguage } from '../../compiler/java/JavaLanguage.js';
 import { JavaRepl } from '../../compiler/java/parser/repl/JavaRepl.js';
 import { DatabaseNewLongPollingListener } from '../../tools/database/DatabaseNewLongPollingListener.js';
-import { checkIfMousePresent } from "../../tools/HtmlTools.js";
+import { checkIfMousePresent, getCookieValue } from "../../tools/HtmlTools.js";
 import { ClassData, UserData, WorkspaceData, Workspaces } from "../communication/Data.js";
 import { NetworkManager } from "../communication/NetworkManager.js";
 import { PushClientManager } from '../communication/pushclient/PushClientManager.js';
@@ -167,17 +167,16 @@ export class Main implements MainBase {
         checkIfMousePresent();
 
         this.login = new Login(this);
-        let hashIndex: number = window.location.href.indexOf('#');
-        if (hashIndex > 0) {
 
-            var ticket = window.location.href.substring(hashIndex + 1);
-            window.history.replaceState({}, "Online-IDE", window.location.href.substring(0, hashIndex));
-            this.login.initGUI(true);
-            this.login.loginWithTicket(ticket);
+        let singleUseToken: string | undefined = getCookieValue("singleUseToken");
 
+        if(singleUseToken){
+            this.login.initGUI();
+            this.login.loginWithVidis();    
         } else {
-            this.login.initGUI(false);
+            this.login.initGUI();
         }
+
 
         this.actionManager = new ActionManager(null);
         this.actionManager.init();

@@ -1,9 +1,15 @@
-import { ajaxAsync } from '../communication/AjaxHelper';
-import { BaseResponse, VidisNewUserRequest } from '../communication/Data';
+import { setCookie } from '../../tools/HttpTools';
+import { VidisNewUserRequest } from '../communication/Data';
 import '/include/css/registerUser.css';
 
+type NewUserResponse = {success: boolean, message: string, sqlIDEToken: string | null}
 
 window.onload = () => {
+
+    let sqlIdeToken = location.search.split('sqlIdeToken=')[1];
+    if(sqlIdeToken){
+        setCookie("singleUseToken", sqlIdeToken, 600);
+    }
 
     document.getElementById('newAccountButton').addEventListener('pointerdown', () => {
         let rufname: string = (<HTMLInputElement>document.getElementById('rufname')).value + "";
@@ -19,8 +25,34 @@ window.onload = () => {
             let request: VidisNewUserRequest = {
                 rufname: rufname,
                 familienname: familienname,
-                klasse: (<HTMLInputElement>document.getElementById('klasse')).value + ""
+                klasse: (<HTMLInputElement>document.getElementById('klasse')).value + "",
+                username: null,
+                password: null
             }
+
+            doVidisRequest(request);
+
+        }
+    })
+
+    document.getElementById('mergeAccountsButton').addEventListener('pointerdown', () => {
+        let username: string = (<HTMLInputElement>document.getElementById('login-username')).value + "";
+        let password: string = (<HTMLInputElement>document.getElementById('login-password')).value + "";
+        if(username.length == 0){
+            document.getElementById('message1').textContent = "Bitte geben Sie Ihren Benutzernamen ein.";
+        } else if(password.length == 0){
+            document.getElementById('message1').textContent = "Bitte geben Sie Ihr Passwort ein.";
+        } else {
+            document.getElementById('message1').textContent = "";
+            document.getElementById('login-spinner').style.visibility = "visible";   
+            
+            let request: VidisNewUserRequest = {
+                username: username,
+                password: password, 
+                rufname: null, familienname: null, klasse: null
+            }
+
+            doVidisRequest(request);
 
         }
     })
@@ -29,15 +61,22 @@ window.onload = () => {
 
 }
 
-function doRequest(request: VidisNewUserRequest){
+function doVidisRequest(request: VidisNewUserRequest){
  
-    fetch("/vidisNewUser", {
+    fetch("/servlet/vidisNewUser", {
         method: "POST",
         body: JSON.stringify(request)
     }).then(resp => {
-        resp.json().then((newUserResponse: BaseResponse) => {
+        resp.json().then((newUserResponse: NewUserResponse) => {
             if(newUserResponse.success){
-                window.location.assign("/index.html");
+                
+                if(newUserResponse.sqlIDEToken){
+                    window.location.assign("https://sql-ide.de/index.html?singleUseToken=" + newUserResponse.sqlIDEToken);
+                } else {
+                    window.location.assign("/index.html");
+                }
+
+
             } else {
                 alert("Fehler beim Anmelden:\n" + newUserResponse.message);
             }
@@ -45,6 +84,5 @@ function doRequest(request: VidisNewUserRequest){
     })
 
 
-
-
 }
+
