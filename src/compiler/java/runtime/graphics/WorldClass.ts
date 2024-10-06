@@ -243,7 +243,7 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
             this.app!.renderer.render({
                 container: this.app!.stage,
                 target: renderTexture,
-                clear: false
+                clear: true
             });
             setTimeout(() => { // inner timeout is needed to await rendering to texture
                 if (!this.app) return;
