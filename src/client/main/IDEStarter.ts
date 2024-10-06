@@ -5,6 +5,7 @@ import { RepositorySettingsManager } from "../repository/update/RepositorySettin
 import { RepositoryCheckoutManager } from "../repository/update/RepositoryCheckoutManager.js";
 import { SpriteManager } from "../spritemanager/SpriteManager.js";
 import * as PIXI from 'pixi.js';
+import jQuery from 'jquery';
 
 // All css files for fullscreen online-ide:
 import "/include/css/editor.css";

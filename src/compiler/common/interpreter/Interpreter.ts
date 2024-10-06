@@ -358,7 +358,10 @@ export class Interpreter {
 
     setState(state: SchedulerState) {
 
-        if(state == SchedulerState.running) this.exceptionMarker?.removeExceptionMarker();
+        if(state == SchedulerState.running){
+            this.exceptionMarker?.removeExceptionMarker();
+            (<HTMLDivElement>document.getElementsByClassName('jo_tabs')[0]).focus();
+        } 
 
         if (state == SchedulerState.stopped) {
             this.hideProgrampointerPosition();
