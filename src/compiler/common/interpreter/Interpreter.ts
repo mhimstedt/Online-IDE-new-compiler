@@ -360,7 +360,7 @@ export class Interpreter {
 
         if(state == SchedulerState.running){
             this.exceptionMarker?.removeExceptionMarker();
-            (<HTMLDivElement>document.getElementsByClassName('jo_tabs')[0]).focus();
+            (<HTMLDivElement>document.getElementById('jo_runtab')).focus();
         } 
 
         if (state == SchedulerState.stopped) {
