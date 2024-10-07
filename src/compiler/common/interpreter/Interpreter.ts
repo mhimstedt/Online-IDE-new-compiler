@@ -360,7 +360,9 @@ export class Interpreter {
 
         if(state == SchedulerState.running){
             this.exceptionMarker?.removeExceptionMarker();
-            (<HTMLDivElement>document.getElementById('jo_runtab')).focus();
+            if(!this.main.isEmbedded()){
+                (<HTMLDivElement>document.getElementById('jo_runtab'))?.focus();
+            }
         } 
 
         if (state == SchedulerState.stopped) {
