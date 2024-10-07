@@ -37,14 +37,8 @@ export class Executable {
 
         this.findMainModule(false, lastOpenedFile, currentlyOpenedModule);
 
-        this.findAllMethods();
-
         this.setupStaticInitializationSequence(globalErrors);
 
-    }
-
-    findAllMethods() {
-        let modules = this.libraryModuleManager.libraryModules;
     }
 
     compileToJavascript() {

@@ -7,6 +7,11 @@ import { File } from "./File.js";
 
 import * as PIXI from 'pixi.js';
 import { CompilerWorkspace } from '../../compiler/common/module/CompilerWorkspace.js';
+import { JavaCompiler } from '../../compiler/java/JavaCompiler.js';
+import { JavaLibraryModule } from '../../compiler/java/module/libraries/JavaLibraryModule.js';
+import { DatabaseModule } from '../libraries/java/database/DatabaseModule.js';
+import { GNGModule } from '../../compiler/java/runtime/graphics/gng/GNGModule.js';
+import { Compiler } from '../../compiler/common/Compiler.js';
 
 export class Workspace extends CompilerWorkspace {
     
@@ -41,7 +46,6 @@ export class Workspace extends CompilerWorkspace {
 
     userSpritesheet: PIXI.Spritesheet; // TODO!
 
-
     settings: WorkspaceSettings = {
         libraries: []
     };
@@ -52,6 +56,21 @@ export class Workspace extends CompilerWorkspace {
         this.owner_id = owner_id;
         this.path = "";
     }
+
+    setLibraries(compiler: Compiler){
+        let additionalModules: JavaLibraryModule[] = [
+            new DatabaseModule()
+        ]
+
+        for(let lib of this.settings.libraries){
+            switch(lib){
+                case "gng": additionalModules.push(new GNGModule())
+            }
+        }
+
+        compiler.setAdditionalModules(...additionalModules);
+    }
+
 
     getFiles(): File[] {
         return this.files;

@@ -1,12 +1,12 @@
 import { DatabaseData } from "../../../../client/communication/Data";
 import { Main } from "../../../../client/main/Main";
+import { Interpreter } from "../../../../compiler/common/interpreter/Interpreter";
+import { JRC } from "../../../../compiler/java/language/JavaRuntimeLibraryComments";
+import { LibraryDeclarations } from "../../../../compiler/java/module/libraries/DeclareType";
+import { ObjectClass } from "../../../../compiler/java/runtime/system/javalang/ObjectClassStringClass";
+import { NonPrimitiveType } from "../../../../compiler/java/types/NonPrimitiveType";
 import { DatabaseNewLongPollingListener } from "../../../../tools/database/DatabaseNewLongPollingListener";
 import { DatabaseTool, QueryResult } from "../../../../tools/database/DatabaseTool";
-import { Interpreter } from "../../../common/interpreter/Interpreter";
-import { JRC } from "../../language/JavaRuntimeLibraryComments";
-import { LibraryDeclarations } from "../../module/libraries/DeclareType";
-import { NonPrimitiveType } from "../../types/NonPrimitiveType";
-import { ObjectClass } from "../system/javalang/ObjectClassStringClass";
 import { PreparedStatementClass } from "./PreparedStatementClass";
 import { StatementClass } from "./StatementClass";
 

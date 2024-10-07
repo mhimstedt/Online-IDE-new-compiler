@@ -683,6 +683,9 @@ export class ProjectExplorer {
         }
 
         this.main.currentWorkspace = w;
+
+        w.setLibraries(this.main.getCompiler());
+
         this.renderFiles(w);
 
         if (w != null) {

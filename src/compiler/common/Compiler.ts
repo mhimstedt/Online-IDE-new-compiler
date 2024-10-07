@@ -1,3 +1,5 @@
+import { JavaCompiledModule } from "../java/module/JavaCompiledModule";
+import { JavaLibraryModule } from "../java/module/libraries/JavaLibraryModule";
 import { JavaLibraryModuleManager } from "../java/module/libraries/JavaLibraryModuleManager";
 import { BaseType } from "./BaseType";
 import { Error } from "./Error";
@@ -17,6 +19,8 @@ export interface Compiler {
     getType(identifier: string): BaseType | undefined;
     startCompilingPeriodically(): void;
     interruptAndStartOverAgain(): void;
+
+    setAdditionalModules(...modules: JavaLibraryModule[]): void;
 
     eventManager: EventManager<CompilerEvents>;
 

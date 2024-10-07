@@ -1,9 +1,9 @@
+import { JRC } from "../../../../compiler/java/language/JavaRuntimeLibraryComments";
+import { LibraryDeclarations } from "../../../../compiler/java/module/libraries/DeclareType";
+import { ObjectClass } from "../../../../compiler/java/runtime/system/javalang/ObjectClassStringClass";
+import { RuntimeExceptionClass } from "../../../../compiler/java/runtime/system/javalang/RuntimeException";
+import { NonPrimitiveType } from "../../../../compiler/java/types/NonPrimitiveType";
 import { QueryResult } from "../../../../tools/database/DatabaseTool";
-import { JRC } from "../../language/JavaRuntimeLibraryComments";
-import { LibraryDeclarations } from "../../module/libraries/DeclareType";
-import { NonPrimitiveType } from "../../types/NonPrimitiveType";
-import { ObjectClass } from "../system/javalang/ObjectClassStringClass";
-import { RuntimeExceptionClass } from "../system/javalang/RuntimeException";
 
 export class ResultSetClass extends ObjectClass {
     static __javaDeclarations: LibraryDeclarations = [
