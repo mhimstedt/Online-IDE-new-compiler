@@ -28,6 +28,7 @@ import { JavaModuleManager } from "./module/JavaModuleManager";
 import { JavaLibraryModuleManager } from "./module/libraries/JavaLibraryModuleManager";
 import { Parser } from "./parser/Parser";
 import { CompilingProgressManager, CompilingProgressManagerException } from "./CompilingProgressManager.ts";
+import { JavaLibraryModule } from "./module/libraries/JavaLibraryModule.ts";
 
 
 enum CompilerState {
@@ -58,6 +59,10 @@ export class JavaCompiler implements Compiler {
     constructor(public main?: IMain, private errorMarker?: ErrorMarker) {
         this.libraryModuleManager = new JavaLibraryModuleManager();
         this.moduleManager = new JavaModuleManager();
+    }
+
+    setAdditionalModules(...modules: JavaLibraryModule[]){
+        this.libraryModuleManager = new JavaLibraryModuleManager(...modules);
     }
 
     getType(identifier: string): BaseType | undefined {
