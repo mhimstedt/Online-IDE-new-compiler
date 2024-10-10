@@ -12,27 +12,27 @@ window.onload = () => {
     }
 
     document.getElementById('newAccountButton').addEventListener('pointerdown', () => {
-        let rufname: string = (<HTMLInputElement>document.getElementById('rufname')).value + "";
-        let familienname: string = (<HTMLInputElement>document.getElementById('familienname')).value + "";
-        if(rufname.length == 0){
-            document.getElementById('message2').textContent = "Bitte geben Sie Ihren Rufnamen ein.";
-        } else if(familienname.length == 0){
-            document.getElementById('message2').textContent = "Bitte geben Sie Ihren Familiennamen ein.";
-        } else {
+        // let rufname: string = (<HTMLInputElement>document.getElementById('rufname')).value + "";
+        // let familienname: string = (<HTMLInputElement>document.getElementById('familienname')).value + "";
+        // if(rufname.length == 0){
+        //     document.getElementById('message2').textContent = "Bitte geben Sie Ihren Rufnamen ein.";
+        // } else if(familienname.length == 0){
+        //     document.getElementById('message2').textContent = "Bitte geben Sie Ihren Familiennamen ein.";
+        // } else {
             document.getElementById('message2').textContent = "";
             document.getElementById('login-spinner').style.visibility = "visible";   
             
             let request: VidisNewUserRequest = {
-                rufname: rufname,
-                familienname: familienname,
-                klasse: (<HTMLInputElement>document.getElementById('klasse')).value + "",
+                rufname: "",
+                familienname: "",
+                klasse: null, //(<HTMLInputElement>document.getElementById('klasse')).value + "",
                 username: null,
                 password: null
             }
 
             doVidisRequest(request);
 
-        }
+        // }
     })
 
     document.getElementById('mergeAccountsButton').addEventListener('pointerdown', () => {
