@@ -57,4 +57,8 @@ export class NumberClass extends ObjectClass implements IPrimitiveTypeWrapper {
         if(callback) callback();
     }
 
+    _mj$equals$boolean$Object(t: Thread, callback: CallbackFunction, otherNumber: NumberClass){
+        t.s.push(otherNumber != null && otherNumber.value == this.value);
+        if(callback) callback();
+    }
 }

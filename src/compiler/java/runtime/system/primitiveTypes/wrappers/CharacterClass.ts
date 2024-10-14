@@ -1,3 +1,4 @@
+import { CallbackFunction } from "../../../../../common/interpreter/StepFunction";
 import { Thread } from "../../../../../common/interpreter/Thread";
 import { LibraryDeclarations } from "../../../../module/libraries/DeclareType";
 import { NonPrimitiveType } from "../../../../types/NonPrimitiveType";
@@ -52,5 +53,11 @@ export class CharacterClass extends ObjectClass implements IPrimitiveTypeWrapper
     _toString() {
         return new StringClass(this.value);
     }
+
+    _mj$equals$boolean$Object(t: Thread, callback: CallbackFunction, otherCharacter: CharacterClass) {
+        t.s.push(otherCharacter != null && otherCharacter.value == this.value);
+        if (callback) callback();
+    }
+
 
 }
