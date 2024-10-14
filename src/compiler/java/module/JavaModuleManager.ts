@@ -47,6 +47,25 @@ export class JavaModuleManager {
         this.typestore.empty();
     }
 
+    setDirtyFlagsBasedOnErrors(){
+        this.modules.forEach(m => m.setDirty(m.hasErrors()));
+
+        let done: boolean = false;
+        while(!done){
+            done = true;
+            for(let module of this.modules){
+                if(module.isDirty()) continue;
+                // does module depend on dirty other module?
+                if(module.dependsOnOtherDirtyModule()){
+                    module.setDirty(true);
+                    done = false;
+                    break;
+                }
+            }
+        }
+
+    }
+
     iterativelySetDirtyFlags(){
 
         for(let module of this.modules){

@@ -150,6 +150,7 @@ export class JavaCompiler implements Compiler {
 
         }
 
+
         this.eventManager.fire("typesReadyForCodeCompletion");
 
         await this.progressManager.interruptIfNeeded();
@@ -159,6 +160,8 @@ export class JavaCompiler implements Compiler {
         this.libraryModuleManager.typestore.populateClassObjectRegistry(klassObjectRegistry);
 
         this.moduleManager.typestore.populateClassObjectRegistry(klassObjectRegistry);
+
+        this.moduleManager.setDirtyFlagsBasedOnErrors();
 
         let executable = new Executable(klassObjectRegistry,
             this.moduleManager, this.libraryModuleManager,

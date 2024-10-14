@@ -39,7 +39,7 @@ export abstract class Module {
 
     isStartable(): boolean {
         if (this.hasMainProgram()) {
-            return !this.hasErrors();
+            return !this.hasErrors() && !this.isDirty();
         }
 
         return false;
