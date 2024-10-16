@@ -1,6 +1,7 @@
 import { Thread } from "../../../../../common/interpreter/Thread";
 import { LibraryDeclarations } from "../../../../module/libraries/DeclareType";
 import { NonPrimitiveType } from "../../../../types/NonPrimitiveType";
+import { ArithmeticExceptionClass } from "../../javalang/ArithmeticExceptionClass";
 import { StringClass } from "../../javalang/ObjectClassStringClass";
 import { NumberClass } from "./NumberClass";
 
@@ -17,6 +18,8 @@ export class IntegerClass extends NumberClass {
         {type: "field", signature: "static final int MIN_VALUE", constantValue: -0x80000000},
         // for doubleValue(), floatValue(), intValue() and longValue() there are methods (if called for a Number variable containing an Integer value) and templates
         // (if called fo Integer variable). Offering templates to the compiler is only possible because the methods are final.
+        {type: "method", signature: "public Integer(int value)", native: IntegerClass.prototype._constructorInt},
+        {type: "method", signature: "public Integer(string value)", native: IntegerClass.prototype._constructorString},
         {type: "method", signature: "public final double doubleValue()", native: IntegerClass.prototype.doubleValue, template: "§1.value"},
         {type: "method", signature: "public final float floatValue()", native: IntegerClass.prototype.floatValue, template: "§1.value"},
         {type: "method", signature: "public final int intValue()", native: IntegerClass.prototype.intValue, template: "§1.value"},
@@ -33,6 +36,19 @@ export class IntegerClass extends NumberClass {
 
     constructor(i: number){
         super(i || 0);
+    }
+
+    _constructorInt(value: number){
+        return new IntegerClass(value);
+    }
+
+    _constructorString(value: string){
+        try{
+            let v = Number.parseInt(value);
+            return new IntegerClass(v);
+        } catch(ex){
+            throw new ArithmeticExceptionClass("\"" + value + "\" is no integer.");
+        }
     }
 
     _compareTo(otherValue: IntegerClass){

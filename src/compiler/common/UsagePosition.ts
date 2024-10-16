@@ -5,7 +5,7 @@ import { Position } from "./range/Position";
 import { IRange, Range } from "./range/Range";
 
 export class UsagePosition {
-    constructor(public symbol: BaseSymbol, public file: CompilerFile, public range: IRange){}
+    constructor(public symbol: BaseSymbol, public file: CompilerFile, public range: IRange) { }
 }
 
 
@@ -22,23 +22,23 @@ export class UsageTracker {
 
     private dependsOnModules: Map<Module, boolean> = new Map();
 
-    constructor(public module: Module){
+    constructor(public module: Module) {
 
     }
 
-    clear(){
+    clear() {
         this.lineToUsagePositionListMap.clear();
         this.symbolToUsagePositionListMap.clear();
         this.dependsOnModules.clear();
     }
 
-    registerUsagePosition(symbol: BaseSymbol, file: CompilerFile, range: IRange){
-        if(!range) return;
+    registerUsagePosition(symbol: BaseSymbol, file: CompilerFile, range: IRange) {
+        if (!range) return;
         let up = new UsagePosition(symbol, file, range);
 
-        for(let line = range.startLineNumber; line <= range.endLineNumber; line++){
+        for (let line = range.startLineNumber; line <= range.endLineNumber; line++) {
             let list = this.lineToUsagePositionListMap.get(line);
-            if(!list){
+            if (!list) {
                 list = [];
                 this.lineToUsagePositionListMap.set(line, list);
             }
@@ -46,13 +46,13 @@ export class UsageTracker {
         }
 
         let upList = this.symbolToUsagePositionListMap.get(symbol);
-        if(!upList){
+        if (!upList) {
             upList = [];
             this.symbolToUsagePositionListMap.set(symbol, upList);
         }
         upList.push(up);
 
-        if(!symbol.module.isLibraryModule){
+        if (!symbol.module.isLibraryModule) {
             this.dependsOnModules.set(symbol.module, true);
             // let moduleUsage = this.dependsOnModules.get(symbol.module);
             // if(!moduleUsage){
@@ -65,23 +65,23 @@ export class UsageTracker {
 
     findSymbolAtPosition(position: Position): UsagePosition | undefined {
         let usagePositionsOnLine = this.lineToUsagePositionListMap.get(position.lineNumber);
-        if(!usagePositionsOnLine) return undefined;
+        if (!usagePositionsOnLine) return undefined;
 
-        for(let up of usagePositionsOnLine){
-            if(Range.containsPosition(up.range, position)) return up;
+        for (let up of usagePositionsOnLine) {
+            if (Range.containsPosition(up.range, position)) return up;
         }
 
         return undefined;
     }
 
-    getUsagePositionsForSymbol(symbol: BaseSymbol){
+    getUsagePositionsForSymbol(symbol: BaseSymbol) {
         return this.symbolToUsagePositionListMap.get(symbol);
     }
 
-    getModulesWhichThisModuleDependsOn():Module[] {
-        let modules: Module[] =  [];
+    getModulesWhichThisModuleDependsOn(): Module[] {
+        let modules: Module[] = [];
 
-        this.dependsOnModules.forEach((v, module) => {modules.push(module)});
+        this.dependsOnModules.forEach((v, module) => { modules.push(module) });
 
         return modules;
     }
@@ -91,7 +91,7 @@ export class UsageTracker {
 
         this.dependsOnModules.forEach((moduleUsage, module) => {
             let mu: string = moduleUsage.toString();
-            if(mu.length > 0){
+            if (mu.length > 0) {
                 str += "Depends on module " + module.file.name + ":\n";
                 str += moduleUsage.toString();
             }
@@ -112,11 +112,11 @@ export class UsageTracker {
     }
 
     existsDependencyToOtherDirtyModule(): boolean {
-        
-        for(let entry of this.dependsOnModules.entries()){
+
+        for (let entry of this.dependsOnModules.entries()) {
             // TODO: analyze if used signatures are available
 
-            if(entry[0].isDirty()){
+            if (entry[0].isDirty()) {
                 return true;
             }
         }

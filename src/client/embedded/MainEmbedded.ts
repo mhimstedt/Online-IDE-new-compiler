@@ -173,6 +173,8 @@ export class MainEmbedded implements MainBase {
 
         this.initScripts();
 
+        this.currentWorkspace.setLibraries(this.getCompiler());
+
         if (!this.config.hideStartPanel) {
             this.indexedDB = new EmbeddedIndexedDB();
             this.indexedDB.open(() => {

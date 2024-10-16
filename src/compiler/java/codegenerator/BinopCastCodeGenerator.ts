@@ -690,8 +690,8 @@ export abstract class BinopCastCodeGenerator {
     }
 
 
-    unbox(snippet: CodeSnippet): CodeSnippet {
-        if (!snippet.type) return snippet;
+    unbox(snippet: CodeSnippet | undefined): CodeSnippet {
+        if (!snippet || !snippet.type) return snippet;
         let boxedTypeIndex: number | undefined = boxedTypesMap[snippet.type.identifier];
         if (!boxedTypeIndex) return snippet;  // type is not boxed
 
