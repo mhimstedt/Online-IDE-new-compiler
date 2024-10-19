@@ -327,6 +327,9 @@ export class Parser extends StatementParser {
             let statement = this.parseStatementOrExpression();
             methodNode.statement = statement;
         } else {
+            if(!methodNode.isAbstract){
+                methodNode.statement = this.nodeFactory.buildBlockNode(this.cct);
+            }
             this.expectSemicolon(true, true);
         }
 
