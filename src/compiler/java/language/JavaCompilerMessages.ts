@@ -1,4 +1,5 @@
 import { le, lm } from "../../../tools/language/LanguageManager";
+import { IRange } from "../../common/range/Range";
 
 /**
  * Java compiler's messages
@@ -574,6 +575,15 @@ export class JCM {
     /**
      * TypeResolver
     */
+    static typenameAlreadyInUse = (name: string, otherPosition: IRange, otherFilename: string) => le({
+        "de": `Es gibt einen weiteren Datentyp mit Bezeichner ${name}. Er findet sich in der Datei ${otherFilename} in Zeile ${otherPosition.startLineNumber}.`,
+        "en": `Identifier ${name} for this type is already in use. See File ${otherFilename}, line ${otherPosition.startLineNumber}.`,
+    })
+
+    static typenameUsedInLibrary = (name: string) => le({
+        "de": `Es gibt in der API bereits einen Typ (Klasse/Interface/Enum) mit dem Bezeichner ${name}.`,
+        "en": `Identifier ${name} is already used in the API.`,
+    })
 
     static typeIsNotGeneric = (type: string) => le({
         "de": `Der Datentyp ${type} ist nicht generisch, daher können keine Typparameter in <...> angegeben werden.`,

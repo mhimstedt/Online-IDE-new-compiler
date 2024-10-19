@@ -131,13 +131,13 @@ export class ErrorManager {
             case "info": className = "jo_revealInfo"; break;
         }
 
-        this.oldDecorations = f.getMonacoModel().deltaDecorations(this.oldDecorations, [
-            {
-                range: error.range,
-                options: { className: className }
+        // this.oldDecorations = f.getMonacoModel().deltaDecorations(this.oldDecorations, [
+        //     {
+        //         range: error.range,
+        //         options: { className: className }
 
-            }
-        ]);
+        //     }
+        // ]);
 
 
     }
