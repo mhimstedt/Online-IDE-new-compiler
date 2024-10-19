@@ -60,15 +60,41 @@ export class TypeResolver {
 
 
     gatherTypeDefinitionNodes() {
+        let typeNames: Map<string, ASTClassDefinitionNode> = new Map();
+
         for (let module of this.dirtyModules) {
-            if(module.ast){
-                this.gatherTypeDefinitionNodesRecursively(module.ast);
+            if (module.ast) {
+                this.gatherTypeDefinitionNodesRecursively(module.ast, typeNames);
             }
         }
     }
 
-    gatherTypeDefinitionNodesRecursively(typeScope: TypeScope) {
+    gatherTypeDefinitionNodesRecursively(typeScope: TypeScope, typeNames: Map<string, ASTClassDefinitionNode | ASTInterfaceDefinitionNode | ASTEnumDefinitionNode>) {
         for (let tdn of typeScope.innerTypes) {
+
+            let otherTypeDef = typeNames.get(tdn.identifier);
+            if (!otherTypeDef) {
+                let otherType = this.moduleManager.typestore.getType(tdn.identifier);
+                if(otherType){
+                    this.pushError(JCM.typenameAlreadyInUse(tdn.identifier, otherType.identifierRange, otherType.module.file.name), tdn.range, tdn.module, "error");
+                    continue;
+                }
+                otherType = this.libraryModuleManager.typestore.getType(tdn.identifier);
+                if(otherType){
+                    this.pushError(JCM.typenameUsedInLibrary(tdn.identifier), tdn.range, tdn.module, "error");
+                    continue;
+                }
+                
+
+            } else {
+                this.pushError(JCM.typenameAlreadyInUse(tdn.identifier, otherTypeDef.range, otherTypeDef.module.file.name), tdn.range, tdn.module, "error");
+                continue;
+            }
+
+            typeNames.set(tdn.identifier, tdn);
+
+
+
             switch (tdn.kind) {
                 case TokenType.keywordClass:
                     this.classDeclarationNodes.push(tdn);
@@ -81,7 +107,9 @@ export class TypeResolver {
                     break;
             }
 
-            this.gatherTypeDefinitionNodesRecursively(tdn);
+            if (tdn.innerTypes.length > 0) {
+                this.gatherTypeDefinitionNodesRecursively(tdn, new Map());
+            }
         }
     }
 
@@ -98,14 +126,14 @@ export class TypeResolver {
             resolvedType.isStatic = klassNode.isStatic;
             resolvedType._isAbstract = klassNode.isAbstract;
             resolvedType.documentation = klassNode.documentation;
-            if(klassNode.isMainClass){
+            if (klassNode.isMainClass) {
                 resolvedType.isMainClass = true;
                 resolvedType.staticType.isMainClass = true;
-            } 
+            }
 
-            if(klassNode.identifier != ""){
+            if (klassNode.identifier != "") {
                 this.moduleManager.typestore.addType(resolvedType);
-                module.types.push(klassNode.resolvedType); 
+                module.types.push(klassNode.resolvedType);
             }
 
             if (klassNode.parent?.kind != TokenType.global) declarationNodesWithClassParent.push(klassNode);
@@ -155,7 +183,7 @@ export class TypeResolver {
         for (let node of declarationNodesWithClassParent) {
             //@ts-ignore
             node.resolvedType!.outerType = node.parent.resolvedType;
-            
+
         }
 
     }
@@ -181,7 +209,7 @@ export class TypeResolver {
 
     resolveTypeReferences() {
         for (let module of this.dirtyModules) {
-            if(module.ast){
+            if (module.ast) {
                 for (let typeNode of module.ast.collectedTypeNodes) {
                     this.resolveTypeNode(typeNode, module);
                 }
@@ -191,12 +219,12 @@ export class TypeResolver {
 
     resolveTypeNode(typeNode: ASTTypeNode, module: JavaBaseModule): JavaType | undefined {
 
-        if(typeNode.resolvedType) return typeNode.resolvedType;
+        if (typeNode.resolvedType) return typeNode.resolvedType;
 
         switch (typeNode.kind) {
             case TokenType.baseType: {
                 let type = this.findPrimaryTypeByIdentifier(<ASTBaseTypeNode>typeNode, module);
-                if(type){
+                if (type) {
                     typeNode.resolvedType = type;
                     module.registerTypeUsage(type, typeNode.range);
                 }
@@ -205,8 +233,8 @@ export class TypeResolver {
             case TokenType.genericTypeInstantiation:
                 let genericTypeNode = <ASTGenericTypeInstantiationNode>typeNode;
                 this.resolveTypeNode(genericTypeNode.baseType, module);
-                
-                
+
+
                 let baseType = genericTypeNode.baseType.resolvedType;
                 if (!baseType) return undefined;
                 if (!baseType.hasGenericParameters()) {
@@ -214,7 +242,7 @@ export class TypeResolver {
                     return undefined;
                 }
                 // ArrayList<> -> ArrayList
-                if(genericTypeNode.actualTypeArguments.length == 0) {
+                if (genericTypeNode.actualTypeArguments.length == 0) {
 
                 }
                 if (genericTypeNode.actualTypeArguments.length > baseType.genericTypeParameters!.length) {
@@ -231,7 +259,7 @@ export class TypeResolver {
                         if (gpType.isPrimitive) {
                             this.pushError(JCM.noPrimitiveTypeForGenericParameter(baseType.identifier), typeNode.range, module);
                         } else {
-                            if(!gp.canBeReplacedByConcreteType(gpType)){
+                            if (!gp.canBeReplacedByConcreteType(gpType)) {
                                 this.pushError(JCM.cantReplaceGenericParamterBy(gp.getDeclaration(), gpType.toString()), typeNode.range, module);
                             }
                             typeMap.set(gp, <NonPrimitiveType>gpType);
@@ -240,9 +268,9 @@ export class TypeResolver {
                 }
 
                 // remaining generic parameters:
-                for(let i = genericTypeNode.actualTypeArguments.length; i < baseType.genericTypeParameters!.length; i++){
+                for (let i = genericTypeNode.actualTypeArguments.length; i < baseType.genericTypeParameters!.length; i++) {
                     let gp = baseType.genericTypeParameters![i];
-                    if(gp.upperBounds.length > 0){
+                    if (gp.upperBounds.length > 0) {
                         typeMap.set(gp, gp.upperBounds[0]);
                     } else {
                         typeMap.set(gp, <NonPrimitiveType>this.libraryModuleManager.typestore.getType("Object"))
@@ -255,11 +283,11 @@ export class TypeResolver {
                 } else {
                     genericTypeNode.resolvedType = baseType;
                 }
-                
+
                 let newType = genericTypeNode.resolvedType;
                 let absoluteName = newType.getAbsoluteName();
                 let cachedType = this.absoluteNameToResolvedTypeMap.get(absoluteName);
-                if(cachedType){
+                if (cachedType) {
                     genericTypeNode.resolvedType = cachedType;
                 } else {
                     this.absoluteNameToResolvedTypeMap.set(absoluteName, newType);
@@ -274,7 +302,7 @@ export class TypeResolver {
 
                 let absoluteName1 = typeNode.resolvedType.getAbsoluteName();
                 let cachedType1 = this.absoluteNameToResolvedTypeMap.get(absoluteName1);
-                if(cachedType1){
+                if (cachedType1) {
                     typeNode.resolvedType = cachedType1;
                 } else {
                     this.absoluteNameToResolvedTypeMap.set(absoluteName1, typeNode.resolvedType);
@@ -363,21 +391,21 @@ export class TypeResolver {
 
         }
 
-        if(!type){
+        if (!type) {
             type = this.moduleManager.typestore.getType(identifer);
-            if(!type){
+            if (!type) {
                 type = this.libraryModuleManager.typestore.getType(identifer);
             }
         }
 
         let i = 1;
-        while(i < typeNode.identifiers.length && type){
+        while (i < typeNode.identifiers.length && type) {
             let id = typeNode.identifiers[i];
-            if(type instanceof NonPrimitiveType){
+            if (type instanceof NonPrimitiveType) {
                 let innerType = type.innerTypes.find(it => it.identifier == id.identifier) as NonPrimitiveType;
-                if(innerType){
+                if (innerType) {
                     module.registerTypeUsage(innerType, id.identifierRange);
-                    if(innerType.visibility != TokenType.keywordPublic){
+                    if (innerType.visibility != TokenType.keywordPublic) {
                         this.pushError(JCM.typeIsNotVisible(innerType.identifier), id.identifierRange, module, "error");
                     }
                     type = innerType;
@@ -388,11 +416,11 @@ export class TypeResolver {
             } else {
                 this.pushError(JCM.typeHasNoSubtype(type.identifier, id.identifier), id.identifierRange, module, "error");
                 return undefined;
-            }  
+            }
             i++;
         }
 
-        if(!type){
+        if (!type) {
             this.pushError(JCM.typeNotDefined(identifer), typeNode.range, module);
         }
 
@@ -428,7 +456,7 @@ export class TypeResolver {
         if (declNode.extends) {
             let extType = this.resolveTypeNode(declNode.extends, module);
 
-            if(extType instanceof NonPrimitiveType && extType.isFinal){
+            if (extType instanceof NonPrimitiveType && extType.isFinal) {
                 this.pushError(JCM.cantExtendFinalClass(), declNode.extends.range, module, "error");
             }
 
@@ -561,7 +589,7 @@ export class TypeResolver {
             }
 
             methodNode.method = method;
-            method.isAbstract = methodNode.isAbstract; 
+            method.isAbstract = methodNode.isAbstract;
             method.isFinal = methodNode.isFinal;
             method.isStatic = methodNode.isStatic;
             method.classEnumInterface = type;
@@ -579,7 +607,7 @@ export class TypeResolver {
                     let parameter = new JavaParameter(p.identifier, p.identifierRange,
                         module, type, p.isFinal, p.isEllipsis, p.trackMissingReadAccess);
 
-                    if((<ASTClassDefinitionNode>node).isMainClass && methodNode.identifier == JavaCompilerStringConstants.mainMethodIdentifier && parameter.identifier == 'args'){
+                    if ((<ASTClassDefinitionNode>node).isMainClass && methodNode.identifier == JavaCompilerStringConstants.mainMethodIdentifier && parameter.identifier == 'args') {
                         parameter.hiddenWhenDebugging = true;
                     }
 
