@@ -564,6 +564,7 @@ export class LibraryDeclarationParser extends LibraryDeclarationLexer {
                             this.${realName}(${parameterNames.join(", ")});
                             ${Helpers.threadStack}.push(this); 
                         `
+                        parameterNames.unshift('callback1');
                         parameterNames.unshift('__t');
                         parameterNames.push(body);
 
