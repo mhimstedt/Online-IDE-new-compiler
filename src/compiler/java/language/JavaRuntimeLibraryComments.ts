@@ -2304,6 +2304,15 @@ export class JRC {
         "en": "Sets speed of thread in steps/second. Values <= 0 mean 'maximum speed'.",
     })
 
+    static threadSleepComment = () => lm({
+        "de": "Bewirkt, dass der gerade ausgeführte Thread für die angegebene Zeit (in Millisekunden) pausiert (schläft). Die genaue Länge des 'Schlafes' hängt von der Genauigkeit des Laufzeitsystems und vom Scheduler ab.",
+        "en": "Causes the currently executing thread to sleep (temporarily cease execution) for the specified number of milliseconds, subject to the precision and accuracy of system timers and schedulers.",
+    })
+
+    static millisecondsNotPositiveError = () => lm({
+    "de": `Die angegebene Zeit in Millisekunden muss größer als 0 sein.`,
+    "en": `Given time in milliseconds has to be positive.`,
+    })
 
     /**
      * Klass PApplet

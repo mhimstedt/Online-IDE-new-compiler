@@ -9,6 +9,7 @@ import { NonPrimitiveType } from "../../../types/NonPrimitiveType.ts";
 import { EnumClass } from "./EnumClass.ts";
 import { ObjectClass, StringClass } from "./ObjectClassStringClass.ts";
 import { RunnableInterface } from "./RunnableInterface.ts";
+import { RuntimeExceptionClass } from "./RuntimeException.ts";
 
 
 export class ThreadStateClass extends EnumClass {
@@ -81,6 +82,7 @@ export class ThreadClass extends ObjectClass implements RunnableInterface {
         { type: "method", signature: "public string getName()", template: `§1.name` , comment: JRC.threadGetNameComment},
         { type: "method", signature: "public void setName(string name)", java: ThreadClass.prototype._setName , comment: JRC.threadSetNameComment},
         { type: "method", signature: "public void setSpeed(int maxStepsPerSecond)", java: ThreadClass.prototype._setSpeed , comment: JRC.threadSetSpeedComment},
+        { type: "method", signature: "public static void sleep(int milliseconds)", java: ThreadClass._sleep , comment: JRC.threadSleepComment},
     ]
 
 
@@ -185,6 +187,21 @@ export class ThreadClass extends ObjectClass implements RunnableInterface {
     _setSpeed(maxStepsPerSecond: number){
         this.maxStepsPerSecond = maxStepsPerSecond > 0 ? maxStepsPerSecond : undefined;
         if(this.thread) this.thread.maxStepsPerSecond = this.maxStepsPerSecond;
+    }
+
+    static _sleep(t: Thread, callback: CallbackFunction, milliseconds: number){
+        if(milliseconds < 0){
+            throw new RuntimeExceptionClass(JRC.millisecondsNotPositiveError());
+        }
+
+        t.scheduler.suspendThread(t);
+        t.state = ThreadState.timedWaiting;
+
+        setTimeout(() => {
+            t.scheduler.restoreThread(t);
+        }, milliseconds);
+
+        if(callback) callback();
     }
 
 }
