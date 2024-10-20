@@ -1,5 +1,5 @@
 import { JRC } from "../../../language/JavaRuntimeLibraryComments";
-import { SchedulerState } from "../../../../common/interpreter/Scheduler.ts";
+import { SchedulerState } from "../../../../common/interpreter/SchedulerState.ts";
 import { CallbackFunction } from "../../../../common/interpreter/StepFunction.ts";
 import { Thread } from "../../../../common/interpreter/Thread.ts";
 import { LibraryDeclarations } from "../../../module/libraries/DeclareType.ts";

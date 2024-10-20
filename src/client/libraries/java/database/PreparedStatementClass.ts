@@ -1,5 +1,6 @@
 import { CallbackParameter } from "../../../../compiler/common/interpreter/CallbackParameter";
-import { Thread, ThreadState } from "../../../../compiler/common/interpreter/Thread";
+import { Thread } from "../../../../compiler/common/interpreter/Thread";
+import { ThreadState } from "../../../../compiler/common/interpreter/ThreadState";
 import { JRC } from "../../../../compiler/java/language/JavaRuntimeLibraryComments";
 import { LibraryDeclarations } from "../../../../compiler/java/module/libraries/DeclareType";
 import { ObjectClass } from "../../../../compiler/java/runtime/system/javalang/ObjectClassStringClass";

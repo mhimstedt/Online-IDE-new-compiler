@@ -1,5 +1,6 @@
 import { JRC } from "../../../language/JavaRuntimeLibraryComments";
-import { Thread, ThreadState } from "../../../../common/interpreter/Thread";
+import { Thread } from "../../../../common/interpreter/Thread";
+import { ThreadState } from "../../../../common/interpreter/ThreadState";
 import { LibraryDeclarations } from "../../../module/libraries/DeclareType";
 import { ObjectClass, StringClass } from "../javalang/ObjectClassStringClass";
 import { RuntimeExceptionClass } from "../javalang/RuntimeException";

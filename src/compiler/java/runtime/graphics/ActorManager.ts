@@ -1,7 +1,8 @@
 import * as PIXI from 'pixi.js';
 import { Interpreter } from "../../../common/interpreter/Interpreter";
 import { KeyDownListener, KeyPressedListener, KeyUpListener, KeyboardManager } from "../../../common/interpreter/KeyboardManager";
-import { Thread, ThreadState } from "../../../common/interpreter/Thread";
+import { Thread } from "../../../common/interpreter/Thread";
+import { ThreadState } from "../../../common/interpreter/ThreadState";
 import { StringClass } from "../system/javalang/ObjectClassStringClass";
 import { ActorType, ActorTypes, IActor } from "./IActor";
 import { ShapeClass } from './ShapeClass';

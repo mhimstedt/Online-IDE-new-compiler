@@ -1,7 +1,8 @@
 import { JRC } from "../../../language/JavaRuntimeLibraryComments";
 import { ValueRenderer } from "../../../../common/debugger/ValueRenderer.ts";
 import { CallbackFunction } from "../../../../common/interpreter/StepFunction.ts";
-import { Thread, ThreadState } from "../../../../common/interpreter/Thread";
+import { Thread } from "../../../../common/interpreter/Thread";
+import { ThreadState } from "../../../../common/interpreter/ThreadState.ts";
 import { LibraryDeclarations } from "../../../module/libraries/DeclareType.ts";
 import { NonPrimitiveType } from "../../../types/NonPrimitiveType";
 import { JCM } from "../../../language/JavaCompilerMessages.ts";

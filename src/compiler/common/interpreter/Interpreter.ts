@@ -17,8 +17,11 @@ import { IInputManager } from "./IInputManager.ts";
 import { DummyPrintManager, IPrintManager } from "./IPrintManager.ts";
 import { KeyboardManager } from "./KeyboardManager.ts";
 import { LoadController } from "./LoadController";
-import { Scheduler, SchedulerExitState, SchedulerState } from "./Scheduler";
-import { Thread, ThreadState } from "./Thread.ts";
+import { Scheduler } from "./Scheduler";
+import { SchedulerExitState } from "./SchedulerExitState.ts";
+import { SchedulerState } from "./SchedulerState.ts";
+import { Thread } from "./Thread.ts";
+import { ThreadState } from "./ThreadState.ts";
 
 
 type InterpreterEvents = "stop" | "done" | "resetRuntime" | "stateChanged" | 

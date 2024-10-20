@@ -6,14 +6,11 @@ import { InterpreterMessages } from "../language/InterpreterMessages.ts";
 import { ProgramPointerPositionInfo } from "../monacoproviders/ProgramPointerManager.ts";
 import { Interpreter } from "./Interpreter";
 import { Program, Step } from "./Program";
+import { SchedulerExitState } from "./SchedulerExitState.ts";
+import { SchedulerState } from "./SchedulerState.ts";
 import { Helpers, KlassObjectRegistry, StepParams } from "./StepFunction.ts";
-import { Thread, ThreadState, ThreadStateInfoAfterRun } from "./Thread";
-
-export enum SchedulerState { not_initialized, running, paused, stopped, error }
-
-
-
-export enum SchedulerExitState { nothingMoreToDo, giveMeAdditionalTime }
+import { Thread, ThreadStateInfoAfterRun } from "./Thread";
+import { ThreadState } from "./ThreadState.ts";
 
 export class Scheduler {
     runningThreads: Thread[] = [];

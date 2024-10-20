@@ -16,7 +16,7 @@ import { WorkspaceSettingsDialog } from "./WorkspaceSettingsDialog.js";
 import { File } from '../../workspace/File.js';
 import { IPosition, Position } from '../../../compiler/common/range/Position.js';
 import { WorkspaceImporterExporter } from '../../workspace/WorkspaceImporterExporter.js';
-import { SchedulerState } from '../../../compiler/common/interpreter/Scheduler.js';
+import { SchedulerState } from "../../../compiler/common/interpreter/SchedulerState.js";
 
 
 export class ProjectExplorer {

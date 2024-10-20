@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { CallbackParameter } from "../../../../common/interpreter/CallbackParameter";
-import { Thread, ThreadState } from "../../../../common/interpreter/Thread";
+import { Thread } from "../../../../common/interpreter/Thread";
+import { ThreadState } from "../../../../common/interpreter/ThreadState";
 import { JRC } from "../../../language/JavaRuntimeLibraryComments";
 import { LibraryDeclarations } from "../../../module/libraries/DeclareType";
 import { ObjectClass } from "../../system/javalang/ObjectClassStringClass";

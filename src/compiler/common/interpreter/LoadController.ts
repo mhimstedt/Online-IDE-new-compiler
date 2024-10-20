@@ -1,5 +1,7 @@
 import { Interpreter } from "./Interpreter";
-import { Scheduler, SchedulerExitState, SchedulerState as SchedulerState } from "./Scheduler";
+import { Scheduler } from "./Scheduler";
+import { SchedulerExitState } from "./SchedulerExitState";
+import { SchedulerState as SchedulerState } from "./SchedulerState";
 
 export class LoadController {
 
