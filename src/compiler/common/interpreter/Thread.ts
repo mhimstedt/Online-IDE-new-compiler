@@ -14,47 +14,17 @@ import { CallbackParameter } from "./CallbackParameter.ts";
 import { CatchBlockInfo, Exception, ExceptionInfo } from "./ExceptionInfo.ts";
 import { ExceptionPrinter } from "./ExceptionPrinter.ts";
 import { Program, Step } from "./Program";
+import { ProgramState } from "./ProgramState.ts";
 import { Scheduler } from "./Scheduler";
 import { CallbackFunction, KlassObjectRegistry } from "./StepFunction.ts";
 import { SystemException } from "./SystemException.ts";
+import { ThreadState } from "./ThreadState.ts";
 import { IThrowable, Stacktrace } from "./ThrowableType.ts";
 
-
-export type ProgramState = {
-    program: Program;
-    currentStepList: Step[];   // Link to program.stepSingle or program.stepMultiple
-    stepIndex: number;
-    stackBase: number;
-    callbackAfterFinished?: () => void;
-    exceptionInfoList: ExceptionInfo[];
-
-    recentlyThrownException?: Exception;
-    afterExceptionTrimStackToSize?: number;     // stack size when entering try {...} block
-
-    aquiredObjectLocks?: ObjectClass[];
-
-    lastExecutedStep?: Step;
-
-}
 
 export type ThreadStateInfoAfterRun = {
     state: ThreadState,
     stepsExecuted: number;
-}
-
-/**
- * @link https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.State.html
- */
-export enum ThreadState {
-    new,          // A thread that has not yet started is in this state.
-    runnable,     // A thread executing in the Java virtual machine is in this state.
-    stoppedAtBreakpoint,
-    blocked,      // A thread that is blocked waiting for a monitor lock (semaphor!) is in this state.
-    waiting,
-    timedWaiting,
-    terminated,   // A thread that has exited is in this state.
-    terminatedWithException,
-    immediatelyAfterReplStatement
 }
 
 export class Thread {

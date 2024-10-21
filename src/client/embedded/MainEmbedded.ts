@@ -33,7 +33,7 @@ import { EmbeddedFileExplorer } from "./EmbeddedFileExplorer.js";
 import { EmbeddedIndexedDB } from "./EmbeddedIndexedDB.js";
 import { EmbeddedSlider } from "../../tools/components/EmbeddedSlider.js";
 import { JOScript } from "./EmbeddedStarter.js";
-import { SchedulerState } from "../../compiler/common/interpreter/Scheduler.js";
+import { SchedulerState } from "../../compiler/common/interpreter/SchedulerState.js";
 import { CompilerFile } from "../../compiler/common/module/CompilerFile.js";
 import { Disassembler } from "../../compiler/common/disassembler/Disassembler.js";
 import { ExceptionMarker } from "../../compiler/common/interpreter/ExceptionMarker.js";

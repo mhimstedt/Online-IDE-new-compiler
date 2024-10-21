@@ -1,6 +1,7 @@
 import { Interpreter } from "../../../../common/interpreter/Interpreter.ts";
 import { KeyDownListener, KeyUpListener, KeyPressedListener } from "../../../../common/interpreter/KeyboardManager.ts";
-import { Thread, ThreadState } from "../../../../common/interpreter/Thread.ts";
+import { Thread } from "../../../../common/interpreter/Thread.ts";
+import { ThreadState } from "../../../../common/interpreter/ThreadState.ts";
 import { StringClass } from "../../system/javalang/ObjectClassStringClass.ts";
 import { IActor } from "../IActor.ts";
 import { InternalMouseListener, MouseEventKind } from "../MouseManager.ts";

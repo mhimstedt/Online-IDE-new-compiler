@@ -1,7 +1,8 @@
 import { JRC } from "../../../language/JavaRuntimeLibraryComments";
 import { Exception } from "../../../../common/interpreter/ExceptionInfo.ts";
 import { CallbackFunction } from "../../../../common/interpreter/StepFunction.ts";
-import { Thread, ThreadState } from "../../../../common/interpreter/Thread.ts";
+import { Thread } from "../../../../common/interpreter/Thread.ts";
+import { ThreadState } from "../../../../common/interpreter/ThreadState.ts";
 import { IThrowable, Stacktrace } from "../../../../common/interpreter/ThrowableType.ts";
 import { IRange } from "../../../../common/range/Range.ts";
 import { LibraryDeclarations } from "../../../module/libraries/DeclareType.ts";

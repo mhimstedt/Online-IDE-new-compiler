@@ -4,7 +4,8 @@ import { EmptyRange, IRange } from "../range/Range";
 import { Klass, StepFunction, StepParams } from "./StepFunction.ts";
 import { CodePrinter } from "../../java/codegenerator/CodePrinter.ts";
 import { CatchBlockInfo } from "./ExceptionInfo.ts";
-import { Thread, ThreadState } from "./Thread.ts";
+import { Thread } from "./Thread.ts";
+import { ThreadState } from "./ThreadState.ts";
 import chalk from "chalk";
 import { getLine, threeDez } from "../../../tools/StringTools.ts";
 

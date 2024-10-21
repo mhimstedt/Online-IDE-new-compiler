@@ -3,7 +3,7 @@ import { CompilerFile } from "../module/CompilerFile";
 import { ProgramPointerPositionInfo } from "../monacoproviders/ProgramPointerManager";
 import { IRange } from "../range/Range";
 import { Step } from "./Program";
-import { SchedulerState } from "./Scheduler";
+import { SchedulerState } from "./SchedulerState";
 import { IThrowable } from "./ThrowableType";
 import '/include/css/exceptionmarker.css';
 

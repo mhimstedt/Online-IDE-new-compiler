@@ -2,7 +2,8 @@ import { IWorld } from "./IWorld";
 import * as PIXI from 'pixi.js';
 import { MouseEventMethod, ShapeClass } from "./ShapeClass";
 import { MouseListenerInterface } from "./MouseListenerInterface";
-import { Thread, ThreadState } from "../../../common/interpreter/Thread";
+import { Thread } from "../../../common/interpreter/Thread";
+import { ThreadState } from "../../../common/interpreter/ThreadState";
 
 export interface InternalMouseListener {
     onMouseEvent(kind: MouseEventKind, x: number, y: number): void;

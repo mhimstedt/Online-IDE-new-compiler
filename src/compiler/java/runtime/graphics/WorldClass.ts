@@ -2,7 +2,8 @@
 import * as PIXI from 'pixi.js';
 import { CallbackParameter } from '../../../common/interpreter/CallbackParameter.ts';
 import { Interpreter } from '../../../common/interpreter/Interpreter.ts';
-import { Thread, ThreadState } from "../../../common/interpreter/Thread.ts";
+import { Thread } from "../../../common/interpreter/Thread.ts";
+import { ThreadState } from "../../../common/interpreter/ThreadState.ts";
 import { ColorHelper } from '../../lexer/ColorHelper.ts';
 import { LibraryDeclarations } from "../../module/libraries/DeclareType.ts";
 import { NonPrimitiveType } from "../../types/NonPrimitiveType.ts";

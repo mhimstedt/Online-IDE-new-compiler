@@ -11,7 +11,7 @@ import { PushClientManager } from '../communication/pushclient/PushClientManager
 import { DatabaseNewLongPollingListener } from '../../tools/database/DatabaseNewLongPollingListener.js';
 import { SqlIdeUrlHolder } from './SqlIdeUrlHolder.js';
 import { AutoLogout } from './AutoLogout.js';
-import { SchedulerState } from '../../compiler/common/interpreter/Scheduler.js';
+import { SchedulerState } from "../../compiler/common/interpreter/SchedulerState.js";
 
 export class Login {
 

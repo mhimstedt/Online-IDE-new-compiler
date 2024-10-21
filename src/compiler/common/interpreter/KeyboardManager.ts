@@ -1,5 +1,5 @@
 import { IMain } from "../IMain";
-import { SchedulerState } from "./Scheduler";
+import { SchedulerState } from "./SchedulerState";
 
 
 export type KeyPressedListener = (key: string) => void;

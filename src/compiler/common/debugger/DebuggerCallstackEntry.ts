@@ -1,7 +1,7 @@
 import { DebM } from "./DebuggerMessages";
 import { BaseSymbolTable } from "../BaseSymbolTable";
 import { Program, Step } from "../interpreter/Program";
-import { ProgramState } from "../interpreter/Thread";
+import { ProgramState } from "../interpreter/ProgramState";
 import { IRange } from "../range/Range";
 
 export class DebuggerCallstackEntry {

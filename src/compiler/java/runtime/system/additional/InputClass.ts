@@ -1,7 +1,8 @@
 import { JRC } from "../../../language/JavaRuntimeLibraryComments";
 import { InputManagerValidator } from "../../../../common/interpreter/IInputManager.ts";
 import { Interpreter } from "../../../../common/interpreter/Interpreter.ts";
-import { Thread, ThreadState } from "../../../../common/interpreter/Thread.ts";
+import { Thread } from "../../../../common/interpreter/Thread.ts";
+import { ThreadState } from "../../../../common/interpreter/ThreadState.ts";
 import { LibraryDeclarations } from "../../../module/libraries/DeclareType.ts";
 import { NonPrimitiveType } from "../../../types/NonPrimitiveType.ts";
 import { ObjectClass, StringClass } from "../javalang/ObjectClassStringClass.ts";

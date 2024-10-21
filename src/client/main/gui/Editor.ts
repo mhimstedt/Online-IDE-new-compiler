@@ -1,5 +1,5 @@
 import jQuery from 'jquery';
-import { SchedulerState } from '../../../compiler/common/interpreter/Scheduler.js';
+import { SchedulerState } from "../../../compiler/common/interpreter/SchedulerState.ts";
 import { JavaAddEditorShortcuts } from '../../../compiler/java/monacoproviders/JavaAddEditorShortcuts.ts';
 import { File } from '../../workspace/File.js';
 import { Workspace } from "../../workspace/Workspace.ts";

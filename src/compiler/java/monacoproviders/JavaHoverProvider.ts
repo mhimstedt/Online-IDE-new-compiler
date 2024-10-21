@@ -2,7 +2,7 @@ import { removeJavadocSyntax } from "../../../tools/StringTools.ts";
 import { IMain } from "../../common/IMain.ts";
 import { ValueRenderer } from "../../common/debugger/ValueRenderer.ts";
 import { ValueTool } from "../../common/debugger/ValueTool.ts";
-import { SchedulerState } from "../../common/interpreter/Scheduler.ts";
+import { SchedulerState } from "../../common/interpreter/SchedulerState.ts";
 import { Module } from "../../common/module/Module.ts";
 import { Range } from "../../common/range/Range.ts";
 import { JavaLocalVariable } from "../codegenerator/JavaLocalVariable.ts";
