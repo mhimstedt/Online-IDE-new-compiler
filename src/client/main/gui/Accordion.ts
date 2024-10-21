@@ -7,6 +7,7 @@ import { WorkspaceImporter } from "./WorkspaceImporter.js";
 import { Main } from "../Main.js";
 import { MainBase } from "../MainBase.js";
 import { Workspace } from '../../workspace/Workspace.js';
+import { EmbeddedMessages } from '../../embedded/EmbeddedMessages.js';
 
 export type AccordionElement = {
     name: string;
@@ -46,7 +47,7 @@ export class AccordionPanel {
 
     static currentlyDraggedElement: AccordionElement;
     static currentlyDraggedElementKind: string;
-    
+
     newElementCallback: (ae: AccordionElement, callbackIfSuccessful: (externalElement: any) => void) => void;
     newFolderCallback: (ae: AccordionElement, callbackIfSuccessful: (externalElement: any) => void) => void;
     renameCallback: (externalElement: any, newName: string, ae: AccordionElement) => string;
@@ -64,7 +65,9 @@ export class AccordionPanel {
     constructor(private accordion: Accordion, caption: string | JQuery<HTMLElement>, private flexWeight: string,
         private newButtonClass: string, private buttonNewTitle: string,
         private defaultIconClass: string, public withDeleteButton: boolean, private withFolders: boolean,
-        private kind: "workspace" | "file" | "class" | "student", private enableDrag: boolean, private acceptDropKinds: string[]) {
+        private kind: "workspace" | "file" | "class" | "student",
+        private enableDrag: boolean, private acceptDropKinds: string[],
+        private newElementPraefix: string, private newElementSuffix: string) {
 
         this._$caption = (typeof caption == "string") ? jQuery(`<div class="jo_captiontext">${caption}</div>`) : caption;
 
@@ -116,9 +119,9 @@ export class AccordionPanel {
         this.$listOuter.animate({
             'flex-grow': 0.001
         }, 1000, () => { this.$listOuter.hide(); this.$captionElement.hide(); });
-        
+
     }
-    
+
     show() {
         let targetGrow = this.$listOuter.data('grow');
         this.$listOuter.show();
@@ -199,8 +202,8 @@ export class AccordionPanel {
         path2.push(name2);
         name2 = "";
 
-        if(path1[0] == '_Prüfungen' && path2[0] != '_Prüfungen') return 1;
-        if(path2[0] == '_Prüfungen' && path1[0] != '_Prüfungen') return -1;
+        if (path1[0] == '_Prüfungen' && path2[0] != '_Prüfungen') return 1;
+        if (path2[0] == '_Prüfungen' && path1[0] != '_Prüfungen') return -1;
 
         let i = 0;
         while (i < path1.length && i < path2.length) {
@@ -280,6 +283,16 @@ export class AccordionPanel {
 
     }
 
+    getUniqueNewElementName(): string {
+        let i = 0;
+        let name: string;
+        while (this.elements.some(fd => fd.name == (name = this.newElementPraefix + " " + i + this.newElementSuffix))) {
+            i++;
+        }
+
+        return name;
+
+    }
 
     renderOuterHtmlElements($accordionDiv: JQuery<HTMLElement>) {
         let that = this;
@@ -301,9 +314,9 @@ export class AccordionPanel {
                 let path = that.getCurrentlySelectedPath();
 
                 let ae: AccordionElement = {
-                    name: "Neu",
+                    name: this.getUniqueNewElementName(),
                     isFolder: false,
-                    path: path, 
+                    path: path,
                     readonly: false,
                     isPruefungFolder: false
                 }
@@ -460,7 +473,7 @@ export class AccordionPanel {
             pathHtml += '<div class="jo_folderline"></div>';
         }
 
-        
+
         element.$htmlFirstLine = jQuery(`<div class="jo_file jo_${element.iconClass} ${expandedCollapsed}">
         <div class="jo_folderlines">${pathHtml}</div>
         <div class="jo_fileimage"></div>
@@ -475,14 +488,14 @@ export class AccordionPanel {
 
         let name = escapeHtml(element.name);
         let $filenameElement = element.$htmlFirstLine.find('.jo_filename');
-        if(name == '_Prüfungen' && element.isFolder){
+        if (name == '_Prüfungen' && element.isFolder) {
             name = 'Prüfungen';
             element.isPruefungFolder = true;
             $filenameElement.addClass('joe_pruefungfolder');
         }
 
         $filenameElement.text(name);
-        
+
         if (!expanded && element.path.length > 0) {
             element.$htmlFirstLine.hide();
         }
@@ -754,7 +767,7 @@ export class AccordionPanel {
                             if (that.selectCallback != null) {
 
                                 let firstWorkspace = that.elements.find(el => !el.isFolder);
-                                if(firstWorkspace){
+                                if (firstWorkspace) {
                                     that.select(that.elements[0].externalElement);
                                 } else {
                                     that.select(null);
@@ -819,10 +832,10 @@ export class AccordionPanel {
     }
 
 
-    pathStartsWith(path: string[], pathStart: string[]){
-        if(path.length < pathStart.length) return false;
-        for(let i = 0; i < pathStart.length; i++){
-            if(path[i] != pathStart[i]) return false;
+    pathStartsWith(path: string[], pathStart: string[]) {
+        if (path.length < pathStart.length) return false;
+        for (let i = 0; i < pathStart.length; i++) {
+            if (path[i] != pathStart[i]) return false;
         }
 
         return true;
@@ -840,22 +853,22 @@ export class AccordionPanel {
             element.name = newText;
             $div.html(element.name);
 
-            if(element.isFolder){
-                
+            if (element.isFolder) {
+
                 let oldPath = element.path.slice().concat([oldName]);
 
                 let movedElements: AccordionElement[] = [];
 
-                for(let e of this.elements){
+                for (let e of this.elements) {
 
-                    if(this.pathStartsWith(e.path, oldPath)){
+                    if (this.pathStartsWith(e.path, oldPath)) {
                         e.path[oldPath.length - 1] = element.name;
                         movedElements.push(e);
                     }
 
                 }
 
-                if(movedElements.length > 0) this.moveCallback(movedElements);
+                if (movedElements.length > 0) this.moveCallback(movedElements);
 
             }
 
@@ -922,7 +935,7 @@ export class AccordionPanel {
         if (element != null) {
             element.$htmlFirstLine?.removeClass("jo_" + element.iconClass).addClass("jo_" + iconClass);
             element.iconClass = iconClass;
-            if(fileimageTitle != null){
+            if (fileimageTitle != null) {
                 element.$htmlFirstLine.find('.jo_fileimage').attr('title', fileimageTitle);
             }
         }

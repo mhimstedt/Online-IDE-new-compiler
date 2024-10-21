@@ -17,6 +17,7 @@ import { File } from '../../workspace/File.js';
 import { IPosition, Position } from '../../../compiler/common/range/Position.js';
 import { WorkspaceImporterExporter } from '../../workspace/WorkspaceImporterExporter.js';
 import { SchedulerState } from "../../../compiler/common/interpreter/SchedulerState.js";
+import { GuiMessages } from './GuiMessages.js';
 
 
 export class ProjectExplorer {
@@ -47,7 +48,8 @@ export class ProjectExplorer {
         let that = this;
 
         this.fileListPanel = new AccordionPanel(this.accordion, "Kein Workspace gewählt", "3",
-            "img_add-file-dark", "Neue Datei...", "emptyFile", true, false, "file", true, []);
+            "img_add-file-dark", "Neue Datei...", "emptyFile", true, false, "file", true, [],
+        GuiMessages.NewFileName(), ".java");
 
         this.fileListPanel.newElementCallback =
 
@@ -255,7 +257,8 @@ export class ProjectExplorer {
         let that = this;
 
         this.workspaceListPanel = new AccordionPanel(this.accordion, "WORKSPACES", "4",
-            "img_add-workspace-dark", "Neuer Workspace...", "workspace", true, true, "workspace", false, ["file"]);
+            "img_add-workspace-dark", "Neuer Workspace...", "workspace", true, true, "workspace", false, ["file"],
+        GuiMessages.NewWorkspaceName(), "");
 
         this.workspaceListPanel.newElementCallback =
 

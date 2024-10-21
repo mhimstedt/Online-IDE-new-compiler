@@ -5,6 +5,7 @@ import jQuery from "jquery";
 import { FileTypeManager } from "../../compiler/common/module/FileTypeManager.js";
 import { File } from "../workspace/File.js";
 import { Workspace } from "../workspace/Workspace.js";
+import { EmbeddedMessages } from "./EmbeddedMessages.js";
 
 type FileData = {
     type?: string,
@@ -35,7 +36,7 @@ export class EmbeddedFileExplorer {
 
             $addButton.on("click", () => {
 
-                let file = this.main.addFile({ text: "", title: "Neue Datei.java" });
+                let file = this.main.addFile({ text: "", title: this.getUniqueFilename() });
                 let fileData = this.addFile(file);
 
                 this.renameElement(fileData, () => {
@@ -46,6 +47,19 @@ export class EmbeddedFileExplorer {
                 });
             });
         }
+
+    }
+
+    getUniqueFilename(): string {
+        let newFileName = EmbeddedMessages.NewFileName();
+
+        let i = 0;
+        let name: string;
+        while(this.fileDataList.some(fd => fd.file?.name == (name = newFileName + " " + i + ".java"))) {
+            i++;
+        }
+
+        return name;
 
     }
 

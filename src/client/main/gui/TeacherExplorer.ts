@@ -53,7 +53,7 @@ export class TeacherExplorer {
 
         this.studentPanel = new AccordionPanel(this.main.projectExplorer.accordion,
             "Schüler/innen", "3", null,
-            "", "student", false, false, "student", false, []);
+            "", "student", false, false, "student", false, [], "", "");
 
         this.studentPanel.selectCallback = (ae: UserData) => {
             if (this.classPanelMode == "classes") {
@@ -98,7 +98,7 @@ export class TeacherExplorer {
         toggleButtonClass.linkTo(toggleButtonTest);
 
         this.classPanel = new AccordionPanel(this.main.projectExplorer.accordion,
-            $buttonContainer, "2", "", "", "class", false, false, "class", false, []);
+            $buttonContainer, "2", "", "", "class", false, false, "class", false, [], "", "");
 
         let $buttonPruefungAdministration = jQuery(`<a href='administration_mc.html?csrfToken=${csrfToken}' target='_blank'><div class="jo_button jo_active img_gear-dark" style="margin-right: 6px" title="Prüfungen verwalten..."></d>`);
         this.classPanel.$captionElement.find('.jo_actions').append($buttonPruefungAdministration);
