@@ -144,15 +144,17 @@ export class Executable {
 
         }
         
-        if (currentlyOpenedModule?.isStartable()) {
-            this.mainModule = currentlyOpenedModule;
-        } else {
-            let lastOpenedModule = this.findModuleByFile(lastOpenedFile);
-            if (lastOpenedModule?.isStartable()) {
-                this.mainModule = lastOpenedModule;
-            } else {
-                // find first startable module...
-                this.mainModule = this.moduleManager.modules.find(m => m.isStartable());
+        if(currentlyOpenedModule){
+            if (currentlyOpenedModule.isStartable()) {
+                this.mainModule = currentlyOpenedModule;
+            } else if(!currentlyOpenedModule.hasErrors()) {
+                let lastOpenedModule = this.findModuleByFile(lastOpenedFile);
+                if (lastOpenedModule?.isStartable()) {
+                    this.mainModule = lastOpenedModule;
+                } else {
+                    // find first startable module...
+                    this.mainModule = this.moduleManager.modules.find(m => m.isStartable());
+                }
             }
         }
 
