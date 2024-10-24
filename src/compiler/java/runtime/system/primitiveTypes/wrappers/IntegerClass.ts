@@ -39,7 +39,8 @@ export class IntegerClass extends NumberClass {
     }
 
     _constructorInt(value: number){
-        return new IntegerClass(value);
+        this.value = value;
+        return this;
     }
 
     _constructorString(value: string){

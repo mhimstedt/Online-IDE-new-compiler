@@ -17,6 +17,8 @@ export class ShortClass extends NumberClass {
         {type: "field", signature: "static final int MIN_VALUE", constantValue: -0x8000},
         // for doubleValue(), floatValue(), intValue() and longValue() there are methods (if called for a Number variable containing an Integer value) and templates
         // (if called fo Integer variable). Offering templates to the compiler is only possible because the methods are final.
+
+        {type: "method", signature: "public Short(short d)", native: ShortClass.prototype._constructorShort},
         {type: "method", signature: "public final double doubleValue()", native: ShortClass.prototype.doubleValue, template: "§1.value"},
         {type: "method", signature: "public final float floatValue()", native: ShortClass.prototype.floatValue, template: "§1.value"},
         {type: "method", signature: "public final int intValue()", native: ShortClass.prototype.intValue, template: "§1.value"},
@@ -33,6 +35,11 @@ export class ShortClass extends NumberClass {
 
     constructor(i: number){
         super(i);
+    }
+
+    _constructorShort(d: number) {
+        this.value = d;
+        return this;
     }
 
     _compareTo(otherValue: ShortClass){

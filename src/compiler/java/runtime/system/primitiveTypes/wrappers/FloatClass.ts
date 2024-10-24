@@ -19,6 +19,8 @@ export class FloatClass extends NumberClass {
         {type: "field", signature: "static final int NEGATIVE_INFINITY", constantValue: Number.NEGATIVE_INFINITY}, 
         // for doubleValue(), floatValue(), intValue() and longValue() there are methods (if called for a Number variable containing an Long value) and templates
         // (if called fo Long variable). Offering templates to the compiler is only possible because the methods are final.
+
+        {type: "method", signature: "public Float(float d)", native: FloatClass.prototype._constructorFloat},
         {type: "method", signature: "public final double doubleValue()", native: FloatClass.prototype.doubleValue, template: "§1.value"},
         {type: "method", signature: "public final float floatValue()", native: FloatClass.prototype.floatValue, template: "§1.value"},
         {type: "method", signature: "public final int intValue()", native: FloatClass.prototype.intValue, template: "(Math.trunc(§1.value) % 0x100000000 - 0x80000000)"},
@@ -33,6 +35,11 @@ export class FloatClass extends NumberClass {
 
     constructor(i: number){
         super(i || 0);
+    }
+
+    _constructorFloat(d: number) {
+        this.value = d;
+        return this;
     }
 
     _compareTo(otherValue: FloatClass){

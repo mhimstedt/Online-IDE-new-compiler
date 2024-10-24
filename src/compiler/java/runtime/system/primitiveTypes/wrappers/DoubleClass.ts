@@ -13,6 +13,7 @@ export class DoubleClass extends NumberClass {
 
     static __javaDeclarations: LibraryDeclarations = [
         {type: "declaration", signature: "class Double extends Number implements Comparable<Double>"},
+        {type: "method", signature: "public Double(double d)", native: DoubleClass.prototype._constructorDouble},
         {type: "field", signature: "static final int MAX_VALUE", constantValue: Number.MAX_VALUE}, 
         {type: "field", signature: "static final int POSITIVE_INFINITY", constantValue: Number.POSITIVE_INFINITY}, 
         {type: "field", signature: "static final int NEGATIVE_INFINITY", constantValue: Number.NEGATIVE_INFINITY}, 
@@ -33,6 +34,11 @@ export class DoubleClass extends NumberClass {
 
     constructor(i: number){
         super(i || 0);
+    }
+
+    _constructorDouble(d: number) {
+        this.value = d;
+        return this;
     }
 
     _compareTo(otherValue: DoubleClass){

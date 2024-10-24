@@ -17,6 +17,8 @@ export class ByteClass extends NumberClass {
         {type: "field", signature: "static final int MIN_VALUE", constantValue: -0x80},
         // for doubleValue(), floatValue(), intValue() and longValue() there are methods (if called for a Number variable containing an Integer value) and templates
         // (if called fo Integer variable). Offering templates to the compiler is only possible because the methods are final.
+
+        {type: "method", signature: "public Byte(byte d)", native: ByteClass.prototype._constructorByte},
         {type: "method", signature: "public final double doubleValue()", native: ByteClass.prototype.doubleValue, template: "§1.value"},
         {type: "method", signature: "public final float floatValue()", native: ByteClass.prototype.floatValue, template: "§1.value"},
         {type: "method", signature: "public final int intValue()", native: ByteClass.prototype.intValue, template: "§1.value"},
@@ -38,6 +40,12 @@ export class ByteClass extends NumberClass {
     _compareTo(otherValue: ByteClass){
         return this.value - otherValue.value;
     }
+
+    _constructorByte(d: number) {
+        this.value = d;
+        return this;
+    }
+
 
     static parseByte(s: StringClass, radix: number = 10){
         return (Number.parseInt(s.value, radix) + 0x80) % 0x100 - 0x80;

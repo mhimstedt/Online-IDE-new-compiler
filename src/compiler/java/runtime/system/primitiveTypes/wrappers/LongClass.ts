@@ -17,6 +17,8 @@ export class LongClass extends NumberClass {
         {type: "field", signature: "static final int MIN_VALUE", constantValue: Number.MIN_SAFE_INTEGER},
         // for doubleValue(), floatValue(), intValue() and longValue() there are methods (if called for a Number variable containing an Long value) and templates
         // (if called fo Long variable). Offering templates to the compiler is only possible because the methods are final.
+
+        {type: "method", signature: "public Long(long d)", native: LongClass.prototype._constructorLong},
         {type: "method", signature: "public final double doubleValue()", native: LongClass.prototype.doubleValue, template: "§1.value"},
         {type: "method", signature: "public final float floatValue()", native: LongClass.prototype.floatValue, template: "§1.value"},
         {type: "method", signature: "public final int intValue()", native: LongClass.prototype.intValue, template: "(§1.value % 0x100000000 - 0x80000000)"},
@@ -33,6 +35,11 @@ export class LongClass extends NumberClass {
 
     constructor(i: number){
         super(i || 0);
+    }
+
+    _constructorLong(d: number) {
+        this.value = d;
+        return this;
     }
 
     _compareTo(otherValue: LongClass){
