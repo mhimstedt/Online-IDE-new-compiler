@@ -24,6 +24,9 @@ export abstract class Module {
 
     returnType?: JavaType;  // for use with Repl
 
+    dependsOnModuleWithErrorsFlag: boolean = false;
+
+
 
     constructor(public file: CompilerFile, public isLibraryModule: boolean) {
 
@@ -39,7 +42,7 @@ export abstract class Module {
 
     isStartable(): boolean {
         if (this.hasMainProgram()) {
-            return !this.hasErrors() && !this.isDirty();
+            return !this.hasErrors() && !this.isDirty() && !this.dependsOnModuleWithErrorsFlag;
         }
 
         return false;

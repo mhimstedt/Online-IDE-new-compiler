@@ -1,3 +1,4 @@
+import { JavaCompiledModule } from "../java/module/JavaCompiledModule";
 import { BaseSymbol } from "./BaseSymbolTable";
 import { CompilerFile } from "./module/CompilerFile";
 import { Module } from "./module/Module";
@@ -117,6 +118,19 @@ export class UsageTracker {
             // TODO: analyze if used signatures are available
 
             if (entry[0].isDirty()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    existsDependencyToOtherModuleWithErrors(): boolean {
+
+        for (let entry of this.dependsOnModules.entries()) {
+            // TODO: analyze if used signatures are available
+
+            if ( entry[0].dependsOnModuleWithErrorsFlag) {
                 return true;
             }
         }

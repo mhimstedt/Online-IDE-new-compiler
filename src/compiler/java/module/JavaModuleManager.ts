@@ -47,17 +47,17 @@ export class JavaModuleManager {
         this.typestore.empty();
     }
 
-    setDirtyFlagsBasedOnErrors(){
-        this.modules.forEach(m => m.setDirty(m.hasErrors()));
+    setDependsOnModuleWithErrorsFlag(){
+        this.modules.forEach(m => m.dependsOnModuleWithErrorsFlag = m.hasErrors());
 
         let done: boolean = false;
         while(!done){
             done = true;
             for(let module of this.modules){
-                if(module.isDirty()) continue;
+                if(module.dependsOnModuleWithErrorsFlag) continue;
                 // does module depend on dirty other module?
-                if(module.dependsOnOtherDirtyModule()){
-                    module.setDirty(true);
+                if(module.dependsOnModuleWithErrors()){
+                    module.dependsOnModuleWithErrorsFlag = true;
                     done = false;
                     break;
                 }

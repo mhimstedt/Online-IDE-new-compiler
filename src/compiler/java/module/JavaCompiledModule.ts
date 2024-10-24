@@ -240,6 +240,10 @@ export class JavaCompiledModule extends JavaBaseModule {
     dependsOnOtherDirtyModule(): boolean {
         return this.compiledSymbolsUsageTracker.existsDependencyToOtherDirtyModule();
     }
+    
+    dependsOnModuleWithErrors(): boolean {
+        return this.compiledSymbolsUsageTracker.existsDependencyToOtherModuleWithErrors();
+    }
 
     findSymbolTableAtPosition(position: Position): JavaSymbolTable | undefined {
         let tableWithSmallestNumberOfLines: JavaSymbolTable | undefined;

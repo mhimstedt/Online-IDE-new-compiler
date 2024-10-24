@@ -75,10 +75,11 @@ export class JavaCompiler implements Compiler {
 
     public async compileIfDirty(): Promise<Executable | undefined> {
 
+        
         if (this.lastCompiledExecutable) {
             this.lastCompiledExecutable.findMainModule(false, this.lastOpenedFile, this.main?.getCurrentWorkspace()?.getCurrentlyEditedModule());
         }
-
+        
         // if we're not in test mode:
         if (this.main) {
             if (this.main.getInterpreter().isRunningOrPaused()) return;
@@ -87,27 +88,29 @@ export class JavaCompiler implements Compiler {
             this.moduleManager.workspace = currentWorkspace;
             this.files = currentWorkspace.getFiles().filter(file => FileTypeManager.filenameToFileType(file.name).language == 'myJava');
         }
-
+        
         this.moduleManager.setupModulesBeforeCompiliation(this.files);
-
+        
         // we call moduleManager.getNewOrDirtyModules before iterativelySetDirtyFlags
         // to check if ANY file has changed/is new since last compilation run:
         let newOrDirtyModules = this.moduleManager.getNewOrDirtyModules(true);
+
         /**
-        * if no module has changed, return as fast as possible
+         * if no module has changed, return as fast as possible
         */
-        if (newOrDirtyModules.length == 0) return this.lastCompiledExecutable;
+       if (newOrDirtyModules.length == 0) return this.lastCompiledExecutable;
+       
+       // now we extend set of dirty modules to
+       //  - modules which had errors in last compilation run
+       //  - modules that are (indirectly) dependent on other dirty modules
+       this.moduleManager.iterativelySetDirtyFlags();
+       
 
-        // now we extend set of dirty modules to
-        //  - modules which had errors in last compilation run
-        //  - modules that are (indirectly) dependent on other dirty modules
-        this.moduleManager.iterativelySetDirtyFlags();
+       newOrDirtyModules = this.moduleManager.getNewOrDirtyModules();
 
-
-        newOrDirtyModules = this.moduleManager.getNewOrDirtyModules();
-        this.progressManager.setNewOrDirtyModules(newOrDirtyModules.map(m => m.file.name).join(", "));  // only for console.log later
-
-        if (newOrDirtyModules.length == 0) return this.lastCompiledExecutable;
+       this.progressManager.setNewOrDirtyModules(newOrDirtyModules.map(m => m.file.name).join(", "));  // only for console.log later
+       
+       if (newOrDirtyModules.length == 0) return this.lastCompiledExecutable;
 
         this.errors = [];
 
@@ -161,7 +164,7 @@ export class JavaCompiler implements Compiler {
 
         this.moduleManager.typestore.populateClassObjectRegistry(klassObjectRegistry);
 
-        this.moduleManager.setDirtyFlagsBasedOnErrors();
+        this.moduleManager.setDependsOnModuleWithErrorsFlag();
 
         let executable = new Executable(klassObjectRegistry,
             this.moduleManager, this.libraryModuleManager,
