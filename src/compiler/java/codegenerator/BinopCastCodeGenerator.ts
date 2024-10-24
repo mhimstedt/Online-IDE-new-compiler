@@ -654,12 +654,16 @@ export abstract class BinopCastCodeGenerator {
 
         if (typeFromIndex == typeToIndex) return true;
 
-        if (typeFromIndex == nBoolean) return false;
-        if (typeFromIndex == nChar) {
-            return typeToIndex >= nByte && typeToIndex <= nDouble;
-        }
-
-        if (castType == "explicit") return true;
+        
+        if (castType == "explicit"){
+            if (typeFromIndex == nBoolean) return false;
+            
+            if (typeFromIndex == nChar) {
+                return typeToIndex >= nByte && typeToIndex <= nDouble;
+            }
+            return true;
+        }  
+        
         return canCastImplicit[typeFromIndex][typeToIndex];
     }
 
