@@ -62,7 +62,9 @@ export abstract class IJavaClass extends JavaTypeWithInstanceInitializer {
                 range: rangeToReplace,
                 documentation: field.documentation == null ? undefined : {
                     value: typeof field.documentation == "string" ? field.documentation : field.documentation()
-                }
+                },
+                //@ts-ignore
+                signature: field.toString()
             });
         }
 
@@ -91,7 +93,9 @@ export abstract class IJavaClass extends JavaTypeWithInstanceInitializer {
                 insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
                 documentation: method.documentation == null ? undefined : {
                     value: typeof method.documentation == "string" ? method.documentation : method.documentation()
-                }
+                },
+                //@ts-ignore
+                signature: method.getSignature()
             });
         }
 
@@ -101,8 +105,23 @@ export abstract class IJavaClass extends JavaTypeWithInstanceInitializer {
                 rangeToReplace, methodContext, onlyStatic));
         }
 
-        return itemList;
+        return this.deleteDoublesWithIdenticalSignature(itemList);
 
+
+    }
+     
+    deleteDoublesWithIdenticalSignature(itemList: monaco.languages.CompletionItem[]):monaco.languages.CompletionItem[] {
+        let signatureList: Set<string> = new Set();
+
+        itemList = itemList.filter(item => {
+            //@ts-ignore
+            let signature: string = item.signature;
+            if(signatureList.has(signature)) return false;
+            signatureList.add(signature);
+            return true;
+        })
+
+        return itemList;
 
     }
 
