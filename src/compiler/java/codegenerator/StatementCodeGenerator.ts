@@ -896,6 +896,8 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
         if(this.currentSymbolTable.findSymbolButNotInParentScopes(variable.identifier)){
             this.pushError(JCM.cantRedeclareVariableError(variable.identifier), "error", node.range);
         }
+        
+        let initValueSnippet: CodeSnippet | undefined = this.compileInitialValue(node.initialization, variable.type);
 
         this.currentSymbolTable.addSymbol(variable);    // sets stackOffset
 
@@ -904,7 +906,6 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
         this.missingStatementManager.addSymbolDeclaration(variable, node.initialization ? true : false);
 
         let accesLocalVariableSnippet = this.compileSymbolOnStackframeAccess(variable, node.identifierRange);
-        let initValueSnippet: CodeSnippet | undefined = this.compileInitialValue(node.initialization, variable.type);
 
         if (initValueSnippet && accesLocalVariableSnippet) {
             if (node.type.kind == TokenType.varType) {
