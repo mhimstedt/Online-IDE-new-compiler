@@ -100,6 +100,11 @@ export class JCM {
         "en": `Operator ${operatorAsString} can only be used for fields/variables which are writable.`,
     })
 
+    static badOperandTypesForBinaryOperator = (operatorAsString: string, firstType: string, secondType: string) => le({
+        "de": "Der Operator " + operatorAsString + " ist für Operanden der Typen " + firstType + " und " + secondType + " nicht definiert.",
+        "en": `Operator ${operatorAsString} is not defined for operands of type ${firstType} and ${secondType}.`,
+    })
+
     /**
      * Messages for Java CodeGenerator 
      */
