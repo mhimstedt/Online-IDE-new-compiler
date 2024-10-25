@@ -229,7 +229,6 @@ export class Main implements MainBase {
         let printManager = new PrintManager(jQuery('#rightdiv-inner .jo_run'), this);
         let fileManager = new FileManager(this);
         let graphicsManager = new GraphicsManager(jQuery('#rightdiv-inner .jo_graphics')[0]);
-        this.actionManager = new ActionManager();
         let keyboardManager = new KeyboardManager(jQuery(window), this);
         let programPointerManager = new ProgramPointerManager(this);
         let exceptionMarker = new ExceptionMarker(this);

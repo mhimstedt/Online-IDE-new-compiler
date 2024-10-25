@@ -82,6 +82,8 @@ async function initMonacoEditor(): Promise<void> {
 window.onload = () => {
 
     setTimeout(() => {
+        let vidisDiv = jQuery('vidis-login')[0];
+        if(!vidisDiv) return;
         jQuery(jQuery('vidis-login')[0].shadowRoot).find('.entry-button-label').text('Amelden mit VIDIS (Test)')
     }, 500);
 
