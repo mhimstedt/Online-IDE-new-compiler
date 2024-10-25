@@ -74,13 +74,23 @@ export class DebuggerSymbolEntry {
         this.children = [];
     }
 
-    setCaption(delimiter: string, value: string, valuecss: string) {
+    setCaption(delimiter: string, value: string, valuecss: string, pulseIfValueChanged: boolean = true, valueIsClean: boolean = false) {
 
-        value = value.replaceAll("<", "&lt;")
-        value = value.replaceAll(">", "&gt;")
+        if(!valueIsClean){
+            value = value.replaceAll("<", "&lt;")
+            value = value.replaceAll(">", "&gt;")
+        }
 
-        let caption = `<span class="${this.isLocalVariable ? "jo_debugger_localVariableIdentifier" : "jo_debugger_fieldIdentifier"}">${this.identifier}</span>${delimiter}<span class="${valuecss}">${value}</span>`;
+        let cssClass = this.isLocalVariable ? "jo_debugger_localVariableIdentifier" : "jo_debugger_fieldIdentifier";
+
+        if(value != this.oldValue && pulseIfValueChanged){
+            valuecss += " jo_debugger_pulse";
+        }
+
+        let caption = `<span class="${cssClass}">${this.identifier}</span>${delimiter}<span class="${valuecss}">${value}</span>`;
         this.treeViewNode.caption = caption;
+
+        this.oldValue = value;
     }
 
 
@@ -189,7 +199,13 @@ export class DebuggerSymbolEntry {
         if(typeof this.oldLength == "undefined") this.treeViewNode.expandCollapseComponent.setState("collapsed");
         
         let elementtype = (<BaseArrayType><any>this.type).getElementType()
-        this.setCaption(": " + elementtype.toString() + "[" + a.length + "] ", ValueRenderer.quickArrayOutput(a, DebuggerSymbolEntry.quickArrayOutputMaxLength) , "jo_debugger_value");
+        this.setCaption(": " + elementtype.toString() + "[" + a.length + "] ", 
+           ValueRenderer.quickArrayOutput(a, DebuggerSymbolEntry.quickArrayOutputMaxLength , this.oldValue, "jo_debugger_pulse"),
+            "jo_debugger_value", false, true);
+
+        if(a.length < 10000){
+            this.oldValue = a.slice();
+        }
 
         while((this.children.length || 0) > a.length){
             this.children.pop()!.treeViewNode.destroy();
@@ -233,6 +249,12 @@ export class DebuggerSymbolEntry {
             }
 
         }
+
+        for(let i = 0; i < this.children.length; i++){
+            let c = this.children[i];
+            c.render(a[i]);
+        }
+
     }
 
     getSubintervalLength(intervalLength: number){

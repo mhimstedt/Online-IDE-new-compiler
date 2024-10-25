@@ -34,3 +34,19 @@
     display: inline-block;
     height: 14px;
 }
+
+@keyframes jo_debugger_pulse_keyframes {
+    0% {
+      background-color: transparent;
+    }
+    50% {
+      background-color: #ffe600;
+    }
+    to {
+      background-color: transparent;
+    }
+  }
+
+.jo_debugger_pulse {
+    animation: jo_debugger_pulse_keyframes 1000ms 1;    
+}

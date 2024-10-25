@@ -7,26 +7,39 @@ type ArrayOutputData = {
 
 export class ValueRenderer {
 
-    static quickArrayOutput(a: any[], maxLength: number): string {
+    static quickArrayOutput(a: any[], maxLength: number, oldArray?: any[], pulseClass?: string): string {
 
         let data: ArrayOutputData = {
             text: ""
         }
 
-        this.quickArrayOutputHelper(a, data, maxLength);
+        this.quickArrayOutputHelper(a, data, maxLength, oldArray, pulseClass);
 
         return data.text;
     }
 
-    private static quickArrayOutputHelper(a: any[], data: ArrayOutputData, maxLength: number) {
+    private static quickArrayOutputHelper(a: any[], data: ArrayOutputData, maxLength: number, 
+        oldArray?: any[], pulseClass?: string) {
         let index: number = 0;
         data.text += "[";
         while (index < a.length && data.text.length < maxLength) {
             let element = a[index];
+            let oldElement = oldArray && oldArray[index]? oldArray[index] : undefined;
             if (Array.isArray(element)) {
                 ValueRenderer.quickArrayOutputHelper(element, data, maxLength);
             } else {
-                data.text += ValueRenderer.renderValue(element, maxLength - data.text.length - 3);
+                let text = ValueRenderer.renderValue(element, maxLength - data.text.length - 3);
+                if(oldElement){
+                    let oldText = ValueRenderer.renderValue(oldElement, maxLength - data.text.length - 3);
+                    let textChanged = text != oldText;
+                    text = text.replaceAll("<", "&lt;")
+                    text = text.replaceAll(">", "&gt;")
+        
+                    if(textChanged){
+                        text = `<span class="${pulseClass}">${text}</span>`;
+                    }
+                }
+                data.text += text;
             }
             if (index < a.length - 1) data.text += ", ";
             index++;
