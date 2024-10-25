@@ -170,6 +170,7 @@ export class TreeviewNode<E> {
             this.captionDiv.textContent = value;
         }
     }
+
     public get isFolder(): boolean {
         return this._isFolder;
     }

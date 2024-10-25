@@ -6,6 +6,7 @@ import { BaseArrayType, BaseListType, BaseType } from "../BaseType";
 import { SymbolTableSection } from "./SymbolTableSection";
 import { ValueRenderer } from "./ValueRenderer.ts";
 import { IPosition } from "../range/Position.ts";
+import jQuery from 'jquery';
 
 export type RuntimeObject = {
     getType(): RuntimeObjectType & BaseType;
@@ -32,7 +33,7 @@ export class DebuggerSymbolEntry {
     static quickArrayOutputMaxLength = 100;
 
     constructor(protected symbolTableSection: SymbolTableSection,
-        parent: DebuggerSymbolEntry | undefined, protected type: BaseType | undefined, 
+        parent: DebuggerSymbolEntry | undefined, protected type: BaseType | undefined,
         public identifier: string
     ) {
 
@@ -40,15 +41,15 @@ export class DebuggerSymbolEntry {
             false, "", undefined,
             this, this, parent, true
         )
-        
+
         this.treeViewNode.render();
 
-        if(identifier == "this"){
+        if (identifier == "this") {
             this.treeViewNode.expandCollapseComponent.setState("expanded");
         }
     }
 
-    render(value: any) {
+    render(value: any, changeValueFunction?: (newValue) => void) {
 
         if (value == null) {
             this.setCaption(" = ", "null", "jo_debugger_value");
@@ -58,14 +59,14 @@ export class DebuggerSymbolEntry {
         } else if (typeof value == "object") {
             this.renderObject(<RuntimeObject>value);
         } else {
-            this.renderPrimitiveValue(value);
+            this.renderPrimitiveValue(value, changeValueFunction);
         }
 
     }
 
     attachNodesToTreeview() {
         this.treeViewNode.attachAfterDetaching();
-        this.children.forEach(c => c.attachNodesToTreeview());        
+        this.children.forEach(c => c.attachNodesToTreeview());
     }
 
 
@@ -74,32 +75,103 @@ export class DebuggerSymbolEntry {
         this.children = [];
     }
 
-    setCaption(delimiter: string, value: string, valuecss: string, pulseIfValueChanged: boolean = true, valueIsClean: boolean = false) {
+    setCaption(delimiter: string, value: string, valuecss: string, pulseIfValueChanged: boolean = true, valueIsClean: boolean = false,
+        setChangedValue?: (newValue: string) => void
+    ) {
 
-        if(!valueIsClean){
+        if (!valueIsClean) {
             value = value.replaceAll("<", "&lt;")
             value = value.replaceAll(">", "&gt;")
         }
 
         let cssClass = this.isLocalVariable ? "jo_debugger_localVariableIdentifier" : "jo_debugger_fieldIdentifier";
 
-        if(value != this.oldValue && pulseIfValueChanged){
+        if (value != this.oldValue && pulseIfValueChanged) {
             valuecss += " jo_debugger_pulse";
         }
 
-        let caption = `<span class="${cssClass}">${this.identifier}</span>${delimiter}<span class="${valuecss}">${value}</span>`;
+        this.oldValue = value;
+
+        let quote: string = '';
+        if (value && typeof value == "string" && value.startsWith('"') && value.endsWith('"') && value.length >= 2) {
+            quote = '"';
+            value = value.substring(1, value.length - 1);
+        }
+
+        let caption = `<span class="${cssClass}">${this.identifier}</span>${delimiter}<span class="${valuecss}">${quote}<span class="jo_valueSpan">${value}</span>${quote}</span>`;
         this.treeViewNode.caption = caption;
 
-        this.oldValue = value;
+
+        if (setChangedValue) {
+            let valueSpan = <HTMLSpanElement>this.treeViewNode.captionDiv.getElementsByClassName('jo_valueSpan')[0]
+
+            let endEditing = function () {
+                jQuery(this).attr('contentEditable', "false");
+                setChangedValue(jQuery(this).text())
+            };
+
+            let oldValue: any = jQuery(valueSpan).text();
+
+
+            let span = jQuery(valueSpan)[0];
+            span.onfocus = function() {
+                window.setTimeout(function() {
+                    var sel, range;
+                    if (window.getSelection && document.createRange) {
+                        range = document.createRange();
+                        range.selectNodeContents(span);
+                        sel = window.getSelection();
+                        sel.removeAllRanges();
+                        sel.addRange(range);
+                    } 
+                }, 1);
+            };
+
+            jQuery(valueSpan).on('click', function (event) {
+                jQuery(this).attr('contentEditable', "true");
+                jQuery(this)[0].focus();
+                // document.execCommand('selectAll', false, null);
+                event.preventDefault();
+            }).on('blur', endEditing)
+            .on('keypress', function(event){
+                switch(event.key){
+                    case "Enter":
+                        endEditing.call(this);
+                        event.preventDefault();
+                        break;
+                    case "Esc":
+                        jQuery(this).attr('contentEditable', "false");
+                        jQuery(this).text(oldValue);
+                        break;
+                }
+            });
+
+        }
+
     }
 
 
 
-    renderPrimitiveValue(value: any) {
+    renderPrimitiveValue(value: any, changeValueFunction?: (newValue) => void) {
         if (typeof value == "string") {
-            this.setCaption(" = ", `"${value}"`, "jo_debugger_value");
+            this.setCaption(" = ", `"${value}"`, "jo_debugger_value", true, false, (newValue: string) => {
+                if (changeValueFunction) {
+                    changeValueFunction(newValue);
+                }
+            });
         } else {
-            this.setCaption(" = ", "" + value, "jo_debugger_value");
+            this.setCaption(" = ", "" + value, "jo_debugger_value", true, false, (newValue: string) => {
+                if (changeValueFunction) {
+                    if (typeof value == 'boolean') {
+                        changeValueFunction(newValue == 'true');
+                    } else if (typeof value == 'number') {
+                        try {
+                            let numbervalue = Number.parseFloat(newValue);
+                            changeValueFunction(numbervalue);
+                        } catch (ex) { }
+                    }
+                }
+            });
         }
         this.removeChildren();
     }
@@ -108,76 +180,76 @@ export class DebuggerSymbolEntry {
     renderObject(o: RuntimeObject) {
         let type = o.getType();
 
-        if(type.identifier == "String"){
+        if (type.identifier == "String") {
             this.setCaption(" = ", '"' + ("" + o.value) + '"', "jo_debugger_value");
             return;
-        } 
-        
-        if(["Double", "Boolean", "Integer", "Float", "Character"].indexOf(type.identifier) >= 0){
+        }
+
+        if (["Double", "Boolean", "Integer", "Float", "Character"].indexOf(type.identifier) >= 0) {
             this.renderPrimitiveValue(o.value);
             return;
         }
 
         let typesDiffer: boolean = false;
-        if(type != this.type){
+        if (type != this.type) {
             typesDiffer = true;
-            if(type instanceof JavaClass && this.type instanceof GenericVariantOfJavaClass && this.type.isGenericVariantOf == type){
+            if (type instanceof JavaClass && this.type instanceof GenericVariantOfJavaClass && this.type.isGenericVariantOf == type) {
                 typesDiffer = false;
             }
         }
-        
-        if(typesDiffer || !this.type){
+
+        if (typesDiffer || !this.type) {
             this.type = type;
         }
 
-        if(o["isBaseListType"]){
+        if (o["isBaseListType"]) {
             this.renderList(<BaseListType><any>o);
             return;
         }
 
         let caption: string;
-        if(o["_debugOutput"]){
+        if (o["_debugOutput"]) {
             caption = o["_debugOutput"]();
         } else {
             caption = ValueRenderer.renderValue(o, DebuggerSymbolEntry.quickArrayOutputMaxLength);
         }
 
-        if(this.identifier == "this"){
+        if (this.identifier == "this") {
             caption = '';
             let style = this.treeViewNode.getMainDiv().style;
             style.borderBottomStyle = "dashed";
             style.borderBottomColor = '#808080';
             style.borderBottomWidth = '1px';
-        } 
+        }
 
         this.treeViewNode.iconClass = "img_debugger-object";
-        this.setCaption(": " +  this.type.toString(), " " + caption, "jo_debugger_value");
+        this.setCaption(": " + this.type.toString(), " " + caption, "jo_debugger_value");
 
         if (typesDiffer || this.children.length == 0) {
             this.removeChildren();
             let fields: BaseField[] = type.getOwnAndInheritedFields();
             this.treeViewNode.isFolder = fields.length > 0;
-            
+
             this.treeViewNode.removeAllExpandListeners();
             this.treeViewNode.addExpandListener((state) => {
-                if(state == "collapsed") return;
+                if (state == "collapsed") return;
                 for (let field of fields) {
                     let fde = new ObjectFieldDebuggerEntry(this.symbolTableSection, this, field);
                     this.children.push(fde);
                 }
                 this.children.forEach(c => (<ObjectFieldDebuggerEntry>c).fetchValueFromObjectAndRender(o));
             }, true)
-            
+
             this.treeViewNode.expandCollapseComponent.setState(this.identifier == 'this' ? "expanded" : "collapsed");
         }
-        
+
         this.children.forEach(c => (<ObjectFieldDebuggerEntry>c).fetchValueFromObjectAndRender(o));
     }
 
-    renderList(value: BaseListType){
+    renderList(value: BaseListType) {
         this.setCaption(": ", this.type!.toString() + "-" + DebM.object(), "jo_debugger_type");
         let elements = value.getElements();
-        if(elements.length != this.oldLength){
+        if (elements.length != this.oldLength) {
             this.removeChildren();
             this.oldLength = elements.length;
             for (let i = 0; i < elements.length; i++) {
@@ -189,36 +261,36 @@ export class DebuggerSymbolEntry {
         }
         this.children.forEach(c => (<ListElementDebuggerEntry>c).fetchValueFromArrayAndRender(elements));
     }
-    
+
     renderArray(a: any[], maxLength: number) {
-        if(a == null || !this.type) return;
+        if (a == null || !this.type) return;
 
         this.treeViewNode.isFolder = a.length > 0;      // isFolder is a property -> a method gets called where the ExpandCollapseComponent is shown            
 
         // on first opening:
-        if(typeof this.oldLength == "undefined") this.treeViewNode.expandCollapseComponent.setState("collapsed");
-        
+        if (typeof this.oldLength == "undefined") this.treeViewNode.expandCollapseComponent.setState("collapsed");
+
         let elementtype = (<BaseArrayType><any>this.type).getElementType()
-        this.setCaption(": " + elementtype.toString() + "[" + a.length + "] ", 
-           ValueRenderer.quickArrayOutput(a, DebuggerSymbolEntry.quickArrayOutputMaxLength , this.oldValue, "jo_debugger_pulse"),
+        this.setCaption(": " + elementtype.toString() + "[" + a.length + "] ",
+            ValueRenderer.quickArrayOutput(a, DebuggerSymbolEntry.quickArrayOutputMaxLength, this.oldValue, "jo_debugger_pulse"),
             "jo_debugger_value", false, true);
 
-        if(a.length < 10000){
+        if (a.length < 10000) {
             this.oldValue = a.slice();
         }
 
-        while((this.children.length || 0) > a.length){
+        while ((this.children.length || 0) > a.length) {
             this.children.pop()!.treeViewNode.destroy();
         }
 
         if (a.length != this.oldLength || this.children.length == 0) {
-            
+
             let addAndDisplayChildren = () => {
 
-                if(a.length! > DebuggerSymbolEntry.MAXARRAYSECTIONLENGTH){
+                if (a.length! > DebuggerSymbolEntry.MAXARRAYSECTIONLENGTH) {
 
-                    let subintervalLength = this.getSubintervalLength(a.length); 
-                    for(let nextIndex = 0; nextIndex < a.length; nextIndex += subintervalLength){
+                    let subintervalLength = this.getSubintervalLength(a.length);
+                    for (let nextIndex = 0; nextIndex < a.length; nextIndex += subintervalLength) {
                         this.children.push(new ArraySectionDebuggerEntry(
                             this.symbolTableSection, this, nextIndex, Math.min(nextIndex + subintervalLength - 1, a.length - 1),
                             elementtype
@@ -231,15 +303,15 @@ export class DebuggerSymbolEntry {
                             this.symbolTableSection, this, i,
                             elementtype
                         ))
-                    }                
+                    }
                 }
 
 
                 this.oldLength = a.length;
                 this.children.forEach(c => (<ArrayElementDebuggerEntry>c).fetchValueFromArrayAndRender(a));
             }
-
-            if(this.treeViewNode.expandCollapseComponent.state == "expanded"){
+            
+            if (this.treeViewNode.expandCollapseComponent.state == "expanded") {
                 addAndDisplayChildren();
             } else {
                 this.treeViewNode.removeAllExpandListeners();
@@ -247,17 +319,15 @@ export class DebuggerSymbolEntry {
                     addAndDisplayChildren();
                 });
             }
-
+            
+        } else {
+            this.children.forEach(c => (<ArrayElementDebuggerEntry>c).fetchValueFromArrayAndRender(a));
         }
 
-        for(let i = 0; i < this.children.length; i++){
-            let c = this.children[i];
-            c.render(a[i]);
-        }
 
     }
 
-    getSubintervalLength(intervalLength: number){
+    getSubintervalLength(intervalLength: number) {
         let digits = Math.trunc(Math.log10(intervalLength));
         return Math.trunc(Math.pow(10, Math.max(digits - 2, 2)));
     }
@@ -271,32 +341,34 @@ export class StackElementDebuggerEntry extends DebuggerSymbolEntry {
         private symbol: SymbolOnStackframe) {
         super(symbolTableSection, undefined, symbol.getType(), symbol.identifier);
 
-        if (!(this.symbol instanceof SymbolOnStackframe)){
+        if (!(this.symbol instanceof SymbolOnStackframe)) {
             this.treeViewNode.getMainDiv().style.display = 'none';
-        } 
+        }
     }
-    
+
     fetchValueFromStackAndRender(stack: any[], stackBase: number, position: IPosition) {
 
         let notYetDefined: boolean = true;
         let symbolRange = this.symbol.identifierRange;
 
-        if(symbolRange.endLineNumber < position.lineNumber){
+        if (symbolRange.endLineNumber < position.lineNumber) {
             notYetDefined = false;
-        } else if (symbolRange.endLineNumber == position.lineNumber && symbolRange.endColumn < position.column){
+        } else if (symbolRange.endLineNumber == position.lineNumber && symbolRange.endColumn < position.column) {
             notYetDefined = false;
         }
-        
-        if(notYetDefined){
+
+        if (notYetDefined) {
             this.treeViewNode.getMainDiv().style.display = 'none';
         } else {
             this.treeViewNode.getMainDiv().style.display = '';
             let value = this.symbol.getValue(stack, stackBase);
-    
-            this.render(value);
+
+            this.render(value, (newValue: any) => {
+                stack[stackBase + this.symbol.stackframePosition] = newValue;
+            });
         }
-        
-        
+
+
 
     }
 
@@ -313,12 +385,14 @@ export class ObjectFieldDebuggerEntry extends DebuggerSymbolEntry {
 
     fetchValueFromObjectAndRender(object: RuntimeObject) {
         let value: any;
-        if(this.field.isStatic()){
-            value = object.getType().runtimeClass[this.field.getFieldIndentifier()];
+        let identifier = this.field.getFieldIndentifier();
+        if (this.field.isStatic()) {
+            value = object.getType().runtimeClass[identifier];
+            this.render(value, (newValue) => { object.getType().runtimeClass[identifier] = newValue });
         } else {
-            value = object[this.field.getFieldIndentifier()];
+            value = object[identifier];
+            this.render(value, (newValue) => { object[identifier] = newValue });
         }
-        this.render(value);
     }
 
 }
@@ -334,7 +408,9 @@ export class ArrayElementDebuggerEntry extends DebuggerSymbolEntry {
 
     fetchValueFromArrayAndRender(a: any[]) {
         let value = a[this.index];
-        this.render(value);
+        this.render(value, (newValue) => {
+            a[this.index] = newValue;
+        });
     }
 
 }
@@ -354,18 +430,18 @@ export class ArraySectionDebuggerEntry extends DebuggerSymbolEntry {
         this.treeViewNode.isFolder = true;      // isFolder is a property -> a method gets called where the ExpandCollapseComponent is shown            
 
         // on first rendering:
-        if(typeof this.oldLength == "undefined"){
+        if (typeof this.oldLength == "undefined") {
             this.treeViewNode.expandCollapseComponent.setState("collapsed");
             this.treeViewNode.removeAllExpandListeners();
             this.oldLength = this.indexTo - this.indexFrom + 1;
-            
-            this.treeViewNode.addExpandListener((state) => {
-                if(this.oldLength! > DebuggerSymbolEntry.MAXARRAYSECTIONLENGTH){
 
-                    let subintervalLength = this.getSubintervalLength(this.oldLength!); 
-                    for(let nextIndex = this.indexFrom; nextIndex <= this.indexTo; nextIndex += subintervalLength){
+            this.treeViewNode.addExpandListener((state) => {
+                if (this.oldLength! > DebuggerSymbolEntry.MAXARRAYSECTIONLENGTH) {
+
+                    let subintervalLength = this.getSubintervalLength(this.oldLength!);
+                    for (let nextIndex = this.indexFrom; nextIndex <= this.indexTo; nextIndex += subintervalLength) {
                         this.children.push(new ArraySectionDebuggerEntry(
-                            this.symbolTableSection, this, nextIndex, 
+                            this.symbolTableSection, this, nextIndex,
                             Math.min(nextIndex + subintervalLength - 1, this.indexTo),
                             this.type!
                         ))
@@ -377,22 +453,22 @@ export class ArraySectionDebuggerEntry extends DebuggerSymbolEntry {
                             this.symbolTableSection, this, i,
                             this.type!
                         ))
-                    }                
+                    }
                 }
-                
+
                 this.children.forEach(c => (<ArrayElementDebuggerEntry>c).fetchValueFromArrayAndRender(a));
             }, true);
-            
+
             this.children.forEach(c => (<ArrayElementDebuggerEntry>c).fetchValueFromArrayAndRender(a));
-        } 
-        
-        
+        }
+
+
         if (a.length != this.oldLength || this.children.length == 0) {
-            
+
             let addAndDisplayChildren = () => {
             }
 
-            if(this.treeViewNode.expandCollapseComponent.state == "expanded"){
+            if (this.treeViewNode.expandCollapseComponent.state == "expanded") {
                 addAndDisplayChildren();
             } else {
             }
@@ -416,7 +492,10 @@ export class ListElementDebuggerEntry extends DebuggerSymbolEntry {
 
     fetchValueFromArrayAndRender(a: any[]) {
         let value = a[this.index];
-        this.render(value);
+        this.render(value, (newValue: any) => {
+            a[this.index] = newValue;
+        });
+
     }
 
 }

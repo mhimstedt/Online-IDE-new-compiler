@@ -21,10 +21,10 @@ export class ShapeClass extends ActorClass {
     static __javaDeclarations: LibraryDeclarations = [
         { type: "declaration", signature: "abstract class Shape extends Actor", comment: JRC.shapeClassComment },
 
-        { type: "field", signature: "private double angle", comment: JRC.shapeAngleComment },
-        { type: "field", signature: "protected double centerX", comment: JRC.shapeCenterXComment },
-        { type: "field", signature: "protected double centerY", comment: JRC.shapeCenterYComment },
-        { type: "field", signature: "private double scaleFactor", comment: JRC.shapeScaleFactorComment },
+        { type: "field", signature: "private double angle", nativeIdentifier: "_angle", comment: JRC.shapeAngleComment },
+        { type: "field", signature: "protected double centerX", nativeIdentifier: "_centerX", comment: JRC.shapeCenterXComment },
+        { type: "field", signature: "protected double centerY", nativeIdentifier: "_centerY", comment: JRC.shapeCenterYComment },
+        { type: "field", signature: "private double scaleFactor", nativeIdentifier: "_scaleFactor", comment: JRC.shapeScaleFactorComment },
 
         { type: "method", signature: "Shape()", java: ShapeClass.prototype._cj$_constructor_$Shape$ },
         { type: "method", signature: "final void move(double dx, double dy)", native: ShapeClass.prototype._move, comment: JRC.shapeMoveComment },
@@ -120,13 +120,38 @@ export class ShapeClass extends ActorClass {
 
     world: IWorld;
 
-    get centerX(): number {
+    get _centerX(): number {
         return this._getCenterX();
     }
 
-    get centerY(): number {
+    get _centerY(): number {
         return this._getCenterY();
     }
+
+    set _centerX(cx: number){
+        this._moveTo(cx, this._centerY);
+    }
+
+    set _centerY(cy: number){
+        this._moveTo(this._centerX, cy);
+    }
+
+    get _angle(): number {
+        return this.angle;
+    }
+
+    set _angle(a: number){
+        this._setAngle(a);
+    }
+
+    get _scaleFactor(): number {
+        return this.scaleFactor;
+    }
+
+    set _scaleFactor(sf: number){
+        this._scale(sf/this.scaleFactor);
+    }
+
 
     mouseEventsImplemented?: { [mouseEvent: string]: MouseEventMethod };
 

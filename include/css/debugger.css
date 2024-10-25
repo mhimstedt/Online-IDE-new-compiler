@@ -50,3 +50,7 @@
 .jo_debugger_pulse {
     animation: jo_debugger_pulse_keyframes 1000ms 1;    
 }
+
+.jo_valueSpan {
+    padding: 0 2px;
+}

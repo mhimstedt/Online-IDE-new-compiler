@@ -42,6 +42,14 @@ export class RectangleClass extends FilledShapeClass {
         return this.scaleFactor * this.width;
     }
 
+    set scaledWidth(w: number) {
+        this._setWidth(w);
+    }
+
+    set scaledHeight(w: number) {
+        this._setHeight(w);
+    }
+
     _cj$_constructor_$Rectangle$(t: Thread, callback: CallbackFunction) {
         this._cj$_constructor_$Rectangle$double$double$double$double(t, callback, 0, 0, 100, 100);
     }
