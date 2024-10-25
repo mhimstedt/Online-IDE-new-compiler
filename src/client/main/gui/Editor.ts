@@ -100,22 +100,12 @@ export class Editor {
         }
         );
 
-        let keysWhichDontStopProgram = ["Arrow", "Page", "ControlLeft", "ControlRight"];
-
-        this.editor.onKeyDown((e: monaco.IKeyboardEvent) => {
+        this.editor.onDidChangeModelContent((e: monaco.editor.IModelContentChangedEvent) => {
             let state = this.main.getInterpreter().scheduler.state;
-
             if ([SchedulerState.stopped, SchedulerState.error, SchedulerState.not_initialized].indexOf(state) < 0) {
-
-                for(let kdp of keysWhichDontStopProgram){
-                    if(e.code.indexOf(kdp) >= 0) return;
-                }
-
-                if(e.code == "KeyC" && e.ctrlKey ) return;
-
                 this.main.getActionManager().trigger("interpreter.stop");
             }
-        });
+        })
 
         let that: Editor = this;
 
@@ -134,25 +124,24 @@ export class Editor {
 
             _main.windowStateManager.registerBackButtonListener((event: PopStateEvent) => {
                 let historyEntry: HistoryEntry = <HistoryEntry>event.state;
-                if(event.state == null) return;
+                if (event.state == null) return;
                 let workspace: Workspace = _main.workspaceList.find((ws) => ws.id == historyEntry.workspace_id);
-                if(workspace == null) return;
+                if (workspace == null) return;
                 let file: File = workspace.findFileById(historyEntry.file_id);
-                if(file == null) return; 
+                if (file == null) return;
 
                 // console.log("Processing pop state event, returning to module " + historyEntry.module_id);
 
-                if(workspace != _main.getCurrentWorkspace()) 
-                {
+                if (workspace != _main.getCurrentWorkspace()) {
                     that.dontPushNextCursorMove++;
                     _main.projectExplorer.setWorkspaceActive(workspace);
                     that.dontPushNextCursorMove--;
                 }
-                if(file != _main.getCurrentWorkspace()?.getCurrentlyEditedFile()){
+                if (file != _main.getCurrentWorkspace()?.getCurrentlyEditedFile()) {
                     that.dontPushNextCursorMove++;
                     _main.projectExplorer.setFileActive(file);
                     that.dontPushNextCursorMove--;
-                } 
+                }
                 that.dontPushNextCursorMove++;
                 that.editor.setPosition(historyEntry.position);
                 that.editor.revealPosition(historyEntry.position);
@@ -172,17 +161,17 @@ export class Editor {
         this.editor.onDidChangeCursorPosition((event) => {
 
             let currentModelId = (<File | undefined>this.main.getCurrentWorkspace()?.getCurrentlyEditedFile())?.id;
-            if(currentModelId == null) return;
+            if (currentModelId == null) return;
             let pushNeeded = this.lastPosition == null
                 || event.source == "api"
                 || currentModelId != this.lastPosition.file_id
                 || Math.abs(this.lastPosition.position.lineNumber - event.position.lineNumber) > 20;
-            
-            if(pushNeeded && this.dontPushNextCursorMove == 0){
-                this.pushHistoryState(false, this.getPositionForHistory());
-            } else if(currentModelId == history.state?.module_id){
 
-                    this.pushHistoryState(true, this.getPositionForHistory());
+            if (pushNeeded && this.dontPushNextCursorMove == 0) {
+                this.pushHistoryState(false, this.getPositionForHistory());
+            } else if (currentModelId == history.state?.module_id) {
+
+                this.pushHistoryState(true, this.getPositionForHistory());
             }
 
             that.onEvaluateSelectedText(event);
@@ -193,7 +182,7 @@ export class Editor {
         this.editor.onDidChangeModel((event) => {
 
             let element: HTMLDivElement = <any>$element.find('.monaco-editor')[0];
-            if(element != null){
+            if (element != null) {
                 element.removeEventListener("wheel", mouseWheelListener);
                 element.addEventListener("wheel", mouseWheelListener, { passive: false });
             }
@@ -207,10 +196,10 @@ export class Editor {
 
                 let pushNeeded = this.lastPosition == null
                     || currentlyEditedFile.id != this.lastPosition.file_id;
-                
-                if(pushNeeded && this.dontPushNextCursorMove == 0){
+
+                if (pushNeeded && this.dontPushNextCursorMove == 0) {
                     this.pushHistoryState(false, this.getPositionForHistory());
-                }    
+                }
 
             }
 
@@ -232,8 +221,8 @@ export class Editor {
 
     getPositionForHistory(): HistoryEntry {
         let file = <File | undefined>this.main.getCurrentWorkspace()?.getCurrentlyEditedFile();
-        if(file == null) return;
-        
+        if (file == null) return;
+
         return {
             position: this.editor.getPosition(),
             workspace_id: (<Workspace>this.main.getCurrentWorkspace()).id,
@@ -242,16 +231,16 @@ export class Editor {
     }
 
     lastPushTime: number = 0;
-    pushHistoryState(replace: boolean, historyEntry: HistoryEntry){
+    pushHistoryState(replace: boolean, historyEntry: HistoryEntry) {
 
-        if(this.main.isEmbedded() || historyEntry == null) return;
+        if (this.main.isEmbedded() || historyEntry == null) return;
 
-        if(replace){
+        if (replace) {
             history.replaceState(historyEntry, ""); //`Java-Online, ${module.file.name} (Zeile ${this.lastPosition.position.lineNumber}, Spalte ${this.lastPosition.position.column})`);
             // console.log("Replace History state with workspace-id: " + historyEntry.workspace_id + ", module-id: " + historyEntry.module_id);
         } else {
             let time = new Date().getTime();
-            if(time - this.lastPushTime > 200){
+            if (time - this.lastPushTime > 200) {
                 history.pushState(historyEntry, ""); //`Java-Online, ${module.file.name} (Zeile ${historyEntry.position.lineNumber}, Spalte ${historyEntry.position.column})`);
             } else {
                 history.replaceState(historyEntry, "");
