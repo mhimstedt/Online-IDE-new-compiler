@@ -133,13 +133,13 @@ export class DebuggerSymbolEntry {
                 // document.execCommand('selectAll', false, null);
                 event.preventDefault();
             }).on('blur', endEditing)
-            .on('keypress', function(event){
+            .on('keydown', function(event){
                 switch(event.key){
                     case "Enter":
                         endEditing.call(this);
                         event.preventDefault();
                         break;
-                    case "Esc":
+                    case "Escape":
                         jQuery(this).attr('contentEditable', "false");
                         jQuery(this).text(oldValue);
                         break;
