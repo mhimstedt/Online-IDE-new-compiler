@@ -3,7 +3,7 @@ import { UserData, CRUDUserRequest, CRUDSchoolRequest, CRUDResponse, SchoolData,
 import { ajax } from "../communication/AjaxHelper.js";
 import { PasswordPopup } from "./PasswordPopup.js";
 import { MoveTeacherToSchoolPopup } from "./MoveTeacherToSchoolPopup.js";
-import { w2grid, w2utils, w2alert } from "../lib/w2ui-2.0.es6.js";
+import { w2grid, w2utils, w2alert } from 'w2ui'
 import { StudentBulkImportMI } from "./StudentBulkImortMI.js";
 
 // declare var w2prompt: any;

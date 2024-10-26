@@ -1,10 +1,8 @@
 import { AdminMenuItem } from "./AdminMenuItem.js";
-import { UserData, CRUDUserRequest, CRUDSchoolRequest, CRUDResponse, SchoolData, GetSchoolDataRequest, GetSchoolDataResponse, ImportSchoolsResponse, GetMessagesResponse, GetMessagesRequest } from "../communication/Data.js";
+import { UserData, CRUDSchoolRequest, CRUDResponse, SchoolData, GetSchoolDataRequest, GetSchoolDataResponse, ImportSchoolsResponse, GetMessagesResponse, GetMessagesRequest } from "../communication/Data.js";
 import { ajax, csrfToken } from "../communication/AjaxHelper.js";
-import { PasswordPopup } from "./PasswordPopup.js";
-import { w2grid } from "../lib/w2ui-2.0.es6.js";
+import { w2grid } from 'w2ui'
 
-declare var w2prompt: any;
 declare var w2alert: any;
 
 export class ExportImportMI extends AdminMenuItem {
