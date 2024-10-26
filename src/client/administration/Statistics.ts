@@ -1,7 +1,9 @@
 import { ajax, extractCsrfTokenFromGetRequest } from "../communication/AjaxHelper.js";
 import { GetStatisticsRequest, GetStatisticsResponse, StatisticData } from "../communication/Data.js";
+import jQuery from 'jquery'
 
 import '/include/css/statistics.css';
+
 
 class Statistics {
 
@@ -29,7 +31,7 @@ class Statistics {
             }, response.statisticPeriodSeconds*1000);
 
             setInterval(()=>{
-                $('#updatetimer').text('Nächste Messung in ' + (response.statisticPeriodSeconds - secondsSinceLastUpdate) + " s");
+                jQuery('#updatetimer').text('Nächste Messung in ' + (response.statisticPeriodSeconds - secondsSinceLastUpdate) + " s");
                 secondsSinceLastUpdate++;
             }, 1000);
 
@@ -45,12 +47,12 @@ class Statistics {
                 let text: string = d.users + " User, " + Math.round(d.memory/1000) + " kB, Requests pro Minute: " + d.requestsPerMinute + ", " + that.getMsPerRequest(d) + " ms/Request.";
                 text += "<br>WebSockets: " + d.webSocketSessionCount + " Sessions with " + d.webSocketClientCount + " Clients, ";
                 text += d.webSocketRequestPerSecond + " Requests pro Sekunde";
-                $('#current').html(text);
+                jQuery('#current').html(text);
 
-                $('#userlist').text(d.userlist.join(", "));
+                jQuery('#userlist').text(d.userlist.join(", "));
 
-                $('#current').css("color", "#0000ff");
-                $('#current').animate({color: "#000000"}, 1500);
+                jQuery('#current').css("color", "#0000ff");
+                jQuery('#current').animate({color: "#000000"}, 1500);
 
 
             }, (message: string) => {
@@ -257,6 +259,6 @@ class Statistics {
 }
 
 
-$(()=>{
+jQuery(()=>{
     new Statistics().start();
 })

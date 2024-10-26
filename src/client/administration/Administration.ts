@@ -10,6 +10,7 @@ import { Pruefungen } from "./Pruefungen.js";
 import { w2utils } from 'w2ui'
 import { AutoLogout } from "../main/AutoLogout.js";
 import { SchoolSettings as SchoolSettingsMI } from "./SchoolSettingsMI.js";
+import jQuery from 'jquery'
 
 import "/include/css/icons.css";
 import "/include/css/administration.css";
