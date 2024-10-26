@@ -174,11 +174,8 @@ export type TeacherData = {
 
 export type LoginRequest = {
     username: string,
-    password: string
-}
-
-export type TicketLoginRequest = {
-    ticket: string
+    password: string,
+    singleUseToken: string | undefined
 }
 
 export type LoginResponse = {
@@ -888,11 +885,12 @@ export type UpdatePruefungSchuelerDataRequest = {
 }
 
 export type VidisNewUserRequest = {
+    singleUseToken: string,
     username?: string,
     password?: string,
 
     // alternative:
     rufname?: string,
     familienname?: string,
-    klasse?: string;
+    klasse?: string,
 }

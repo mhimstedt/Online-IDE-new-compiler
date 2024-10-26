@@ -15,7 +15,7 @@ import { IRange, Range } from '../../compiler/common/range/Range.js';
 import { JavaLanguage } from '../../compiler/java/JavaLanguage.js';
 import { JavaRepl } from '../../compiler/java/parser/repl/JavaRepl.js';
 import { DatabaseNewLongPollingListener } from '../../tools/database/DatabaseNewLongPollingListener.js';
-import { checkIfMousePresent, getCookieValue } from "../../tools/HtmlTools.js";
+import { checkIfMousePresent, findGetParameter, getCookieValue } from "../../tools/HtmlTools.js";
 import { ClassData, UserData, WorkspaceData, Workspaces } from "../communication/Data.js";
 import { NetworkManager } from "../communication/NetworkManager.js";
 import { PushClientManager } from '../communication/pushclient/PushClientManager.js';
@@ -168,11 +168,12 @@ export class Main implements MainBase {
 
         this.login = new Login(this);
 
-        let singleUseToken: string | undefined = getCookieValue("singleUseToken");
+        // let singleUseToken: string | undefined = getCookieValue("singleUseToken");
+        let singleUseToken: string | undefined = findGetParameter("singleUseToken");
 
         if(singleUseToken){
             this.login.initGUI();
-            this.login.loginWithVidis();    
+            this.login.loginWithVidis(singleUseToken);    
         } else {
             this.login.initGUI();
         }

@@ -1,14 +1,20 @@
+import { findGetParameter } from '../../tools/HtmlTools';
 import { setCookie } from '../../tools/HttpTools';
 import { VidisNewUserRequest } from '../communication/Data';
 import '/include/css/registerUser.css';
 
-type NewUserResponse = {success: boolean, message: string, sqlIDEToken: string | null}
+type NewUserResponse = {success: boolean, message: string, fromSqlIde: boolean, singleUseToken: string}
 
 window.onload = () => {
 
-    let sqlIdeToken = location.search.split('sqlIdeToken=')[1];
-    if(sqlIdeToken){
-        setCookie("singleUseToken", sqlIdeToken, 600);
+    // let sqlIdeToken = location.search.split('sqlIdeToken=')[1];
+
+
+    let singleUseToken = findGetParameter('singleUseToken');
+
+    if(!singleUseToken){
+        singleUseToken = findGetParameter('sqlIdeToken');
+        // setCookie("singleUseToken", singleUseToken, 600);
     }
 
     document.getElementById('newAccountButton').addEventListener('pointerdown', () => {
@@ -23,6 +29,7 @@ window.onload = () => {
             document.getElementById('login-spinner').style.visibility = "visible";   
             
             let request: VidisNewUserRequest = {
+                singleUseToken: singleUseToken,
                 rufname: "",
                 familienname: "",
                 klasse: null, //(<HTMLInputElement>document.getElementById('klasse')).value + "",
@@ -47,6 +54,7 @@ window.onload = () => {
             document.getElementById('login-spinner').style.visibility = "visible";   
             
             let request: VidisNewUserRequest = {
+                singleUseToken: singleUseToken,
                 username: username,
                 password: password, 
                 rufname: null, familienname: null, klasse: null
@@ -70,10 +78,10 @@ function doVidisRequest(request: VidisNewUserRequest){
         resp.json().then((newUserResponse: NewUserResponse) => {
             if(newUserResponse.success){
                 
-                if(newUserResponse.sqlIDEToken){
-                    window.location.assign("https://sql-ide.de/index.html?singleUseToken=" + newUserResponse.sqlIDEToken);
+                if(newUserResponse.fromSqlIde){
+                    window.location.assign("https://sql-ide.de/index.html?singleUseToken=" + newUserResponse.singleUseToken);
                 } else {
-                    window.location.assign("/index.html");
+                    window.location.assign("/index.html?singleUseToken=" + newUserResponse.singleUseToken);
                 }
 
 
