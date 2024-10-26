@@ -1,12 +1,14 @@
+import * as UPNG from 'upng-js'
+
 export type SpriteData = {
     image: Uint8Array,
     width: number,
-    height: number, 
+    height: number,
     filename?: string,
 
     series?: string,
     index?: number
-    
+
     x?: number,
     y?: number
 }

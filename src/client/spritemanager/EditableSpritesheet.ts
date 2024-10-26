@@ -1,6 +1,7 @@
 import { SpriteData } from "./ImageFile.js";
 import { potpack } from "./RectanglePacker.js";
 import { SpritesheetData } from "./SpritesheetData.js";
+import * as UPNG from 'upng-js'
 
 
 export class EditableSpritesheet {
