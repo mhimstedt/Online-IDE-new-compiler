@@ -1,5 +1,6 @@
-import { SchoolData, TeacherData } from "../communication/Data";
-import { w2form, w2popup } from "../lib/w2ui-2.0.es6";
+import { TeacherData } from "../communication/Data";
+import { w2form, w2popup } from 'w2ui'
+
 
 export class SelectTeacherPopup {
 
