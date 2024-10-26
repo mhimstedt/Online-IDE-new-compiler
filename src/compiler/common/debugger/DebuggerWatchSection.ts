@@ -1,11 +1,12 @@
 import { Treeview } from "../../../tools/components/treeview/Treeview.ts";
 import { TreeviewNode } from "../../../tools/components/treeview/TreeviewNode.ts";
 import { JavaRepl } from "../../java/parser/repl/JavaRepl.ts";
-import { IMain } from "../IMain.ts";
 import { Interpreter } from "../interpreter/Interpreter.ts";
 import { Debugger } from "./Debugger.ts";
 import { DebuggerWatchEntry } from "./DebuggerWatchEntry.ts";
 import { ValueRenderer } from "./ValueRenderer.ts";
+import * as monaco from 'monaco-editor'
+
 
 export class DebuggerWatchSection {
 
@@ -30,7 +31,7 @@ export class DebuggerWatchSection {
         let repl: JavaRepl | undefined = this.debugger_.main.getRepl();
         if(!repl){
             repl = this.lastRepl;
-        } 
+        }
         if(!repl) return;
         this.lastRepl = repl;
 
@@ -55,5 +56,5 @@ export class DebuggerWatchSection {
 
 
     }
-    
+
 }

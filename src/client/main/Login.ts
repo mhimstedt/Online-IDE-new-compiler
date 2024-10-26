@@ -12,6 +12,7 @@ import { DatabaseNewLongPollingListener } from '../../tools/database/DatabaseNew
 import { SqlIdeUrlHolder } from './SqlIdeUrlHolder.js';
 import { AutoLogout } from './AutoLogout.js';
 import { SchedulerState } from "../../compiler/common/interpreter/SchedulerState.js";
+import * as monaco from 'monaco-editor';
 
 export class Login {
 

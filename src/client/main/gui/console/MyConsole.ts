@@ -4,6 +4,7 @@ import { ReplReturnValue } from "../../../../compiler/java/parser/repl/ReplRetur
 import { MainBase } from "../../MainBase.js";
 import { Helper } from "../Helper.js";
 import { ConsoleEntry } from "./ConsoleEntry.js";
+import * as monaco from 'monaco-editor'
 
 export class MyConsole {
 

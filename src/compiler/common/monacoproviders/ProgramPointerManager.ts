@@ -2,7 +2,9 @@ import { IMain } from "../IMain"
 import { Program } from "../interpreter/Program"
 import { CompilerFile } from "../module/CompilerFile"
 import { Module } from "../module/Module"
-import { IRange, Range } from "../range/Range"
+import { IRange } from "../range/Range"
+import * as monaco from 'monaco-editor'
+
 
 export type ProgramPointerPositionInfo = {
     programOrmoduleOrFile: Program | Module | CompilerFile,

@@ -1,8 +1,10 @@
 import { IMain } from "../../common/IMain.ts";
 import { Position } from "../../common/range/Position.ts";
-import { EmptyRange, Range } from "../../common/range/Range.ts";
+import { Range } from "../../common/range/Range.ts";
 import { UsagePosition } from "../../common/UsagePosition.ts";
 import { JavaCompiledModule } from "../module/JavaCompiledModule.ts";
+import * as monaco from 'monaco-editor'
+
 
 export class JavaDefinitionProvider implements monaco.languages.DefinitionProvider {
 
@@ -16,7 +18,7 @@ export class JavaDefinitionProvider implements monaco.languages.DefinitionProvid
         if(!editor) return;
 
         let usagePosition = this.getUsagePosition(position, editor);
-        
+
         let targetModel = usagePosition?.symbol.module.file.getMonacoModel();
         let uri = targetModel?.uri;
 
@@ -37,9 +39,9 @@ export class JavaDefinitionProvider implements monaco.languages.DefinitionProvid
                     editor!.revealPositionInCenterIfOutsideViewport(currentEditorPosition);
                 }
 
-            } 
+            }
         }, 200);
-        
+
         return {
             range: usagePosition!.symbol.identifierRange,
             uri: uri

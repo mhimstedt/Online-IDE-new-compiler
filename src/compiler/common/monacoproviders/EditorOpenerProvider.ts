@@ -1,6 +1,8 @@
 import { IMain } from "../IMain";
 import { IPosition } from "../range/Position";
 import { Range } from "../range/Range";
+import * as monaco from 'monaco-editor'
+
 
 export class EditorOpenerProvider implements monaco.editor.ICodeEditorOpener {
 

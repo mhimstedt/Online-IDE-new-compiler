@@ -2,13 +2,13 @@ import { CompilerFile } from "../../common/module/CompilerFile";
 import { JavaTypeStore } from "./JavaTypeStore";
 import { JavaCompiledModule as JavaCompiledModule } from "./JavaCompiledModule";
 import { NonPrimitiveType } from "../types/NonPrimitiveType";
-import { JavaTypeWithInstanceInitializer } from "../types/JavaTypeWithInstanceInitializer";
 import { StaticNonPrimitiveType } from "../types/StaticNonPrimitiveType";
 import { CompilerWorkspace } from "../../common/module/CompilerWorkspace";
+import type * as monaco from 'monaco-editor'
 
 
 /**
- * A JavaModuleManager includes all Modules of a Java Workspace together with all library 
+ * A JavaModuleManager includes all Modules of a Java Workspace together with all library
  * Modules and thus represents a "Java Program".
  */
 export class JavaModuleManager {
@@ -89,7 +89,7 @@ export class JavaModuleManager {
         for(let module of this.modules){
             if(module.isDirty()){
                 module.resetBeforeCompilation();
-            } 
+            }
         }
 
     }
@@ -109,7 +109,7 @@ export class JavaModuleManager {
 
     getNewOrDirtyModules(log: boolean = false): JavaCompiledModule[] {
 //        if(log) console.log("Module-versions: " + this.modules.map(m => m.file.name + ": " + m.getLastCompiledMonacoVersion()).join(", "));
-        
+
         return this.modules.filter(
             m => m.isDirty()
         );

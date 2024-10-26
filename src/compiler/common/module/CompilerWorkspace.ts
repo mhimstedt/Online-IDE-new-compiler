@@ -1,10 +1,12 @@
 import { IMain } from "../IMain";
 import { CompilerFile } from "./CompilerFile";
 import { Module } from "./Module";
+import type * as monaco from 'monaco-editor'
+
 
 export abstract class CompilerWorkspace {
 
-    constructor(private cmain: IMain) { 
+    constructor(private cmain: IMain) {
 
     }
 
@@ -69,7 +71,7 @@ export abstract class CompilerWorkspace {
      * monaco editor counts LanguageChangedListeners and issues ugly warnings in console if more than
      * 200, 300, ... are created. Unfortunately it creates one each time a monaco.editor.ITextModel is created.
      * To keep monaco.editor.ITextModel instance count low we instantiate it only when needed and dispose of it
-     * when switching to another workspace. 
+     * when switching to another workspace.
      */
 
     disposeMonacoModels(){

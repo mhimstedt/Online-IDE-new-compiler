@@ -5,7 +5,6 @@ import { JCM } from "../language/JavaCompilerMessages.ts";
 import { ColorHelper } from "../lexer/ColorHelper.ts";
 import { JavaBaseModule } from "../module/JavaBaseModule";
 import { JavaTypeStore } from "../module/JavaTypeStore.ts";
-import { JavaLibraryModuleManager } from "../module/libraries/JavaLibraryModuleManager.ts";
 import { GenericTypeParameter } from "./GenericTypeParameter.ts";
 import { JavaField } from "./JavaField";
 import { GenericVariantOfJavaInterface, IJavaInterface, JavaInterface } from "./JavaInterface";
@@ -14,6 +13,7 @@ import { JavaType } from "./JavaType";
 import { JavaTypeWithInstanceInitializer } from "./JavaTypeWithInstanceInitializer.ts";
 import { NonPrimitiveType } from "./NonPrimitiveType";
 import { Visibility } from "./Visibility";
+import * as monaco from 'monaco-editor'
 
 export abstract class IJavaClass extends JavaTypeWithInstanceInitializer {
 
@@ -109,7 +109,7 @@ export abstract class IJavaClass extends JavaTypeWithInstanceInitializer {
 
 
     }
-     
+
     deleteDoublesWithIdenticalSignature(itemList: monaco.languages.CompletionItem[]):monaco.languages.CompletionItem[] {
         let signatureList: Set<string> = new Set();
 
@@ -398,7 +398,7 @@ export class JavaClass extends IJavaClass {
 
     cachedAllImplementedInterfaces?: IJavaInterface[];
     getAllImplementedInterfaces(): IJavaInterface[] {
-        
+
         if(!this.cachedAllImplementedInterfaces){
             this.cachedAllImplementedInterfaces = [];
             for(let intf of this.getImplements()){
@@ -543,7 +543,7 @@ export class JavaClass extends IJavaClass {
                 typeMap.set(gp, <NonPrimitiveType>libraryTypeStore.getType("Object"))
             }
         }
-        
+
         return new GenericVariantOfJavaClass(this, typeMap);
     }
 
@@ -553,7 +553,7 @@ export class JavaClass extends IJavaClass {
         return this.methods.find(m => m.isStatic && m.identifier == 'main' && m.getSignature().toLocaleLowerCase() == 'void main(string[])')
     }
 
- 
+
 }
 
 export class GenericVariantOfJavaClass extends IJavaClass {
@@ -706,7 +706,7 @@ export class GenericVariantOfJavaClass extends IJavaClass {
     cachedAllImplementedInterfaces?: IJavaInterface[];
     getAllImplementedInterfaces(): IJavaInterface[] {
         if(!this.cachedAllImplementedInterfaces){
-            this.cachedAllImplementedInterfaces = this.isGenericVariantOf.getAllImplementedInterfaces().map(impl => <IJavaInterface>impl.getCopyWithConcreteType(this.typeMap));            
+            this.cachedAllImplementedInterfaces = this.isGenericVariantOf.getAllImplementedInterfaces().map(impl => <IJavaInterface>impl.getCopyWithConcreteType(this.typeMap));
         }
         return this.cachedAllImplementedInterfaces!;
     }

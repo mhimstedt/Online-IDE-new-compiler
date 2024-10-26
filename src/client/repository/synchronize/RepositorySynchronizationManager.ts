@@ -10,6 +10,7 @@ import { HistoryElement } from "./HistoryElement.js";
 import { RepositoryTool } from "./RepositoryTool.js";
 import { LeftRight, SynchronizationListElement } from "./SynchronizationListElement.js";
 import { SynchroFile, SynchroWorkspace } from "./SynchroWorkspace.js";
+import * as monaco from 'monaco-editor'
 
 
 type FileElement = {

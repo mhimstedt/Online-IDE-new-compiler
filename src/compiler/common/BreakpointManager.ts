@@ -2,6 +2,7 @@ import { IMain } from "./IMain";
 import { Interpreter } from "./interpreter/Interpreter";
 import { Step } from "./interpreter/Program";
 import { Module } from "./module/Module";
+import * as monaco from 'monaco-editor'
 
 type Breakpoint = {
     lineNumber: number,

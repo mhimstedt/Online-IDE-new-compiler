@@ -1,5 +1,7 @@
 import jQuery from 'jquery';
 import { ValueTool } from '../../../../compiler/common/debugger/ValueTool';
+import * as monaco from 'monaco-editor'
+
 
 export class ConsoleEntry {
 
@@ -18,7 +20,7 @@ export class ConsoleEntry {
 
     $consoleEntry: JQuery<HTMLElement>;
 
-    constructor(private isCommand: boolean, caption: string|JQuery<HTMLElement>, value: any, identifier: string, parent: ConsoleEntry, 
+    constructor(private isCommand: boolean, caption: string|JQuery<HTMLElement>, value: any, identifier: string, parent: ConsoleEntry,
         private withBottomBorder: boolean, private color: string = null ) {
         this.caption = caption;
         this.parent = parent;
@@ -105,11 +107,11 @@ export class ConsoleEntry {
     renderValue() {
 
         let $firstLine = this.$consoleEntry.find('.jo_ceFirstline');
-        
+
         if (this.isCommand) {
             if(this.caption != null){
                 if(typeof this.caption == "string" ){
-                    monaco.editor.colorize(this.caption, 'myJava', { tabSize: 3 }).then((html) => { 
+                    monaco.editor.colorize(this.caption, 'myJava', { tabSize: 3 }).then((html) => {
                         $firstLine.append(jQuery(html));
                     });
                     // $firstLine.append(jQuery('<span class="jo_ceCaption">' + this.caption + "</span>"));
@@ -123,7 +125,7 @@ export class ConsoleEntry {
             }
             return;
         } else {
-            
+
             if(this.identifier != null){
                 $firstLine.append(jQuery('<span class="jo_ceIdentifier">' + this.identifier + ":&nbsp;</span>"));
             }

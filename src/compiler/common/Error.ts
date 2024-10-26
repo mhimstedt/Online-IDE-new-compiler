@@ -1,4 +1,6 @@
 import { IRange } from "./range/Range";
+import type * as monaco from 'monaco-editor'
+
 
 export type QuickFix = {
     title: string,

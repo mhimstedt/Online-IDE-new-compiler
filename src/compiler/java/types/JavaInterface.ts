@@ -9,9 +9,10 @@ import { JavaMethod } from "./JavaMethod";
 import { JavaType } from "./JavaType";
 import { NonPrimitiveType } from "./NonPrimitiveType";
 import { Visibility } from "./Visibility";
+import * as monaco from 'monaco-editor'
 
 export abstract class IJavaInterface extends NonPrimitiveType {
-    
+
     constructor(public identifier: string, public identifierRange: IRange, path: string, public module: JavaBaseModule) {
         super(identifier, identifierRange, path, module);
     }

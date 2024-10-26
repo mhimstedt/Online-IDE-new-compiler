@@ -8,6 +8,8 @@ import { JavaType } from "../types/JavaType";
 import { NonPrimitiveType } from "../types/NonPrimitiveType";
 import { StaticNonPrimitiveType } from "../types/StaticNonPrimitiveType";
 import { JavaCompiledModule } from "./JavaCompiledModule";
+import * as monaco from 'monaco-editor'
+
 
 export class JavaTypeStore {
 

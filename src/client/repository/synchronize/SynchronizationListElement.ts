@@ -2,6 +2,8 @@ import jQuery from 'jquery';
 import { makeDiv } from "../../../tools/HtmlTools.js";
 import { SynchronizationManager } from "./RepositorySynchronizationManager.js";
 import { SynchroFile, SynchroWorkspace } from "./SynchroWorkspace.js";
+import * as monaco from 'monaco-editor'
+
 
 type ButtonKind = "create" | "delete" | "update" | "commit" | "updateAll" | "commitAll";
 export type LeftRight = "left" | "right";

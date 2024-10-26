@@ -9,6 +9,7 @@ import { JavaMethod } from '../../compiler/java/types/JavaMethod.js';
 import { NonPrimitiveType } from '../../compiler/java/types/NonPrimitiveType.js';
 import { extractCsrfTokenFromGetRequest } from "../communication/AjaxHelper.js";
 import { HelpMessages } from './HelpMessages.js';
+import * as monaco from 'monaco-editor'
 
 export class ApiDoc {
     async start() {
@@ -133,7 +134,7 @@ export class ApiDoc {
                     $main.append(jQuery('<div class="jo_documentation">' + this.docToString(method.documentation) + '</div>'));
                 }
             }
-        }     
+        }
     }
 
     showMethods(t: NonPrimitiveType){

@@ -1,4 +1,6 @@
 import { IMain } from "../IMain";
+import type * as monaco from 'monaco-editor'
+
 
 export class ColorProvider implements monaco.languages.DocumentColorProvider {
 

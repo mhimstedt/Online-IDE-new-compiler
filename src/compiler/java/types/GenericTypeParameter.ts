@@ -10,6 +10,7 @@ import { JavaMethod } from "./JavaMethod";
 import { NonPrimitiveType } from "./NonPrimitiveType";
 import { Visibility } from "./Visibility.ts";
 import { JCM } from "../language/JavaCompilerMessages.ts";
+import type * as monaco from 'monaco-editor'
 
 export class GenericTypeParameter extends NonPrimitiveType {
 
@@ -22,12 +23,12 @@ export class GenericTypeParameter extends NonPrimitiveType {
     public catches?: NonPrimitiveType[];
 
     /**
-     * 
-     * @param identifier 
+     *
+     * @param identifier
      * @param upperBounds: ? extends B1 & B2 & B3...  B1 can be class or interface, B2, ... only interfaces; The type is SUBtype of B1, B2, ...
      * @param lowerBound : ? super B: the given type has B as its subtype
      */
-    constructor(identifier: string, module: JavaBaseModule, identifierRange: IRange, 
+    constructor(identifier: string, module: JavaBaseModule, identifierRange: IRange,
         public upperBounds: (IJavaClass | IJavaInterface)[] = [], public lowerBound?: IJavaClass){
         super(identifier, identifierRange, "", module);
         this.isWildcard = (this.identifier == '?');
@@ -38,21 +39,21 @@ export class GenericTypeParameter extends NonPrimitiveType {
     }
 
     getDeclaration(): string {
-        return this.toString();        
+        return this.toString();
     }
 
     toString(): string {
-        return this.identifier + 
-        (this.lowerBound ? " super " + this.lowerBound?.identifier : "") + 
-        // (this.lowerBound ? " super " + this.lowerBound?.toString() : "") + 
+        return this.identifier +
+        (this.lowerBound ? " super " + this.lowerBound?.identifier : "") +
+        // (this.lowerBound ? " super " + this.lowerBound?.toString() : "") +
         // (this.upperBounds.length > 0 ? " extends " + this.upperBounds.map(ub => ub.toString()).join(" & ") : "");
         (this.upperBounds.length > 0 ? " extends " + this.upperBounds.map(ub => ub.identifier).join(" & ") : "");
     }
 
     getAbsoluteName(): string {
-        return this.pathAndIdentifier + 
-        (this.lowerBound ? " super " + this.lowerBound?.pathAndIdentifier : "") + 
-        // (this.lowerBound ? " super " + this.lowerBound?.toString() : "") + 
+        return this.pathAndIdentifier +
+        (this.lowerBound ? " super " + this.lowerBound?.pathAndIdentifier : "") +
+        // (this.lowerBound ? " super " + this.lowerBound?.toString() : "") +
         // (this.upperBounds.length > 0 ? " extends " + this.upperBounds.map(ub => ub.toString()).join(" & ") : "");
         (this.upperBounds.length > 0 ? " extends " + this.upperBounds.map(ub => ub.pathAndIdentifier).join(" & ") : "");
     }
@@ -75,7 +76,7 @@ export class GenericTypeParameter extends NonPrimitiveType {
                 this.fieldCache = [];     // TODO: fields of Object class!
             } else {
                 this.fieldCache = this.upperBounds[0].getFields();
-            } 
+            }
         }
         return this.fieldCache;
     }

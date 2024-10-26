@@ -5,6 +5,7 @@ import { File } from "../../workspace/File.js";
 import { Workspace } from "../../workspace/Workspace.js";
 import { HistoryElement } from "./HistoryElement.js";
 import { SynchronizationManager } from "./RepositorySynchronizationManager.js";
+import * as monaco from 'monaco-editor'
 
 
 export type SynchroFileState = "original" | "changed" | "new" | "deleted";
@@ -19,7 +20,7 @@ export type SynchroFile = {
     identical_to_repository_version: boolean,
     text: string,
     synchroWorkspace: SynchroWorkspace,
-    
+
     state: SynchroFileState,
     markedAsMerged: boolean,
 
@@ -66,7 +67,7 @@ export class SynchroWorkspace {
                 workspaceFile: file,
                 text: file.getText().replace(/\r\n/g, "\n"),
                 synchroWorkspace: this,
-                
+
                 state: "original",
                 markedAsMerged: false,
 
@@ -94,7 +95,7 @@ export class SynchroWorkspace {
                 identical_to_repository_version: true,
                 text: fileEntry.text == null ? null : fileEntry.text.replace(/\r\n/g, "\n"),
                 synchroWorkspace: this,
-                
+
                 state: "original",
                 markedAsMerged: false,
 
@@ -187,7 +188,7 @@ export class SynchroWorkspace {
                 if(cff != null){
                     cff.repository_file_version = oldFile.version;
                     cff.workspaceFile.repository_file_version = oldFile.version;
-                    cff.workspaceFile.setSaved(false);                    
+                    cff.workspaceFile.setSaved(false);
                 }
 
             } else if (oldFile.filename != file.name) {
@@ -243,7 +244,7 @@ export class SynchroWorkspace {
             that.manager.currentUserSynchroWorkspace.files.forEach(synchroFile => {
                 let workspaceFile = synchroFile.workspaceFile;
                 if(workspaceFile != null){
-                    if(synchroFile.text == workspaceFile.getText() && 
+                    if(synchroFile.text == workspaceFile.getText() &&
                         (synchroFile.repository_file_version != workspaceFile.repository_file_version  || synchroFile.identical_to_repository_version != workspaceFile.identical_to_repository_version)){
                             workspaceFile.identical_to_repository_version = synchroFile.identical_to_repository_version;
                             workspaceFile.repository_file_version = synchroFile.repository_file_version;
@@ -328,7 +329,7 @@ export class SynchroWorkspace {
                 if (main.currentWorkspace == workspace && main.getCurrentWorkspace()?.getCurrentlyEditedFile() == file) {
                     main.projectExplorer.setFileActive(null);
                 }
-                
+
             }
 
         }

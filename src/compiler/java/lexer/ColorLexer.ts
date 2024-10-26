@@ -1,3 +1,6 @@
+import type * as monaco from 'monaco-editor'
+
+
 export class ColorLexer {
     hexColorRegExp = /^#([a-fA-F0-9]{6})$/;
     rgbColorRegExp = /^rgb\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\)$/;
@@ -39,7 +42,7 @@ export class ColorLexer {
                     blue: Number.parseInt(m3[3])/255,
                     alpha: 1
                 }
-    
+
 
             }
 

@@ -13,6 +13,7 @@ import { JUnitTreeviewEntry } from "./JUnitTreeviewEntry";
 import '/include/css/junit.css';
 import { JUnitProgressbar } from './JUnitProgressbar';
 import { TreeviewNode } from '../../../tools/components/treeview/TreeviewNode';
+import * as monaco from 'monaco-editor';
 
 type MouseDownHandler = () => void;
 

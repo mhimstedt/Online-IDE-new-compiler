@@ -6,6 +6,7 @@ import { Workspace } from "../../workspace/Workspace.ts";
 import { Main } from "../Main.ts";
 import { MainBase } from "../MainBase.ts";
 import { FileTypeManager } from "../../../compiler/common/module/FileTypeManager.ts";
+import * as monaco from 'monaco-editor'
 
 export type HistoryEntry = {
     file_id: number,

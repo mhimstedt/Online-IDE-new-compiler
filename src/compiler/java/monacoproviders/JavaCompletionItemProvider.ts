@@ -5,14 +5,16 @@ import { TokenType, TokenTypeReadable } from "../TokenType";
 import { JavaSymbolTable } from "../codegenerator/JavaSymbolTable";
 import { JavaCompiledModule } from "../module/JavaCompiledModule";
 import { JavaArrayType } from "../types/JavaArrayType";
-import { IJavaClass, JavaClass } from "../types/JavaClass";
+import { IJavaClass } from "../types/JavaClass";
 import { JavaEnum } from "../types/JavaEnum.ts";
-import { IJavaInterface, JavaInterface } from "../types/JavaInterface";
+import { IJavaInterface } from "../types/JavaInterface";
 import { JavaMethod } from "../types/JavaMethod";
 import { NonPrimitiveType } from "../types/NonPrimitiveType";
 import { StaticNonPrimitiveType } from "../types/StaticNonPrimitiveType";
 import { getVisibilityUpTo } from "../types/VisibilityTools";
 import { MonacoProviderLanguage } from "./MonacoProviderLanguage.ts";
+import * as monaco from 'monaco-editor'
+
 
 export class JavaCompletionItemProvider implements monaco.languages.CompletionItemProvider {
 

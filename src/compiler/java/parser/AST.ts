@@ -10,6 +10,8 @@ import { JavaInterface } from "../types/JavaInterface.ts";
 import { JavaType } from "../types/JavaType.ts";
 import { JavaMethod } from "../types/JavaMethod.ts";
 import { Visibility } from "../types/Visibility.ts";
+import type * as monaco from 'monaco-editor'
+
 
 export type ASTNodes = ASTNode[];
 
@@ -41,7 +43,7 @@ export interface ASTDebugProgram extends ASTNode {
 
 export interface TypeScope {
     kind: TokenType.keywordClass | TokenType.keywordInterface | TokenType.keywordEnum | TokenType.global | TokenType.methodDeclaration;
-    
+
     innerTypes: (ASTClassDefinitionNode | ASTInterfaceDefinitionNode | ASTEnumDefinitionNode)[];
     path: string;
     symbolTable?: JavaSymbolTable;
@@ -123,9 +125,9 @@ export interface ASTTypeDefinitionWithGenerics {
  */
 // e.g. HashMap<String, Integer>
 export interface ASTTypeNode extends ASTNode {
-    kind: TokenType.baseType | TokenType.wildcardType | TokenType.varType 
+    kind: TokenType.baseType | TokenType.wildcardType | TokenType.varType
     | TokenType.voidType | TokenType.arrayType | TokenType.genericTypeInstantiation,
-    
+
     parentTypeScope?: TypeScope
     resolvedType?: JavaType;
 }
@@ -134,7 +136,7 @@ export interface ASTWildcardTypeNode extends ASTTypeNode {
     kind: TokenType.wildcardType,
     extends: ASTTypeNode[],
     super?: ASTTypeNode
-} 
+}
 
 export interface ASTVoidTypeNode extends ASTTypeNode {
     kind: TokenType.voidType

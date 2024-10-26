@@ -14,10 +14,10 @@ import { Helper } from "./Helper.js";
 import { TeacherExplorer } from './TeacherExplorer.js';
 import { WorkspaceSettingsDialog } from "./WorkspaceSettingsDialog.js";
 import { File } from '../../workspace/File.js';
-import { IPosition, Position } from '../../../compiler/common/range/Position.js';
 import { WorkspaceImporterExporter } from '../../workspace/WorkspaceImporterExporter.js';
 import { SchedulerState } from "../../../compiler/common/interpreter/SchedulerState.js";
 import { GuiMessages } from './GuiMessages.js';
+import * as monaco from 'monaco-editor'
 
 
 export class ProjectExplorer {
@@ -671,7 +671,7 @@ export class ProjectExplorer {
         * monaco editor counts LanguageChangedListeners and issues ugly warnings in console if more than
         * 200, 300, ... are created. Unfortunately it creates one each time a monaco.editor.ITextModel is created.
         * To keep monaco.editor.ITextModel instance count low we instantiate it only when needed and dispose of it
-        * when switching to another workspace. 
+        * when switching to another workspace.
         */
 
         this.main.editor.editor.setModel(null); // detach current model from editor

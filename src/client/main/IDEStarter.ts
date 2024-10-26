@@ -1,3 +1,4 @@
+import jQuery from 'jquery';
 import { Main } from "./Main.js";
 import { SynchronizationManager } from "../repository/synchronize/RepositorySynchronizationManager.js";
 import { RepositoryCreateManager } from "../repository/update/RepositoryCreateManager.js";
@@ -5,17 +6,22 @@ import { RepositorySettingsManager } from "../repository/update/RepositorySettin
 import { RepositoryCheckoutManager } from "../repository/update/RepositoryCheckoutManager.js";
 import { SpriteManager } from "../spritemanager/SpriteManager.js";
 import * as PIXI from 'pixi.js';
-import jQuery from 'jquery';
+
+import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
+import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
+import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker'
+import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
+import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
+
 
 // All css files for fullscreen online-ide:
+import "/include/css/bottomdiv.css";
+import "/include/css/debugger.css";
 import "/include/css/editor.css";
 import "/include/css/editorStatic.css";
-import "/include/css/bottomdiv.css";
-import "/include/css/run.css";
-// import "/include/css/diagram.css";
-import "/include/css/debugger.css";
 import "/include/css/helper.css";
 import "/include/css/icons.css";
+import "/include/css/run.css";
 import "/include/css/dialog.css";
 import "/include/css/synchronize-repo.css";
 import "/include/css/updatecreate-repo.css";
@@ -48,36 +54,34 @@ function loadSpritesheet() {
         });
 }
 
-async function initMonacoEditor(): Promise<void> {
+function initMonacoEditor(): void {
+    // see https://github.com/microsoft/monaco-editor/blob/main/docs/integrate-esm.md#using-vite
+    // https://dev.to/lawrencecchen/monaco-editor-svelte-kit-572
+    // https://github.com/microsoft/monaco-editor/issues/4045
 
-    return new Promise((resolve) => {
-        //@ts-ignore
-        window.AMDLoader.Configuration.ignoreDuplicateModules = ["jquery"];
-
-        //@ts-ignore
-        window.require.config({ paths: { 'vs': 'lib/monaco-editor/dev/vs' } });
-        //@ts-ignore
-        window.require.config({
-            'vs/nls': {
-                availableLanguages: {
-                    '*': 'de'
-                }
-            },
-            ignoreDuplicateModules: ["vs/editor/editor.main", 'jquery']
-        });
-
-        //@ts-ignore
-        window.require(['vs/editor/editor.main'], function () {
-
-            resolve();
-
-        });
-
-    })
-
+    self.MonacoEnvironment = {
+        getWorker: (_workerId, label) => {
+            switch (label) {
+                case 'json':
+                    return new jsonWorker()
+                case 'css':
+                case 'scss':
+                case 'less':
+                    return new cssWorker()
+                case 'html':
+                case 'handlebars':
+                case 'razor':
+                    return new htmlWorker()
+                case 'typescript':
+                case 'javascript':
+                    return new tsWorker()
+                default:
+                    return new editorWorker()
+            }
+        }
+    };
 
 }
-
 
 window.onload = () => {
 
@@ -96,32 +100,33 @@ window.onload = () => {
     let main = new Main();
     loadSpritesheet();
 
-    initMonacoEditor().then(() => {
-        main.startupAfterMonacoEditorIsLoaded();
-        main.getMainEditor().updateOptions({ readOnly: true });
-
-        main.bottomDiv.initGUI();
-        main.checkStartupComplete();
-
-        if (main.repositoryOn) {
-            main.synchronizationManager = new SynchronizationManager(main);
-            // main.synchronizationManager.initGUI();
-            main.repositoryCreateManager = new RepositoryCreateManager(main);
-            main.repositoryCreateManager.initGUI();
-            main.repositoryUpdateManager = new RepositorySettingsManager(main);
-            main.repositoryUpdateManager.initGUI();
-            main.repositoryCheckoutManager = new RepositoryCheckoutManager(main);
-            main.repositoryCheckoutManager.initGUI();
-
-        }
-
-        main.spriteManager = new SpriteManager(main);
-        // main.spriteManager.initGUI();
-
-        //@ts-ignore
-        p5.disableFriendlyErrors = true
-    })
+    initMonacoEditor()
 
     main.startupBeforeMonacoEditorIsLoaded();
+    main.startupAfterMonacoEditorIsLoaded();
+    main.getMainEditor().updateOptions({ readOnly: true });
+
+    main.bottomDiv.initGUI();
+    main.checkStartupComplete();
+
+    if (main.repositoryOn) {
+        main.synchronizationManager = new SynchronizationManager(main);
+        // main.synchronizationManager.initGUI();
+        main.repositoryCreateManager = new RepositoryCreateManager(main);
+        main.repositoryCreateManager.initGUI();
+        main.repositoryUpdateManager = new RepositorySettingsManager(main);
+        main.repositoryUpdateManager.initGUI();
+        main.repositoryCheckoutManager = new RepositoryCheckoutManager(main);
+        main.repositoryCheckoutManager.initGUI();
+
+    }
+
+    main.spriteManager = new SpriteManager(main);
+    // main.spriteManager.initGUI();
+
+    //@ts-ignore
+    p5.disableFriendlyErrors = true
+
+
     // document.body.innerText = 'Hello World!';
 }

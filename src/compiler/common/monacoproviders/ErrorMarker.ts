@@ -1,5 +1,6 @@
 import { Error, ErrorLevel } from "../Error.ts";
 import { Module } from "../module/Module.ts";
+import * as monaco from 'monaco-editor'
 
 export class ErrorMarker {
 

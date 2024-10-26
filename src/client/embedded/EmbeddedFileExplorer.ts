@@ -6,6 +6,7 @@ import { FileTypeManager } from "../../compiler/common/module/FileTypeManager.js
 import { File } from "../workspace/File.js";
 import { Workspace } from "../workspace/Workspace.js";
 import { EmbeddedMessages } from "./EmbeddedMessages.js";
+import * as monaco from 'monaco-editor'
 
 type FileData = {
     type?: string,

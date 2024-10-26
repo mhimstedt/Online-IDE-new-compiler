@@ -16,6 +16,7 @@ import { JavaArrayType } from "./JavaArrayType.ts";
 import { PrimitiveType } from "../runtime/system/primitiveTypes/PrimitiveType.ts";
 import { JavaParameter } from "./JavaParameter.ts";
 import { JCM } from "../language/JavaCompilerMessages.ts";
+import * as monaco from 'monaco-editor'
 
 
 export class JavaEnum extends JavaTypeWithInstanceInitializer {
@@ -26,7 +27,7 @@ export class JavaEnum extends JavaTypeWithInstanceInitializer {
     /**
      * needed for user defined Sprites in SpriteLibraryEnum, see document user-defined-spritesheets.md
      */
-    id: number; 
+    id: number;
 
     private implements: JavaInterface[] = [];
 
@@ -190,7 +191,7 @@ export class JavaEnum extends JavaTypeWithInstanceInitializer {
     }
 
     addValuesMethod(klass: Klass, stringType: PrimitiveType) {
-        
+
         klass["_values"] = (klass["_mn$values$" + this.identifier + "_I$"] = () => {
             return klass.values;
         })

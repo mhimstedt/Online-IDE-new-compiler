@@ -5,6 +5,7 @@ import { EscapeSequenceList, keywordList as KeywordList, specialCharList, TokenT
 import { ColorHelper } from "./ColorHelper.js";
 import { ColorLexer } from "./ColorLexer.js";
 import { Token, TokenList } from "./Token.js";
+import type * as monaco from 'monaco-editor'
 
 
 

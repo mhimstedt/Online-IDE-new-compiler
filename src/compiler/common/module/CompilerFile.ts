@@ -1,4 +1,5 @@
 import { FileTypeManager } from "./FileTypeManager";
+import * as monaco from 'monaco-editor'
 
 export type FileContentChangedListener = (changedfile: CompilerFile) => void;
 
