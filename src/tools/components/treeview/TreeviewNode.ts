@@ -236,21 +236,25 @@ export class TreeviewNode<E> {
 
             this.nodeLineDiv.onpointerup = (ev) => {
                 if (ev.button == 2) return;
-                ev.stopPropagation();
-                if (!ev.shiftKey && !ev.ctrlKey) {
-                    this.treeview.unselectAllNodes();
+
+                if(this.treeview.config.withSelection){
+                    ev.stopPropagation();
+                    if (!ev.shiftKey && !ev.ctrlKey) {
+                        this.treeview.unselectAllNodes();
+                    }
+    
+                    if (ev.shiftKey) {
+                        this.treeview.expandSelectionTo(this);
+                    } else {
+                        this.treeview.setLastSelectedElement(this);
+                    }
+    
+    
+                    this.setSelected(true);
+                    this.treeview.addToSelection(this);
+                    this.setFocus(true);
                 }
 
-                if (ev.shiftKey) {
-                    this.treeview.expandSelectionTo(this);
-                } else {
-                    this.treeview.setLastSelectedElement(this);
-                }
-
-
-                this.setSelected(true);
-                this.treeview.addToSelection(this);
-                this.setFocus(true);
                 if (this._onClickHandler) this._onClickHandler(this._externalObject!);
                 if (this.treeview.onNodeClickedHandler) this.treeview.onNodeClickedHandler(this._externalObject!);
             }

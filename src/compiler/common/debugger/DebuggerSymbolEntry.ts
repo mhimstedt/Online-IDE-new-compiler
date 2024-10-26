@@ -86,7 +86,7 @@ export class DebuggerSymbolEntry {
 
         let cssClass = this.isLocalVariable ? "jo_debugger_localVariableIdentifier" : "jo_debugger_fieldIdentifier";
 
-        if (value != this.oldValue && pulseIfValueChanged) {
+        if ((typeof this.oldValue !== 'undefined') && value != this.oldValue && pulseIfValueChanged) {
             valuecss += " jo_debugger_pulse";
         }
 
@@ -105,17 +105,21 @@ export class DebuggerSymbolEntry {
         if (setChangedValue) {
             let valueSpan = <HTMLSpanElement>this.treeViewNode.captionDiv.getElementsByClassName('jo_valueSpan')[0]
 
+            let oldValue: any = jQuery(valueSpan).text();
+
             let endEditing = function () {
                 jQuery(this).attr('contentEditable', "false");
-                setChangedValue(jQuery(this).text())
+                let newValue = jQuery(this).text();
+                if(oldValue != newValue){
+                    setChangedValue(newValue)
+                }
             };
 
-            let oldValue: any = jQuery(valueSpan).text();
 
 
             let span = jQuery(valueSpan)[0];
-            span.onfocus = function() {
-                window.setTimeout(function() {
+            span.onfocus = function () {
+                window.setTimeout(function () {
                     var sel, range;
                     if (window.getSelection && document.createRange) {
                         range = document.createRange();
@@ -123,28 +127,35 @@ export class DebuggerSymbolEntry {
                         sel = window.getSelection();
                         sel.removeAllRanges();
                         sel.addRange(range);
-                    } 
+                    }
                 }, 1);
             };
 
-            jQuery(valueSpan).on('click', function (event) {
-                jQuery(this).attr('contentEditable', "true");
-                jQuery(this)[0].focus();
-                // document.execCommand('selectAll', false, null);
-                event.preventDefault();
-            }).on('blur', endEditing)
-            .on('keydown', function(event){
-                switch(event.key){
-                    case "Enter":
-                        endEditing.call(this);
-                        event.preventDefault();
-                        break;
-                    case "Escape":
-                        jQuery(this).attr('contentEditable', "false");
-                        jQuery(this).text(oldValue);
-                        break;
-                }
-            });
+            this.treeViewNode.onClickHandler = () => {
+                jQuery(span).attr('contentEditable', "true");
+                span.focus();
+            }
+
+            jQuery(valueSpan)
+                // .on('click', function (event) {
+                //     jQuery(this).attr('contentEditable', "true");
+                //     jQuery(this)[0].focus();
+                //     // document.execCommand('selectAll', false, null);
+                //     event.preventDefault();
+                // })
+                .on('blur', endEditing)
+                .on('keydown', function (event) {
+                    switch (event.key) {
+                        case "Enter":
+                            endEditing.call(this);
+                            event.preventDefault();
+                            break;
+                        case "Escape":
+                            jQuery(this).attr('contentEditable', "false");
+                            jQuery(this).text(oldValue);
+                            break;
+                    }
+                });
 
         }
 
@@ -310,7 +321,7 @@ export class DebuggerSymbolEntry {
                 this.oldLength = a.length;
                 this.children.forEach(c => (<ArrayElementDebuggerEntry>c).fetchValueFromArrayAndRender(a));
             }
-            
+
             if (this.treeViewNode.expandCollapseComponent.state == "expanded") {
                 addAndDisplayChildren();
             } else {
@@ -319,7 +330,7 @@ export class DebuggerSymbolEntry {
                     addAndDisplayChildren();
                 });
             }
-            
+
         } else {
             this.children.forEach(c => (<ArrayElementDebuggerEntry>c).fetchValueFromArrayAndRender(a));
         }

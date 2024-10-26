@@ -64,7 +64,9 @@ export class Debugger {
             flexWeight: "1",
             withDeleteButtons: true,
             withDragAndDrop: false,
-            buttonAddFolders: false
+            buttonAddFolders: false,
+            withSelection: false, 
+            minHeight: 50
         });
 
 
@@ -80,7 +82,9 @@ export class Debugger {
             withDeleteButtons: false,
             withDragAndDrop: false,
             buttonAddFolders: false,
-            buttonAddElements: false
+            buttonAddElements: false,
+            withSelection: true,
+            minHeight: 50
         });
 
     }
@@ -95,7 +99,9 @@ export class Debugger {
             withDeleteButtons: false,
             withDragAndDrop: false,
             buttonAddFolders: false,
-            buttonAddElements: false
+            buttonAddElements: false,
+            withSelection: true,
+            minHeight: 50
         });
 
     }
@@ -110,7 +116,8 @@ export class Debugger {
             withDeleteButtons: false,
             withDragAndDrop: false,
             buttonAddFolders: false,
-            buttonAddElements: false
+            buttonAddElements: false, 
+            withSelection: false
         });
 
     }
