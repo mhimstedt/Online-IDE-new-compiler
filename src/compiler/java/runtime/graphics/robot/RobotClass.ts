@@ -32,12 +32,14 @@ export class RobotClass extends ObjectClass {
         { type: "method", signature: "void schritt(int anzahl)", native: RobotClass.prototype._schrittAnzahl, comment: JRC.robotSchrittAnzahl },
 
         { type: "method", signature: "void hinlegen()", native: RobotClass.prototype._hinlegen, comment: JRC.robotHinlegen },
+        { type: "method", signature: "void hinlegen(int n)", native: RobotClass.prototype._hinlegen, comment: JRC.robotHinlegen },
         { type: "method", signature: "void hinlegen(string farbe)", native: RobotClass.prototype._hinlegen, comment: JRC.robotHinlegenFarbe },
 
         { type: "method", signature: "void markeSetzen()", native: RobotClass.prototype._markeSetzen, comment: JRC.robotMarkeSetzen },
         { type: "method", signature: "void markeSetzen(string farbe)", native: RobotClass.prototype._markeSetzen, comment: JRC.robotMarkeSetzenFarbe },
 
         { type: "method", signature: "void aufheben()", native: RobotClass.prototype._aufheben, comment: JRC.robotAufheben },
+        { type: "method", signature: "void aufheben(int n)", native: RobotClass.prototype._aufheben, comment: JRC.robotAufheben },
         { type: "method", signature: "void beenden()", java: RobotClass.prototype._mj$beenden$void$, comment: JRC.robotBeenden },
         { type: "method", signature: "boolean istWand()", native: RobotClass.prototype._istWand, comment: JRC.robotIstWand },
         { type: "method", signature: "boolean nichtIstWand()", native: RobotClass.prototype._nichtIstWand, comment: JRC.robotNichtIstWand },
@@ -213,7 +215,10 @@ export class RobotClass extends ObjectClass {
         }
     }
 
-    _hinlegen(farbe?: string) {
+    _hinlegen(farbeOrN?: string | number) {
+        let farbe: string = (typeof farbeOrN == 'string') ? (farbeOrN || "rot") : "rot";
+        let n: number = (typeof farbeOrN == 'number') ? (farbeOrN || 1) : 1;
+
         let deltas = this.direction.getDeltas();
         let newX = this.x + deltas.dx;
         let newY = this.y + deltas.dy;
@@ -222,29 +227,29 @@ export class RobotClass extends ObjectClass {
             throw new RuntimeExceptionClass(JRC.robotCantPlaceBricksIntoWall());
         }
 
-        farbe = farbe || "rot";
 
         farbe = farbe.toLocaleLowerCase();
         if (!this.robotWorld.gibtFarbe(farbe)) {
             throw new RuntimeExceptionClass(JRC.robotColorUnknown());
         }
 
-        if (this.hatSteine == 0) {
+        if (this.hatSteine < n) {
             throw new RuntimeExceptionClass(JRC.robotOutOfBricks());
         }
 
-        if (this.robotWorld.getBrickCount(newX, newY) > this.robotWorld.maximumHeight) {
+        if (this.robotWorld.getBrickCount(newX, newY) + n > this.robotWorld.maximumHeight) {
             throw new ExceptionClass(JRC.robotMaximumHeightExceeded(this.robotWorld.maximumHeight));
         }
 
-        this.robotWorld.addBrick(newX, newY, farbe);
-        this.hatSteine--;
+        for(let i = 0; i < n; i++) this.robotWorld.addBrick(newX, newY, farbe);
+        this.hatSteine -= n;
 
         return true;
 
     }
 
-    _aufheben() {
+    _aufheben(n?: number) {
+        n = n || 1;
         let deltas = this.direction.getDeltas();
         let newX = this.x + deltas.dx;
         let newY = this.y + deltas.dy;
@@ -253,14 +258,14 @@ export class RobotClass extends ObjectClass {
             throw new RuntimeExceptionClass(JRC.robotCantPlaceBricksIntoWall());
         }
 
-        if (this.robotWorld.getNumberOfBricks(newX, newY) < 1) {
+        if (this.robotWorld.getNumberOfBricks(newX, newY) < n) {
             throw new RuntimeExceptionClass(JRC.robotNoBricksToPickUp());
         }
 
-        this.robotWorld.removeBrick(newX, newY);
+        for(let i = 0; i < n; i++) this.robotWorld.removeBrick(newX, newY);
 
-        if (this.hatSteine < this.maxSteine) {
-            this.hatSteine++;
+        if (this.hatSteine + n <= this.maxSteine) {
+            this.hatSteine += n;
         } else {
             throw new RuntimeExceptionClass(JRC.robotCapacityExceeded());
         }
