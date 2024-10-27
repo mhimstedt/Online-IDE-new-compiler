@@ -129,6 +129,7 @@ export class MyConsole {
                         that.writeConsoleEntry(command, returnValue);
                         this.editor.getModel()?.setValue('');
                     }
+                    this.main.getInterpreter().updateDebugger();
                 }, 10);
                 e.preventDefault();
             } else {
