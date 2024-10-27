@@ -15,7 +15,7 @@ export class LineClass extends FilledShapeClass {
         { type: "method", signature: "Line()", java: LineClass.prototype._cj$_constructor_$Line$, comment: JRC.LineEmptyConstructorComment },
         { type: "method", signature: "Line(double x1, double y1, double x2, double y2)", java: LineClass.prototype._cj$_constructor_$Line$double$double$double$double, comment: JRC.LineConstructorComment1 },
 
-        { type: "method", signature: "final setPoints(double x1, double y1, double x2, double y2)", native: LineClass.prototype._setPoints, comment: JRC.LineSetPointsComment },
+        { type: "method", signature: "final void setPoints(double x1, double y1, double x2, double y2)", native: LineClass.prototype._setPoints, comment: JRC.LineSetPointsComment },
 
         { type: "method", signature: "final Line copy()", java: LineClass.prototype._mj$copy$Line$, comment: JRC.LineCopyComment },
 
