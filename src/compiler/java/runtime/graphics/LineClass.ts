@@ -15,6 +15,8 @@ export class LineClass extends FilledShapeClass {
         { type: "method", signature: "Line()", java: LineClass.prototype._cj$_constructor_$Line$, comment: JRC.LineEmptyConstructorComment },
         { type: "method", signature: "Line(double x1, double y1, double x2, double y2)", java: LineClass.prototype._cj$_constructor_$Line$double$double$double$double, comment: JRC.LineConstructorComment1 },
 
+        { type: "method", signature: "final setPoints(double x1, double y1, double x2, double y2)", native: LineClass.prototype._setPoints, comment: JRC.LineSetPointsComment },
+
         { type: "method", signature: "final Line copy()", java: LineClass.prototype._mj$copy$Line$, comment: JRC.LineCopyComment },
 
         { type: "method", signature: "String toString()", java: LineClass.prototype._mj$toString$String$ , comment: JRC.objectToStringComment},
@@ -79,6 +81,20 @@ export class LineClass extends FilledShapeClass {
         }
         
     };
+
+    _setPoints(x1: number, y1: number, x2: number, y2: number){
+        let p0 = new PIXI.Point(x1, y1);
+        this.getWorldTransform().applyInverse(p0, p0);
+        this.hitPolygonInitial[0].x = p0.x;
+        this.hitPolygonInitial[0].y = p0.y;
+
+        let p1 = new PIXI.Point(x2, y2);
+        this.getWorldTransform().applyInverse(p1, p1);
+        this.hitPolygonInitial[1].x = p1.x;
+        this.hitPolygonInitial[2].y = p1.y;
+
+        this.render();
+    }
 
     _mj$toString$String$(t: Thread, callback: CallbackParameter) {
 
