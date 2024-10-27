@@ -277,6 +277,7 @@ export class MainEmbedded implements MainBase {
     readScripts(callback: () => void) {
 
         let files = this.currentWorkspace.getFiles();
+        files.forEach(f => f.setSaved(true))
 
         let that = this;
 
