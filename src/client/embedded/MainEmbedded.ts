@@ -277,7 +277,10 @@ export class MainEmbedded implements MainBase {
     readScripts(callback: () => void) {
 
         let files = this.currentWorkspace.getFiles();
-        files.forEach(f => f.setSaved(true))
+        files.forEach(f => {
+            f.getMonacoModel();
+            f.setSaved(true);
+        } )
 
         let that = this;
 
@@ -296,6 +299,7 @@ export class MainEmbedded implements MainBase {
                 for (let file of files.slice()) {
                     that.fileExplorer?.removeFile(file, false);  // calls MainEmbedded.removeFile subsequently
                 }
+                that.currentWorkspace.removeAllFiles();
 
                 for (let name of scriptList) {
 
@@ -306,6 +310,7 @@ export class MainEmbedded implements MainBase {
                             script = this.eraseDokuwikiSearchMarkup(script);
 
                             let file = new File(this, name, script);
+                            file.getMonacoModel();
                             file.setSaved(true);
 
                             that.fileExplorer?.addFile(file);

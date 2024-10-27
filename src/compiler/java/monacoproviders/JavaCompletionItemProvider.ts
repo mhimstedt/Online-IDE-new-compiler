@@ -30,8 +30,8 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
 
         let module: JavaCompiledModule;
 
-        let console = this.main.getBottomDiv().console;
-        if(console.editor.getModel() == model){
+        let console = this.main.getBottomDiv()?.console;
+        if(console?.editor?.getModel() == model){
             console.compile();
             module = this.main.getRepl().getCurrentModule();
         } else {
