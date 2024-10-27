@@ -1,3 +1,4 @@
+import { BottomDiv } from "../../client/main/gui/BottomDiv.ts";
 import { Compiler } from "../common/Compiler.ts";
 import { JavaRepl } from "../java/parser/repl/JavaRepl.ts";
 import { Disassembler } from "./disassembler/Disassembler.ts";
@@ -23,7 +24,7 @@ export interface IMain {
 
 
     getMainEditor(): monaco.editor.IStandaloneCodeEditor;
-    
+
     getReplEditor(): monaco.editor.IStandaloneCodeEditor;
 
 
@@ -40,4 +41,7 @@ export interface IMain {
     getActionManager(): ActionManager;
 
     showJUnitDiv(): void;
+
+    getBottomDiv(): BottomDiv;
+
 }

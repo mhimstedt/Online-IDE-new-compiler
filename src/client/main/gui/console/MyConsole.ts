@@ -12,7 +12,6 @@ export class MyConsole {
     historyPos: number = 0;
 
     timerHandle: any;
-    isDirty: boolean = false;
 
     consoleEntries: ConsoleEntry[] = [];
 
@@ -96,7 +95,7 @@ export class MyConsole {
                 vertical: 'hidden',
                 horizontal: 'hidden'
             },
-            theme: "myCustomThemeDark", 
+            theme: "myCustomThemeDark",
 
             acceptSuggestionOnEnter: "off"
 
@@ -107,7 +106,6 @@ export class MyConsole {
 
         let that = this;
 
-        let lastStatement: string = "";
 
         this.editor.onKeyDown((e) => {
             let statement = this.editor.getModel()?.getValue();
@@ -125,66 +123,70 @@ export class MyConsole {
                     let returnValue = await that.main.getRepl().executeAsync(command!, false);
                     this.showCompilationErrors(returnValue.errors);
 
-                    if(typeof returnValue !== "undefined"){
+                    if (typeof returnValue !== "undefined") {
                         that.writeConsoleEntry(command, returnValue);
                         this.editor.getModel()?.setValue('');
                     }
                     this.main.getInterpreter().updateDebugger();
                 }, 10);
                 e.preventDefault();
-            } else {
-                // if (statement != lastStatement) {
-                //     that.main.getRepl().compileAndShowErrors(statement);
-                //     lastStatement = statement;
-                // }
             }
         })
 
-        // this.editor.addCommand(monaco.KeyCode.UpArrow, () => {
-
-        //     let nextHistoryPos = that.history.length - (that.historyPos + 1);
-        //     if (nextHistoryPos >= 0) {
-        //         that.historyPos++;
-        //         let text = that.history[nextHistoryPos];
-        //         that.editor.setValue(text);
-        //         that.editor.setPosition({
-        //             lineNumber: 1,
-        //             column: text.length + 1
-        //         })
-        //     }
-
-        // }, "!suggestWidgetVisible");
-
-        // this.editor.addCommand(monaco.KeyCode.DownArrow, () => {
-
-        //     let nextHistoryPos = that.history.length - (that.historyPos - 1);
-        //     if (nextHistoryPos <= that.history.length - 1) {
-        //         that.historyPos--;
-        //         let text = that.history[nextHistoryPos];
-        //         that.editor.setValue(text);
-        //         that.editor.setPosition({
-        //             lineNumber: 1,
-        //             column: text.length + 1
-        //         })
-        //     } else {
-        //         that.editor.setValue("");
-        //         that.historyPos = 0;
-        //     }
-
-        // }, "!suggestWidgetVisible");
-
-
-        let model = this.editor.getModel();
-        let lastVersionId = 0;
-
-        model.onDidChangeContent(() => {
-            let versionId = model.getAlternativeVersionId();
-
-            if (versionId != lastVersionId) {
-                that.isDirty = true;
-                lastVersionId = versionId;
+        this.editor.onKeyUp(() => {
+            let programAndModule = this.compile();
+            if (programAndModule) {
+                this.showCompilationErrors(programAndModule.module.errors);
             }
-        });
+        })
+
+        this.editor.addCommand(monaco.KeyCode.UpArrow, () => {
+
+            let nextHistoryPos = that.history.length - (that.historyPos + 1);
+            if (nextHistoryPos >= 0) {
+                that.historyPos++;
+                let text = that.history[nextHistoryPos];
+                that.editor.setValue(text);
+                that.editor.setPosition({
+                    lineNumber: 1,
+                    column: text.length + 1
+                })
+                that.compile();
+            }
+
+        }, "!suggestWidgetVisible");
+
+        this.editor.addCommand(monaco.KeyCode.DownArrow, () => {
+
+            let nextHistoryPos = that.history.length - (that.historyPos - 1);
+            if (nextHistoryPos <= that.history.length - 1) {
+                that.historyPos--;
+                let text = that.history[nextHistoryPos];
+                that.editor.setValue(text);
+                that.editor.setPosition({
+                    lineNumber: 1,
+                    column: text.length + 1
+                })
+            } else {
+                that.editor.setValue("");
+                that.historyPos = 0;
+            }
+            that.compile();
+
+        }, "!suggestWidgetVisible");
+
+
+        // let model = this.editor.getModel();
+        // let lastVersionId = 0;
+
+        // model.onDidChangeContent(() => {
+        //     let versionId = model.getAlternativeVersionId();
+
+        //     if (versionId != lastVersionId) {
+        //         that.isDirty = true;
+        //         lastVersionId = versionId;
+        //     }
+        // });
 
         this.$consoleTabHeading.on("mousedown", () => {
             Helper.showHelper("consoleHelper", this.main);
@@ -197,6 +199,11 @@ export class MyConsole {
     }
 
 
+    compile() {
+        let command = this.editor.getModel().getValue(monaco.editor.EndOfLinePreference.LF, false);
+        return this.main.getRepl().compile(command, false);
+    }
+
     execute() {
 
         // monaco.editor.colorize(command, 'myJava', { tabSize: 3 }).then((command) => {
@@ -206,9 +213,9 @@ export class MyConsole {
     }
 
     showCompilationErrors(errors?: Error[]) {
-        if(!errors) return;
+        if (!errors) return;
         let monacoModel = this.main.getReplEditor()?.getModel();
-        if(!monacoModel) return;
+        if (!monacoModel) return;
 
         this.errorMarker.markErrors(errors, monacoModel);
 
@@ -222,19 +229,19 @@ export class MyConsole {
 
     replReturnValueToOutput(replReturnValue: ReplReturnValue): string | undefined {
         if (typeof replReturnValue == "undefined") return undefined;
-        if(!replReturnValue.text) return undefined;
+        if (!replReturnValue.text) return undefined;
         let type: string = replReturnValue.type ? replReturnValue.type.toString() + " " : "";
         let text = replReturnValue.text;
         //@ts-ignore#
-        if(text["value"]) text = text.value;
+        if (text["value"]) text = text.value;
         switch (type) {
             case "string ":
-            case "String ": 
-            if(replReturnValue.value){
-                text = '"' + text + '"';
-            } else {
-                text = "null";
-            }
+            case "String ":
+                if (replReturnValue.value) {
+                    text = '"' + text + '"';
+                } else {
+                    text = "null";
+                }
                 break;
             case "char ":
             case "Character ":
@@ -242,7 +249,7 @@ export class MyConsole {
                 break;
         }
 
-        if(text.length > 200){
+        if (text.length > 200) {
             text = text.substring(0, 200) + " ...";
         }
 
@@ -263,8 +270,8 @@ export class MyConsole {
         consoleTop.append(commandEntry.$consoleEntry);
 
         let replReturnOutputAsString = this.replReturnValueToOutput(value);
-        if(replReturnOutputAsString){
-            let resultEntry = new ConsoleEntry(false, replReturnOutputAsString, value.value,  null, null, true, color);
+        if (replReturnOutputAsString) {
+            let resultEntry = new ConsoleEntry(false, replReturnOutputAsString, value.value, null, null, true, color);
             this.consoleEntries.push(resultEntry);
             consoleTop.append(resultEntry.$consoleEntry);
         }

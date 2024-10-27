@@ -1,8 +1,6 @@
-import { BaseSymbolTable } from "../../../common/BaseSymbolTable.ts";
 import { Executable } from "../../../common/Executable.ts";
 import { Program } from "../../../common/interpreter/Program.ts";
 import { TypeResolver } from "../../TypeResolver/TypeResolver.ts";
-import { ExceptionTree } from "../../codegenerator/ExceptionTree.ts";
 import { JavaSymbolTable } from "../../codegenerator/JavaSymbolTable.ts";
 import { Lexer } from "../../lexer/Lexer.ts";
 import { JavaReplCodeGenerator } from "./JavaReplCodeGenerator.ts";
@@ -24,6 +22,8 @@ export class JavaReplCompiler {
         let compiledTypesTypestore = executable.moduleManager.typestore;
 
         let typeResolver = new TypeResolver(executable.moduleManager, executable.libraryModuleManager);
+        typeResolver.dirtyModules = [replCompiledModule];
+
         if(typeResolver.resolve()){
 
             let replCodeGenerator = new JavaReplCodeGenerator(replCompiledModule, libraryTypestore,

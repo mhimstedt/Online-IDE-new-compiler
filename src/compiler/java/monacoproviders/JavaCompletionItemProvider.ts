@@ -28,16 +28,24 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
 
         if (model.getLanguageId() != 'myJava') return;
 
-        let module = <JavaCompiledModule>this.main.getCurrentWorkspace()?.getModuleForMonacoModel(model);
+        let module: JavaCompiledModule;
+
+        let console = this.main.getBottomDiv().console;
+        if(console.editor.getModel() == model){
+            console.compile();
+            module = this.main.getRepl().getCurrentModule();
+        } else {
+            module = <JavaCompiledModule>this.main.getCurrentWorkspace()?.getModuleForMonacoModel(model);
+            if(module && module.getLastCompiledMonacoVersion() < module.file.getMonacoVersion() - 1){
+                await this.main.getCompiler().interruptAndStartOverAgain();
+                module = <JavaCompiledModule>this.main.getCurrentWorkspace()?.getModuleForMonacoModel(model);
+            }
+        }
 
         if (module == null) {
             return null;
         }
 
-        if(module.getLastCompiledMonacoVersion() < module.file.getMonacoVersion() - 1){
-            await this.main.getCompiler().interruptAndStartOverAgain();
-            module = <JavaCompiledModule>this.main.getCurrentWorkspace()?.getModuleForMonacoModel(model);
-        }
 
         let symbolTable = module.findSymbolTableAtPosition(position);
         let classContext = symbolTable == null ? undefined : symbolTable.classContext;
