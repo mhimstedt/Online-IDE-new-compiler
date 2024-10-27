@@ -219,8 +219,9 @@ export class MyConsole {
     }
 
 
-    replReturnValueToOutput(replReturnValue: ReplReturnValue): string {
-        if (typeof replReturnValue == "undefined") return "---";
+    replReturnValueToOutput(replReturnValue: ReplReturnValue): string | undefined {
+        if (typeof replReturnValue == "undefined") return undefined;
+        if(!replReturnValue.text) return undefined;
         let type: string = replReturnValue.type ? replReturnValue.type.toString() + " " : "";
         let text = replReturnValue.text;
         //@ts-ignore#
@@ -260,9 +261,13 @@ export class MyConsole {
         this.consoleEntries.push(commandEntry);
         consoleTop.append(commandEntry.$consoleEntry);
 
-        let resultEntry = new ConsoleEntry(false, this.replReturnValueToOutput(value), value.value,  null, null, true, color);
-        this.consoleEntries.push(resultEntry);
-        consoleTop.append(resultEntry.$consoleEntry);
+        let replReturnOutputAsString = this.replReturnValueToOutput(value);
+        if(replReturnOutputAsString){
+            let resultEntry = new ConsoleEntry(false, replReturnOutputAsString, value.value,  null, null, true, color);
+            this.consoleEntries.push(resultEntry);
+            consoleTop.append(resultEntry.$consoleEntry);
+        }
+
 
         var height = consoleTop[0].scrollHeight;
         consoleTop.scrollTop(height);
