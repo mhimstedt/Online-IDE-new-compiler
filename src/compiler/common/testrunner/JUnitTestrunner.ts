@@ -63,7 +63,8 @@ export class JUnitTestrunner {
             withDragAndDrop: false,
             contextMenu: {
 
-            }
+            },
+            withSelection: true
         })
 
         this.testTreeview.contextMenuProvider = (element: JUnitTreeviewEntry, node: TreeviewNode<JUnitTreeviewEntry>) => {
