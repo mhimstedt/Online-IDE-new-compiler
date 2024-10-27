@@ -82,7 +82,7 @@ export class Thread {
         let currentProgramState!: ProgramState;
         let stepIndex!: number;
 
-        if(!this.currentProgramState){
+        if (!this.currentProgramState) {
             this.state = ThreadState.terminated;
             return {
                 state: this.state,
@@ -175,7 +175,7 @@ export class Thread {
             } else {
                 this.handleSystemException(exception, step!, currentProgramState);
             }
-            
+
         }
 
         return { state: this._state, stepsExecuted: this.numberOfSteps }
@@ -185,7 +185,7 @@ export class Thread {
      * We use this method if we are in a call chain outside of Thread.run-method, e.g.
      * called by a network-event in database-classes.
      */
-    throwRuntimeExceptionOnLastExecutedStep(exception: Exception & IThrowable){
+    throwRuntimeExceptionOnLastExecutedStep(exception: Exception & IThrowable) {
         this.throwException(exception, this.currentProgramState!.lastExecutedStep!);
     }
 
@@ -265,7 +265,7 @@ export class Thread {
         exception.range = exception.range || step.getValidRangeOrUndefined();
         exception.thread = this;
 
-        if(this.isExecutingReplProgram) this.returnFromREPLProgram(exception, step);
+        if (this.isExecutingReplProgram) this.returnFromREPLProgram(exception, step);
 
         let classNames = exception.getExtendedImplementedIdentifiers().slice();
         classNames.push(exception.getIdentifier());
@@ -415,7 +415,7 @@ export class Thread {
 
         // TODO: getStacktrace and get exception to the output...
         let replProgram = this.programStack.pop();
-        while(replProgram && !replProgram.program.isReplProgram){
+        while (replProgram && !replProgram.program.isReplProgram) {
             replProgram = this.programStack.pop();
         }
 
@@ -613,7 +613,7 @@ export class Thread {
         if (Array.isArray(object)) {
             this._arrayOfObjectsToString(object, () => {
                 this.s.push(new StringClass(this.s.pop()));
-                if(callback) callback();
+                if (callback) callback();
             }, maximumLength);
             return;
         }
@@ -652,6 +652,38 @@ export class Thread {
         }
     }
 
+    registerLeavingSynchronizedBlock() {
+        let ps = this.programStack[this.programStack.length - 1];
+        if (ps.exceptionInfoList.length > 0) {
+            let ei = ps.exceptionInfoList[ps.exceptionInfoList.length - 1];
+            if (ei.aquiredObjectLocks && ei.aquiredObjectLocks.length > 0) ei.aquiredObjectLocks.pop();
+        } else {
+            if (ps.aquiredObjectLocks && ps.aquiredObjectLocks.length > 0) ps.aquiredObjectLocks.pop();
+        }
+
+    }
+
+    leaveAllSynchronizedBlocksInCurrentMethod() {
+        let ps = this.programStack[this.programStack.length - 1];
+
+        while (ps?.exceptionInfoList.length > 0) {
+            let exInfo = ps.exceptionInfoList.pop()!;
+
+            if (exInfo.aquiredObjectLocks) {
+                while (exInfo.aquiredObjectLocks.length > 0) exInfo.aquiredObjectLocks.pop().leaveSynchronizedBlock(this, false);
+            }
+
+        }
+
+        if(ps.aquiredObjectLocks){
+            while(ps.aquiredObjectLocks.length > 0){
+                ps.aquiredObjectLocks.pop().leaveSynchronizedBlock(this, false);
+            }
+        }
+
+    }
+
+
     leaveSynchronizedBlock(aquiredLock: ObjectClass) {
         aquiredLock.leaveSynchronizedBlock(this);
     }
@@ -682,7 +714,7 @@ export class Thread {
      *  java: a[3][4] = 17 -> javascript: __t.Array1(a, 3)[__t.CheckLastIndex(4)] = 17   (__t stores result of __t.Array1(a, 3))
      *  java: a[3][4][5] = 17 -> javascript: __t.Array2(a, 3, 4)[__t.CheckLastIndex(5)] = 17 (__t stores result of __t.Array2(a, 3, 4))
      */
-    IOBE(startLineNumber: number, startColumn: number, endLineNumber: number, endColumn: number){
+    IOBE(startLineNumber: number, startColumn: number, endLineNumber: number, endColumn: number) {
         let range: IRange = {
             startLineNumber: startLineNumber,
             startColumn: startColumn,
@@ -724,7 +756,7 @@ export class Thread {
         return array;
     }
 
-    Array0(array: any[]){
+    Array0(array: any[]) {
         this.lastCheckedArrays.push(array);
         return array;
     }

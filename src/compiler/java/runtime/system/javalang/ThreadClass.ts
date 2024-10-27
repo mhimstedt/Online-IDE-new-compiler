@@ -81,7 +81,7 @@ export class ThreadClass extends ObjectClass implements RunnableInterface {
         { type: "method", signature: "public void join()", java: ThreadClass.prototype._mj$join , comment: JRC.threadJoinComment},
         { type: "method", signature: "public void join(int milliseconds)", java: ThreadClass.prototype._mj$join , comment: JRC.threadJoinComment2},
         { type: "method", signature: "public string getName()", template: `§1.name` , comment: JRC.threadGetNameComment},
-        { type: "method", signature: "public void setName(string name)", java: ThreadClass.prototype._setName , comment: JRC.threadSetNameComment},
+        { type: "method", signature: "public void setName(string name)", native: ThreadClass.prototype._setName , comment: JRC.threadSetNameComment},
         { type: "method", signature: "public void setSpeed(int maxStepsPerSecond)", java: ThreadClass.prototype._setSpeed , comment: JRC.threadSetSpeedComment},
         { type: "method", signature: "public static void sleep(int milliseconds)", java: ThreadClass._sleep , comment: JRC.threadSleepComment},
     ]
@@ -183,6 +183,7 @@ export class ThreadClass extends ObjectClass implements RunnableInterface {
 
     _setName(name: string){
         this.name = name;
+        if(this.thread) this.thread.name = name;
     }
 
     _setSpeed(maxStepsPerSecond: number){

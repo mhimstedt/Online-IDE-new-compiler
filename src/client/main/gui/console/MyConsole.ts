@@ -133,60 +133,44 @@ export class MyConsole {
             }
         })
 
-        this.editor.onKeyUp(() => {
+        this.editor.onKeyUp((e) => {
             let programAndModule = this.compile();
             if (programAndModule) {
                 this.showCompilationErrors(programAndModule.module.errors);
             }
-        })
 
-        this.editor.addCommand(monaco.KeyCode.UpArrow, () => {
 
-            let nextHistoryPos = that.history.length - (that.historyPos + 1);
-            if (nextHistoryPos >= 0) {
-                that.historyPos++;
-                let text = that.history[nextHistoryPos];
-                that.editor.setValue(text);
-                that.editor.setPosition({
-                    lineNumber: 1,
-                    column: text.length + 1
-                })
+            if(e.code == "ArrowUp"){
+                let nextHistoryPos = that.history.length - (that.historyPos + 1);
+                if (nextHistoryPos >= 0) {
+                    that.historyPos++;
+                    let text = that.history[nextHistoryPos];
+                    that.editor.setValue(text);
+                    that.editor.setPosition({
+                        lineNumber: 1,
+                        column: text.length + 1
+                    })
+                    that.compile();
+                }    
+            } else if(e.code == "ArrowDown"){
+                let nextHistoryPos = that.history.length - (that.historyPos - 1);
+                if (nextHistoryPos <= that.history.length - 1) {
+                    that.historyPos--;
+                    let text = that.history[nextHistoryPos];
+                    that.editor.setValue(text);
+                    that.editor.setPosition({
+                        lineNumber: 1,
+                        column: text.length + 1
+                    })
+                } else {
+                    that.editor.setValue("");
+                    that.historyPos = 0;
+                }
                 that.compile();
+    
             }
 
-        }, "!suggestWidgetVisible");
-
-        this.editor.addCommand(monaco.KeyCode.DownArrow, () => {
-
-            let nextHistoryPos = that.history.length - (that.historyPos - 1);
-            if (nextHistoryPos <= that.history.length - 1) {
-                that.historyPos--;
-                let text = that.history[nextHistoryPos];
-                that.editor.setValue(text);
-                that.editor.setPosition({
-                    lineNumber: 1,
-                    column: text.length + 1
-                })
-            } else {
-                that.editor.setValue("");
-                that.historyPos = 0;
-            }
-            that.compile();
-
-        }, "!suggestWidgetVisible");
-
-
-        // let model = this.editor.getModel();
-        // let lastVersionId = 0;
-
-        // model.onDidChangeContent(() => {
-        //     let versionId = model.getAlternativeVersionId();
-
-        //     if (versionId != lastVersionId) {
-        //         that.isDirty = true;
-        //         lastVersionId = versionId;
-        //     }
-        // });
+        })
 
         this.$consoleTabHeading.on("mousedown", () => {
             Helper.showHelper("consoleHelper", this.main);

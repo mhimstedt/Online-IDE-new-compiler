@@ -103,11 +103,12 @@ export class ObjectClass {
 
     restoreOneBlockedThread() {
         if (this.waitingThreads) {
-            for (let i = 0; i < this.waitingThreads.length - 1; i++) {
+            for (let i = 0; i < this.waitingThreads.length; i++) {
                 let t = this.waitingThreads[i];
                 if (t.state == ThreadState.blocked) {
                     this.waitingThreads.splice(i, 1);
                     t.scheduler.restoreThread(t);
+                    // console.log("Thread " + t.name + " unblocked.");
                     break;
                 }
             }
@@ -144,39 +145,53 @@ export class ObjectClass {
         return;
     }
 
-    beforeEnteringSynchronizedBlock(t: Thread, pushLockObject: boolean = false) {
-        if (pushLockObject) t.s.push(this);
+    /**
+     * returns 1 if thread may pass, 0 otherwise
+     * @param t 
+     * @param pushLockObject 
+     */
+    beforeEnteringSynchronizedBlock(t: Thread): number {
 
         if (this.threadHoldingLockToThisObject && this.threadHoldingLockToThisObject != t) {
-            t.state == ThreadState.blocked;
+            t.state = ThreadState.blocked;
             t.scheduler.suspendThread(t);
-        }
-    }
-
-
-    enterSynchronizedBlock(t: Thread, pushLockObject: boolean = false) {
-
-        if (pushLockObject) t.s.push(this);
-
-        if (!this.threadHoldingLockToThisObject) {
-            this.threadHoldingLockToThisObject = t;
-            this.reentranceCounter = 1;
-        } else {
-            this.reentranceCounter!++;
+            if (!this.waitingThreads) this.waitingThreads = [];
+            this.waitingThreads.push(t);
+            // console.log("Thread " + t.name + " blocked.");
+            return 0;
         }
 
+        this.threadHoldingLockToThisObject = t;
+        this.reentranceCounter = this.reentranceCounter || 0;
+        this.reentranceCounter++;
         t.registerEnteringSynchronizedBlock(this);
+        return 1;
     }
 
-    leaveSynchronizedBlock(t: Thread) {
-        if (this.threadHoldingLockToThisObject == t) {
-            this.reentranceCounter!--;
-            if (this.reentranceCounter == 0) {
-                this._mj$notifyAll$void$(t, undefined);
-                this.threadHoldingLockToThisObject = undefined;
-                this.reentranceCounter = undefined;
-                this.restoreOneBlockedThread();
-            }
+
+    // enterSynchronizedBlock(t: Thread, pushLockObject: boolean = false) {
+
+    //     if (pushLockObject) t.s.push(this);
+
+    //     if (!this.threadHoldingLockToThisObject) {
+    //         this.threadHoldingLockToThisObject = t;
+    //         this.reentranceCounter = 1;
+    //     } else {
+    //         this.reentranceCounter!++;
+    //     }
+
+    //     t.registerEnteringSynchronizedBlock(this);
+    // }
+
+    leaveSynchronizedBlock(t: Thread, registerLeaving: boolean = true) {
+        this.reentranceCounter!--;
+        if (this.reentranceCounter == 0) {
+            // console.log("Thread " + t.name + " leaves synchronized block.")
+            if(registerLeaving) t.registerLeavingSynchronizedBlock();
+            this._mj$notifyAll$void$(t, undefined);
+            this.threadHoldingLockToThisObject = undefined;
+            this.reentranceCounter = undefined;
+            this.restoreOneBlockedThread();
         }
     }
 
@@ -379,7 +394,7 @@ export class StringClass extends ObjectClass implements IPrimitiveTypeWrapper {
     _mj$compareToIgnoreCase$int$T(t: Thread, callback: CallbackFunction, otherString: StringClass) {
         if (otherString === null) {
             throw new t.classes["NullPointerException"](JRC.stringCompareToNullpointerException());
-        }    
+        }
         t.s.push(this.value.localeCompare(otherString.value, undefined, { sensitivity: 'accent' }));
         if (callback) callback();
     }

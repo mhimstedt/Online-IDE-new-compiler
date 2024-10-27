@@ -134,13 +134,11 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
             return undefined;
         }
 
-        if(this.synchronizedBlockCount > 0){
-            for(let i = 0; i < this.synchronizedBlockCount; i++){
-                snippet.addParts(new StringCodeSnippet(`${StepParams.stack}.pop().${ObjectClass.prototype.leaveSynchronizedBlock.name}(${StepParams.thread});\n`));
-            }
+        if (this.synchronizedBlockCount > 0) {
+            snippet.addParts(new StringCodeSnippet(`${Helpers.leaveAllSynchronizedBlocksInCurrentMethod}();\n`));
         }
 
-        if(this.currentSymbolTable.methodContext?.isSynchronized){
+        if (this.currentSymbolTable.methodContext?.isSynchronized) {
             snippet.addParts(new StringCodeSnippet(`${Helpers.elementRelativeToStackbase(0)}.${ObjectClass.prototype.leaveSynchronizedBlock.name}(${StepParams.thread});\n`));
         }
 
@@ -230,7 +228,7 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
             collectionElementType = collectionType.getElementType();
             if (node.elementType.kind != TokenType.varType) {
                 if (!this.typesAreIdentical(elementType!, collectionElementType)) {
-                    if(!this.canCastTo(collectionElementType, elementType, "implicit")){
+                    if (!this.canCastTo(collectionElementType, elementType, "implicit")) {
                         this.pushError(JCM.wrongArrayElementType(elementType!.toString(), node.elementIdentifier, collectionElementType.toString()), "error", node.elementIdentifierPosition);
                     }
                 }
@@ -262,7 +260,7 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
 
         } else if (collectionType instanceof IJavaClass && collectionType.runtimeClass!.prototype.getElements) {
 
-            if(elementType == this.stringType) elementType = this.stringNonPrimitiveType;
+            if (elementType == this.stringType) elementType = this.stringNonPrimitiveType;
 
             /*
              * Loop over SystemCollection
@@ -279,7 +277,7 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
                 } else {
                     collectionElementType = firstGenericParametersType;
                 }
-            } else if(collectionType.identifier == "Group"){
+            } else if (collectionType.identifier == "Group") {
                 collectionElementType = this.libraryTypestore.getType("Shape")!;
             }
             if (node.elementType.kind != TokenType.varType) {
@@ -336,7 +334,7 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
             }
 
             if (node.elementType.kind != TokenType.varType) {
-                if(elementType == this.stringType && collectionElementType == this.stringNonPrimitiveType){
+                if (elementType == this.stringType && collectionElementType == this.stringNonPrimitiveType) {
                     elementType = collectionElementType;
                 } else if (!this.typesAreIdentical(elementType!, collectionElementType)) {
                     this.pushError(JCM.elementTypeDoesntFitToIterable(elementType!.toString(), node.elementIdentifier, collectionElementType.toString()), "error", node.elementIdentifierPosition);
@@ -514,12 +512,12 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
             this.synchronizedBlockCount++;
             let getLockObjectSnippet = this.compileTerm(lockObject);
             if (getLockObjectSnippet) {
-                let beforeEnteringSynchronizedBlockStatement = SnippetFramer.frame(getLockObjectSnippet, `§1.${ObjectClass.prototype.beforeEnteringSynchronizedBlock.name}(${StepParams.thread}, true);\n`);
+                let beforeEnteringSynchronizedBlockStatement = SnippetFramer.frame(getLockObjectSnippet, `§1.${ObjectClass.prototype.beforeEnteringSynchronizedBlock.name}(${StepParams.thread});\n`);
                 snippet.addParts(beforeEnteringSynchronizedBlockStatement);
                 snippet.addNextStepMark();
 
-                let enterSynchronizedBlockStatement = new StringCodeSnippet(`${StepParams.stack}.pop().${ObjectClass.prototype.enterSynchronizedBlock.name}(${StepParams.thread}, true);\n`, synchronizedTokenRange);
-                snippet.addParts(enterSynchronizedBlockStatement);
+                // let enterSynchronizedBlockStatement = new StringCodeSnippet(`${StepParams.stack}.pop().${ObjectClass.prototype.enterSynchronizedBlock.name}(${StepParams.thread}, true);\n`, synchronizedTokenRange);
+                // snippet.addParts(enterSynchronizedBlockStatement);
             }
         }
 
@@ -723,7 +721,7 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
             this.pushError(JCM.switchOnlyFeasibleForTypes(), "error", node.term.range);
         }
 
-        if(type == this.stringNonPrimitiveType){
+        if (type == this.stringNonPrimitiveType) {
             term = this.unbox(term);
             type = this.stringType;
         }
@@ -893,10 +891,10 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
             node.type.resolvedType!, this.currentSymbolTable);
         variable.isFinal = node.isFinal;
 
-        if(this.currentSymbolTable.findSymbolButNotInParentScopes(variable.identifier)){
+        if (this.currentSymbolTable.findSymbolButNotInParentScopes(variable.identifier)) {
             this.pushError(JCM.cantRedeclareVariableError(variable.identifier), "error", node.range);
         }
-        
+
         let initValueSnippet: CodeSnippet | undefined = this.compileInitialValue(node.initialization, variable.type);
 
         this.currentSymbolTable.addSymbol(variable);    // sets stackOffset
@@ -911,10 +909,10 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
             if (node.type.kind == TokenType.varType) {
                 let valueType = initValueSnippet.type!;
                 variable.type = valueType;
-                if(valueType == this.floatType && initValueSnippet.isConstant()){
+                if (valueType == this.floatType && initValueSnippet.isConstant()) {
                     variable.type = this.doubleType;
                 }
-                
+
             }
 
             let snippet = new BinaryOperatorTemplate('=', false)
@@ -976,14 +974,14 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
 
 
         } else {
-            if(!destinationType) return undefined;
-            
+            if (!destinationType) return undefined;
+
             let defaultValueAsString: string = destinationType.isPrimitive ? (<PrimitiveType>destinationType).defaultValueAsString : "null";
             let defaultValue = destinationType.isPrimitive ? (<PrimitiveType>destinationType).defaultValue : null;
             // initValueSnippet = new StringCodeSnippet(defaultValue, EmptyRange.instance, destinationType);
             initValueSnippet = new StringCodeSnippet(defaultValueAsString, EmptyRange.instance, destinationType);
             (<StringCodeSnippet>initValueSnippet).setConstantValue(defaultValue);
-            
+
         }
 
         return initValueSnippet;

@@ -49,6 +49,7 @@ export class Helpers {
     static objectArrayToString = StepParams.thread + "." + Thread.prototype._arrayOfObjectsToString.name;
     static startReplProgram = StepParams.thread + "." + Thread.prototype.startREPLProgram.name;
     static returnFromReplProgram = StepParams.thread + "." + Thread.prototype.returnFromREPLProgram.name;
+    static leaveAllSynchronizedBlocksInCurrentMethod = StepParams.thread + "." + Thread.prototype.leaveAllSynchronizedBlocksInCurrentMethod.name;
 
 
     static callbackParameter = "callback";
