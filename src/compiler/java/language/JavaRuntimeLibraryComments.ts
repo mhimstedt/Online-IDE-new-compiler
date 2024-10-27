@@ -1540,6 +1540,11 @@ export class JRC {
         "en": "Creates a straight line from (x1, y1) to (x2, y2).",
     })
 
+    static LineSetPointsComment = () => lm({
+    "de": `Ändert Start- und Endpunkt der Linie.`,
+    "en": `Sets start- and endpoint of this line.`,
+    })
+    
     static LineCopyComment = () => lm({
         "de": "Erstellt eine Kopie der Linie.",
         "en": "Creates a copy of this line.",
