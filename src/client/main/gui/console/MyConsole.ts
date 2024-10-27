@@ -213,7 +213,7 @@ export class MyConsole {
 
     replReturnValueToOutput(replReturnValue: ReplReturnValue): string | undefined {
         if (typeof replReturnValue == "undefined") return undefined;
-        if (!replReturnValue.text) return undefined;
+        if(!replReturnValue.text) return undefined;
         let type: string = replReturnValue.type ? replReturnValue.type.toString() + " " : "";
         let text = replReturnValue.text;
         //@ts-ignore#
@@ -254,8 +254,8 @@ export class MyConsole {
         consoleTop.append(commandEntry.$consoleEntry);
 
         let replReturnOutputAsString = this.replReturnValueToOutput(value);
-        if (replReturnOutputAsString) {
-            let resultEntry = new ConsoleEntry(false, replReturnOutputAsString, value.value, null, null, true, color);
+        if(replReturnOutputAsString){
+            let resultEntry = new ConsoleEntry(false, replReturnOutputAsString, value.value,  null, null, true, color);
             this.consoleEntries.push(resultEntry);
             consoleTop.append(resultEntry.$consoleEntry);
         }
