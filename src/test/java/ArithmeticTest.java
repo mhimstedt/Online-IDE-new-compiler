@@ -1,6 +1,7 @@
 /**::
  * Operator precedence
  */
+print("Test!");
 
 int a = 10;
 int b = 20;

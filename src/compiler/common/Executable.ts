@@ -133,15 +133,9 @@ export class Executable {
         return this.testClassToTestMethodMap;
     }
 
-    findMainModule(useTestModuleIfPresent: boolean, lastOpenedFile?: CompilerFile, currentlyOpenedModule?: Module) {
-        if (useTestModuleIfPresent) {
-            let testModule = this.moduleManager.modules.find(m => m.file.name == "TEST_FILE");
-            if (testModule) {
-                this.mainModule = testModule;
-
-                return;
-            }
-
+    findMainModule(unitTestMode: boolean, lastOpenedFile?: CompilerFile, currentlyOpenedModule?: Module) {
+        if (unitTestMode) {
+            this.mainModule = this.moduleManager.modules.find(m => m.isStartable());
         }
         
         if(currentlyOpenedModule){
