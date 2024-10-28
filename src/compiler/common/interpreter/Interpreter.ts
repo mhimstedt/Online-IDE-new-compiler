@@ -26,8 +26,8 @@ import { ThreadState } from "./ThreadState.ts";
 import { InterpreterMessages } from './InterpreterMessages.ts';
 
 
-type InterpreterEvents = "stop" | "done" | "resetRuntime" | "stateChanged" | 
-                         "showProgramPointer" | "hideProgramPointer" | "afterExcecutableInitialized";
+type InterpreterEvents = "stop" | "done" | "resetRuntime" | "stateChanged" |
+    "showProgramPointer" | "hideProgramPointer" | "afterExcecutableInitialized";
 
 export class Interpreter {
 
@@ -79,7 +79,7 @@ export class Interpreter {
     mainThread?: Thread;
     public stepsPerSecondGoal: number | undefined = 1e8;
     public isMaxSpeed: boolean = true;
-    
+
 
     constructor(printManager?: IPrintManager, private actionManager?: ActionManager,
         public graphicsManager?: GraphicsManager, public keyboardManager?: KeyboardManager,
@@ -90,7 +90,7 @@ export class Interpreter {
     ) {
 
         //@ts-ignore
-        if(typeof p5 === 'object') p5.disableFriendlyErrors = true
+        if (typeof p5 === 'object') p5.disableFriendlyErrors = true
 
         this.printManager = printManager || new DummyPrintManager();
 
@@ -132,10 +132,10 @@ export class Interpreter {
 
     detachAssertionObserver(observer: IAssertionObserver) {
         let index = this.assertionObserverList.indexOf(observer);
-        if(index >= 0) this.assertionObserverList.splice(index, 1);
+        if (index >= 0) this.assertionObserverList.splice(index, 1);
     }
 
-    detachAllAssertionObservers(){
+    detachAllAssertionObservers() {
         this.assertionObserverList = [];
     }
 
@@ -181,15 +181,15 @@ export class Interpreter {
 
     showProgramPointer(_textPositionWithModule?: ProgramPointerPositionInfo, tag?: string) {
         if (this.programPointerManager) {
-            if (!_textPositionWithModule){
+            if (!_textPositionWithModule) {
 
                 _textPositionWithModule = this.scheduler.getNextStepPosition();
 
-                if(!this.programPointerManager.fileIsCurrentlyShownInEditor((<Module>_textPositionWithModule?.programOrmoduleOrFile)?.file)){
+                if (!this.programPointerManager.fileIsCurrentlyShownInEditor((<Module>_textPositionWithModule?.programOrmoduleOrFile)?.file)) {
                     _textPositionWithModule = undefined;
                 }
 
-            }  
+            }
             if (_textPositionWithModule?.range) {
                 this.eventManager.fire("showProgramPointer");
                 if (_textPositionWithModule.range.startLineNumber >= 0) {
@@ -239,13 +239,13 @@ export class Interpreter {
         const thread = this.scheduler.getCurrentThread()
         const programState = thread.currentProgramState
 
-        if(this.main.getCurrentWorkspace().getCurrentlyEditedModule() != programState.program.module){
+        if (this.main.getCurrentWorkspace().getCurrentlyEditedModule() != programState.program.module) {
             alert(InterpreterMessages.CantJumpToLine());
             return;
         }
-        
+
         const stepNo = programState.currentStepList.find(s => s.range.startLineNumber <= lineNo && s.range.endLineNumber >= lineNo)?.index
-        if(!stepNo){
+        if (!stepNo) {
             alert(InterpreterMessages.CantJumpToLine());
             return;
         }
@@ -310,7 +310,7 @@ export class Interpreter {
         this.scheduler.setState(SchedulerState.running);
         try {
             while (this.scheduler.state == SchedulerState.running) {
-                if(this.scheduler.run(100) == SchedulerExitState.nothingMoreToDo){
+                if (this.scheduler.run(100) == SchedulerExitState.nothingMoreToDo) {
                     break;
                 };
             }
@@ -330,7 +330,7 @@ export class Interpreter {
 
         if (!this.actionManager) return;
 
-        this.actionManager.registerAction("interpreter.start", ['F4'],
+        this.actionManager.registerAction("interpreter.start", ['F4'], "Programm starten",
             () => {
                 if (this.actionManager!.isActive("interpreter.start")) {
                     this.start();
@@ -338,9 +338,9 @@ export class Interpreter {
                     this.pause();
                 }
 
-            }, "Programm starten");
+            });
 
-        this.actionManager.registerAction("interpreter.pause", ['F4'],
+        this.actionManager.registerAction("interpreter.pause", ['F4'], "Pause",
             () => {
                 if (this.actionManager!.isActive("interpreter.start")) {
                     this.start();
@@ -348,38 +348,38 @@ export class Interpreter {
                     this.pause();
                 }
 
-            }, "Pause");
+            });
 
-        this.actionManager.registerAction("interpreter.stop", [],
+        this.actionManager.registerAction("interpreter.stop", [], "Programm anhalten",
             () => {
                 this.stop(false);
-            }, "Programm anhalten");
+            });
 
-        this.actionManager.registerAction("interpreter.stepOver", ['F6'],
+        this.actionManager.registerAction("interpreter.stepOver", ['F6'], "Einzelschritt (Step over)",
             () => {
                 this.executeOneStep(false);
-            }, "Einzelschritt (Step over)");
+            });
 
-        this.actionManager.registerAction("interpreter.stepInto", ['F7'],
+        this.actionManager.registerAction("interpreter.stepInto", ['F7'], "Einzelschritt (Step into)",
             () => {
                 this.executeOneStep(true);
-            }, "Einzelschritt (Step into)");
+            });
 
-        this.actionManager.registerAction("interpreter.stepOut", [],
+        this.actionManager.registerAction("interpreter.stepOut", [], "Step out",
             () => {
                 this.stepOut();
-            }, "Step out");
+            });
 
-        this.actionManager.registerAction("interpreter.restart", [],
+        this.actionManager.registerAction("interpreter.restart", [], "Neu starten",
             () => {
                 this.stop(true);
-            }, "Neu starten");
+            });
 
-        this.actionManager.registerAction("interpreter.goto", [],
+        this.actionManager.registerAction("interpreter.goto", [], "Goto",
             (name: string, buttonToggler?: ButtonToggler, pressed_key?: string, ...args: any[]) => {
                 const lineNo = args[0]
                 this.goto(lineNo)
-            }, "Goto");
+            });
     }
 
     executableHasTests(): boolean {
@@ -388,12 +388,12 @@ export class Interpreter {
 
     setState(state: SchedulerState) {
 
-        if(state == SchedulerState.running){
+        if (state == SchedulerState.running) {
             this.exceptionMarker?.removeExceptionMarker();
-            if(this.main && !this.main.isEmbedded()){
+            if (this.main && !this.main.isEmbedded()) {
                 (<HTMLDivElement>document.getElementById('jo_runtab'))?.focus();
             }
-        } 
+        }
 
         if (state == SchedulerState.stopped) {
             this.hideProgrampointerPosition();
@@ -433,6 +433,9 @@ export class Interpreter {
             this.actionManager.setActive("interpreter.stepInto", buttonStepIntoActive);
             this.actionManager.setActive("interpreter.startTests", this.executableHasTests() && state == SchedulerState.stopped);
 
+            Object.values(SchedulerState).filter(v => typeof v == 'string').forEach( (key) => {
+                this.actionManager.setEditorContext("Scheduler_" + key, SchedulerState[key] == state);
+            })
 
         }
 
@@ -440,21 +443,21 @@ export class Interpreter {
             this.eventManager.fire("done");
 
         }
-        
+
         let runningStates: SchedulerState[] = [SchedulerState.paused, SchedulerState.running];
         if (runningStates.indexOf(this.scheduler.state) >= 0 && runningStates.indexOf(state) < 0) {
             this._debugger?.hide();
             this.keyboardManager?.unsubscribeAllListeners();
         }
-        
+
         if (runningStates.indexOf(this.scheduler.state) < 0 && runningStates.indexOf(state) >= 0) {
             this._debugger?.show();
         }
-        
+
         this.eventManager.fire("stateChanged", this.scheduler.state, state);
 
         this.scheduler.setState(state);
-        
+
 
     }
 
@@ -472,19 +475,19 @@ export class Interpreter {
 
         // this.main.getBottomDiv()?.console?.clearErrors();
 
-        
+
         // this.main.getBottomDiv()?.console?.clearExceptions();
-        
+
         // /*
         //     As long as there is no startable new Version of current workspace we keep current compiled modules so
         //     that variables and objects defined/instantiated via console can be kept, too. 
         // */
         // if (this.moduleStoreVersion != this.main.version && this.main.getCompiler().atLeastOneModuleIsStartable) {
-            //     this.main.copyExecutableModuleStoreToInterpreter();
-            //     this.main.getBottomDiv()?.console?.detachValues();  // detach values from console entries
-            // }
-            
-            
+        //     this.main.copyExecutableModuleStoreToInterpreter();
+        //     this.main.getBottomDiv()?.console?.detachValues();  // detach values from console entries
+        // }
+
+
         this.setState(SchedulerState.stopped);
         this.mainThread = this.scheduler.init(executable);
 
@@ -541,15 +544,15 @@ export class Interpreter {
         return false; // TODO
     }
 
-    public storeObject(classIdentifier: string, object: any){
+    public storeObject(classIdentifier: string, object: any) {
         this.objectStore.set(classIdentifier, object);
     }
 
-    public retrieveObject(classIdentifier: string){
+    public retrieveObject(classIdentifier: string) {
         return this.objectStore.get(classIdentifier);
     }
 
-    public deleteObject(classIdentifier: string){
+    public deleteObject(classIdentifier: string) {
         this.objectStore.delete(classIdentifier);
     }
 

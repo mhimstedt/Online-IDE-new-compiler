@@ -3,12 +3,14 @@ import { SoundTools } from '../../../tools/SoundTools';
 
 export type ButtonToggler = (state: boolean) => void;
 
-export type Action = (name: string, buttonToggler?: ButtonToggler, pressed_key?: string, ...args: any[]) => void;
+export type ActionListener = (name: string, buttonToggler?: ButtonToggler, pressed_key?: string, ...args: any[]) => void;
+
+interface EditorContextKey {set(value: any): void;}
 
 export type ActionEntry = {
     text?: string,
     keys: string[],
-    action: Action,
+    actionListeners: ActionListener[],
     identifier: string, // name of Action is copied automatically to name of ActionEntry
     active: boolean
 }
@@ -20,6 +22,8 @@ export class ActionManager {
     keyEntries: { [key: string]: ActionEntry[] } = {};
 
     buttons: { [actionIdentifier: string]: JQuery<HTMLElement>[] } = {};
+
+    editorContextKeys: Map<string, EditorContextKey> = new Map();
 
     constructor(private $mainElement?: JQuery<HTMLElement> | undefined){
 
@@ -43,14 +47,23 @@ export class ActionManager {
     trigger(actionIdentifier: string, ...args: any[]) {
         let ae = this.actions[actionIdentifier];
         if(ae != null){
-            ae.action(actionIdentifier, undefined, "", ...args);
+            ae.actionListeners.forEach(listener => listener(actionIdentifier, undefined, "", ...args));
         }
     }
 
 
-    public registerAction(identifier: string, keys: string[], action: Action, text: string = ""){
+    public registerActionListener(identifier: string, actionListener: ActionListener){
+        let actionEntry = this.actions[identifier];
+        if(!actionEntry){
+            console.trace("ActionManager.registerActionListener: ActionEntry " + identifier + " not registered yet.");
+            return;
+        }
+        actionEntry.actionListeners.push(actionListener);
+    }
+
+    public registerAction(identifier: string, keys: string[], text: string = "", listener?: ActionListener){
         let actionEntry: ActionEntry = {
-            action: action,
+            actionListeners: [],
             identifier: identifier,
             keys: keys,
             text: text,
@@ -74,6 +87,7 @@ export class ActionManager {
             }
         }
 
+        if(listener) this.registerActionListener(identifier, listener);
     }
 
     public registerButton(actionIdentifier: string, $button: JQuery<HTMLElement>){
@@ -93,7 +107,7 @@ export class ActionManager {
             let actionEntry = this.actions[actionIdentifier];
             if(!actionEntry) return;
             if(actionEntry.active){
-                actionEntry.action(actionIdentifier, undefined, "mousedown");
+                actionEntry.actionListeners.forEach(listener => listener(actionIdentifier, undefined, "mousedown"));
             }
             if(actionIdentifier == "interpreter.start"){
                 SoundTools.init();
@@ -182,7 +196,7 @@ export class ActionManager {
                 if (actionEntry.active) {
                     event.stopPropagation();
                     event.preventDefault();
-                    actionEntry.action(actionEntry.identifier, undefined, key);
+                    actionEntry.actionListeners.forEach(listener => listener(actionEntry.identifier, undefined, key));
                     break;
                 }
             }
@@ -209,6 +223,21 @@ export class ActionManager {
                 }
             });
         }
+    }
+
+    /**
+     * Register a context key for monaco editor. This can be used to add preconditions
+     * to editor actions
+     * 
+     * @param identifier 
+     * @param editorContextKey 
+     */
+    registerEditorContextKey(identifier: string, editorContextKey: EditorContextKey){
+        this.editorContextKeys.set(identifier, editorContextKey);
+    }
+
+    setEditorContext(identifier: string, value: any){
+        this.editorContextKeys.get(identifier)?.set(value);
     }
 
 }

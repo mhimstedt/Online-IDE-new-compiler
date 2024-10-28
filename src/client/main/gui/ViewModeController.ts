@@ -30,28 +30,28 @@ export class ViewModeController {
 
         let am = this.main.actionManager;
 
-        am.registerAction("editor.fullwidth", [],
+        am.registerAction("editor.fullwidth", [], "Editor auf die volle Breite erweitern",
             () => {
                 this.toggleEditorFullwidth();
-            }, "Editor auf die volle Breite erweitern");
+            });
         am.registerButton("editor.fullwidth", this.$buttonEditorFullscreen)
 
-        am.registerAction("viewmode.presentation", [],
+        am.registerAction("viewmode.presentation", [], "Präsentationsansicht",
             () => {
                 this.setMode("presentation");
-            }, "Präsentationsansicht");
+            });
         am.registerButton("viewmode.presentation", this.$buttonPresentationMode);
 
-        am.registerAction("viewmode.monitor", [],
+        am.registerAction("viewmode.monitor", [], "Monitoransicht",
             () => {
                 this.setMode("monitor");
-            }, "Monitoransicht");
-            am.registerButton("viewmode.monitor", this.$buttonMonitorMode);
+            });
+        am.registerButton("viewmode.monitor", this.$buttonMonitorMode);
 
     }
 
     toggleEditorFullwidth() {
-        if(this.editorHasFullWidth){
+        if (this.editorHasFullWidth) {
             this.$buttonEditorFullscreen.removeClass('img_whole-window-back');
             this.$buttonEditorFullscreen.addClass('img_whole-window');
             this.$buttonEditorFullscreen.attr('title', 'Editor in voller Breite');
@@ -66,7 +66,7 @@ export class ViewModeController {
             this.$buttonEditorFullscreen.removeClass('img_whole-window');
             this.$buttonEditorFullscreen.addClass('img_whole-window-back');
             this.$buttonEditorFullscreen.attr('title', 'Editor in normaler Breite');
-            
+
             this.rightDivWidth = Number.parseInt(jQuery('#rightdiv').css('width').replace('px', ''));
             this.editorWidth = Number.parseInt(jQuery('#editor>.monaco-editor').css('width').replace('px', ''));
 
@@ -76,7 +76,7 @@ export class ViewModeController {
             this.main.getInterpreter().stop(false);
         }
 
-        setTimeout(()=>{
+        setTimeout(() => {
             this.main.getMainEditor().layout();
         }, 800);
 

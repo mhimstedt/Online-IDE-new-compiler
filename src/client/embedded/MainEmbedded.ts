@@ -520,14 +520,14 @@ export class MainEmbedded implements MainBase {
             });
         }
 
+        this.actionManager = new ActionManager($div);
+        this.actionManager.init();
+
         this.editor = new Editor(this, false, true);
         this.editor.initGUI(this.$monacoDiv);
         this.$monacoDiv.find('.monaco-editor').css('z-index', '10');
 
         if ($div.attr('tabindex') == null) $div.attr('tabindex', "0");
-
-        this.actionManager = new ActionManager($div);
-        this.actionManager.init();
 
         this.bottomDiv = new BottomDiv(this, $bottomDivInner, $div);
         this.bottomDiv.initGUI();

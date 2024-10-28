@@ -100,6 +100,8 @@ export class Editor {
         }
         );
 
+        this.createContextKeys();
+
         this.editor.onDidChangeModelContent((e: monaco.editor.IModelContentChangedEvent) => {
             let state = this.main.getInterpreter().scheduler.state;
             if ([SchedulerState.stopped, SchedulerState.error, SchedulerState.not_initialized].indexOf(state) < 0) {
@@ -223,7 +225,7 @@ export class Editor {
                 monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyK],
 
             // A precondition for this action.
-            precondition: undefined,
+            precondition: "Scheduler_running || Scheduler_paused",
 
             // A rule to evaluate on top of the precondition in order to dispatch the keybindings.
             keybindingContext: undefined,
@@ -242,6 +244,12 @@ export class Editor {
         // console.log(this.editor.getSupportedActions().map(a => a.id));
 
         return this.editor;
+    }
+
+    createContextKeys(){
+        Object.values(SchedulerState).filter(v => typeof v == 'string').forEach(key => 
+            this.main.getActionManager().registerEditorContextKey("Scheduler_" + key, this.editor.createContextKey("Scheduler_" + key, false))
+        );
     }
 
     getPositionForHistory(): HistoryEntry {
