@@ -214,32 +214,8 @@ export class Editor {
             monaco.editor.remeasureFonts();
         }, 2000);
 
-        JavaAddEditorShortcuts.addActions(this.editor);
+        JavaAddEditorShortcuts.addActions(this.editor, this.main);
 
-        this.editor.addAction({
-            id: 'Debugger Goto',
-            label: 'Gehe zur Zeile',
-
-            // An optional array of keybindings for the action.
-            keybindings: [
-                monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyK],
-
-            // A precondition for this action.
-            precondition: "Scheduler_running || Scheduler_paused",
-
-            // A rule to evaluate on top of the precondition in order to dispatch the keybindings.
-            keybindingContext: undefined,
-
-            contextMenuGroupId: 'navigation',
-
-            contextMenuOrder: 1.5,
-
-            // Method that will be executed when the action is triggered.
-            // @param editor The editor instance is passed in as a convenience
-            run: (ed) => {
-                this.main.getActionManager().trigger("interpreter.goto", this.editor.getSelection().startLineNumber)
-            }
-        });
 
         // console.log(this.editor.getSupportedActions().map(a => a.id));
 

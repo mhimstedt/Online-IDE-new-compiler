@@ -1,5 +1,10 @@
+import { HistoryEntry } from '../../../client/main/gui/Editor';
+import { Workspace } from '../../../client/workspace/Workspace';
+import { IMain } from '../../common/IMain';
+import { SchedulerState } from '../../common/interpreter/SchedulerState';
+
 export class JavaAddEditorShortcuts {
-    static addActions(editor: monaco.editor.IStandaloneCodeEditor) {
+    static addActions(editor: monaco.editor.IStandaloneCodeEditor, main?: IMain) {
         editor.addAction({
             // An unique identifier of the contributed action.
             id: 'Find bracket',
@@ -57,6 +62,31 @@ export class JavaAddEditorShortcuts {
                 console.log('Hier!');
                 ed.getAction('editor.action.commentLine')?.run();
                 return undefined;
+            }
+        });
+
+        if(main) editor.addAction({
+            id: 'Debugger Goto',
+            label: 'Gehe zur Zeile',
+
+            // An optional array of keybindings for the action.
+            keybindings: [
+                monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyK],
+
+            // A precondition for this action.
+            precondition: "Scheduler_running || Scheduler_paused",
+
+            // A rule to evaluate on top of the precondition in order to dispatch the keybindings.
+            keybindingContext: undefined,
+
+            contextMenuGroupId: 'navigation',
+
+            contextMenuOrder: 1.5,
+
+            // Method that will be executed when the action is triggered.
+            // @param editor The editor instance is passed in as a convenience
+            run: (ed) => {
+                main.getActionManager().trigger("interpreter.goto", editor.getSelection().startLineNumber)
             }
         });
 
