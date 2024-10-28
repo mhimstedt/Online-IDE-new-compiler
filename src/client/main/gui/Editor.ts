@@ -216,7 +216,7 @@ export class Editor {
 
         this.editor.addAction({
             id: 'Debugger Goto',
-            label: 'interpreter goto',
+            label: 'Gehe zur Zeile',
 
             // An optional array of keybindings for the action.
             keybindings: [

@@ -23,6 +23,7 @@ import { SchedulerExitState } from "./SchedulerExitState.ts";
 import { SchedulerState } from "./SchedulerState.ts";
 import { Thread } from "./Thread.ts";
 import { ThreadState } from "./ThreadState.ts";
+import { InterpreterMessages } from './InterpreterMessages.ts';
 
 
 type InterpreterEvents = "stop" | "done" | "resetRuntime" | "stateChanged" | 
@@ -238,7 +239,17 @@ export class Interpreter {
         const thread = this.scheduler.getCurrentThread()
         const programState = thread.currentProgramState
 
-        const stepNo = programState.currentStepList.find(s => s.range.startLineNumber >= lineNo).index
+        if(this.main.getCurrentWorkspace().getCurrentlyEditedModule() != programState.program.module){
+            alert(InterpreterMessages.CantJumpToLine());
+            return;
+        }
+        
+        const stepNo = programState.currentStepList.find(s => s.range.startLineNumber <= lineNo && s.range.endLineNumber >= lineNo)?.index
+        if(!stepNo){
+            alert(InterpreterMessages.CantJumpToLine());
+            return;
+        }
+
         programState.stepIndex = stepNo
 
         this.showProgramPointer(this.scheduler.getNextStepPosition(thread));
