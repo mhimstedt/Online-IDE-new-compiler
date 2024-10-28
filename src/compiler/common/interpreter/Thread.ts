@@ -63,6 +63,8 @@ export class Thread {
 
     callbackAfterTerminated?: () => void;
 
+    threadObject?: any;     // For java: type is ThreadClass
+
     get assertionObservers() {
         return this.scheduler.interpreter.assertionObserverList;
     }

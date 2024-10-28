@@ -84,6 +84,7 @@ export class ThreadClass extends ObjectClass implements RunnableInterface {
         { type: "method", signature: "public void setName(string name)", native: ThreadClass.prototype._setName , comment: JRC.threadSetNameComment},
         { type: "method", signature: "public void setSpeed(int maxStepsPerSecond)", java: ThreadClass.prototype._setSpeed , comment: JRC.threadSetSpeedComment},
         { type: "method", signature: "public static void sleep(int milliseconds)", java: ThreadClass._sleep , comment: JRC.threadSleepComment},
+        { type: "method", signature: "public static Thread currentThread()", java: ThreadClass._currentThread , comment: JRC.threadCurrentThreadComment},
     ]
 
 
@@ -129,7 +130,8 @@ export class ThreadClass extends ObjectClass implements RunnableInterface {
             if(!runnable) runnable = this;
 
             this.thread = t.scheduler.createThread(this.name || "user generated thread", []);
-            
+            this.thread.threadObject = this;
+
             let that = this;
             runnable._mj$run$void$(this.thread, () => {
                 that.callbackWhenThreadFinished();        
@@ -205,5 +207,13 @@ export class ThreadClass extends ObjectClass implements RunnableInterface {
 
         if(callback) callback();
     }
+
+    static _currentThread(t: Thread, callback: CallbackFunction){
+        if(!t.threadObject) t.threadObject = new ThreadClass();
+        (<ThreadClass>t.threadObject).thread = t;
+        t.s.push(t.threadObject);
+        if(callback) callback();
+    }
+
 
 }

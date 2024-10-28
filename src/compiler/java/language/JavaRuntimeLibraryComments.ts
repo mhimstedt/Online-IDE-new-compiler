@@ -2314,6 +2314,11 @@ export class JRC {
         "en": "Causes the currently executing thread to sleep (temporarily cease execution) for the specified number of milliseconds, subject to the precision and accuracy of system timers and schedulers.",
     })
 
+    static threadCurrentThreadComment = () => lm({
+    "de": `Gibt das Thread-Objekt für den gerade ausgeführten Thread zurück.`,
+    "en": `Returns the Thread object for the current thread.`,
+    })
+
     static millisecondsNotPositiveError = () => lm({
     "de": `Die angegebene Zeit in Millisekunden muss größer als 0 sein.`,
     "en": `Given time in milliseconds has to be positive.`,
