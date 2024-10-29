@@ -44,7 +44,7 @@ export class Editor {
             language: 'myJava',
             "semanticHighlighting.enabled": true,
             lightbulb: {
-                enabled: true
+                enabled: monaco.editor.ShowLightbulbIconMode.On
             },
             // gotoLocation: {
             //     multipleReferences: "gotoAndPeek"
@@ -63,7 +63,7 @@ export class Editor {
             // selectionHighlight: false,
             automaticLayout: true,
             scrollBeyondLastLine: false,
-            occurrencesHighlight: false,
+            occurrencesHighlight: "multiFile",
             autoIndent: "advanced",
             // renderWhitespace: "boundary",
             dragAndDrop: true,

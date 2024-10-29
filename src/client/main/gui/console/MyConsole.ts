@@ -83,7 +83,7 @@ export class MyConsole {
             fontFamily: window.javaOnlineFont == null ? "Consolas, Roboto Mono" : window.javaOnlineFont,
             fontWeight: "500",
             roundedSelection: true,
-            occurrencesHighlight: false,
+            occurrencesHighlight: "multiFile",
             suggest: {
                 localityBonus: true,
                 snippetsPreventQuickSuggestions: false

@@ -1,11 +1,11 @@
-"use strict";
 /*!-----------------------------------------------------------------------------
  * Copyright (c) Microsoft Corporation. All rights reserved.
- * Version: 0.44.0(3e047efd345ff102c8c61b5398fb30845aaac166)
+ * Version: 0.52.0(f6dc0eb8fce67e57f6036f4769d92c1666cdf546)
  * Released under the MIT license
  * https://github.com/microsoft/monaco-editor/blob/main/LICENSE.txt
  *-----------------------------------------------------------------------------*/
 define("vs/basic-languages/dockerfile/dockerfile", ["require"],(require)=>{
+"use strict";
 var moduleExports = (() => {
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -98,6 +98,7 @@ var moduleExports = (() => {
           }
         ]
       ],
+      // Deal with white space, including comments
       whitespace: [
         [
           /\s+/,
@@ -110,9 +111,12 @@ var moduleExports = (() => {
         ]
       ],
       comment: [[/(^#.*$)/, "comment", "@popall"]],
+      // Recognize strings, including those broken across lines with \ (but not without)
       strings: [
         [/\\'$/, "", "@popall"],
+        // \' leaves @arguments at eol
         [/\\'/, ""],
+        // \' is not a string
         [/'$/, "string", "@popall"],
         [/'/, "string", "@stringBody"],
         [/"$/, "string", "@popall"],
