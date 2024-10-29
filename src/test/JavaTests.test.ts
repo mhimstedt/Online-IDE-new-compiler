@@ -2,11 +2,11 @@ import chalk from "chalk";
 import fs from "fs";
 import { test } from "vitest";
 import { Interpreter } from "../compiler/common/interpreter/Interpreter";
-import { CompilerFile } from "../compiler/common/module/CompilerFile";
 import { JavaCompiler } from "../compiler/java/JavaCompiler";
 import { getLine, getLineNumber, threeDez } from "../tools/StringTools";
 import { IPrintManager } from "../compiler/common/interpreter/IPrintManager";
 import { ViteTestAssertions } from "./ViteTestAssertions";
+import { CompilerFileMockup } from "./CompilerFileMockup";
 
 class StoreOutputPrintManager implements IPrintManager {
     
@@ -110,12 +110,12 @@ function test1(sourcecode: string, file: string) {
 function compileAndTest(name: string, program: string, lineOffset: number, expectedOutput: string | undefined, expectedCompiliationErrors: ExpectedError[]) {
 
     test(name, async (context) => {
-        let file = new CompilerFile();
+        let file = new CompilerFileMockup();
 
         file.setText(program);
 
         let compiler = new JavaCompiler();
-        compiler.setFiles([file]);
+        compiler.setFiles([<any>file]);
         let executable = await compiler.compileIfDirty();
         if (!executable){
             return;
