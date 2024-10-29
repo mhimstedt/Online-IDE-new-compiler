@@ -177,7 +177,9 @@ export class EmbeddedFileExplorer {
                 this.selectFileData(this.fileDataList[0], focusFirstFileSubsequently);
             } else {
                 let editor = this.main.getMainEditor();
-                editor.setValue("Keine Datei vorhanden.");
+                let model = monaco.editor.createModel("Keine Datei vorhanden.", "plaintext");
+                editor.setModel(model);
+                // editor.setValue("Keine Datei vorhanden.");
                 editor.updateOptions({ readOnly: true });
             }
         }
