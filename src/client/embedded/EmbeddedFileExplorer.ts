@@ -6,6 +6,7 @@ import { FileTypeManager } from "../../compiler/common/module/FileTypeManager.js
 import { File } from "../workspace/File.js";
 import { Workspace } from "../workspace/Workspace.js";
 import { EmbeddedMessages } from "./EmbeddedMessages.js";
+import markdownit from 'markdown-it';
 import * as monaco from 'monaco-editor'
 
 type FileData = {
@@ -242,7 +243,7 @@ export class EmbeddedFileExplorer {
                 let code: string[] = [];
 
                 //@ts-ignore
-                let md1 = window.markdownit({
+                let md1 = markdownit({
                     highlight: function (str, lang) {
                         code.push(str);
                         return "";
@@ -260,7 +261,7 @@ export class EmbeddedFileExplorer {
 
                 this.colorize(code, syntaxMap, () => {
                     //@ts-ignore
-                    let md2 = window.markdownit({
+                    let md2 = markdownit({
                         highlight: function (str, lang) {
                             return syntaxMap[str];
                         }
