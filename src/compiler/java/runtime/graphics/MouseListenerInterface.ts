@@ -18,9 +18,9 @@ export class MouseListenerInterface extends InterfaceClass {
     ]
 
     static type: NonPrimitiveType;
-   
+
     _mj$onMouseUp$void$double$double$int(t: Thread, callback: CallbackParameter, x: number, y: number, button: number){
-        
+
     }
 
     _mj$onMouseDown$void$double$double$int(t: Thread, callback: CallbackParameter, x: number, y: number, button: number){

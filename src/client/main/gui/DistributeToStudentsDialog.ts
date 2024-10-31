@@ -52,7 +52,7 @@ export class DistributeToStudentsDialog {
 
         for(let student of students){
             let $studentLine = jQuery('<div class="jo_ds_student_line">');
-            let $studentClass = jQuery(`<div class="jo_ds_student_class">${student["klass"].name}</div>`);                
+            let $studentClass = jQuery(`<div class="jo_ds_student_class">${student["klass"].name}</div>`);
             let $studentName = jQuery(`<div class="jo_ds_student_name">${student.rufname} ${student.familienname}</div>`);
             $studentLine.append($studentClass, $studentName);
             $studentList.append($studentLine);
@@ -67,7 +67,7 @@ export class DistributeToStudentsDialog {
 
         jQuery('.jo_ds_filterdiv>input').on('input', () => {
             let filterText = <string>jQuery('.jo_ds_filterdiv>input').val();
-            
+
             if(filterText == null || filterText == ""){
                 jQuery('.jo_ds_student_line').show();
             } else {
@@ -85,20 +85,20 @@ export class DistributeToStudentsDialog {
                 });
 
             }
-            
+
         });
 
-        
+
         this.$dialogMain = this.$dialog.find('.dialog-main');
         this.$dialog.css('visibility', 'visible');
-        
+
         jQuery('#jo_ds_cancel_button').on('click', () => { window.history.back(); });
         jQuery('#jo_ds_distribute_button').on('click', () => {that.distributeWorkspace();});
-        
+
         this.main.windowStateManager.registerOneTimeBackButtonListener(() => {
             that.close();
         });
-        
+
         (<HTMLInputElement>jQuery('.jo_ds_filterdiv>input')[0]).focus();
 
     }

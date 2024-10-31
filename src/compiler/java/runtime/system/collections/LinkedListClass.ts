@@ -55,7 +55,7 @@ export class LinkedListClass extends ObjectClass implements BaseListType {
 
         // override toString-method
         { type: "method", signature: "String toString()", java: LinkedListClass.prototype._mj$toString$String$, comment: JRC.objectToStringComment },
-        // 
+        //
     ]
 
     static type: NonPrimitiveType;

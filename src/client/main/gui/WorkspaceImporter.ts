@@ -11,7 +11,7 @@ export class WorkspaceImporter {
     constructor(private main: Main, private path: string[] = []) {
 
         this.dialog = new Dialog();
-        
+
     }
 
     show() {
@@ -27,12 +27,12 @@ export class WorkspaceImporter {
 
         let $fileInputButton = jQuery('<input type="file" id="file" name="file" multiple />');
         this.dialog.addDiv($fileInputButton);
-        
+
         let exportedWorkspaces: ExportedWorkspace[] = [];
-        
+
         let $errorDiv = this.dialog.description("", "red");
         let $workspacePreviewDiv = jQuery(`<ul></ul>`);
-        
+
         let registerFiles = (files: FileList) => {
             for (let i = 0; i < files.length; i++) {
                 let f = files[i];
@@ -43,9 +43,9 @@ export class WorkspaceImporter {
                         $errorDiv.append(jQuery(`<div>Das Format der Datei ${f.name} passt nicht.</div>`));
                         return;
                     }
-                    
+
                     let ew: ExportedWorkspace = JSON.parse(text);
-                    
+
                     if(ew.modules == null || ew.name == null || ew.settings == null){
                         $errorDiv.append(jQuery(`<div>Das Format der Datei ${f.name} passt nicht.</div>`));
                         return;
@@ -98,7 +98,7 @@ export class WorkspaceImporter {
                 caption: "Importieren",
                 color: "green",
                 callback: () => {
-                    
+
                     let networkManager = this.main.networkManager;
                     let projectExplorer = this.main.projectExplorer;
 
@@ -133,21 +133,21 @@ export class WorkspaceImporter {
                                 for(let f of ws.getFiles()){
                                     networkManager.sendCreateFile(f, ws, owner_id,
                                         (error: string) => {
-                                            count--; 
+                                            count--;
                                             if (error == null) {
                                                 projectExplorer.workspaceListPanel.sortElements();
                                                 this.dialog.close();
                                                 if(firstWorkspace != null) projectExplorer.setWorkspaceActive(firstWorkspace, true);
                                             } else {
                                                 alert('Der Server ist nicht erreichbar!');
-                    
+
                                             }
                                         });
                                 }
 
                             } else {
                                 alert('Der Server ist nicht erreichbar!');
-        
+
                             }
                         });
 

@@ -11,9 +11,9 @@ export class GNGKreis extends GNGBaseFigur {
         {type: "method", signature: "Kreis()", java: GNGKreis.prototype._cj$_constructor_$Kreis$, comment: "Instanziert ein neues Kreis-Objekt."},
         {type: "method", signature: "void RadiusSetzen(int radius)", native: GNGKreis.prototype._radiusSetzen, comment: "Setzt den Radius des Kreis-Objekts."},
     ];
-    
+
     static type: NonPrimitiveType;
-    
+
     renderGNG(): void {
         let circle = this.filledShape as CircleClass;
         circle.mx = this.moveAnchor.x;
@@ -26,7 +26,7 @@ export class GNGKreis extends GNGBaseFigur {
 
         let circle = new CircleClass();
         this.filledShape = circle;
-        
+
         circle._cj$_constructor_$Circle$double$double$double(t, () => {
             t.s.pop();
             t.s.push(this);

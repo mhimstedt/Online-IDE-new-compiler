@@ -242,14 +242,14 @@ export class TreeviewNode<E> {
                     if (!ev.shiftKey && !ev.ctrlKey) {
                         this.treeview.unselectAllNodes();
                     }
-    
+
                     if (ev.shiftKey) {
                         this.treeview.expandSelectionTo(this);
                     } else {
                         this.treeview.setLastSelectedElement(this);
                     }
-    
-    
+
+
                     this.setSelected(true);
                     this.treeview.addToSelection(this);
                     this.setFocus(true);
@@ -392,8 +392,8 @@ export class TreeviewNode<E> {
      *  0 if insert-position is between caption and first child
      *  1 if insert-position is between first child and second child
      *  ...
-     * @param _mouseX 
-     * @param mouseY 
+     * @param _mouseX
+     * @param mouseY
      */
     getDragAndDropIndex(_mouseX: number, mouseY: number): { index: number, insertPosY: number } {
         let boundingRect = this.nodeWithChildrenDiv.getBoundingClientRect();

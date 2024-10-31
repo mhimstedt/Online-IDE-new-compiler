@@ -175,7 +175,7 @@ export class GNGEventlistenerManager implements InternalMouseListener {
     onKeyPressed(key: string): void {
         if (this.listeners["tasteGedrückt"].length + this.listeners["taste"].length > 0) {
             let t = this.interpreter.scheduler.createThread("GNG TasteGedrückt event thread");
-    
+
             for (let actor of this.listeners["tasteGedrückt"]) {
                 actor._mj$TasteGedrückt$void$char(t, undefined, key);
             }
@@ -189,7 +189,7 @@ export class GNGEventlistenerManager implements InternalMouseListener {
         if (keyCode) {
             if (this.listeners["sondertasteGedrückt"].length + this.listeners["sondertaste"].length > 0){
                 let t = this.interpreter.scheduler.createThread("GNG SondertasteGedrückt event thread");
-    
+
                 for (let actor of this.listeners["sondertasteGedrückt"]) {
                     actor._mj$SonderTasteGedrückt$void$int(t, undefined, keyCode);
                 }
@@ -198,7 +198,7 @@ export class GNGEventlistenerManager implements InternalMouseListener {
                 }
                 t.state = ThreadState.runnable;
 
-            } 
+            }
         }
     }
 

@@ -43,16 +43,16 @@ export class HitPolygonStore {
         let pointsPerBorder = additionalPointsPerHalfBorder*2 + 3;
 
         let probes: Punkt[] = [];
-        HitPolygonStore.addPointsOnLine({x: 0, y: 0}, {x: w-1, y: 0}, 
+        HitPolygonStore.addPointsOnLine({x: 0, y: 0}, {x: w-1, y: 0},
             pointsPerBorder, probes);
-        HitPolygonStore.addPointsOnLine({x: w-1, y: 0}, {x: w-1, y: h-1}, 
+        HitPolygonStore.addPointsOnLine({x: w-1, y: 0}, {x: w-1, y: h-1},
             pointsPerBorder, probes);
-        HitPolygonStore.addPointsOnLine({x: w-1, y: h-1}, {x: 0, y: h-1}, 
+        HitPolygonStore.addPointsOnLine({x: w-1, y: h-1}, {x: 0, y: h-1},
             pointsPerBorder, probes);
-        HitPolygonStore.addPointsOnLine({x: 0, y: h-1}, {x: 0, y: 0}, 
+        HitPolygonStore.addPointsOnLine({x: 0, y: h-1}, {x: 0, y: 0},
             pointsPerBorder, probes);
 
-        let mid = {x: w/2, y: h/2};    
+        let mid = {x: w/2, y: h/2};
         for(let probe of probes){
             HitPolygonStore.probe(polygon, probe, mid,w, h, pixels);
         }
@@ -76,7 +76,7 @@ export class HitPolygonStore {
     }
 
     private static addPointsOnLine(start: Punkt, end: Punkt, n: number, points: Punkt[]){
-    
+
         let fx = (end.x - start.x)/(n-1);
         let fy = (end.y - start.y)/(n-1);
 
@@ -85,12 +85,12 @@ export class HitPolygonStore {
                 x: start.x + fx*i,
                 y: start.y + fy*i
             });
-        }    
+        }
 
 
     }
 
-    private static probe(polygon: Punkt[], start: Punkt, end: Punkt, 
+    private static probe(polygon: Punkt[], start: Punkt, end: Punkt,
         width: number, height: number, pixels: Uint8ClampedArray) {
 
         let length = abstand(start, end);

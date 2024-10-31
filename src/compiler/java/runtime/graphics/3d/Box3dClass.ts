@@ -49,7 +49,7 @@ export class Box3dClass extends Mesh3dClass {
 
             this.moveTo(x, y, z);
             this.mesh.scale.set(sx, sy, sz);
-        
+
         })
 
     }
@@ -57,10 +57,10 @@ export class Box3dClass extends Mesh3dClass {
     _cj$_constructor_$Box3d$(t: Thread, callback: CallbackParameter) {
         super._cj$_constructor_$Mesh3d$(t, ()=>{
 
-            const geometry = new THREE.BoxGeometry();        
+            const geometry = new THREE.BoxGeometry();
             this.mesh = new THREE.Mesh(geometry, this.getInitialMaterial().getMaterialAndIncreaseUsageCounter());
             this.world3d.scene.add(this.mesh);
-            
+
             if(callback)callback();
 
         });
@@ -95,7 +95,7 @@ export class Box3dClass extends Mesh3dClass {
     _setTextures(spriteLibrary: SpriteLibraryEnum, imageIndices: number[]){
         if(imageIndices?.length != 6){
             throw new RuntimeExceptionClass(JRC.box3dYouNeedSixTexturesError());
-        }   
+        }
 
         let textures: THREE.Texture[] = [];
         for(let i = 0; i < 6; i++){

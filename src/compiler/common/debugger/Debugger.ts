@@ -23,7 +23,7 @@ export class Debugger {
 
     currentlyVisibleSymbolTableSections: SymbolTableSection[] = [];
     showVariablesTreeview!: Treeview<DebuggerSymbolEntry>;
-    
+
     callstackTreeview!: Treeview<DebuggerCallstackEntry>;
 
     threadsTreeview!: Treeview<Thread>;
@@ -50,11 +50,11 @@ export class Debugger {
     hide(){
         this.debuggerDiv.style.display = "none";
     }
-    
+
     show(){
         this.debuggerDiv.style.display = "block";
     }
-    
+
     initWatchTreeview(){
         this.watchTreeview = new Treeview(this.treeviewAccordion, {
             captionLine: {
@@ -65,7 +65,7 @@ export class Debugger {
             withDeleteButtons: true,
             withDragAndDrop: false,
             buttonAddFolders: false,
-            withSelection: false, 
+            withSelection: false,
             minHeight: 50
         });
 
@@ -116,7 +116,7 @@ export class Debugger {
             withDeleteButtons: false,
             withDragAndDrop: false,
             buttonAddFolders: false,
-            buttonAddElements: false, 
+            buttonAddElements: false,
             withSelection: false
         });
 
@@ -197,9 +197,9 @@ export class Debugger {
 
         let position: ProgramPointerPositionInfo = {
             programOrmoduleOrFile: entry.program,
-            range: entry.range            
+            range: entry.range
         }
-        
+
         thread.scheduler.interpreter.programPointerManager?.show(position, {
             key: "callstackEntry",
             isWholeLine: true,
@@ -219,10 +219,10 @@ export class Debugger {
             this.showVariablesTreeview.clear();
             this.currentlyVisibleSymbolTableSections = [];
             return;
-        } 
-        
+        }
+
         let callstackEntry = new DebuggerCallstackEntry(programState);
-                
+
         if(!callstackEntry.symbolTable) return;
 
         let symbolTablesToShow: BaseSymbolTable[] = [];
@@ -245,16 +245,16 @@ export class Debugger {
                 remainingSymbolTableSections.push(sts);
             }
         }
-        
+
         while(remainingSymbolTableSections.length < symbolTablesToShow.length){
             let index = remainingSymbolTableSections.length;
             remainingSymbolTableSections.push(new SymbolTableSection(this.showVariablesTreeview, symbolTablesToShow[index], this));
         }
-        
+
         this.currentlyVisibleSymbolTableSections = remainingSymbolTableSections;
-        
-        
-        
+
+
+
         let position: IPosition = {
             lineNumber: Number.MAX_SAFE_INTEGER,
             column: 0
@@ -263,7 +263,7 @@ export class Debugger {
         if(range && range.startLineNumber >= 0){
             position = Range.getStartPosition(range);
         }
-        
+
         this.showVariablesTreeview.detachAllNodes();
         for(let sts of this.currentlyVisibleSymbolTableSections){
             sts.attachNodesToTreeview();

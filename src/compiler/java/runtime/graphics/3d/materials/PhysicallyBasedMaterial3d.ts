@@ -11,7 +11,7 @@ export class PhysicallyBasedMaterial3dClass extends Material3dClass {
         {type: "method", signature: "PhysicallyBasedMaterial3d(int color, double routhness, double metalness)", native: PhysicallyBasedMaterial3dClass.prototype._physicallyBasedMaterialConstructor, comment: JRC.physicallyBasedMaterial3dConstructorComment },
         {type: "method", signature: "PhysicallyBasedMaterial3d(string color, double routhness, double metalness)", native: PhysicallyBasedMaterial3dClass.prototype._physicallyBasedMaterialConstructor, comment: JRC.physicallyBasedMaterial3dConstructorComment },
         {type: "method", signature: "PhysicallyBasedMaterial3d(Color color, double routhness, double metalness)", native: PhysicallyBasedMaterial3dClass.prototype._physicallyBasedMaterialConstructor, comment: JRC.physicallyBasedMaterial3dConstructorComment },
-        
+
         {type: "field", signature: "private int emissive", template: "§1.emissive", comment: JRC.material3dEmissiveComment },
         {type: "method", signature: "void setEmissive(int color)", native: PhysicallyBasedMaterial3dClass.prototype._setEmissive, comment: JRC.material3dEmissiveComment },
         {type: "method", signature: "void setEmissive(string color)", native: PhysicallyBasedMaterial3dClass.prototype._setEmissive, comment: JRC.material3dEmissiveComment },
@@ -25,7 +25,7 @@ export class PhysicallyBasedMaterial3dClass extends Material3dClass {
         { type: "field", signature: "private double roughness", template: "§1.roughness", comment: JRC.physicallyBasedMaterial3dRoughnessComment },
         { type: "method", signature: "void setRoughness(double value)", template: "§1.material.roughness = §2", comment: JRC.physicallyBasedMaterial3dRoughnessComment },
         { type: "method", signature: "double getRoughness(double value)", template: "§1.material.roughness", comment: JRC.physicallyBasedMaterial3dRoughnessComment },
-        
+
         { type: "field", signature: "private double metalness", template: "§1.metalness", comment: JRC.physicallyBasedMaterial3dMetalnessComment },
         { type: "method", signature: "void setMetalness(double value)", template: "§1.material.metalness = §2", comment: JRC.physicallyBasedMaterial3dMetalnessComment },
         { type: "method", signature: "double getMetalness(double value)", template: "§1.material.metalness", comment: JRC.physicallyBasedMaterial3dMetalnessComment },

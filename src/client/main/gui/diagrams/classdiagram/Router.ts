@@ -1,7 +1,7 @@
 onmessage = function (e) {
 
     let ri: RoutingInput = e.data;
-    
+
     if(ri.xMax == null) return; // BugFix 06.06.2020: Monaco Editor sends messages to everyone...
 
     let router: Router = new Router(ri);
@@ -361,12 +361,12 @@ class Router {
         for (let a of this.arrows) {
 
             if (a == newArrow) return;
-            let joinArrow: boolean = 
+            let joinArrow: boolean =
                a.arrowType == newArrow.arrowType && a.destinationIdentifier == newArrow.destinationIdentifier
                && this.routingInput.rectangles.length > 10;
 
             if(a.points == null) return;
-            
+
             for (let p of a.points) {
                 if (joinArrow) {
                     this.locks[p.x][p.y] = 0;
@@ -558,10 +558,10 @@ class Router {
         let slotDistance = this.routingInput.slotDistance;
 
         for (let sourceDirection = 0; sourceDirection < 4; sourceDirection++) {
-            // for (let sourceSlotDelta of [-1, 1]) 
+            // for (let sourceSlotDelta of [-1, 1])
             {
                 for (let destDirection = 0; destDirection < 4; destDirection++) {
-                    // for (let destSlotDelta of [-1, 1]) 
+                    // for (let destSlotDelta of [-1, 1])
                     {
 
                         let sourceSlot = sourceRect.slots[sourceDirection];

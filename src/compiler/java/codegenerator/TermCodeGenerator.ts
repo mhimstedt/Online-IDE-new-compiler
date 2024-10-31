@@ -308,8 +308,8 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
         let classHasOuterType: boolean = (klassType.outerType && !klassType.isStatic) ? true : false;
 
         let callingConvention: CallingConvention = method.hasImplementationWithNativeCallingConvention && !classHasOuterType ? "native" : "java";
-        
-        // if this is no library class: use java calling convention because 
+
+        // if this is no library class: use java calling convention because
         // new MyClass() could be compiled before standard constructors of MyClass() are built
         // if new MyClass is part of instanceInitializers of other class.
         if(method.classEnumInterface != klassType) callingConvention = 'java';
@@ -318,7 +318,7 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
             newObjectSnippet = new StringCodeSnippet(`new ${Helpers.classes}["${klassType.pathAndIdentifier}"](${enumValueIdentifier ? '"' + enumValueIdentifier + '", ' + enumValueIndex : ""})`);
         }
 
-        // call javascript constructor and directly thereafter call java constructor 
+        // call javascript constructor and directly thereafter call java constructor
         let template: string = `§1.${method.getInternalName(callingConvention)}(`;
 
         // instantiation of non-static inner class-object?
@@ -348,11 +348,11 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
             /*
              * if class is child of Actor or Shape then overridden listener-methos (act, onMouseDown, onKeyDown, ...)
              * must not be called before constructor is FULLY finished. We achieve this by setting the callback-function
-             * of the constructor: 
+             * of the constructor:
              */
             let callRegisterListeners: string = (!klassType.isLibraryType && klassType.fastExtendsImplements("Actor")) ?
             `() => {${StepParams.stack}[${StepParams.stack}.length - 1]._registerListeners(${StepParams.thread}); }` : "undefined";
-            
+
             template += `${StepParams.thread}, ${callRegisterListeners}` + (parameterValues.length > 0 ? ", " : "");
         }
 
@@ -503,7 +503,7 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
                     let range = indexSnippets[i].range || EmptyRange.instance;
                     template = `(${template}[§${i+2}]??${Helpers.IOBE}(${range.startLineNumber}, ${range.startColumn}, ${range.endLineNumber}, ${range.endColumn}))`;
                 }
-                
+
                 returnSnippet = new SeveralParameterTemplate(`${Helpers.array0}(${template})[${Helpers.checkLastIndex}(§${indexSnippets.length + 1}, ${indexSnippets.length})]`)
                 .applyToSnippet(remainingType, node.range, arraySnippet, ...indexSnippets);
             }
@@ -804,7 +804,7 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
     compileBinaryOperator(ast: ASTBinaryNode): CodeSnippet | undefined {
 
         if (ast.operator == TokenType.ternaryOperator) return this.compileTernaryOperator(ast);
-        
+
         let leftOperand = this.compileTerm(ast.leftSide, this.isAssignmentOperator(ast.operator));
         let rightOperand = ast.rightSide?.kind == TokenType.lambdaOperator ? this.compileLambdaFunction(<ASTLambdaFunctionDeclarationNode>ast.rightSide, leftOperand?.type) : this.compileTerm(ast.rightSide);
 
@@ -879,7 +879,7 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
                 if(["Double", "Float", "Integer", "Byte"].indexOf(operand.type.identifier) >= 0){
                     let template: CodeTemplate = ast.operator == TokenType.plusPlus ? new OneParameterTemplate(`${Helpers.checkNPE('§1', operand.range)}.value++`) : new OneParameterTemplate(`${Helpers.checkNPE('§1', operand.range)}.value--`);
 
-                    return template.applyToSnippet( this.getUnboxedType(operand.type), ast.range, operand);        
+                    return template.applyToSnippet( this.getUnboxedType(operand.type), ast.range, operand);
                 }
             }
 
@@ -972,7 +972,7 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
         if (isEnum && objectType.identifier == 'SpriteLibrary') {
             let enumType = <JavaEnum>(<StaticNonPrimitiveType>objectType).nonPrimitiveType;
             let id = enumType.id;
-            
+
             if(!enumType.runtimeClass) return undefined;
 
             let value = enumType.runtimeClass!.getSpriteLibrary(id, node.attributeIdentifier);
@@ -1031,7 +1031,7 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
     }
 
 
-    // if Method is generic: 
+    // if Method is generic:
     // a) catch type paramters inside types to get actual types for them
     // b) make sure all catches for one type parameter deliver the same type
     // c) compute actual type for return parameter
@@ -1054,7 +1054,7 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
             if (!objectSnippet) return undefined;
             let range = node.nodeToGetObject.range;
             if (
-                // !(objectSnippet.type instanceof JavaEnum) && 
+                // !(objectSnippet.type instanceof JavaEnum) &&
                 objectSnippet.type != this.stringType
                 && !(objectSnippet.type instanceof StaticNonPrimitiveType) && !objectSnippet.isSuperKeywordWithLevel) {
                 objectSnippet = SnippetFramer.frame(objectSnippet, `${Helpers.checkNPE('§1', range)}`);
@@ -1081,7 +1081,7 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
             return undefined;
         }
 
-        let methods = this.searchMethod(node.identifier, objectSnippet.type, parameterValueSnippet.map(p => p?.type), methodIsConstructor, 
+        let methods = this.searchMethod(node.identifier, objectSnippet.type, parameterValueSnippet.map(p => p?.type), methodIsConstructor,
         objectSnippet.type instanceof StaticNonPrimitiveType, true, node.identifierRange);
         if((<NonPrimitiveType>objectSnippet.type).isMainClass && !methods.best){
             let globalMethod = this.searchGlobalMethod(node.identifier, parameterValueSnippet.map(p => p?.type), node.identifierRange);
@@ -1243,7 +1243,7 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
     }
 
     /**
-     * 
+     *
      */
     searchGlobalMethod(identifier: string, parameterTypes: JavaType[], methodCallRange: IRange): {method: JavaMethod, staticMainClass: StaticNonPrimitiveType} | undefined {
         for(let mainClass of this.compiledTypesTypestore.getMainClasses()){
@@ -1252,7 +1252,7 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
             )
             if(methods.best){
                 return {
-                    method: methods.best, 
+                    method: methods.best,
                     staticMainClass: mainClass.staticType
                 }
             }

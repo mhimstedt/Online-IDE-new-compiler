@@ -34,7 +34,7 @@ export class JavaReplCompiler {
                 module: replCompiledModule,
                 program: program
             }
-                
+
         }
 
         return {

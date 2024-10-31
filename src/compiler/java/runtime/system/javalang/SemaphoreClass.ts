@@ -35,7 +35,7 @@ export class SemaphoreClass extends ObjectClass {
     }
 
     _jconstructor(t: Thread, permits: number) {
-        t.s.push(this);        
+        t.s.push(this);
         this.permitsAvailable = permits;
     }
 
@@ -50,14 +50,14 @@ export class SemaphoreClass extends ObjectClass {
             t.state = ThreadState.blocked;
             t.scheduler.suspendThread(t);
             this.waitingThreads1.push(t);
-        }        
+        }
 
         if(callback) callback();
     }
 
     _mj$release$void(t: Thread, callback: CallbackFunction){
         this.permitsAvailable++;
-        
+
         let threadToUnblock = this.waitingThreads1.shift();
 
         if(threadToUnblock){

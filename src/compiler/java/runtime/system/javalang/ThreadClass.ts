@@ -95,16 +95,16 @@ export class ThreadClass extends ObjectClass implements RunnableInterface {
     }
 
     _jconstructor(t: Thread, callback?: CallbackFunction, runnable?: RunnableInterface, name?: string) {
-        t.s.push(this);        
+        t.s.push(this);
         this.runnable = runnable;
         this.name = name || "user generated thread";
-        
+
     }
 
     _jconstructor1(t: Thread, callback?: CallbackFunction, name?: string) {
-        t.s.push(this);        
+        t.s.push(this);
         this.name = name || "user generated thread";
-        
+
     }
 
     _mj$getState$Thread_State$(t: Thread, callback: CallbackFunction){
@@ -123,7 +123,7 @@ export class ThreadClass extends ObjectClass implements RunnableInterface {
     }
 
     _mj$start$void$(t: Thread, callback: CallbackFunction): void {
-        
+
         if(!this.thread){
 
             let runnable = this.runnable;
@@ -134,13 +134,13 @@ export class ThreadClass extends ObjectClass implements RunnableInterface {
 
             let that = this;
             runnable._mj$run$void$(this.thread, () => {
-                that.callbackWhenThreadFinished();        
+                that.callbackWhenThreadFinished();
             })
 
             this.thread.startIfNotEmptyOrDestroy();
         }
 
-        if(callback) callback(); 
+        if(callback) callback();
     }
 
     callbackWhenThreadFinished(){

@@ -61,7 +61,7 @@ export function createDb(SQL, buffer) {
 
     db.create_function("isDateTime", function (inputText) {
         if(inputText == null) return true;
-        
+
         if (typeof inputText != 'string') return false;
 
         // var dateformat = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/;

@@ -33,8 +33,8 @@ export class AutoLogout {
     reset() {
         this.counterInMinutes = this.logoutAfterMinutes;
     }
-    
-    
+
+
     logout() {
         let logoutRequest: LogoutRequest = {
             currentWorkspaceId: null

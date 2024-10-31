@@ -21,16 +21,16 @@ function exportSVG(callback, directory){
             console.error("Could not list the directory " + directory, err);
             process.exit(1);
         }
-    
+
         // Nimm nur die Dateien, die auf .svg enden:
         files.filter(filename => filename.endsWith(".svg")).forEach(function (file, index) {
-    
+
             // für jede dieser Dateien:
             let fileWithPath =directory + file;
-    
+
             // Hol den Inhalt als Text
             let svgtext = fs.readFileSync(fileWithPath, 'utf-8');
-    
+
             // Optionen für den XML-Parser
             var options = {
                 attributeNamePrefix : "@_",
@@ -50,10 +50,10 @@ function exportSVG(callback, directory){
                 tagValueProcessor : (val, tagName) => he.decode(val), //default is a=>a
                 stopNodes: ["parse-me-as-string"]
             };
-    
+
             // Wandle den XML-Text in einen Javascript-Objektbaum um:
             let svgObject = parser.parse(svgtext, options);
-    
+
             // Analysiere den Javascript-Objektbaum, um herauszufinden, welche Teilgrafiken
             // exportiert werden sollen. Erzeuge für jede Teilgrafik einen Kommandozeilen-Command
             // und lege ihn im Array commands ab.
@@ -76,14 +76,14 @@ function exportSVG(callback, directory){
                 callback();
             }
         }
-    
+
         callback1();
-    
+
 
     });
 
 
-    
+
 }
 
 
@@ -103,7 +103,7 @@ function doExec(command, callback){
 
 /**
  * Analysiere die einen Knoten des Objektbaums einer SVG-Datei und bearbeite rekursiv
- * alle Kindknoten. Suche in den Knoten nach SVG-Elementen, die als png-Grafiken exportiert 
+ * alle Kindknoten. Suche in den Knoten nach SVG-Elementen, die als png-Grafiken exportiert
  * werden sollen und generiere für jedes dieser Elemente einen Kommandozeilen-Command.
  * Lege diese Commands im Array commands ab.
  */
@@ -125,7 +125,7 @@ function analyzeSVGNode(svgNode, fileWithPath) {
         }
     }
 
-    // Hat das SVG-Element ein desc-Feld (Description)? 
+    // Hat das SVG-Element ein desc-Feld (Description)?
     if(svgNode.desc){
         let id = svgNode.attr["@_id"];  // In Inkscape: Feld Objekteigenschaften -> Kennung
         let description = svgNode.desc; // IN Inksape: Feld Objekteigenschaften -> Beschreibung
@@ -147,13 +147,13 @@ function analyzeSVGNode(svgNode, fileWithPath) {
         if(SpriteLibrary){
             // { filename: "minesweeper/minesweeper.png", name: "Minesweeper", tilesX: 20, tilesY: 1, scale: 1.0, index: 0 },
             SpriteLibrary.push({
-                filename: "fromSVG/" + id + ".png", 
-                name: id, 
-                tilesX: data.tilesX, 
+                filename: "fromSVG/" + id + ".png",
+                name: id,
+                tilesX: data.tilesX,
                 tilesY: data.tilesY,
                 spacingX: data.spacingX,
-                spacingY: data.spacingY, 
-                scale: data.scale ? data.scale : 1.0, 
+                spacingY: data.spacingY,
+                scale: data.scale ? data.scale : 1.0,
                 index: data.index,
                 extrudeMarginWidth: data.extrudeMarginWidth
             });
@@ -163,10 +163,10 @@ function analyzeSVGNode(svgNode, fileWithPath) {
         // let arguments = '--export-background-opacity="0.0" --export-id="' + data.id + '" --export-id-only -o "./material/spritesheet_bitmap/fromSVG/' + id + '.png" ' + fileWithPath ;
 
         currentBatchCommand += 'export-id:' + data.id + '; export-id-only; export-filename: ./material/spritesheet_bitmap/fromSVG/' + id + '.png; export-do;' ;
-        
+
         // ... und lege ihn im Array commands ab.
         // commands.push(inkscape + " " + arguments);
-        
+
     }
 
 }

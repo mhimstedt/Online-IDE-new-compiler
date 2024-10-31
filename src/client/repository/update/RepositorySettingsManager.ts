@@ -259,7 +259,7 @@ export class RepositorySettingsManager {
 
     selectRepository($repoDiv: JQuery<HTMLDivElement>, repInfo: RepositoryInfo) {
         this.repositoryInfo = repInfo;
-        
+
         this.emptyRepositoryInfo();
         if (this.$saveButton.is(":visible")) {
             let selectedItem = this.$repoListDiv.find('.active').first();
@@ -386,7 +386,7 @@ export class RepositorySettingsManager {
             writeAccessList: writeAccessList
         }
 
-        if (repoData.owner_id == owner.user_id || 
+        if (repoData.owner_id == owner.user_id ||
               confirm("Soll die Eigentümerschaft über das Repository " + repoData.name + " wirklich an " + owner.firstName + " " + owner.lastName + " übertragen werden?")) {
             ajax('updateRepositoryUserWriteAccess', request, (response: UpdateRepositoryUserWriteAccessResponse) => {
 

@@ -23,7 +23,7 @@ export type LibraryAttributeDeclaration = {
     template?: string;
     constantValue: any;
     comment?: string | (() => string);
-} 
+}
 
 export type LibraryMethodOrAttributeDeclaration = LibraryClassDeclaration | LibraryMethodDeclaration | LibraryAttributeDeclaration;
 

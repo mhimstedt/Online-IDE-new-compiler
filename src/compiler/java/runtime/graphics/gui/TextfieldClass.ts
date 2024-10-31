@@ -65,15 +65,15 @@ export class TextFieldClass extends GuiTextComponentClass {
             this.borderWidth = fontsize/10;
             this.fillColor = 0xffffff;
             this.textColor = 0x000000;
-    
+
             this.hitPolygonInitial = [];
 
             this.generateCharacterStops();
 
             this.render();
-        
+
             this.initTimer();
-    
+
             if (callback) callback();
 
         }, true, true, fontsize, caption, fontFamily);
@@ -239,10 +239,10 @@ export class TextFieldClass extends GuiTextComponentClass {
         this.cursor.clear();
         let cursorWidth = Math.min(2, this.fontsize / 10);
         let cx = this.characterStops[this.selectionEnd] - this.characterStops[this.renderFromCharacterPosition];
-        
+
         let start = new PIXI.Point(cx, 0);
         let end = new PIXI.Point(cx, this.height);
-        
+
         this.cursor.moveTo(start.x, start.y).lineTo(end.x, end.y);
         this.cursor.stroke({width: cursorWidth, color: 0x0, alpha: 1.0, alignment: 0.5});
         this.cursor.visible = this.hasKeyboardFocus;
@@ -288,7 +288,7 @@ export class TextFieldClass extends GuiTextComponentClass {
                     this.isMouseOver = containsPointer;
                     this.world._setCursor(containsPointer ? "pointer" : "default");
                 }
-                
+
             }
                 break;
         }

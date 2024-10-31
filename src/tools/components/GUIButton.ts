@@ -4,15 +4,15 @@ import "/include/css/guibutton.css";
 type Listener = () => void;
 
 export class GUIButton {
-    
+
     $html: JQuery<HTMLDivElement>;
     isActive: boolean = true;
     listeners: Listener[] = [];
- 
+
     constructor(private _caption: string, public $parent: JQuery<HTMLElement>, backgroundColor: string = "#3059a9",
         onClick?: () => void
     ){
-        this.$html = jQuery(`<div class='joe_guiButton active'>${_caption}</div>`);        
+        this.$html = jQuery(`<div class='joe_guiButton active'>${_caption}</div>`);
         this.$parent?.append(this.$html);
         this.$html.on('pointerdown', (e) => {
             e.stopPropagation();
@@ -23,7 +23,7 @@ export class GUIButton {
         this.$html.css('background-color', backgroundColor);
         if(onClick != null) this.onClick(onClick);
     }
-    
+
     onClick(listener: () => void){
         this.listeners.push(listener);
     }
@@ -46,4 +46,4 @@ export class GUIButton {
 
 
 
-} 
+}

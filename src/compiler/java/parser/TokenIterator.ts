@@ -128,7 +128,7 @@ export class TokenIterator {
     /**
      * Looks n tokens ahead, omitting space, comments and newLine
      * n == 0 => return current token
-     * @param n 
+     * @param n
      */
     lookahead(n: number): Token {
         let k = n;
@@ -290,14 +290,14 @@ export class TokenIterator {
         this.pushError(JCM.identifierExpected("" + this.cct.value));
         return "";
     }
-    
+
     expectAndSkipIdentifierAsToken(): Token {
         if (this.tt == TokenType.identifier) {
             let t = this.cct;
             this.nextToken();
             return t;
         }
-        
+
         this.pushError(JCM.identifierExpected("" + this.cct.value));
 
         return {
@@ -427,9 +427,9 @@ export class TokenIterator {
                 if(isCodeOutsideClassdeclarations){
                     nonSpaceTokenTypesFound.push(tt);
                     break;
-                } 
+                }
                 return "statement";
-            } 
+            }
             if (TokenIterator.possibleTokensInsideVariableDeclaration.indexOf(tt) < 0) return "statement";
             if (TokenIterator.spaceTokenTypes.indexOf(tt) < 0) nonSpaceTokenTypesFound.push(tt);
             pos++;
@@ -443,11 +443,11 @@ export class TokenIterator {
         let lastToken3 = length < 3 ? TokenType.endofSourcecode : nonSpaceTokenTypesFound[length - 3];
 
         if(isCodeOutsideClassdeclarations){
-            if(lastToken1 == TokenType.leftBracket && lastToken2 == TokenType.identifier 
-                && [TokenType.greater, TokenType.identifier, TokenType.leftRightSquareBracket, 
+            if(lastToken1 == TokenType.leftBracket && lastToken2 == TokenType.identifier
+                && [TokenType.greater, TokenType.identifier, TokenType.leftRightSquareBracket,
                 TokenType.keywordVoid].indexOf(lastToken3) >= 0){
                     return "methoddeclaration"
-                }            
+                }
         }
 
         if ([TokenType.identifier, TokenType.leftRightSquareBracket].indexOf(lastToken1) < 0) return "statement";

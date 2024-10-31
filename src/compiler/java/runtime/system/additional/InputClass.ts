@@ -123,7 +123,7 @@ export class InputClass extends ObjectClass {
             if(Number.isNaN(n)){
                 error = JRC.InputClassIntError();
             }
-            
+
             return {
                 convertedValue: n,
                 errorMessage: error
@@ -142,7 +142,7 @@ export class InputClass extends ObjectClass {
             if(Number.isNaN(n)){
                 error = JRC.InputClassFloatError();
             }
-            
+
             return {
                 convertedValue: n,
                 errorMessage: error
@@ -161,7 +161,7 @@ export class InputClass extends ObjectClass {
             if(Number.isNaN(n)){
                 error = JRC.InputClassFloatError();
             }
-            
+
             return {
                 convertedValue: n,
                 errorMessage: error
@@ -180,7 +180,7 @@ export class InputClass extends ObjectClass {
             if(value.length != 1){
                 error = JRC.InputClassCharError();
             }
-            
+
             return {
                 convertedValue: value,
                 errorMessage: error

@@ -14,9 +14,9 @@ export class CodeReacedAssertion {
 }
 
 export class CodeReachedAssertions {
-    
+
     assertions: Map<string, CodeReacedAssertion> = new Map();
-    
+
     init(moduleManager: JavaModuleManager) {
         this.assertions.clear();
         moduleManager.modules.forEach( m => {

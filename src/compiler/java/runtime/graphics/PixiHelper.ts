@@ -7,7 +7,7 @@ export function updateWorldTransformRecursively(container: PIXI.Container, inclu
     if(parent){
         updateWorldTransformRecursively(parent, false);
         PIXI.updateWorldTransform(container.localTransform, parent.worldTransform, container.worldTransform);
-    
+
         if(includeChildren){
             for(let child of container.children){
                 updateWorldTransformRecursively(child, true);

@@ -25,7 +25,7 @@ export class TreeviewAccordion {
 
     onResize(){
         let overallHeight = this._mainDiv.getBoundingClientRect().height;
-    
+
         let fixedHeight: number = 0;
         let variableHeight: number = 0;
         for(let tv of this.treeviewList){

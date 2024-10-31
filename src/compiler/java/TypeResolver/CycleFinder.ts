@@ -10,7 +10,7 @@ export class CycleFinder {
 
     static findCycle(moduleManager: JavaModuleManager): boolean {
         for(let npt of moduleManager.typestore.getNonPrimitiveTypes()){
-            
+
             if(npt instanceof JavaClass){
                 let cycle = CycleFinder.classHelper(npt, []);
                 if(cycle){

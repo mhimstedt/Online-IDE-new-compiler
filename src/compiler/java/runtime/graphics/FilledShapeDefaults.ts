@@ -13,7 +13,7 @@ export class FilledShapeDefaults {
     static initDefaultValues(){
         FilledShapeDefaults.defaultFillColor = 0x8080ff;
         FilledShapeDefaults.defaultFillAlpha = 1.0;
-    
+
         FilledShapeDefaults.defaultBorderAlpha = 1.0;
         FilledShapeDefaults.defaultBorderWidth = 10;
 

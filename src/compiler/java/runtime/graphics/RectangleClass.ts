@@ -60,7 +60,7 @@ export class RectangleClass extends FilledShapeClass {
         this._cj$_constructor_$FilledShape$(t, () => {
             this.centerXInitial = left + width / 2;
             this.centerYInitial = top + height / 2;
-    
+
             this.left = left;
             this.top = top;
             this.width = width;
@@ -69,8 +69,8 @@ export class RectangleClass extends FilledShapeClass {
             this.hitPolygonInitial = [
                 { x: this.left, y: this.top }, { x: this.left, y: this.top + this.height },
                 { x: this.left + this.width, y: this.top + this.height }, { x: this.left + this.width, y: this.top }
-            ];    
-    
+            ];
+
             this.render();
             if(callback) callback();
         });   // call base class constructor
@@ -84,7 +84,7 @@ export class RectangleClass extends FilledShapeClass {
             { x: this.left + this.width, y: this.top + this.height }, { x: this.left + this.width, y: this.top }
         ];
     }
-    
+
     _mj$copy$Shape$(t: Thread, callback: CallbackParameter){
         this._mj$copy$Rectangle$(t, callback);
     }
@@ -125,7 +125,7 @@ export class RectangleClass extends FilledShapeClass {
                 alignment: 0.5
             })
         }
-        
+
         g.closePath();
 
     };
@@ -136,7 +136,7 @@ export class RectangleClass extends FilledShapeClass {
         this.calculateHitPolygonInitial();
         this.render();
     }
-    
+
     _setHeight(height: number){
         this.height = height / this.container.scale.y;
         this.centerYInitial = this.top + this.height / 2;
@@ -157,7 +157,7 @@ export class RectangleClass extends FilledShapeClass {
         t.s.push(new StringClass(this._debugOutput()));
 
         if(callback) callback();
-        
+
         return;
     }
 
@@ -167,6 +167,6 @@ export class RectangleClass extends FilledShapeClass {
         return s;
     }
 
-    
+
 
 }

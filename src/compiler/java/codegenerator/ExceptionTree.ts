@@ -8,7 +8,7 @@ export class ExceptionTree {
 
     constructor(libraryTypestore: JavaTypeStore, compiledTypesTypestore: JavaTypeStore){
 
-        let exceptionClasses = 
+        let exceptionClasses =
         libraryTypestore.getNonPrimitiveTypes().filter(type => type.fastExtendsImplements("Throwable"));
 
         exceptionClasses = exceptionClasses.concat(compiledTypesTypestore.getNonPrimitiveTypes().filter(type => type.fastExtendsImplements("Throwable")));
@@ -23,7 +23,7 @@ export class ExceptionTree {
 
     register(superType: string, subType: string){
         if(superType == 'Object') return;
-        
+
         let map = this.isExtendedImplementedBy[superType];
         if(!map){
             map = {};

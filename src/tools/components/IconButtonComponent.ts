@@ -14,7 +14,7 @@ export class IconButtonComponent {
     private currentIconClass?: string;
 
     constructor(private _parent: HTMLElement, private iconClass: string, private listener: IconButtonListener, tooltip?: string){
-        
+
         this.divElement = DOM.makeDiv(undefined, 'jo_iconButton');
         _parent.prepend(this.divElement);
 
@@ -29,14 +29,14 @@ export class IconButtonComponent {
 
         this.render();
 
-    }    
+    }
 
     public get parent(): HTMLElement {
         return this._parent;
     }
 
     render(){
-        
+
         if(this.currentIconClass) this.divElement.classList.remove(this.currentIconClass);
 
         this.currentIconClass = this.iconClass;

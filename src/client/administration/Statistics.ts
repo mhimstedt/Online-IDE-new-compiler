@@ -26,7 +26,7 @@ class Statistics {
             setInterval(() => {
                 secondsSinceLastUpdate = 0;
                 that.updateGraph();
-            }, response.statisticPeriodSeconds*1000);    
+            }, response.statisticPeriodSeconds*1000);
 
             setInterval(()=>{
                 $('#updatetimer').text('Nächste Messung in ' + (response.statisticPeriodSeconds - secondsSinceLastUpdate) + " s");
@@ -51,8 +51,8 @@ class Statistics {
 
                 $('#current').css("color", "#0000ff");
                 $('#current').animate({color: "#000000"}, 1500);
-    
-    
+
+
             }, (message: string) => {
                 alert("Es ist ein Fehler aufgetreten: " + message);
             });
@@ -89,7 +89,7 @@ class Statistics {
             } else {
                 newData = incomingData;
             }
-            
+
             for(let d of newData){
 
                 //@ts-ignore
@@ -130,7 +130,7 @@ class Statistics {
         this.rawLabels = data.map((d) => d.time);
 
         //java: yyyy-MM-dd HH:mm
-        
+
 
         let options: Chart.ChartConfiguration = {
             // The type of chart we want to create
@@ -193,7 +193,7 @@ class Statistics {
 
             ]
             },
-        
+
             // Configuration options go here
             options: {
                 responsive: true,
@@ -225,7 +225,7 @@ class Statistics {
 							maxRotation: 0,
 							sampleSize: 100
 						}
-                    }],                    
+                    }],
                     yAxes: [{
                         type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
                         display: true,
@@ -252,7 +252,7 @@ class Statistics {
 
     }
 
-    
+
 
 }
 

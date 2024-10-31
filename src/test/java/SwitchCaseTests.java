@@ -26,10 +26,10 @@
 
   String b = "DEF";
   int y = 4;
-  
+
   switch(b) {
       case A.a: fail("Case A.a must not be reached."); break;
-      
+
       default: switch(y) {
         case 4:
         case 5: assertCodeReached("Didn't reache case 5."); break;

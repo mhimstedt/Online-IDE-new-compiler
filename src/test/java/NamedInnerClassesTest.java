@@ -20,7 +20,7 @@ class A {
    int i = 10;
 
    class B {
-      
+
       int j = 100;
 
       int getOuterI(){

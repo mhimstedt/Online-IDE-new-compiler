@@ -60,7 +60,7 @@ export class Interpreter {
         "stepInto", "stepOut", "restart"];
     //SchedulerLstatus { done, running, paused, not_initialized }
 
-    // buttonActiveMatrix[button][i] tells if button is active at 
+    // buttonActiveMatrix[button][i] tells if button is active at
     // SchedulerState i
     // export enum SchedulerState { not_initialized, running, paused, stopped, error }
 
@@ -480,7 +480,7 @@ export class Interpreter {
 
         // /*
         //     As long as there is no startable new Version of current workspace we keep current compiled modules so
-        //     that variables and objects defined/instantiated via console can be kept, too. 
+        //     that variables and objects defined/instantiated via console can be kept, too.
         // */
         // if (this.moduleStoreVersion != this.main.version && this.main.getCompiler().atLeastOneModuleIsStartable) {
         //     this.main.copyExecutableModuleStoreToInterpreter();

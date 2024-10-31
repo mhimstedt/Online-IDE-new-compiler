@@ -16,7 +16,7 @@ export class JavaArrayType extends JavaType implements BaseArrayType {
     constructor(public elementType: JavaType, public dimension: number,
         module: JavaBaseModule, identifierRange: IRange) {
         super(elementType.identifier + "[]".repeat(dimension), identifierRange, module);
-        
+
         while(this.elementType instanceof JavaArrayType){
             this.dimension += this.elementType.dimension;
             this.elementType = this.elementType.elementType;
@@ -79,7 +79,7 @@ export class JavaArrayType extends JavaType implements BaseArrayType {
 
     getInternalName(): string {
         let internalName = this.elementType.identifier;
-        for(let i = 0; i < this.dimension; i++) internalName += "_I";        
+        for(let i = 0; i < this.dimension; i++) internalName += "_I";
         return internalName;
     }
 

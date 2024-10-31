@@ -63,7 +63,7 @@ export class InputManager implements IInputManager {
                 // e.preventDefault();
                 // return false;
             }
-            
+
         })
 
         setTimeout(() => {

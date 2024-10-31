@@ -13,19 +13,19 @@ export class GNGDreieck extends GNGBaseFigur {
 
         {type: "field", signature: "protected int breite", comment: "Breite des Dreiecks"},
         {type: "field", signature: "protected int höhe", comment: "Höhe des Dreiecks"},
-        
+
         {type: "method", signature: "void GrößeSetzen(int breite, int höhe)", native: GNGDreieck.prototype._groesseSetzen, comment: "Setzt die Breite und Höhe des Rechtecks."}
 
     ];
 
-    
-    
+
+
     static type: NonPrimitiveType;
-    
+
     get breite(): number {
         return Math.round(Math.abs(this.width * this.filledShape.container.scale.x));
     }
-    
+
     get höhe(): number {
         return Math.round(Math.abs(this.height * this.filledShape.container.scale.y));
     }
@@ -57,7 +57,7 @@ export class GNGDreieck extends GNGBaseFigur {
 
         let triangle = new PolygonClass();
         this.filledShape = triangle;
-        
+
         triangle._cj$_constructor_$Polygon$boolean$double_I(t, () => {
             t.s.pop();
             t.s.push(this);

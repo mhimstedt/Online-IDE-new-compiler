@@ -31,7 +31,7 @@ export class Scheduler {
     lastTimeDebuggeroutputWritten: number = 0;
     updateDebuggerEveryMs: number = 1000;
 
-    // if pause button is pressed when there is no thread 
+    // if pause button is pressed when there is no thread
     // and Program has actors then interpreter sets this callback:
     onStartingNextThreadCallback?: () => void;
 
@@ -48,22 +48,22 @@ export class Scheduler {
 
 
     /**
-     * This method is called every tick by LoadController.tick and gets told how many steps it may execute. It distributes 
+     * This method is called every tick by LoadController.tick and gets told how many steps it may execute. It distributes
      * this steps evenly among all running threads and calls their run-method.
-     * 
+     *
      * This one of three nested main loops:
-     * 
+     *
      * Outer loop: LoadController.tick
      * Middle loop: this one
      * Inner loop: Thread.run
-     * @param numberOfStepsMax 
-     * @returns 
+     * @param numberOfStepsMax
+     * @returns
      */
     run(numberOfStepsMax: number): SchedulerExitState {
 
         if (this.state != SchedulerState.running) return SchedulerExitState.nothingMoreToDo;
 
-        // If pause button is pressed while no thread is in state running then noStartinNextThreadCallback is set to wait 
+        // If pause button is pressed while no thread is in state running then noStartinNextThreadCallback is set to wait
         // for next running thread. This is neccessary because we we want to show program pointer immediately after program is paused.
         if (this.onStartingNextThreadCallback) {
             if (this.getNextStepPosition()) {
@@ -87,7 +87,7 @@ export class Scheduler {
 
         while (numberOfStepsInThisRun < numberOfStepsMax && this.state == SchedulerState.running) {
 
-            // watchdog: if all threads had beed run once and no one executed a step then exit the loop to avoid endless looping when there's nothing to do: 
+            // watchdog: if all threads had beed run once and no one executed a step then exit the loop to avoid endless looping when there's nothing to do:
             if (this.currentThreadIndex == 0) {
                 if (lastStoredStepsInThisRun == numberOfStepsInThisRun || this.runningThreads.length == 0) {
                     break;
@@ -273,7 +273,7 @@ export class Scheduler {
         if (stepInto) {
             if (this.state == SchedulerState.paused) {
                 this.setState(SchedulerState.running);
-                
+
                 let finished: boolean = false;
                 do {
                     this.run(1);
@@ -281,12 +281,12 @@ export class Scheduler {
                     // skip steps for which position can't be shown to user:
                     finished = !(step && !step.getValidRangeOrUndefined() && thread.state == ThreadState.runnable)
                 } while (!finished)
-                
+
                 this.setState(SchedulerState.paused);
             }
             callback();
         } else {
-            
+
             thread.markSingleStepOver(() => {
                 callback();
             });
@@ -305,7 +305,7 @@ export class Scheduler {
     }
 
     /**
-     * when pause-button is clicked while thread executes a single step then 
+     * when pause-button is clicked while thread executes a single step then
      * cancel this single-step execution
      */
     unmarkCurrentlyExecutedSingleStep() {

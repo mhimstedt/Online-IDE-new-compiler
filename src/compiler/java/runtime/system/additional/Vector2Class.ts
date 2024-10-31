@@ -89,7 +89,7 @@ export class Vector2Class extends ObjectClass {
     _getUnitVector(){
         let length2 = this.x * this.x + this.y * this.y;
         if(length2 < 1e-14) return new Vector2Class(0, 0);
-        
+
         let length: number = Math.sqrt(length2);
 
         return new Vector2Class(this.x/length, this.y/length);

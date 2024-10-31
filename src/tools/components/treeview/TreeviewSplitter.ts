@@ -3,9 +3,9 @@ import { Treeview } from "./Treeview";
 import { TreeviewAccordion } from "./TreeviewAccordion";
 
 export class TreeviewSplitter {
-    
+
     div: HTMLDivElement;
-    
+
     yStart: number | undefined;
     divsStartHeights: number[] = [];
 
@@ -20,14 +20,14 @@ export class TreeviewSplitter {
 
     enable(){
         this.div.style.display = '';
-        
+
         this.div.onpointerdown = (ev) => {
-            
+
             this.div.style.backgroundColor = '#800000';
 
             this.yStart = ev.pageY;
             let treeviewList: Treeview<any>[] = this.accordion.treeviewList;
-            
+
             this.divsStartHeights = [];
             for(let tv of treeviewList){
                 let height = tv.outerDiv.getBoundingClientRect().height;
@@ -38,23 +38,23 @@ export class TreeviewSplitter {
 
             this.transparentOverlay = DOM.makeDiv(document.body, 'jo_treeview_splitter_overlay');
             this.transparentOverlay.style.cursor = 'ns-resize';
-            
+
             this.transparentOverlay!.onpointermove = (ev) => {
                 this.onPointerMove(ev.pageY);
                 ev.stopPropagation();
             }
-            
+
             this.transparentOverlay!.onmousemove = (ev) => {ev.stopPropagation()};
-            
+
             this.transparentOverlay!.onpointerup = () => {
                 this.transparentOverlay!.remove();
                 this.div.style.backgroundColor = '';
             }
-            
+
         }
-        
+
     }
-    
+
     onPointerMove(newY: number){
         let dyCursor = newY - this.yStart!;
         let treeviewList: Treeview<any>[] = this.accordion.treeviewList;

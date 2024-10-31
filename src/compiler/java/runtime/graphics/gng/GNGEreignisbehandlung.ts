@@ -42,22 +42,22 @@ export class GNGEreignisbehandlung extends ObjectClass implements IGNGEventListe
             this.constructorHelper(t);
             if(callback) callback();
         }
-        
+
     }
-    
+
     constructorHelper(t: Thread){
         if(this._mj$TaktImpulsAusführen$void$ != GNGEreignisbehandlung.prototype._mj$TaktImpulsAusführen$void$){
             this.world.registerGNGEventListener(this, "taktImpulsAusführen");
         }
-    
+
         if(this._mj$TasteGedrückt$void$char != GNGEreignisbehandlung.prototype._mj$TasteGedrückt$void$char){
             this.world.registerGNGEventListener(this, "tasteGedrückt");
         }
-    
+
         if(this._mj$SonderTasteGedrückt$void$int != GNGEreignisbehandlung.prototype._mj$SonderTasteGedrückt$void$int){
             this.world.registerGNGEventListener(this, "sondertasteGedrückt");
         }
-    
+
         if(this._mj$MausGeklickt$void$int$int$int != GNGEreignisbehandlung.prototype._mj$MausGeklickt$void$int$int$int){
             this.world.registerGNGEventListener(this, "mausGeklickt");
         }

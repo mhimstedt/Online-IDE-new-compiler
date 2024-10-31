@@ -25,7 +25,7 @@ export class CoordinateSystemHelper3d {
             textureIndex: 0
         },
         {
-            vector: new THREE.Vector3(0, 1, 0), 
+            vector: new THREE.Vector3(0, 1, 0),
             vector2: new THREE.Vector3(-1, 0, 0),
             color: 0x00ff00,
             caption: "y",

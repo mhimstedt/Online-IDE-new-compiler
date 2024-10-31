@@ -57,7 +57,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
     scene: THREE.Scene;
     renderer: THREE.WebGLRenderer;
-    camera: THREE.PerspectiveCamera; 
+    camera: THREE.PerspectiveCamera;
     orbitControls: OrbitControls;
 
     objects:Object3dClass[]=[];
@@ -124,23 +124,23 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
         this.orbitControls = new OrbitControls(this.camera, this.renderer.domElement);
 
-        
+
         const light = new THREE.DirectionalLight(0xffffff, 1.5);
         light.position.set(10, 5, 3);
         this.scene.add(light);
         const light2 = new THREE.AmbientLight(0xffffff, 0.5);
         this.scene.add(light2);
-        
+
         this.scene.background = new THREE.Color(0, 0, 0);
-        
+
         // interpreter.isExternalTimer = true;
         this.addCallbacks(interpreter);
-        
+
         // this.mouseManager = new MouseManager(this);
-        
-        
+
+
         this.textureManager3d = new TextureManager3d();
-        
+
         t.state = ThreadState.waiting;
         this.textureManager3d.init(interpreter).then(() => {
             this.coordinateSystemHelper = new CoordinateSystemHelper3d(this).show();

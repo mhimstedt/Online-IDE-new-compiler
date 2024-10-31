@@ -11,7 +11,7 @@ export class LambertMaterial3dClass extends Material3dClass {
         {type: "method", signature: "LambertMaterial3d(int color)", native: LambertMaterial3dClass.prototype._lambertMaterialConstructor, comment: JRC.lambertMaterial3dConstructorComment },
         {type: "method", signature: "LambertMaterial3d(string color)", native: LambertMaterial3dClass.prototype._lambertMaterialConstructor, comment: JRC.lambertMaterial3dConstructorComment },
         {type: "method", signature: "LambertMaterial3d(Color color)", native: LambertMaterial3dClass.prototype._lambertMaterialConstructor, comment: JRC.lambertMaterial3dConstructorComment },
-        
+
         {type: "field", signature: "private int emissive", comment: JRC.material3dEmissiveComment },
         {type: "method", signature: "void setEmissive(int color)", native: LambertMaterial3dClass.prototype._setEmissive, comment: JRC.material3dEmissiveComment },
         {type: "method", signature: "void setEmissive(string color)", native: LambertMaterial3dClass.prototype._setEmissive, comment: JRC.material3dEmissiveComment },

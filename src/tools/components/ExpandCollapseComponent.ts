@@ -42,7 +42,7 @@ export class ExpandCollapseComponent {
         this._state = initialState;
         this.render();
 
-    }    
+    }
 
     public toggleState(){
         switch(this._state){

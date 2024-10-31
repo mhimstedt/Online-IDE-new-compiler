@@ -30,31 +30,31 @@ export class ButtonClass extends GuiTextComponentClass {
 
     isMouseOver: boolean = false;
 
-    _cj$_constructor_$Button$double$double$double$string(t: Thread, callback: CallbackFunction, 
+    _cj$_constructor_$Button$double$double$double$string(t: Thread, callback: CallbackFunction,
         x: number, y: number, fontsize: number, text: string, fontFamily?: string
     ){
 
         this.x = x;
         this.y = y;
-        
+
         this._cj$_constructor_$GuiTextComponent$(t, () => {
             this.centerXInitial = x;
             this.centerYInitial = y;
-            
+
             this.borderColor = 0x808080;
             this.borderWidth = fontsize / 8;
             this.fillColor = 0x0000ff;
-            
+
             this.hitPolygonInitial = [];
-            
+
             this.render();
 
             if(callback) callback();
-            
+
         }, true, false, fontsize, text, fontFamily);
-        
+
     }
-    
+
     onKeyDown(key: string, isShift: boolean, isCtrl: boolean, isAlt: boolean): void {}
 
     looseKeyboardFocus(): void {}
@@ -64,11 +64,11 @@ export class ButtonClass extends GuiTextComponentClass {
         let button = new ButtonClass();
         button.textColor = this.textColor;
         this._cj$_constructor_$Button$double$double$double$string(t, () => {
-            if(callback) callback();            
+            if(callback) callback();
         }, this.x, this.y, this.fontsize, this.text, this.fontFamily);
 
     }
-    
+
     render(): void {
 
         this.textCompomentPrerender();

@@ -164,7 +164,7 @@ export class EmbeddedFileExplorer {
 
     }
 
-    
+
     removeFile(file: File, focusFirstFileSubsequently: boolean = true){
         this.removeFileData(this.getFileDataFromFile(file), focusFirstFileSubsequently);
     }
@@ -222,7 +222,7 @@ export class EmbeddedFileExplorer {
     }
 
     selectFileData(fileData: FileData, focusEditorSubsequently: boolean = true) {
-        
+
         if (!fileData) return;
 
         switch (fileData.type) {

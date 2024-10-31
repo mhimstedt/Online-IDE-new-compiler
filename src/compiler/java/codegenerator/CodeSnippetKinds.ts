@@ -105,13 +105,13 @@ export class CodeSnippetContainer extends CodeSnippet {
 
     flattenInto(flatList: CodeSnippet[]): void {
         if (this.parts.length == 0) return;
-        
+
         if (this.parts[0] instanceof NextStepMark) {
             if (flatList.length == 0 || flatList[flatList.length - 1] instanceof NextStepMark) {
                 this.parts.shift();
             }
         }
-        
+
         if (this.parts.length == 0) return;
 
         if (!this.parts[0].range) this.parts[0].range = this.range;
@@ -144,9 +144,9 @@ export class CodeSnippetContainer extends CodeSnippet {
 
     /**
      * not used
-     * @param currentStep 
-     * @param steps 
-     * @returns 
+     * @param currentStep
+     * @param steps
+     * @returns
      */
     emitToStep(currentStep: Step, steps: Step[], module: Module): Step {
 
@@ -196,7 +196,7 @@ export class CodeSnippetContainer extends CodeSnippet {
 
     addStringPart(part: string, range?: IRange, type?: JavaType, takeListenersFromParts?: CodeSnippet[]) {
         let newPart = new StringCodeSnippet(part, range, type);
-        
+
         if(takeListenersFromParts){
             takeListenersFromParts.forEach(part => newPart.addEmitToStepListener(part.getEmitToStepListeners()));
         }

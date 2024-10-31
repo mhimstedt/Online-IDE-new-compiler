@@ -52,7 +52,7 @@ export class JUnitTestrunnerLanguage {
     })
 
     static noTestsAvailableHtml = (exampleHtml: string) => lm({
-    "de": `<div>In deinem Workspace gibt es noch keine JUnit-Tests. Wenn du wissen möchtest, was ein JUnit-Test ist und wie man einen 
+    "de": `<div>In deinem Workspace gibt es noch keine JUnit-Tests. Wenn du wissen möchtest, was ein JUnit-Test ist und wie man einen
     schreibt, schau' dir <a target="_blank" href="https://www.learnj.de/doku.php?id=api:documentation:junit:start">die ausführliche Anleitung auf www.learnj.de</a> dazu an.</div>
     <br />
     <div style="font-weight: bold">Hier ein kurzer Beispieltest:<div>
@@ -61,16 +61,16 @@ export class JUnitTestrunnerLanguage {
     <span style="font-weight: bold>Tipp: </span>
     <ul>
       <li>Jede Testmethode muss mit einer @Test-Annotation gekennzeichnet sein.</li>
-      <li>Im Quelltext siehst Du links neben der Deklaration der Testmethode einen kleinen 
+      <li>Im Quelltext siehst Du links neben der Deklaration der Testmethode einen kleinen
           Button, mit dem Du diese Testmethode starten kannst.</li>
       <li>Eine Testmethode muss parameterlos sein und besitzt immer den Rückgabetyp void. </li>
-      <li>Wenn Du auch die Klasse mit @Test annotierst, erhältst Du links neben ihrer 
+      <li>Wenn Du auch die Klasse mit @Test annotierst, erhältst Du links neben ihrer
       Deklaration im Quelltext einen kleinen Button, mit dem Du alle Tests der Klasse
       gemeinsam starten kannst. </li>
     </ul>`,
 
- 
-    "en": `<div>There aren't any JUnit-tests in your workspace yet. If you want to know more about JUnit-Tests and how to write them,  
+
+    "en": `<div>There aren't any JUnit-tests in your workspace yet. If you want to know more about JUnit-Tests and how to write them,
      <a target="_blank" href="https://www.learnj.de/doku.php?id=api:documentation:junit:start">look here!</a>.</div>
     <br />
      <div style="font-weight: bold">Here a quick example:<div>
@@ -90,11 +90,11 @@ export class JUnitTestrunnerLanguage {
     static noTestsAvailableExampleProgram = () => lm({
     "de": `@Test
 class MyFirstTestClass {
-   
+
    @Test
    void testSquareRoot() {
       double squareRootOfFour = Math.sqrt(4);
-      assertEquals(2.0, squareRootOfFour, 
+      assertEquals(2.0, squareRootOfFour,
          "There semms to be something wrong with Math.sqrt!");
    }
 
@@ -102,19 +102,19 @@ class MyFirstTestClass {
    void testDivision() {
       double n = 5 / 2 * 3;
       println(n);
-      assertEquals(7.5, n, 
+      assertEquals(7.5, n,
          "5/2 * 3 doesn't yield 7.5 -> mysterious...");
    }
 }`,
     })
-   
+
 
     static testsFound = (count: number) => lm({
-    "de": `In diesem Workspace wurden ${count} Testmethoden gefunden. 
+    "de": `In diesem Workspace wurden ${count} Testmethoden gefunden.
     <br />Klicke auf die Test-Buttons
     <span class="img_test-start jo_junit_imagesInline"></span>, um sie zu starten!`,
-    
-    "en": `${count} test methods found in this workspace. 
+
+    "en": `${count} test methods found in this workspace.
     <br />Click the test-buttons <span class="img_test-start jo_junit_imagesInline"></span> to start them!`,
     })
 }

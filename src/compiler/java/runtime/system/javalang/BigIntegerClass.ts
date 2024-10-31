@@ -16,7 +16,7 @@ export class BigIntegerClass extends ObjectClass {
         { type: "method", signature: "final BigInteger remainder(BigInteger otherNumber)", native: BigIntegerClass.prototype._remainder, comment: JRC.BigIntegerRemainderComment },
         { type: "method", signature: "final String toString()", java: BigIntegerClass.prototype._mj$toString$String$, comment: JRC.BigIntegerToStringComment },
         { type: "method", signature: "final int intValue()", native: BigIntegerClass.prototype._intValue, comment: JRC.BigIntegerIntValueComment },
-        
+
     ]
 
     static type: NonPrimitiveType;

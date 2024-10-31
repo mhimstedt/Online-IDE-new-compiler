@@ -15,9 +15,9 @@ export class ChangeListenerInterface extends InterfaceClass {
     ]
 
     static type: NonPrimitiveType;
-   
+
     _mj$onChange$void$Object$String(t: Thread, callback: CallbackParameter, changedObject: ObjectClass, newValue: StringClass){
-        
+
     }
 
 

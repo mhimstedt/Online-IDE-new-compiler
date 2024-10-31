@@ -349,7 +349,7 @@ export function lightenDarkenHexColor(col: string, amount: number) {
     return newColor;
   }
 
-  export function getCookieValue(name: string): string | undefined 
+  export function getCookieValue(name: string): string | undefined
   {
     const regex = new RegExp(`(^| )${name}=([^;]+)`)
     const match = document.cookie.match(regex)

@@ -22,7 +22,7 @@ export class PrintStreamClass extends ObjectClass {
         t.print(text, 0xffffff);
         if(callback) callback();
     }
-    
+
     _mn$println$void$string(t: Thread, callback: CallbackFunction, text?: string){
         if(!text){
             t.println("", 0xffffff);
@@ -42,7 +42,7 @@ export class SystemClass extends ObjectClass {
         { type: "field", signature: "static PrintStream out", comment: JRC.SystemOutComment},
         { type: "method", signature: "static void exit(int status)", java: SystemClass._mj$exit$void$int, comment: JRC.SystemExitComment },
         { type: "method", signature: "static int currentTimeMillis()", native: SystemClass._currentTimeMillis, comment: JRC.SystemCurrentTimeMillisComment },
-    ];    
+    ];
 
     static type: NonPrimitiveType;
     static deltaTimeMillis: number = 0;   // when using WebSocket then the Server sends time synchronization
@@ -51,11 +51,11 @@ export class SystemClass extends ObjectClass {
     static _mj$exit$void$int(t: Thread, status: number){
         t.state = ThreadState.terminated;
         t.scheduler.exit(status);
-    }    
+    }
 
     static _currentTimeMillis(){
         return Math.round(performance.now()) + SystemClass.deltaTimeMillis;
-    }    
+    }
 
     static synchronizeToServerTimeMillis(serverTimeMillis: number){
         SystemClass.deltaTimeMillis = serverTimeMillis - performance.now();
@@ -63,6 +63,6 @@ export class SystemClass extends ObjectClass {
 
 
 
-}    
+}
 
 

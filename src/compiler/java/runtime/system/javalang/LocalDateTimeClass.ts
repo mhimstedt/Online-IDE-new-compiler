@@ -73,7 +73,7 @@ export class LocalDateTimeClass extends ObjectClass {
 
 
     _mj$toString$String$(t: Thread, callback: CallbackFunction) {
-        
+
         t.s.push(new StringClass(`${this.td(this.date.getDate())}.${this.td(this.date.getMonth() + 1)}.${this.td(this.date.getFullYear())} ${this.td(this.date.getHours())}:${this.td(this.date.getMinutes())}:${this.td(this.date.getSeconds())}`));
         if(callback) callback();
         return;

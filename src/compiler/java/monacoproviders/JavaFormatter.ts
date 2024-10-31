@@ -149,7 +149,7 @@ export class JavaFormatter implements monaco.languages.DocumentFormattingEditPro
                         indentLevel--;
                         // if(t.range.startColumn >= 3){
                         this.deleteSpaces(edits, t.range.startLineNumber, 1, 3);
-                        // }    
+                        // }
                     }
                     indentLevel--;
                     let openedAtLine = curlyBracesOpenAtLines.pop();

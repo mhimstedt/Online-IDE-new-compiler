@@ -4,14 +4,14 @@ import "/include/css/guibutton.css";
 type Listener = (checked: boolean) => void;
 
 export class GUIToggleButton {
-    
+
     $html: JQuery<HTMLDivElement>;
     isActive: boolean = true;
     listeners: Listener[] = [];
     linkedToggleButtons: Set<GUIToggleButton> = new Set();
 
     constructor(private _caption: string, public $parent: JQuery<HTMLElement>, private _isChecked: boolean){
-        this.$html = jQuery(`<div class='joe_toggleButton active${_isChecked ? " checked" : ""}'>${_caption}</div>`);        
+        this.$html = jQuery(`<div class='joe_toggleButton active${_isChecked ? " checked" : ""}'>${_caption}</div>`);
         this.$parent?.append(this.$html);
         this.$html.on('pointerdown', (e) => {
             e.stopPropagation();
@@ -20,7 +20,7 @@ export class GUIToggleButton {
             }
         })
     }
-    
+
     onChange(listener: (checked: boolean) => void){
         this.listeners.push(listener);
     }
@@ -62,4 +62,4 @@ export class GUIToggleButton {
 
 
 
-} 
+}

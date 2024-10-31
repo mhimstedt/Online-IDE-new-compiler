@@ -36,10 +36,10 @@ export class InnerClassCodeGenerator extends StatementCodeGenerator {
     }
 
     /**
-     * 
+     *
      *  Compiles expressions like new MyAbstractClass(p1, p2){ attributeDeclarations, instanceInitializers, methodDeclarations }
-     * 
-     * @param node 
+     *
+     * @param node
      */
     compileAnonymousInnerClass(node: ASTAnonymousClassNode): CodeSnippet | undefined {
 
@@ -51,7 +51,7 @@ export class InnerClassCodeGenerator extends StatementCodeGenerator {
 
         // node.klass.resolvedType = klass;
 
-        // setup provisionally version of runtime class to collect programs: 
+        // setup provisionally version of runtime class to collect programs:
         klass.runtimeClass = class {
 
         };  //
@@ -190,7 +190,7 @@ export class InnerClassCodeGenerator extends StatementCodeGenerator {
         klass.outerType = outerClass;
         klass.setExtends(this.objectType);
 
-        // setup provisionally version of runtime class to collect programs: 
+        // setup provisionally version of runtime class to collect programs:
         klass.runtimeClass = class {
 
         };  //
@@ -307,7 +307,7 @@ export class InnerClassCodeGenerator extends StatementCodeGenerator {
 
     /**
      * if a class has no explicitly declared constructor then foreach constructor of it's base class build
-     * a constructor with same signature 
+     * a constructor with same signature
      */
     buildStandardConstructors(classContext: JavaClass) {
         if (classContext.methods.some(m => m.isConstructor)) return;
@@ -385,7 +385,7 @@ export class InnerClassCodeGenerator extends StatementCodeGenerator {
 
 
                 // runtimeClass.prototype[method.getInternalName("java")] = new Function(StepParams.thread, ...parameterIdentifiers,
-                //     `${Helpers.threadStack}.push(${thisFollowedByParameterIdentifiers.join(", ")});` + 
+                //     `${Helpers.threadStack}.push(${thisFollowedByParameterIdentifiers.join(", ")});` +
                 //                  `${Helpers.pushProgram}(this.constructor.__programs[${methodIndex}]);`);
 
 
@@ -405,11 +405,11 @@ export class InnerClassCodeGenerator extends StatementCodeGenerator {
 
 
     /**
- * All fields inside types are already built by TypeResolver. 
+ * All fields inside types are already built by TypeResolver.
  * This method handles field initialization and adds all fields to the
  * symbol table.
  * @see TypeResolver#buildRuntimeClassesAndTheirFields
- * @returns 
+ * @returns
  */
     compileFieldDeclaration(fieldNode: ASTFieldDeclarationNode, classContext: JavaClass | JavaEnum | JavaInterface): CodeSnippet | undefined {
 
@@ -687,7 +687,7 @@ export class InnerClassCodeGenerator extends StatementCodeGenerator {
 
 
 
-    protected async compileMethods(cdef: ASTClassDefinitionNode | ASTEnumDefinitionNode | ASTInterfaceDefinitionNode, 
+    protected async compileMethods(cdef: ASTClassDefinitionNode | ASTEnumDefinitionNode | ASTInterfaceDefinitionNode,
         classContext: JavaClass | JavaEnum | JavaInterface, interruptIfNeeded: boolean) {
         for (let method of cdef.methods) {
 

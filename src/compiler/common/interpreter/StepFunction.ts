@@ -42,7 +42,7 @@ export class Helpers {
     static instanceof = StepParams.thread + "." + Thread.prototype.Instanceof.name;
     static toString = StepParams.thread + "." + Thread.prototype.ToString.name;
     static exit = StepParams.thread + "." + Thread.prototype.exit.name;
-    static assertionObservers = StepParams.thread + ".assertionObservers"; 
+    static assertionObservers = StepParams.thread + ".assertionObservers";
     static registerCodeReached = StepParams.thread + "." + Thread.prototype.registerCodeReached.name;
     static nullstringIfNull = StepParams.thread + "." + Thread.prototype.NullstringIfNull.name;
     static primitiveArrayToString = StepParams.thread + "." + Thread.prototype._primitiveElementOrArrayToString.name;
@@ -68,7 +68,7 @@ export class Helpers {
 
 /**
  * int a = v[b + 3][x];
- * compiles to: 
+ * compiles to:
  * s[sb + 2] = h.arr(s[sb + 7], 1370, s[sb + 12] + 3, s[sb + 13])
  * (v lies on pos 7, b on pos 12, x on pos 13)
  */

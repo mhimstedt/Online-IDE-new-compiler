@@ -61,7 +61,7 @@ export class GraphicsManager {
                 width: this.pixiSpritesheetData.meta.size.w,
                 height: this.pixiSpritesheetData.meta.size.h
             }))
-    
+
             this.pixiUserSpritesheet = new PIXI.Spritesheet(textureNew, this.pixiSpritesheetData);
             await this.pixiUserSpritesheet.parse()
         }
@@ -70,6 +70,6 @@ export class GraphicsManager {
 
     }
 
-    
+
 
 }

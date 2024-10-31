@@ -84,7 +84,7 @@ export class TypeResolver {
                     this.pushError(JCM.typenameUsedInLibrary(tdn.identifier), tdn.range, tdn.module, "error");
                     continue;
                 }
-                
+
 
             } else {
                 this.pushError(JCM.typenameAlreadyInUse(tdn.identifier, otherTypeDef.range, otherTypeDef.module.file.name), tdn.range, tdn.module, "error");
@@ -463,7 +463,7 @@ export class TypeResolver {
             if (extType instanceof IJavaClass) {
                 resolvedType1.setExtends(extType);
             } else {
-                // anonymous inner class? 
+                // anonymous inner class?
                 if (declNode.identifier == "" && extType instanceof IJavaInterface) {
                     declNode.implements.push(declNode.extends);
                     declNode.extends = undefined;

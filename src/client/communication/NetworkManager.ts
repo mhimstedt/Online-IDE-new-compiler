@@ -10,31 +10,31 @@ import { PushClientManager } from "./pushclient/PushClientManager.js";
 import { File } from '../workspace/File.js';
 
 export class NetworkManager {
-        
+
     // = "https://sql.onlinecoding.de/servlet/";
     // SqlIdeUrlHolder.sqlIdeURL = "http://localhost:6500/servlet/";
     // SqlIdeUrlHolder.sqlIdeURL = "https://www.sql-ide.de/servlet/";
-    
+
     timerhandle: any;
-    
+
     ownUpdateFrequencyInSeconds: number = 25;
     teacherUpdateFrequencyInSeconds: number = 5;
-    
+
     updateFrequencyInSeconds: number = 25;
     forcedUpdateEvery: number = 25;
     forcedUpdatesInARow: number = 0;
-    
+
     secondsTillNextUpdate: number = this.updateFrequencyInSeconds;
     errorHappened: boolean = false;
-    
+
     interval: any;
-    
+
     counterTillForcedUpdate: number;
-    
+
     constructor(public main: Main, private $updateTimerDiv: JQuery<HTMLElement>) {
 
     }
-    
+
     initializeTimer() {
 
         let that = this;
@@ -43,13 +43,13 @@ export class NetworkManager {
         if (this.interval != null) clearInterval(this.interval);
 
         this.counterTillForcedUpdate = this.forcedUpdateEvery;
-        
+
         this.interval = setInterval(() => {
-            
+
             if (that.main.user == null) return; // don't call server if no user is logged in
-            
+
             that.secondsTillNextUpdate--;
-            
+
             if (that.secondsTillNextUpdate < 0) {
                 that.secondsTillNextUpdate = that.updateFrequencyInSeconds;
                 that.counterTillForcedUpdate--;
@@ -62,15 +62,15 @@ export class NetworkManager {
                     }
                 }
 
-                
+
                 that.sendUpdates(() => { }, doForceUpdate, false);
-                
+
             }
-            
+
             let $rect = this.$updateTimerDiv.find('.jo_updateTimerRect');
-            
+
             $rect.attr('width', that.secondsTillNextUpdate + "px");
-            
+
             if (that.errorHappened) {
                 $rect.css('fill', '#c00000');
                 this.$updateTimerDiv.attr('title', "Fehler beim letzten Speichervorgang -> Werd's wieder versuchen");
@@ -78,11 +78,11 @@ export class NetworkManager {
                 $rect.css('fill', '#008000');
                 this.$updateTimerDiv.attr('title', that.secondsTillNextUpdate + " Sekunden bis zum nächsten Speichern");
             }
-            
+
             PerformanceCollector.sendDataToServer();
-            
+
         }, 1000);
-        
+
     }
 
     initializeSSE() {
@@ -106,12 +106,12 @@ export class NetworkManager {
             if (callback != null) callback();
             return;
         }
-                
+
         let classDiagram = this.main.rightDiv?.classDiagram;
         let userSettings = this.main.user.settings;
 
         if (classDiagram?.dirty || this.main.userDataDirty) {
-            
+
             this.main.userDataDirty = false;
             userSettings.classDiagram = classDiagram?.serialize();
             this.sendUpdateUserSettings(() => { }, sendBeacon);
@@ -430,7 +430,7 @@ export class NetworkManager {
                             file.setSaved(true);
                         }
                         file.version = remoteFileData.version;
-                    } 
+                    }
                 }
 
 
@@ -476,11 +476,11 @@ export class NetworkManager {
     public createNewWorkspaceFromWorkspaceData(remoteWorkspace: WorkspaceData, withSort: boolean = false): Workspace {
 
         let w = this.main.restoreWorkspaceFromData(remoteWorkspace);
-        
+
         this.main.workspaceList.push(w);
         let path = remoteWorkspace.path.split("/");
         if (path.length == 1 && path[0] == "") path = [];
-        
+
         let panelElement: AccordionElement = {
             name: remoteWorkspace.name,
             externalElement: w,
@@ -530,7 +530,7 @@ export class NetworkManager {
             if (response.success) {
                 this.fetchDatabase(response.token, (database, error) => {
                     callback(database, response.token, error);
-                })                
+                })
             } else {
                 callback(null, null, response.message);
             }
@@ -551,7 +551,7 @@ export class NetworkManager {
             if (response.success) {
 
                 let database = response.database;
-                
+
                 cacheManager.fetchTemplateFromCache(database.based_on_template_id, (templateDump: Uint8Array) => {
 
                     if (templateDump != null) {
@@ -614,7 +614,7 @@ export class NetworkManager {
 
     }
 
-    public addDatabaseStatement(token: string, version_before: number, statements: string[], 
+    public addDatabaseStatement(token: string, version_before: number, statements: string[],
         callback: (statementsBefore: string[], new_version: number, message: string) => void){
 
         let request: JAddStatementRequest = {
@@ -629,8 +629,8 @@ export class NetworkManager {
 
 
     }
-    
-    public rollbackDatabaseStatement(token: string, current_version: number, 
+
+    public rollbackDatabaseStatement(token: string, current_version: number,
         callback: (message: string) => void){
 
         let request: JRollbackStatementRequest = {
@@ -644,7 +644,7 @@ export class NetworkManager {
 
 
     }
-    
+
 
 
 }

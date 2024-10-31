@@ -152,7 +152,7 @@ export class MyConsole {
                         column: text.length + 1
                     })
                     that.compile();
-                }    
+                }
             } else if(e.code == "ArrowDown"){
                 let nextHistoryPos = that.history.length - (that.historyPos - 1);
                 if (nextHistoryPos <= that.history.length - 1) {
@@ -168,7 +168,7 @@ export class MyConsole {
                     that.historyPos = 0;
                 }
                 that.compile();
-    
+
             }
 
         })

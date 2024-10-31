@@ -1,8 +1,8 @@
 /**
  * The JavaCompiler takes a bundle of files and tries to compile them into
  * a runnable java program.
- * 
- * If it is invoked with files it already knows it may reuse code from 
+ *
+ * If it is invoked with files it already knows it may reuse code from
  * a former compilation run.
  */
 
@@ -75,11 +75,11 @@ export class JavaCompiler implements Compiler {
 
     public async compileIfDirty(): Promise<Executable | undefined> {
 
-        
+
         if (this.lastCompiledExecutable) {
             this.lastCompiledExecutable.findMainModule(false, this.lastOpenedFile, this.main?.getCurrentWorkspace()?.getCurrentlyEditedModule());
         }
-        
+
         // if we're not in test mode:
         if (this.main) {
             if (this.main.getInterpreter().isRunningOrPaused()) return;
@@ -88,9 +88,9 @@ export class JavaCompiler implements Compiler {
             this.moduleManager.workspace = currentWorkspace;
             this.files = currentWorkspace.getFiles().filter(file => FileTypeManager.filenameToFileType(file.name).language == 'myJava');
         }
-        
+
         this.moduleManager.setupModulesBeforeCompiliation(this.files);
-        
+
         // we call moduleManager.getNewOrDirtyModules before iterativelySetDirtyFlags
         // to check if ANY file has changed/is new since last compilation run:
         let newOrDirtyModules = this.moduleManager.getNewOrDirtyModules(true);
@@ -99,17 +99,17 @@ export class JavaCompiler implements Compiler {
          * if no module has changed, return as fast as possible
         */
        if (newOrDirtyModules.length == 0) return this.lastCompiledExecutable;
-       
+
        // now we extend set of dirty modules to
        //  - modules which had errors in last compilation run
        //  - modules that are (indirectly) dependent on other dirty modules
        this.moduleManager.iterativelySetDirtyFlags();
-       
+
 
        newOrDirtyModules = this.moduleManager.getNewOrDirtyModules();
 
        this.progressManager.setNewOrDirtyModules(newOrDirtyModules.map(m => m.file.name).join(", "));  // only for console.log later
-       
+
        if (newOrDirtyModules.length == 0) return this.lastCompiledExecutable;
 
         this.errors = [];
@@ -195,7 +195,7 @@ export class JavaCompiler implements Compiler {
     }
 
     /**
-     * If user presses . or <ctrl> + <space> then we assume that only 
+     * If user presses . or <ctrl> + <space> then we assume that only
      * currently edited file is dirty, therefore it suffices to compile only this module.
      */
     updateSingleModuleForCodeCompletion(module: JavaCompiledModule): "success" | "completeCompilingNecessary" {
@@ -249,7 +249,7 @@ export class JavaCompiler implements Compiler {
 
         let f = () => {
 
-            // if compileIfDirty() had been called from outside between two invocations of f, then 
+            // if compileIfDirty() had been called from outside between two invocations of f, then
             // we don't need to compile this early:
             let plannedNextCompilationTime = this.endOfLastCompilationRunMs + this.maxMsBetweenRuns;
             if (performance.now() < plannedNextCompilationTime - 30) {

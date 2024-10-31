@@ -32,7 +32,7 @@ export class JsonTool {
     }
 
     private anyToJson(data: any): any {
-        
+
         if(Array.isArray(data)){
             return data.map(element => this.anyToJson(element));
         }
@@ -49,7 +49,7 @@ export class JsonTool {
             // typeof data is "string" or "number" or "boolean"
             return data;
         }
-        
+
     }
 
     objectToJson(object: ObjectClass): SerializedObject {
@@ -65,12 +65,12 @@ export class JsonTool {
         if (index != null) {
             return { "!i": index };
         }
-        
+
         index = this.nextIndex++;
         this.objectToIndexMap.set(object, index);
-        
+
         let serializedObject: SerializedObject = { "!k": klass.identifier, "!i": index };
-        
+
         // Don't serialize system classes unless they are explicitely serializable
         if (klass.module.isLibraryModule) {
             return null;
@@ -113,7 +113,7 @@ export class JsonTool {
                 ftr.objectHoldingField[ftr.fieldIdentifier] = object;
             }
         }
-        
+
         for(let atr of this.arrayElementsToResolve){
             let object = this.indexToObjectMap.get(atr.objectToResolveIndex);
             if (object != null) {
@@ -136,7 +136,7 @@ export class JsonTool {
 
         if(klassIdentifier != null){
             let realObject = new klass.runtimeClass!(); // todo: call constructor...
-    
+
             let serializedFields: any = serializedObject[klass.identifier];
             if(serializedFields){
                 while(klass != null){
@@ -146,8 +146,8 @@ export class JsonTool {
                         if(type instanceof JavaClass){
                             realObject[identifier] = this.fromJsonObj(serializedFields[identifier], type, (index: number) => {
                                 this.fieldsToResolve!.push({
-                                    objectHoldingField: realObject, 
-                                    fieldIdentifier: identifier, 
+                                    objectHoldingField: realObject,
+                                    fieldIdentifier: identifier,
                                     objectToResolveIndex: index
                                 });
                             });
@@ -174,7 +174,7 @@ export class JsonTool {
 
 
     fromJsonAny(data: any, type: JavaType): any {
-        if(type instanceof JavaEnum){ 
+        if(type instanceof JavaEnum){
             let ordinal: number = data;
             return type.runtimeClass!.values.find((v: any) => v.ordinal == ordinal );
         } else if(type instanceof JavaArrayType && Array.isArray(data)){
@@ -195,7 +195,7 @@ export class JsonTool {
                 if(elementType instanceof JavaClass){
                     ret.push(this.fromJsonObj(element, elementType, (index: number) => {
                         this.arrayElementsToResolve!.push({
-                            array: data, 
+                            array: data,
                             arrayIndex: i,
                             objectToResolveIndex: index
                         })

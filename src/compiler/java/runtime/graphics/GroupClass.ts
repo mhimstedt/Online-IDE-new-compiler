@@ -72,7 +72,7 @@ export class GroupClass extends ShapeClass implements BaseListType {
     }
 
     _mj$copy$Group$(t: Thread, callback: CallbackParameter){
-        
+
         let g = new GroupClass();
         g._cj$_constructor_$Group$(t, () => {
             let index = 0;
@@ -147,15 +147,15 @@ export class GroupClass extends ShapeClass implements BaseListType {
     add(shape: ShapeClass) {
 
         if (shape == null) return;
-        
+
         if (shape.isDestroyed) {
             throw new RuntimeExceptionClass("Ein schon zerstörtes Objekt kann keiner Gruppe hinzugefügt werden.");
         }
-        
+
         if (shape instanceof GroupClass && shape.containsRecursively(this)) {
             throw new RuntimeExceptionClass("Es wurde versucht, eine Gruppe A zu einer Gruppe B hinzuzufügen, wobei B die Gruppe A bereits enthielt. Dies führt zu einem unzulässigen Zirkelbezug.")
         }
-        
+
         shape.getWorldTransform();
         if (shape.belongsToGroup != null) {
             shape.belongsToGroup.remove(shape);
@@ -165,9 +165,9 @@ export class GroupClass extends ShapeClass implements BaseListType {
                 this.world.shapesWhichBelongToNoGroup.splice(index, 1);
             }
         }
-        
+
         this.shapes.push(shape);
-        
+
         shape.belongsToGroup = this;
 
 
@@ -318,7 +318,7 @@ export class GroupClass extends ShapeClass implements BaseListType {
                 let centerXOld = this._getCenterX();
                 let centerYOld = this._getCenterY();
                 sprite._defineCenter(this._getCenterX(), this._getCenterY());
-                
+
                 sprite.container.localTransform.append(this.world.app!.stage.localTransform);
                 sprite.container.setFromMatrix(sprite.container.localTransform);
                 sprite.container.updateLocalTransform();
@@ -326,7 +326,7 @@ export class GroupClass extends ShapeClass implements BaseListType {
 
                 this.add(sprite);
                 this._defineCenter(centerXOld, centerYOld);
-                
+
                 if(callback) callback();
             }, 0, 0, "", 0, undefined, this
         );

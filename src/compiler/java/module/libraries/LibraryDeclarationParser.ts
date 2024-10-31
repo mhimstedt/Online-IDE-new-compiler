@@ -73,7 +73,7 @@ export class LibraryDeclarationParser extends LibraryDeclarationLexer {
             path.push(this.cct.value);
             this.nextToken();
         } while(this.comesToken(TokenType.dot, true));
-        
+
         let pathAndIdentifier = path.join(".");
         let identifier: string = path.pop()!;
 
@@ -279,7 +279,7 @@ export class LibraryDeclarationParser extends LibraryDeclarationLexer {
 
     /**
      * int, int[][], HashMap<Integer, Boolean>[]
-     * 
+     *
      */
     parseType(module: JavaBaseModule): JavaType {
         let id = this.expectIdentifier();
@@ -562,7 +562,7 @@ export class LibraryDeclarationParser extends LibraryDeclarationLexer {
                     if (m.isConstructor) {
                         body = `
                             this.${realName}(${parameterNames.join(", ")});
-                            ${Helpers.threadStack}.push(this); 
+                            ${Helpers.threadStack}.push(this);
                         `
                         parameterNames.unshift('callback1');
                         parameterNames.unshift('__t');
@@ -572,7 +572,7 @@ export class LibraryDeclarationParser extends LibraryDeclarationLexer {
                     } else if (m.isStatic) {
                         body = `
                             ${hasReturnValue ? 'let __returnValue = ' : ''}this.${realName}(${parameterNames.join(", ")});
-                            ${hasReturnValue ? `${Helpers.threadStack}.push(__returnValue);` : ''} 
+                            ${hasReturnValue ? `${Helpers.threadStack}.push(__returnValue);` : ''}
                         `
                         parameterNames.unshift('__t');
                         parameterNames.push(body);
@@ -582,7 +582,7 @@ export class LibraryDeclarationParser extends LibraryDeclarationLexer {
                         body = `
                             ${hasReturnValue ? 'let __returnValue = ' : ''}this.${realName}(${parameterNames.join(", ")});
                             ${hasReturnValue ? `${Helpers.threadStack}.push(__returnValue);` : ''}
-                            if(__callback)__callback(); 
+                            if(__callback)__callback();
                         `
                         parameterNames.unshift('__callback');
                         parameterNames.unshift('__t');
@@ -634,7 +634,7 @@ export class LibraryDeclarationParser extends LibraryDeclarationLexer {
             if (typeof adecl.constantValue !== "undefined") {
                 a.initialValue = adecl.constantValue;
                 a.initialValueIsConstant = true;
-                klass[a.internalName] = adecl.constantValue; 
+                klass[a.internalName] = adecl.constantValue;
             }
 
             klassType.fields.push(a);

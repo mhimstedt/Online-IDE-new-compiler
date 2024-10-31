@@ -24,7 +24,7 @@ export class BasePushClientManager {
     public subscribe(eventType: PushEventType, handler: PushMessageHandler) {
         this.eventTypeToSubscriberInfoMap.set(eventType, { eventType: eventType, handler: handler });
     }
-    
+
     public unsubscribe(eventType: PushEventType){
         this.eventTypeToSubscriberInfoMap.delete(eventType);
     }
@@ -51,9 +51,9 @@ export class BasePushClientManager {
 
     onMessage(messages: ServerSentMessage[]){
 
-        for(let message of messages){            
+        for(let message of messages){
             if(message.eventType == "keepAlive") return;
-    
+
             this.eventTypeToSubscriberInfoMap.get(message.eventType)?.handler(message.data);
         }
 
@@ -72,7 +72,7 @@ export class BasePushClientManager {
                 text += `=> Trying ${this.currentStrategy.name} in 3 seconds...`;
             setTimeout(() => {
                 console.log(`Opening ${this.currentStrategy.name}`);
-                this.currentStrategy.open();                
+                this.currentStrategy.open();
             }, 3000);
         } else {
             text += `It was the last resort, unfortunately this client has no means to receive push-messages from server.`;

@@ -10,25 +10,25 @@ export class GNGRechteck extends GNGBaseFigur {
     static __javaDeclarations: LibraryDeclarations = [
         {type: "declaration", signature: "class Rechteck extends GNGBaseFigur", comment: "Rechteck-Klasse der Graphics'n Games-Bibliothek (Cornelsen-Verlag)"},
         {type: "method", signature: "Rechteck()", java: GNGRechteck.prototype._cj$_constructor_$Rechteck$, comment: "Instanziert ein neues, achsenparalleles Rechteck-Objekt."},
-        
+
         {type: "field", signature: "protected int breite", comment: "Breite des Recthecks"},
         {type: "field", signature: "protected int höhe", comment: "Höhe des Rechtecks"},
 
         {type: "method", signature: "void GrößeSetzen(int breite, int höhe)", native: GNGRechteck.prototype._groesseSetzen, comment: "Setzt die Breite und Höhe des Rechtecks."}
     ];
-    
+
     static type: NonPrimitiveType;
 
     get breite(): number {
         if(!this.filledShape?.container?.scale) return 0;
         return Math.round(Math.abs(this.width * this.filledShape.container.scale.x));
     }
-    
+
     get höhe(): number {
         if(!this.filledShape?.container?.scale) return 0;
         return Math.round(Math.abs(this.height * this.filledShape.container.scale.y));
     }
-    
+
     renderGNG(): void {
         let rectangle = this.filledShape as RectangleClass;
         let rotationCenterX = this.moveAnchor.x + this.width/2;
@@ -56,7 +56,7 @@ export class GNGRechteck extends GNGBaseFigur {
 
         let rectangle = new RectangleClass();
         this.filledShape = rectangle;
-        
+
         rectangle._cj$_constructor_$Rectangle$double$double$double$double(t, () => {
             t.s.pop();
             t.s.push(this);

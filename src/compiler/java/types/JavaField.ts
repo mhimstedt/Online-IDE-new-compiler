@@ -42,7 +42,7 @@ export class JavaField extends BaseField {
     getCopyWithConcreteType(typeMap: Map<GenericTypeParameter, JavaType>): JavaField {
         let newType: JavaType = this.type.getCopyWithConcreteType(typeMap);
         if(newType == this.type) return this;
-        
+
         let copy = new JavaField(this.identifier, this.identifierRange, this.module,
              newType, this.visibility);
         copy.documentation = this.documentation;

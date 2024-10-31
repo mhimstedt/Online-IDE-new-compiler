@@ -19,7 +19,7 @@ export class IssueReporter {
     constructor(private main: Main) {
 
         this.dialog = new Dialog();
-        
+
     }
 
     show() {
@@ -34,7 +34,7 @@ export class IssueReporter {
         let emailInput = this.dialog.input("text", "E-Mail-Adresse (für Rückfragen, optional)");
         let rufnameInput = this.dialog.input("text", "Rufname (für Rückfragen, optional)");
         let familiennameInput = this.dialog.input("text", "Familienname (für Rückfragen, optional)");
-        
+
 
         this.dialog.buttons([
             {
@@ -46,7 +46,7 @@ export class IssueReporter {
                 caption: "Senden",
                 color: "green",
                 callback: async() => {
-                    
+
                     let request: ReportIssueRequest = {
                         workspace_id: addWorkspace() ? this.main.getCurrentWorkspace().id : null,
                         description: textfield.value,

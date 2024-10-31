@@ -5,7 +5,7 @@ export var SpriteLibrary = [
     {filename: "Schaufel.png", name: "Werkzeug", index: 0, scale: 1.0},
     {filename: "minesweeper/minesweeper.png", name: "Minesweeper", tilesX: 20, tilesY: 1, spacingX: 1, scale: 1.0, index: 0},
     {filename: "minesweeper/minesweeper-numbers.png", name: "Minesweeper", tilesX: 10, tilesY: 1, scale: 1.0, index: 22},
-    
+
     // Sleepy Blocks
     {filename: "Sleepy_Blocks/sleepy_blocks.png", name: "Sleepy_Blocks", tilesX: 8, tilesY: 1, spacingX: 2, spacingY: 2, scale: 1.0, index: 0, extrudeMarginWidth: 1},
 
@@ -17,7 +17,7 @@ export var SpriteLibrary = [
     { filename: "flappy_bird/Leiste.png", name: "Bird", index: 5, indexName: "Bird" },
     { filename: "flappy_bird/Saeule.png", name: "Bird", index: 6, indexName: "Bird" },
     { filename: "flappy_bird/Wolken.png", name: "Bird", index: 7, indexName: "Bird" },
-    
+
     { filename: "Raumschiff_Adrian/NeuesRaumschiff/raumschiff_0004_geradeaus.png", name: "Space_Shooter_1", index: 0 },
     { filename: "Raumschiff_Adrian/NeuesRaumschiff/raumschiff_0001_runter1.png", name: "Space_Shooter_1", index: 1 },
     { filename: "Raumschiff_Adrian/NeuesRaumschiff/raumschiff_0000_runter2.png", name: "Space_Shooter_1", index: 2 },
@@ -29,7 +29,7 @@ export var SpriteLibrary = [
     { filename: "Raumschiff_Adrian/Schussanimation/schuss_0001.png", name: "Space_Shooter_1", index: 7 },
     { filename: "Raumschiff_Adrian/Schussanimation/schuss_0002.png", name: "Space_Shooter_1", index: 8 },
     { filename: "Raumschiff_Adrian/Schussanimation/schuss_0003.png", name: "Space_Shooter_1", index: 9 },
-    
+
     { filename: "Raumschiff_Adrian/Asteroid.png", name: "Space_Shooter_1", index: 10 },
     { filename: "Raumschiff_Adrian/Gegner.png", name: "Space_Shooter_1", index: 11 },
 
@@ -45,7 +45,7 @@ export var SpriteLibrary = [
     { filename: "Raumschiff_Adrian/Explosion/explosion_0009_..png", name: "Space_Shooter_1", index: 21 },
     { filename: "Raumschiff_Adrian/Explosion/explosion_0010_..png", name: "Space_Shooter_1", index: 22 },
     { filename: "Raumschiff_Adrian/Explosion/explosion_0011_..png", name: "Space_Shooter_1", index: 23 },
-    
+
     // Spaceshooter 2
     { filename: "classics/spaceship_1.png", name: "Space_Shooter_2", index: 0 },
     { filename: "classics/spaceship_2.png", name: "Space_Shooter_2", index: 1 },
@@ -70,7 +70,7 @@ export var SpriteLibrary = [
     { filename: "classics/missile_12.png", name: "Space_Shooter_2", index: 20 },
     { filename: "classics/satellite_1.png", name: "Space_Shooter_2", index: 21 },
     { filename: "classics/satellite_2.png", name: "Space_Shooter_2", index: 22 },
-    
+
     // Soko
     {filename: "classics/sokoban_man_horizontal.png", name: "Soko", tilesX: 3, tilesY: 1, spacingX: 2, spacingY: 0, scale: 1.0, index: 0, extrudeMarginWidth: 1},
     {filename: "classics/sokoban_man_vertical.png", name: "Soko", tilesX: 6, tilesY: 1, spacingX: 2, spacingY: 0, scale: 1.0, index: 3, extrudeMarginWidth: 1},
@@ -79,11 +79,11 @@ export var SpriteLibrary = [
     { filename: "classics/sokoban_empty.png", name: "Soko", index: 11, extrudeMarginWidth: 1 },
     { filename: "classics/sokoban_wall.png", name: "Soko", index: 12, extrudeMarginWidth: 1 },
     { filename: "classics/sokoban_target.png", name: "Soko", index: 13, extrudeMarginWidth: 1 },
-    
+
     // P-Man
     {filename: "classics/pacman_characters.png", name: "PMan", tilesX: 22, tilesY: 1, spacingX: 2, spacingY: 0, scale: 1.0, index: 0},
     {filename: "classics/pacman_maze.png", name: "PMan", tilesX: 15, tilesY: 1, spacingX: 2, spacingY: 0, scale: 1.0, index: 22},
-    
+
     // Breakin
     { filename: "classics/bo_bat_long.png", name: "Breakin", index: 0 },
     { filename: "classics/bo_bat_short.png", name: "Breakin", index: 1 },
@@ -99,7 +99,7 @@ export var SpriteLibrary = [
     { filename: "classics/bo_raute_active.png", name: "Breakin", index: 11 },
     { filename: "classics/bo_star1.png", name: "Breakin", index: 12 },
     { filename: "classics/bo_star2.png", name: "Breakin", index: 13 },
-    
+
     // Chess
     // Source: https://commons.wikimedia.org/wiki/Category:SVG_chess_pieces
     { filename: "classics/Chess.png", name: "Boardgames", tilesX: 6, tilesY: 2, spacingX: 2, spacingY: 2, scale: 1.0, index: 0},
@@ -110,17 +110,17 @@ export var SpriteLibrary = [
     { filename: "classics/wuerfel_4.png", name: "Boardgames", index: 16 },
     { filename: "classics/wuerfel_5.png", name: "Boardgames", index: 17 },
     { filename: "classics/wuerfel_6.png", name: "Boardgames", index: 18 },
-    
+
     // Platformer
     {filename: "plattformer/Tiles_and_enemies_64x64.png", name: "Plattforms", tilesX: 22, tilesY: 16, spacingX: 2, spacingY: 2, scale: 1.0, index: 0, extrudeMarginWidth: 1},
-    
+
     // Tower defense
     {filename: "tower-defense/tower-defense.png", name: "TowerDefense", tilesX: 18, tilesY: 10, spacingX: 2, spacingY: 2, scale: 1.0, index: 0, extrudeMarginWidth: 1},
-    
+
     // Platformer character
     {filename: "plattformer/male.png", name: "Characters_1", tilesX: 6, tilesY: 2, spacingX: 0, spacingY: 0, scale: 1.0, index: 0},
     // {filename: "plattformer/female.png", name: "Characters", tilesX: 6, tilesY: 2, spacingX: 0, spacingY: 0, scale: 1.0, index: 12},
-    
+
     { filename: "plattformer/background_grass.png", name: "Background", index: 0, scale: 0.2 },
     { filename: "plattformer/background_mountains.png", name: "Background", index: 1, scale: 0.2 },
     { filename: "plattformer/background_sky.png", name: "Background", index: 2, scale: 0.2 },
@@ -134,7 +134,7 @@ export var SpriteLibrary = [
     { filename: "plattformer/tree1.png", name: "Background", index: 10, scale: 0.5 },
     { filename: "plattformer/tree2.png", name: "Background", index: 11, scale: 0.5 },
     { filename: "plattformer/tree3.png", name: "Background", index: 12, scale: 0.5 },
-    
+
     //Frogger
     {filename: "frogger/Frogger_1.png", name: "Frogger", tilesX: 3, tilesY: 1, spacingX: 2, spacingY: 0, scale: 1.0, index: 0, extrudeMarginWidth: 1},
     {filename: "frogger/Frogger_car.png", name: "Frogger", tilesX: 2, tilesY: 1, spacingX: 2, spacingY: 0, scale: 1.0, index: 3, extrudeMarginWidth: 1},
@@ -151,56 +151,56 @@ export var SpriteLibrary = [
     {filename: "3d/bedrock.png", name: "robot", tilesX: 1, tilesY: 1, index: 9},
     {filename: "3d/earth.png", name: "robot", tilesX: 1, tilesY: 1, index: 10},
     {filename: "3d/north.png", name: "robot", tilesX: 1, tilesY: 1, index: 11},
-    
+
     {filename: "3d/axis_x.png", name: "standard_textures", tilesX: 1, tilesY: 1, index: 0},
     {filename: "3d/axis_y.png", name: "standard_textures", tilesX: 1, tilesY: 1, index: 1},
     {filename: "3d/axis_z.png", name: "standard_textures", tilesX: 1, tilesY: 1, index: 2},
-    
-    
-    {filename: "pixelmon/creature1.png", name: "pixelmon", index: 0}, 
-    {filename: "pixelmon/creature2.png", name: "pixelmon", index: 1}, 
-    {filename: "pixelmon/creature3.png", name: "pixelmon", index: 2}, 
-    {filename: "pixelmon/flowersblue.png", name: "pixelmon", index: 3}, 
-    {filename: "pixelmon/flowersred.png", name: "pixelmon", index: 4}, 
-    {filename: "pixelmon/flowerswhite.png", name: "pixelmon", index: 5}, 
-    {filename: "pixelmon/tree.png", name: "pixelmon", index: 6}, 
-    {filename: "pixelmon/grass.png", name: "pixelmon", index: 7}, 
-    {filename: "pixelmon/highgrass.png", name: "pixelmon", index: 8}, 
-    {filename: "pixelmon/highgrassoverlay.png", name: "pixelmon", index: 9}, 
-    {filename: "pixelmon/itembucket.png", name: "pixelmon", index: 10}, 
-    {filename: "pixelmon/plattform.png", name: "pixelmon", index: 11}, 
-    {filename: "pixelmon/player1back.png", name: "pixelmon", index: 12}, 
-    {filename: "pixelmon/player1backwalk1.png", name: "pixelmon", index: 13}, 
-    {filename: "pixelmon/player1backwalk2.png", name: "pixelmon", index: 14}, 
-    {filename: "pixelmon/player1front.png", name: "pixelmon", index: 15}, 
-    {filename: "pixelmon/player1frontwalk1.png", name: "pixelmon", index: 16}, 
-    {filename: "pixelmon/player1frontwalk2.png", name: "pixelmon", index: 17}, 
-    {filename: "pixelmon/player1side.png", name: "pixelmon", index: 18}, 
-    {filename: "pixelmon/player1sidewalk1.png", name: "pixelmon", index: 19}, 
-    {filename: "pixelmon/player1sidewalk2.png", name: "pixelmon", index: 20}, 
-    {filename: "pixelmon/wall1.png", name: "pixelmon", index: 21}, 
-    {filename: "pixelmon/wall2.png", name: "pixelmon", index: 22}, 
-    {filename: "pixelmon/wall3.png", name: "pixelmon", index: 23}, 
-    {filename: "pixelmon/wall4.png", name: "pixelmon", index: 24}, 
-    {filename: "pixelmon/wallstairs1.png", name: "pixelmon", index: 25}, 
-    {filename: "pixelmon/wallstairs2.png", name: "pixelmon", index: 26}, 
-    {filename: "pixelmon/wallstairs3.png", name: "pixelmon", index: 27}, 
-    {filename: "pixelmon/wallstairs4.png", name: "pixelmon", index: 28}, 
-    {filename: "pixelmon/water1.png", name: "pixelmon", index: 29}, 
-    {filename: "pixelmon/water2.png", name: "pixelmon", index: 30}, 
-    {filename: "pixelmon/water3.png", name: "pixelmon", index: 31}, 
-    {filename: "pixelmon/water4.png", name: "pixelmon", index: 32}, 
-    {filename: "pixelmon/way1.png", name: "pixelmon", index: 33}, 
-    {filename: "pixelmon/way2.png", name: "pixelmon", index: 34}, 
-    {filename: "pixelmon/way3.png", name: "pixelmon", index: 35}, 
-    {filename: "pixelmon/way4.png", name: "pixelmon", index: 36}, 
-    {filename: "pixelmon/way5.png", name: "pixelmon", index: 37}, 
-    {filename: "pixelmon/way6.png", name: "pixelmon", index: 38}, 
-    {filename: "pixelmon/way7.png", name: "pixelmon", index: 39}, 
-    {filename: "pixelmon/way8.png", name: "pixelmon", index: 40}, 
-    {filename: "pixelmon/whitefence1.png", name: "pixelmon", index: 41}, 
-    {filename: "pixelmon/whitefence2.png", name: "pixelmon", index: 42}, 
-    {filename: "pixelmon/woodfence1.png", name: "pixelmon", index: 43}, 
+
+
+    {filename: "pixelmon/creature1.png", name: "pixelmon", index: 0},
+    {filename: "pixelmon/creature2.png", name: "pixelmon", index: 1},
+    {filename: "pixelmon/creature3.png", name: "pixelmon", index: 2},
+    {filename: "pixelmon/flowersblue.png", name: "pixelmon", index: 3},
+    {filename: "pixelmon/flowersred.png", name: "pixelmon", index: 4},
+    {filename: "pixelmon/flowerswhite.png", name: "pixelmon", index: 5},
+    {filename: "pixelmon/tree.png", name: "pixelmon", index: 6},
+    {filename: "pixelmon/grass.png", name: "pixelmon", index: 7},
+    {filename: "pixelmon/highgrass.png", name: "pixelmon", index: 8},
+    {filename: "pixelmon/highgrassoverlay.png", name: "pixelmon", index: 9},
+    {filename: "pixelmon/itembucket.png", name: "pixelmon", index: 10},
+    {filename: "pixelmon/plattform.png", name: "pixelmon", index: 11},
+    {filename: "pixelmon/player1back.png", name: "pixelmon", index: 12},
+    {filename: "pixelmon/player1backwalk1.png", name: "pixelmon", index: 13},
+    {filename: "pixelmon/player1backwalk2.png", name: "pixelmon", index: 14},
+    {filename: "pixelmon/player1front.png", name: "pixelmon", index: 15},
+    {filename: "pixelmon/player1frontwalk1.png", name: "pixelmon", index: 16},
+    {filename: "pixelmon/player1frontwalk2.png", name: "pixelmon", index: 17},
+    {filename: "pixelmon/player1side.png", name: "pixelmon", index: 18},
+    {filename: "pixelmon/player1sidewalk1.png", name: "pixelmon", index: 19},
+    {filename: "pixelmon/player1sidewalk2.png", name: "pixelmon", index: 20},
+    {filename: "pixelmon/wall1.png", name: "pixelmon", index: 21},
+    {filename: "pixelmon/wall2.png", name: "pixelmon", index: 22},
+    {filename: "pixelmon/wall3.png", name: "pixelmon", index: 23},
+    {filename: "pixelmon/wall4.png", name: "pixelmon", index: 24},
+    {filename: "pixelmon/wallstairs1.png", name: "pixelmon", index: 25},
+    {filename: "pixelmon/wallstairs2.png", name: "pixelmon", index: 26},
+    {filename: "pixelmon/wallstairs3.png", name: "pixelmon", index: 27},
+    {filename: "pixelmon/wallstairs4.png", name: "pixelmon", index: 28},
+    {filename: "pixelmon/water1.png", name: "pixelmon", index: 29},
+    {filename: "pixelmon/water2.png", name: "pixelmon", index: 30},
+    {filename: "pixelmon/water3.png", name: "pixelmon", index: 31},
+    {filename: "pixelmon/water4.png", name: "pixelmon", index: 32},
+    {filename: "pixelmon/way1.png", name: "pixelmon", index: 33},
+    {filename: "pixelmon/way2.png", name: "pixelmon", index: 34},
+    {filename: "pixelmon/way3.png", name: "pixelmon", index: 35},
+    {filename: "pixelmon/way4.png", name: "pixelmon", index: 36},
+    {filename: "pixelmon/way5.png", name: "pixelmon", index: 37},
+    {filename: "pixelmon/way6.png", name: "pixelmon", index: 38},
+    {filename: "pixelmon/way7.png", name: "pixelmon", index: 39},
+    {filename: "pixelmon/way8.png", name: "pixelmon", index: 40},
+    {filename: "pixelmon/whitefence1.png", name: "pixelmon", index: 41},
+    {filename: "pixelmon/whitefence2.png", name: "pixelmon", index: 42},
+    {filename: "pixelmon/woodfence1.png", name: "pixelmon", index: 43},
     {filename: "pixelmon/woodfence2.png", name: "pixelmon", index: 44},
     {filename: "little_figure/Animation_Run/Run0.png", name: "Sneaker", index: 0},
     {filename: "little_figure/Animation_Run/Run1.png", name: "Sneaker", index: 1},
@@ -247,5 +247,5 @@ let spriteLibInit = () => {
 spriteLibInit();
 
 if(typeof module != "undefined"){
-    module.exports = SpriteLibrary; 
+    module.exports = SpriteLibrary;
 }

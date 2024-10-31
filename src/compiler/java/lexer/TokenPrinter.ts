@@ -19,7 +19,7 @@ export class TokenPrinter {
 
 
         let tokenDiv = DOM.makeDiv(parentDiv, 'jo_tokenprinter_tokendiv')
-        
+
         let lineDiv = DOM.makeDiv(tokenDiv, 'jo_tokenprinter_tokenline');
         let linenumberDiv = DOM.makeDiv(lineDiv, 'jo_tokenprinter_linenumber');
 
@@ -33,7 +33,7 @@ export class TokenPrinter {
                 lineNumber = t.range.startLineNumber;
                 linenumberDiv.textContent = "" + lineNumber;
             }
-            
+
             let tokend = DOM.makeDiv(lineDiv, 'jo_tokenprinter_token');
 
             let withContent = TokenPrinter.typesWithContent.indexOf(t.tt) >= 0;
@@ -43,9 +43,9 @@ export class TokenPrinter {
 
             if(TokenPrinter.typesWithContent.indexOf(t.tt) >= 0){
                 let contentSpan = DOM.makeSpan(tokend, 'jo_tokenprinter_text');
-                contentSpan.innerHTML = (" " + t.value).replace(/ /g, '&nbsp;').replace(/</g,'&lt;');    
+                contentSpan.innerHTML = (" " + t.value).replace(/ /g, '&nbsp;').replace(/</g,'&lt;');
 
-                DOM.makeSpan(tokend, 'jo_tokenprinter_tokentype').textContent = ']';                                
+                DOM.makeSpan(tokend, 'jo_tokenprinter_tokentype').textContent = ']';
 
             }
 

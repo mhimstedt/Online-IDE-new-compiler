@@ -38,7 +38,7 @@ export class TimerClass extends ObjectClass {
             let newThread = t.scheduler.createThread("timer-thread");
             runnable._mj$run$void$(newThread, undefined);
             newThread.startIfNotEmptyOrDestroy();
-        }, dt);        
+        }, dt);
     }
 
 
@@ -65,7 +65,7 @@ export class TimerClass extends ObjectClass {
                 newThread.startIfNotEmptyOrDestroy();
             }
         }, dt));
-        
+
     }
 
     _pause(){
@@ -76,5 +76,5 @@ export class TimerClass extends ObjectClass {
         this.state = "running";
     }
 
-    
+
 }

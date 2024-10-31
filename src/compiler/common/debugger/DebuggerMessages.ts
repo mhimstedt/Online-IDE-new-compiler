@@ -6,7 +6,7 @@ import { lm } from "../../../tools/language/LanguageManager";
 export class DebM {
 
     /**
-     * Messages for class BinopCastCodeGenerator  
+     * Messages for class BinopCastCodeGenerator
      */
 
     static watch = () => lm({

@@ -199,7 +199,7 @@ export class PAppletClass extends ObjectClass implements GraphicSystem {
         { type: "method", signature: "final int year()", template: "§1.p5o.year()", comment: JRC.PAppletYear0Comment },
         { type: "method", signature: "final int month()", template: "§1.p5o.month()", comment: JRC.PAppletMonth0Comment },
         { type: "method", signature: "final int day()", template: "§1.p5o.day()", comment: JRC.PAppletDay0Comment },
-        { type: "method", signature: "final int hour()", template: "§1.p5o.hour()", comment: JRC.PAppletHour0Comment }, 
+        { type: "method", signature: "final int hour()", template: "§1.p5o.hour()", comment: JRC.PAppletHour0Comment },
         { type: "method", signature: "final int minute()", template: "§1.p5o.minute()", comment: JRC.PAppletMinute0Comment },
         { type: "method", signature: "final int second()", template: "§1.p5o.second()", comment: JRC.PAppletSecond0Comment },
         { type: "method", signature: "final void frameRate(int n)", template: "§1.p5o.frameRate(§2)", comment: JRC.PAppletFrameRate1Comment },
@@ -290,7 +290,7 @@ export class PAppletClass extends ObjectClass implements GraphicSystem {
             interpreter.deleteObject("PAppletClass");
             this.canvasCreated = false;
         })
-        
+
         interpreter.storeObject("PAppletClass", this);
 
     }
@@ -311,17 +311,17 @@ export class PAppletClass extends ObjectClass implements GraphicSystem {
                 graphicsDiv.style.width = maxWidth + "px";
                 graphicsDiv.style.height = this.height / this.width * maxWidth + "px";
             }
-            
+
         };
 
-        // graphicsDiv.onresize = (ev) => { 
-        //     this.onSizeChanged() 
+        // graphicsDiv.onresize = (ev) => {
+        //     this.onSizeChanged()
         // }
 
-        this.resizeObserver = new ResizeObserver(() => { 
-            this.onSizeChanged(); 
+        this.resizeObserver = new ResizeObserver(() => {
+            this.onSizeChanged();
         });
-        
+
         this.resizeObserver.observe(this.graphicsDiv!.parentElement!);
 
         this.onSizeChanged();
@@ -341,7 +341,7 @@ export class PAppletClass extends ObjectClass implements GraphicSystem {
     _createCanvas(width: number, height: number, renderer?: string) {
         renderer ||= this.renderer;
         this.renderer = renderer;
-        
+
         this.width = width;
         this.height = height;
         this.onSizeChanged();
@@ -374,7 +374,7 @@ export class PAppletClass extends ObjectClass implements GraphicSystem {
                     // $div.find('canvas').css({
                     //     'width': '',
                     //     'height': ''
-                    // })            
+                    // })
                     if (!that.canvasCreated) {
                         that._createCanvas(that.width, that.height);
                     }

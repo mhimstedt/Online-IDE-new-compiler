@@ -10,7 +10,7 @@ import { Module } from "./module/Module";
 export type CompilerEvents = "typesReadyForCodeCompletion" | "compilationFinished";
 
 export interface Compiler {
-    setFiles(files: CompilerFile[]): void;    
+    setFiles(files: CompilerFile[]): void;
     updateSingleModuleForCodeCompletion(module: Module): "success" | "completeCompilingNecessary";
     findModuleByFile(file: CompilerFile): Module | undefined;
     getAllModules(): Module[];

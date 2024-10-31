@@ -1544,7 +1544,7 @@ export class JRC {
     "de": `Ändert Start- und Endpunkt der Linie.`,
     "en": `Sets start- and endpoint of this line.`,
     })
-    
+
     static LineCopyComment = () => lm({
         "de": "Erstellt eine Kopie der Linie.",
         "en": "Creates a copy of this line.",
@@ -2730,7 +2730,7 @@ export class JRC {
 
     static PAppletColorMode1Comment = () => lm({
         "de": `Setzt den Modus, in dem nachfolgende Aufrufe von color(...) interpretiert werden. Möglich sind die Werte RGB, HSL und HSB.`,
-        "en": `Changes the way color values are interpreted. 
+        "en": `Changes the way color values are interpreted.
 By default, the Number parameters for fill(), stroke(), background(), and color() are defined by values between 0 and 255 using the RGB color model. This is equivalent to calling colorMode(RGB, 255). Pure red is color(255, 0, 0) in this model.
 Calling colorMode(RGB, 100) sets colors to use RGB color values between 0 and 100. Pure red is color(100, 0, 0) in this model.
 Calling colorMode(HSB) or colorMode(HSL) changes to HSB or HSL system instead of RGB. Pure red is color(0, 100, 100) in HSB and color(0, 100, 50) in HSL.`,
@@ -2738,7 +2738,7 @@ Calling colorMode(HSB) or colorMode(HSL) changes to HSB or HSL system instead of
 
     static PAppletColorMode2Comment = () => lm({
         "de": `Setzt den Modus, in dem nachfolgende Aufrufe von color(...) interpretiert werden. Möglich sind die Werte RGB, HSL und HSB für Mode. Max ist der Maximalwert jeder Farbkomponente.`,
-        "en": `Changes the way color values are interpreted. 
+        "en": `Changes the way color values are interpreted.
 By default, the Number parameters for fill(), stroke(), background(), and color() are defined by values between 0 and 255 using the RGB color model. This is equivalent to calling colorMode(RGB, 255). Pure red is color(255, 0, 0) in this model.
 Calling colorMode(RGB, 100) sets colors to use RGB color values between 0 and 100. Pure red is color(100, 0, 0) in this model.
 Calling colorMode(HSB) or colorMode(HSL) changes to HSB or HSL system instead of RGB. Pure red is color(0, 100, 100) in HSB and color(0, 100, 50) in HSL.`,
@@ -2746,7 +2746,7 @@ Calling colorMode(HSB) or colorMode(HSL) changes to HSB or HSL system instead of
 
     static PAppletColorMode4Comment = () => lm({
         "de": `Setzt den Modus, in dem nachfolgende Aufrufe von color(...) interpretiert werden. Möglich sind die Werte RGB, HSL und HSB für Mode. Max ist der Maximalwert jeder Farbkomponente.`,
-        "en": `Changes the way color values are interpreted. 
+        "en": `Changes the way color values are interpreted.
 By default, the Number parameters for fill(), stroke(), background(), and color() are defined by values between 0 and 255 using the RGB color model. This is equivalent to calling colorMode(RGB, 255). Pure red is color(255, 0, 0) in this model.
 Calling colorMode(RGB, 100) sets colors to use RGB color values between 0 and 100. Pure red is color(100, 0, 0) in this model.
 Calling colorMode(HSB) or colorMode(HSL) changes to HSB or HSL system instead of RGB. Pure red is color(0, 100, 100) in HSB and color(0, 100, 50) in HSL.`,
@@ -2754,7 +2754,7 @@ Calling colorMode(HSB) or colorMode(HSL) changes to HSB or HSL system instead of
 
     static PAppletColorMode5Comment = () => lm({
         "de": `Setzt den Modus, in dem nachfolgende Aufrufe von color(...) interpretiert werden. Möglich sind die Werte RGB, HSL und HSB für Mode. Max ist der Maximalwert jeder Farbkomponente.`,
-        "en": `Changes the way color values are interpreted. 
+        "en": `Changes the way color values are interpreted.
 By default, the Number parameters for fill(), stroke(), background(), and color() are defined by values between 0 and 255 using the RGB color model. This is equivalent to calling colorMode(RGB, 255). Pure red is color(255, 0, 0) in this model.
 Calling colorMode(RGB, 100) sets colors to use RGB color values between 0 and 100. Pure red is color(100, 0, 0) in this model.
 Calling colorMode(HSB) or colorMode(HSL) changes to HSB or HSL system instead of RGB. Pure red is color(0, 100, 100) in HSB and color(0, 100, 50) in HSL.`,
@@ -5437,13 +5437,13 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
     static material3dIsTransparentComment = () => lm({
     "de": `Gibt true zurück, falls transparente Teile des Körpers auch transparent gezeichnet werden sollen.`,
     "en": `Returns true if transparent parts of the 3d-object get rendered transparent.`,
-    })    
+    })
 
     static material3dSetTransparentComment = () => lm({
     "de": `Falls der Wert true ist, werden transparente Teile des 3d-Körpers auch transparent gezeichnet. Nachteil ist eine etwas geringere Performance.`,
     "en": `If this value is true, then transparent parts of the 3d object get rendered transparent. Setting 'true' is less performant than setting 'false'.`,
     })
-    
+
     static material3dAlphaComment = () => lm({
     "de": `Der Alphawert (0 ... 1) bestimmt die Durchsichtigkeit des Objekts. Tipp: Damit die Durchsichtigkeit sichtbar wird, musst Du noch setTransparent(true) aufrufen.`,
     "en": `The alpha value (0 ... 1) determines the transparency of the object. Hint: To make the transparency visible, you have to call setTransparent(true).`,
@@ -5510,11 +5510,11 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
      * Lambert Material
      */
     static lambertMaterial3dClassComment = () => lm({
-    "de": `Das Material verwendet ein nichtphysikalisches Lambertmodell zur Berechnung des Reflexionsgrads. Dadurch können einige Oberflächen (z. B. unbehandeltes Holz oder Stein) gut simuliert werden. 
+    "de": `Das Material verwendet ein nichtphysikalisches Lambertmodell zur Berechnung des Reflexionsgrads. Dadurch können einige Oberflächen (z. B. unbehandeltes Holz oder Stein) gut simuliert werden.
     Glänzende Oberflächen mit Glanzlichtern (z. B. lackiertes Holz) können jedoch nicht simuliert werden. MeshLambertMaterial berechnet die Schattierung je Fragment (d.h. ca. je Bildschirmpixel).
     Aufgrund der Einfachheit der Reflexions- und Beleuchtungsmodelle ist die Performance bei Verwendung dieses Materials höher als bei PhongMaterial oder StandardMaterial, allerdings auf Kosten einer gewissen grafischen Genauigkeit.
     `,
-    "en": `The material uses a non-physically based Lambertian model for calculating reflectance. This can simulate some surfaces (such as untreated wood or stone) well, 
+    "en": `The material uses a non-physically based Lambertian model for calculating reflectance. This can simulate some surfaces (such as untreated wood or stone) well,
     but cannot simulate shiny surfaces with specular highlights (such as varnished wood). MeshLambertMaterial uses per-fragment shading.
     Due to the simplicity of the reflectance and illumination models, performance will be greater when using this material over the PhongMaterial or StandardMaterial, at the cost of some graphical accuracy.`,
     })
@@ -5529,11 +5529,11 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
      */
 
     static physicallyBasedMaterial3dClassComment = () => lm({
-    "de": `in Standardmaterial auf physikalischer Basis. Physically Based Rendering (PBR) ist in vielen 3D-Anwendungen wie Unity, Unreal und 3D Studio Max in letzter Zeit zum Standard geworden. 
-    Dieser Ansatz unterscheidet sich von älteren Ansätzen dadurch, dass statt Näherungen für die Art und Weise, wie Licht mit einer Oberfläche interagiert, ein physikalisch korrektes Modell verwendet wird. 
+    "de": `in Standardmaterial auf physikalischer Basis. Physically Based Rendering (PBR) ist in vielen 3D-Anwendungen wie Unity, Unreal und 3D Studio Max in letzter Zeit zum Standard geworden.
+    Dieser Ansatz unterscheidet sich von älteren Ansätzen dadurch, dass statt Näherungen für die Art und Weise, wie Licht mit einer Oberfläche interagiert, ein physikalisch korrektes Modell verwendet wird.
     In der Praxis liefert dies ein genaueres und realistischeres Ergebnis als LambertMaterial oder PhongMaterial, allerdings ist der Rechenaufwand etwas höher.`,
-    "en": `A standard physically based material, using Metallic-Roughness workflow. Physically based rendering (PBR) has recently become the standard in many 3D applications, such as Unity, Unreal and 3D Studio Max. 
-    This approach differs from older approaches in that instead of using approximations for the way in which light interacts with a surface, a physically correct model is used. 
+    "en": `A standard physically based material, using Metallic-Roughness workflow. Physically based rendering (PBR) has recently become the standard in many 3D applications, such as Unity, Unreal and 3D Studio Max.
+    This approach differs from older approaches in that instead of using approximations for the way in which light interacts with a surface, a physically correct model is used.
     In practice this gives a more accurate and realistic looking result than the LambertMaterial or PhongMaterial, at the cost of being somewhat more computationally expensive.`,
     })
 

@@ -27,7 +27,7 @@ export class PositionClass extends ObjectClass {
         this.x = x || 0;
         this.y = y || 0;
     }
-    
+
     _cj$_constructor_$Position$int$int(t: Thread, callback: CallbackFunction, x: number, y: number){
         this.x = x;
         this.y = y;

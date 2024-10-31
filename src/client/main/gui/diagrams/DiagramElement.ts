@@ -1,4 +1,4 @@
-import { DiagramUnitCm, Diagram } from "./Diagram.js"; 
+import { DiagramUnitCm, Diagram } from "./Diagram.js";
 import { Rectangle } from "./classdiagram/Router.js";
 import jQuery from 'jquery';
 
@@ -35,9 +35,9 @@ export abstract class DiagramElement {
 
     public leftCm: number = 0; // x-Koordinate in cm
     public topCm: number = 0; // y-Koordinate in cm
- 
+
     public widthCm: number;
-    public heightCm: number; 
+    public heightCm: number;
 
     protected lines: (TextLine | HorizontalLine)[] = [];
 
@@ -52,7 +52,7 @@ export abstract class DiagramElement {
             left: Math.round(this.leftCm/DiagramUnitCm),
             top: Math.round(this.topCm/DiagramUnitCm),
             width: Math.round(this.widthCm/DiagramUnitCm),
-            height: Math.round(this.heightCm/DiagramUnitCm) 
+            height: Math.round(this.heightCm/DiagramUnitCm)
         };
     }
 
@@ -68,13 +68,13 @@ export abstract class DiagramElement {
 
     detach() {
         if(this.$element == null) return;
-        this.$element.detach();        
+        this.$element.detach();
     }
 
     remove() {
         if(this.$element == null) return;
         this.$element.remove();
-        this.$element = null;        
+        this.$element = null;
     }
 
     appendTo($element: JQuery<Element>){
@@ -145,7 +145,7 @@ export abstract class DiagramElement {
 
     public getTextMetrics(textElement: JQuery<SVGTextElement>):{height: number, width: number}{
         let bbox:DOMRect = textElement[0].getBBox();
-        
+
         return {
             height: bbox.height * DiagramElement.cmPerPx,
             width: bbox.width * DiagramElement.cmPerPx
@@ -249,7 +249,7 @@ export abstract class DiagramElement {
                 }
 
                 // Unfortunately we have to wrap Text-Elements in <g> due to a bug in safari,
-                // see 
+                // see
                 //@ts-ignore
                 let $g = this.createElement("g", $group[0]);
                 $g.append(line.$element);
@@ -278,14 +278,14 @@ export abstract class DiagramElement {
 
                 line.$element.css({
                     stroke: "#000",
-                    "stroke-width": line.thicknessCm + "cm"        
+                    "stroke-width": line.thicknessCm + "cm"
                 });
 
             }
         }
 
 
-        
+
 
 
     }

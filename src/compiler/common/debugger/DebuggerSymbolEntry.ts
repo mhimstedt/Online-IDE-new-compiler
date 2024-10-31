@@ -276,7 +276,7 @@ export class DebuggerSymbolEntry {
     renderArray(a: any[], maxLength: number) {
         if (a == null || !this.type) return;
 
-        this.treeViewNode.isFolder = a.length > 0;      // isFolder is a property -> a method gets called where the ExpandCollapseComponent is shown            
+        this.treeViewNode.isFolder = a.length > 0;      // isFolder is a property -> a method gets called where the ExpandCollapseComponent is shown
 
         // on first opening:
         if (typeof this.oldLength == "undefined") this.treeViewNode.expandCollapseComponent.setState("collapsed");
@@ -438,7 +438,7 @@ export class ArraySectionDebuggerEntry extends DebuggerSymbolEntry {
     }
 
     fetchValueFromArrayAndRender(a: any[]) {
-        this.treeViewNode.isFolder = true;      // isFolder is a property -> a method gets called where the ExpandCollapseComponent is shown            
+        this.treeViewNode.isFolder = true;      // isFolder is a property -> a method gets called where the ExpandCollapseComponent is shown
 
         // on first rendering:
         if (typeof this.oldLength == "undefined") {

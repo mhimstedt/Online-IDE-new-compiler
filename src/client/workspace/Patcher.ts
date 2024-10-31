@@ -1,5 +1,5 @@
 type Patch = {
-    old: RegExp, 
+    old: RegExp,
     new: string
 }
 
@@ -33,7 +33,7 @@ export class Patcher {
         {old: /SpriteLibrary.Explosion_Adrian,\s*9/g, new: "SpriteLibrary.Space_Shooter_1, 21"},
         {old: /SpriteLibrary.Explosion_Adrian,\s*10/g, new: "SpriteLibrary.Space_Shooter_1, 22"},
         {old: /SpriteLibrary.Explosion_Adrian,\s*11/g, new: "SpriteLibrary.Space_Shooter_1, 23"},
-    ] 
+    ]
 
     static patch(text: string): {patchedText: string, modified: boolean} {
 

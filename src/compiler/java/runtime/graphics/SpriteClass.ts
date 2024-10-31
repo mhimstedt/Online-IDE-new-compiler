@@ -71,7 +71,7 @@ export class SpriteClass extends ShapeClass {
             this.x = x;
             this.y = y;
             this.scaleModeOrdinal = scaleMode?.ordinal || ScaleMode.nearest_neighbour;
-            
+
             if (copyFromOtherShape == null) {
                 this.spriteLibrary = (typeof spriteLibrary == "string") ? spriteLibrary : spriteLibrary!.name;
                 this.imageIndex = imageIndex;
@@ -133,7 +133,7 @@ export class SpriteClass extends ShapeClass {
 
         return this._cj$_constructor_$Sprite$Shape$ScaleMode(
             t, callback, shape, undefined
-        ); 
+        );
     }
 
     oldTexture: PIXI.Texture | null = null;
@@ -358,7 +358,7 @@ export class SpriteClass extends ShapeClass {
                 this.hitPolygonInitial = HitPolygonStore.getPolygonForTexture(spriteLibrary, imageIndex, this, new PIXI.Sprite(sheet.textures[nameWithIndex]));
                 this.hitPolygonDirty = true;
             }
-        
+
             let oldCenterX = this.centerXInitial;
             let oldCenterY = this.centerYInitial;
 
@@ -372,9 +372,9 @@ export class SpriteClass extends ShapeClass {
                 this.container.updateLocalTransform();
                 //@ts-ignore
                 this.container._didLocalTransformChangeId = this.container._didChangeId;
-        
+
                 this.setWorldTransformAndHitPolygonDirty();
-        
+
             }
 
 
@@ -470,7 +470,7 @@ export class SpriteClass extends ShapeClass {
         // console.log(this.animationTime);
         // console.log(image);
 
-        // this method is called by PIXI.Ticker, not by Thread.run, so we have to catch 
+        // this method is called by PIXI.Ticker, not by Thread.run, so we have to catch
         // the exception ourselves...
         try {
             this.setTexture(this.spriteLibrary, this.animationIndices[image]);

@@ -142,7 +142,7 @@ export enum TokenType {
 
     // Program statement types:
     binaryOp, // +, -, *, <=, ...
-    unaryPrefixOp, // ! and - 
+    unaryPrefixOp, // ! and -
     localVariableDeclaration,
     localVariableDeclarations,
     dereferenceAttribute, // dot-operator
@@ -152,7 +152,7 @@ export enum TokenType {
     selectArrayElement, // select Element from Array (e.g. a[20])
     methodCall,
     newObject,
-    
+
     // additional AST node types
     global,
     program,
@@ -176,7 +176,7 @@ export enum TokenType {
     print,
     println,
     initializeEnumValue,
-    
+
     type, // e.g. int[][]
     baseType,  // type described only by an identifier, e.g. "ArrayList" or "int"
     wildcardType,
@@ -226,7 +226,7 @@ export var TokenTypeReadable: { [tt: number]: string } = {
     [TokenType.keywordReturn]: "return",
     [TokenType.keywordBreak]: "break",
     [TokenType.keywordContinue]: "continue",
-    [TokenType.keywordNull]: "null", 
+    [TokenType.keywordNull]: "null",
     [TokenType.keywordFinal]: "final",
     [TokenType.keywordInstanceof]: "instanceof",
     [TokenType.keywordThrow]: "throw",
@@ -286,7 +286,7 @@ export var TokenTypeReadable: { [tt: number]: string } = {
     [TokenType.shiftLeftAssigment]: "<<=",
     [TokenType.shiftRightAssigment]: ">>=",
     [TokenType.shiftRightUnsignedAssigment]: ">>>=",
-    // [TokenType.AND]: "&", 
+    // [TokenType.AND]: "&",
     [TokenType.OR]: "|",
     [TokenType.XOR]: "^",
     [TokenType.tilde]: "~",

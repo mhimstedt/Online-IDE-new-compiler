@@ -187,9 +187,9 @@ export class JavaMethod extends BaseSymbol {
     }
 
     getCompletionLabel() {
-        
+
         let label = "";
-        
+
         if (this.returnParameterType != null && this.returnParameterType.identifier != "void") {
             label += this.returnParameterType.toString() + " ";
         }
@@ -254,7 +254,7 @@ export class JavaMethod extends BaseSymbol {
     hasAnnotation(identifier: string) {
         return this.annotations.find(a => a.identifier == identifier) != null;
     }
-    
+
     getAnnotation(identifier: string){
         return this.annotations.find(a => a.identifier == identifier);
     }

@@ -39,7 +39,7 @@ export class OptionalClass extends ObjectClass {
         let emptyOptional = new OptionalClass();
         emptyOptional._jconstructor(t, undefined);
     }
-    
+
     static _mj$of$Optional$T(t: Thread, element: ObjectClass){
         let justElement = new OptionalClass();
         justElement._jconstructor(t, element);
@@ -58,7 +58,7 @@ export class OptionalClass extends ObjectClass {
         if(this.element==undefined) {
             t.s.push(otherOptional.element == undefined);
             return;
-        } 
+        }
         else {
             if(otherOptional.element == undefined) {
                 t.s.push(false);
@@ -66,7 +66,7 @@ export class OptionalClass extends ObjectClass {
             else {
                 t.s.push(this.element._mj$equals$boolean$Object(t, callback, otherOptional.element));
             }
-        }  
+        }
     }
 
     _mj$map$Optional$Function(t: Thread, callback: CallbackFunction, f: FunctionInterface){

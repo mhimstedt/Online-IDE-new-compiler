@@ -4,11 +4,11 @@ import { FileNotFoundExceptionClass } from "../../../compiler/java/runtime/syste
 import { MainBase } from "../MainBase";
 
 export class FileManager implements IFilesManager {
-    
+
     constructor(public main: MainBase){
 
     }
-    
+
     read(filename: string): string {
         let file = this.getFile(filename);
         return file.getText();
@@ -23,7 +23,7 @@ export class FileManager implements IFilesManager {
         let file = this.getFile(filename);
         file.setText(file.getText() + content);
     }
-    
+
     getFile(filename: string): CompilerFile {
         let file = this.main.getCurrentWorkspace()?.getFiles().find(f => f.name == filename);
         if(!file){

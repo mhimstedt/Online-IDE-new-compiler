@@ -1,10 +1,10 @@
 /**
  * jquery.numberformatter - Formatting/Parsing Numbers in jQuery
- * 
+ *
  * Written by
  * Michael Abernethy (mike@abernethysoft.com),
  * Andrew Parry (aparry0@gmail.com)
- * 
+ *
  * https://code.google.com/archive/p/jquery-numberformatter/
  *
  * Dual licensed under the MIT (MIT-LICENSE.txt)
@@ -12,14 +12,14 @@
  *
  * @author Michael Abernethy, Andrew Parry
  * @version 1.2.4-RELEASE ($Id$)
- * 
+ *
  * Dependencies
- * 
+ *
  * jQuery (http://jquery.com)
  * jshashtable (http://www.timdown.co.uk/jshashtable)
- * 
+ *
  * Notes & Thanks
- * 
+ *
  * many thanks to advweb.nanasi.jp for his bug fixes
  * jsHashtable is now used also, so thanks to the author for that excellent little class.
  *
@@ -37,22 +37,22 @@
  * formatNumber(options, writeBack, giveReturnValue) - Reads the value from the subject, parses to
  * a Javascript Number object, then formats back to text using the passed options and write back to
  * the subject.
- * 
+ *
  * parseNumber(options) - Parses the value in the subject to a Number object using the passed options
  * to decipher the actual number from the text, then writes the value as text back to the subject.
- * 
- * 
+ *
+ *
  * Generic functions:
- * 
+ *
  * formatNumber(numberString, options) - Takes a plain number as a string (e.g. '1002.0123') and returns
  * a string of the given format options.
- * 
+ *
  * parseNumber(numberString, options) - Takes a number as text that is formatted the same as the given
  * options then and returns it as a plain Number object.
- * 
+ *
  * To achieve the old way of combining parsing and formatting to keep say a input field always formatted
  * to a given format after it has lost focus you'd simply use a combination of the functions.
- * 
+ *
  * e.g.
  * $("#salary").blur(function(){
  *      $(this).parseNumber({format:"#,###.00", locale:"us"});
@@ -66,12 +66,12 @@
  * - = Negative sign
  * , = Grouping Separator
  * % = Percent (multiplies the number by 100)
- * 
+ *
  * For example, a format of "#,###.00" and text of 4500.20 will
  * display as "4.500,20" with a locale of "de", and "4,500.20" with a locale of "us"
  *
  *
- * As of now, the only acceptable locales are 
+ * As of now, the only acceptable locales are
  * Arab Emirates -> "ae"
  * Australia -> "au"
  * Austria -> "at"
@@ -140,13 +140,13 @@ export class NumberFormatter {
      dec: string;
      group: string;
      neg: string;
-    
+
      nfLocalesLikeUS = [ 'ae','au','ca','cn','eg','gb','hk','il','in','jp','sk','th','tw','us' ];
      nfLocalesLikeDE = [ 'at','br','de','dk','es','gr','it','nl','pt','tr','vn' ];
      nfLocalesLikeFR = [ 'bg','cz','fi','fr','no','pl','ru','se' ];
      nfLocalesLikeCH = [ 'ch' ];
-    
-     nfLocaleFormatting = [ [".", ","], [",", "."], [",", " "], [".", "'"] ]; 
+
+     nfLocaleFormatting = [ [".", ","], [",", "."], [",", " "], [".", "'"] ];
      nfAllLocales = [ this.nfLocalesLikeUS, this.nfLocalesLikeDE, this.nfLocalesLikeFR, this.nfLocalesLikeCH ]
 
      parseNumberDefaults: NumberParserOptions = {
@@ -198,7 +198,7 @@ export class NumberFormatter {
          var dec = ".";
          var group = ",";
          var neg = "-";
-         
+
          if (isFullLocale == false) {
              // Extract and convert to lower-case any language code from a real 'locale' formatted string, if not use as-is
              // (To prevent locale format like : "fr_FR", "en_US", "de_DE", "fr_FR", "en-US", "de-DE")
@@ -219,73 +219,73 @@ export class NumberFormatter {
          }
          return new FormatData(dec, group, neg);
     };
-    
-    
+
+
     /*  Formatting Methods  */
-    
+
     /**
      * First parses a string and reformats it with the given options.
-     * 
+     *
      * @param {Object} numberString
      * @param {Object} options
      */
     formatNumber (numberString: string, options: NumberFormatterOptions){
         var options = {...this.formatNumberDefaults, ...options};
         var formatData = this.formatCodes(options.locale.toLowerCase(), options.isFullLocale);
-        
+
         var dec = formatData.dec;
         var group = formatData.group;
         var neg = formatData.neg;
-        
+
         var validFormat = "0#-,.";
-        
+
         // strip all the invalid characters at the beginning and the end
         // of the format, and we'll stick them back on at the end
-        // make a special case for the negative sign "-" though, so 
+        // make a special case for the negative sign "-" though, so
         // we can have formats like -$23.32
         var prefix = "";
         var negativeInFront = false;
         for (var i = 0; i < options.format.length; i++) {
-            if (validFormat.indexOf(options.format.charAt(i)) == -1) 
+            if (validFormat.indexOf(options.format.charAt(i)) == -1)
                 prefix = prefix + options.format.charAt(i);
-            else 
+            else
                 if (i == 0 && options.format.charAt(i) == '-') {
                     negativeInFront = true;
                     continue;
                 }
-                else 
+                else
                     break;
         }
         var suffix = "";
         for (var i = options.format.length - 1; i >= 0; i--) {
-            if (validFormat.indexOf(options.format.charAt(i)) == -1) 
+            if (validFormat.indexOf(options.format.charAt(i)) == -1)
                 suffix = options.format.charAt(i) + suffix;
-            else 
+            else
                 break;
         }
-        
+
         options.format = options.format.substring(prefix.length);
         options.format = options.format.substring(0, options.format.length - suffix.length);
-        
+
         // now we need to convert it into a number
-        //while (numberString.indexOf(group) > -1) 
+        //while (numberString.indexOf(group) > -1)
         //  numberString = numberString.replace(group, '');
         //var number = new Number(numberString.replace(dec, ".").replace(neg, "-"));
         var number = new Number(numberString);
-        
+
         return this._formatNumber(number, options, suffix, prefix, negativeInFront);
     };
-    
+
     /**
      * Formats a Number object into a string, using the given formatting options
-     * 
+     *
      * @param {Object} numberString
      * @param {Object} options
      */
     _formatNumber(number, options, suffix, prefix, negativeInFront) {
         var options = {...this.formatNumberDefaults, ...options};
         var formatData = this.formatCodes(options.locale.toLowerCase(), options.isFullLocale);
-        
+
         var dec = formatData.dec;
         var group = formatData.group;
         var neg = formatData.neg;
@@ -300,7 +300,7 @@ export class NumberFormatter {
         if (options.overrideNegSign != null) {
             neg = options.overrideNegSign;
         }
-        
+
         // Check NAN handling
         var forcedToZero = false;
         if (isNaN(number)) {
@@ -321,7 +321,7 @@ export class NumberFormatter {
         if (options.format.indexOf(".") > -1) {
             var decimalPortion = dec;
             var decimalFormat = options.format.substring(options.format.lastIndexOf(".") + 1);
-            
+
             // round or truncate number as needed
             if (options.round == true)
                 number = new Number(number.toFixed(decimalFormat.length));
@@ -332,7 +332,7 @@ export class NumberFormatter {
                 }
                 number = new Number(numStr);
             }
-            
+
             var decimalValue = new Number(number.toString().substring(number.toString().indexOf('.')));
             var decimalString = new String(decimalValue.toFixed(decimalFormat.length));
             decimalString = decimalString.substring(decimalString.lastIndexOf('.') + 1);
@@ -380,13 +380,13 @@ export class NumberFormatter {
                     groupCount = 0;
                 }
             }
-            
+
             // account for any pre-data padding
             if (onesFormat.length > onePortion.length) {
                 var padStart = onesFormat.indexOf('0');
                 if (padStart != -1) {
                     var padLen = onesFormat.length - padStart;
-                    
+
                     // pad to left with 0's or group char
                     var pos = onesFormat.length - onePortion.length - 1;
                     while (onePortion.length < padLen) {
@@ -400,7 +400,7 @@ export class NumberFormatter {
                 }
             }
         }
-        
+
         if (!onePortion && onesFormat.indexOf('0', onesFormat.length - 1) !== -1)
             onePortion = '0';
 
@@ -411,7 +411,7 @@ export class NumberFormatter {
             prefix = neg + prefix;
         else if (number < 0)
             returnString = neg + returnString;
-        
+
         if (!options.decimalSeparatorAlwaysShown) {
             if (returnString.lastIndexOf(dec) == returnString.length - 1) {
                 returnString = returnString.substring(0, returnString.length - 1);
@@ -426,10 +426,10 @@ export class NumberFormatter {
 
 
 
-    
+
     /**
      * Parses a string of given format into a Number object.
-     * 
+     *
      * @param {Object} string
      * @param {Object} options
      */
@@ -455,7 +455,7 @@ export class NumberFormatter {
         var valid = "1234567890";
         var validOnce = '.-';
         var strictMode = options.strict;
-        
+
         // now we need to convert it into a number
         while (numberString.indexOf(group)>-1) {
             numberString = numberString.replace(group, '');
@@ -500,15 +500,15 @@ export class NumberFormatter {
         return number;
     };
 
-    
+
 //     Number.prototype.toFixed = function(precision) {
 //         return jQuery._roundNumber(this, precision);
 //     };
-    
+
 //     jQuery._roundNumber = function(number, decimalPlaces) {
 //         var power = Math.pow(10, decimalPlaces || 0);
 //         var value = String(Math.round(number * power) / power);
-        
+
 //         // ensure the decimal places are there
 //         if (decimalPlaces > 0) {
 //             var dp = value.indexOf(".");
@@ -518,7 +518,7 @@ export class NumberFormatter {
 //             } else {
 //                 dp = value.length - (dp + 1);
 //             }
-            
+
 //             while (dp < decimalPlaces) {
 //                 value += '0';
 //                 dp++;

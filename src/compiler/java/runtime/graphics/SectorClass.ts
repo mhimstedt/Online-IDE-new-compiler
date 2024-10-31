@@ -25,7 +25,7 @@ export class SectorClass extends FilledShapeClass {
 
         { type: "method", signature: "final void setEndAngle(double endAngle)", native: SectorClass.prototype._setEndAngle, comment: JRC.SectorSetEndAngleComment },
         { type: "method", signature: "final double getEndAngleX()", template: '(§1.endAngle/Math.PI*180)', comment: JRC.SectorGetEndAngleComment },
-        
+
         { type: "method", signature: "final void drawRadii(boolean drawRadii)", native: SectorClass.prototype._drawRadii, comment: JRC.SectorDrawRadiiComment },
 
         { type: "method", signature: "final Sector copy()", java: SectorClass.prototype._mj$copy$Sector$, comment: JRC.SectorCopyComment },
@@ -119,7 +119,7 @@ export class SectorClass extends FilledShapeClass {
                 g.lineTo(this.mx, this.my);
             }
         }
- 
+
         if(this.drawRadii){
             g.closePath();
         }
@@ -190,7 +190,7 @@ export class SectorClass extends FilledShapeClass {
                 return ret;
             } else {
                 return !ret;
-            }  
+            }
         } else {
             return false;
         }

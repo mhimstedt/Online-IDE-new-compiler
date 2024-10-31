@@ -2,7 +2,7 @@ import jQuery from 'jquery';
 import { convertPxToNumber } from "../../../../tools/HtmlTools.js";
 
 export class ZoomControl {
-    
+
     public static preventFading:boolean = false;
 
     position: number = 0;
@@ -45,8 +45,8 @@ export class ZoomControl {
             that.$grip.trigger(mousePointer + 'down', [e.clientY]);
 
         });
-        
-        
+
+
         this.$grip.on(mousePointer + 'down', (e, y) => {
             if(y == null) y = e.clientY;
             mousedownY = y;
@@ -72,7 +72,7 @@ export class ZoomControl {
             if(!ZoomControl.preventFading)
             $zoomcontrolOuter.fadeIn();
         });
-        
+
         $parentElement.on(mousePointer + "leave", (e) => {
             if(!ZoomControl.preventFading)
             $zoomcontrolOuter.fadeOut();

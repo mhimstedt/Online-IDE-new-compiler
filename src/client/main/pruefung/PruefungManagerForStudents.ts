@@ -38,16 +38,16 @@ export class PruefungManagerForStudents {
     }
 
     startPruefung(pruefung: Pruefung) {
-        
+
         if(this.pruefung != null) return;
 
         this.pruefung = pruefung;
 
         this.main.networkManager.sendUpdates(() => {
-            
+
             let wss = this.main.workspaceList.filter(ws => ws.pruefung_id == pruefung.id);
             if(wss.length == 0) alert('Es fehlt der Prüfungsworkspace.');
-            
+
             let pruefungWorkspace = wss[0];
             this.main.workspaceList = [pruefungWorkspace];
             this.main.currentWorkspace = pruefungWorkspace;
@@ -57,14 +57,14 @@ export class PruefungManagerForStudents {
             projectExplorer.workspaceListPanel.hide();
 
             projectExplorer.setWorkspaceActive(pruefungWorkspace);
-            
+
             // this.pruefung = pruefung;
 
             jQuery('#pruefunglaeuft').css('display', 'block');
             if(this.timer != null){
                 clearInterval(this.timer);
                 this.timer = null;
-            } 
+            }
 
             this.timer = setInterval(async () => {
                 let request: ReportPruefungStudentStateRequest = {pruefungId: this.pruefung.id, clientState: "", running: true}
@@ -73,11 +73,11 @@ export class PruefungManagerForStudents {
                     this.stopPruefung(true);
                 }
             }, 3000)
-            
+
         }, true, false, false);
 
     }
-    
+
     async stopPruefung(renderWorkspaces: boolean){
         // await this.main.networkManager.sendUpdatesAsync();  // is done by fetchAndRenderOwnWorkspaces later on
 
@@ -88,12 +88,12 @@ export class PruefungManagerForStudents {
 
         if(this.pruefung == null){
             return;
-        } 
+        }
 
         this.pruefung = null;
-        
+
         this.main.projectExplorer.workspaceListPanel.show();
-        
+
         if(renderWorkspaces){
             await this.main.projectExplorer.fetchAndRenderOwnWorkspaces();
         }
@@ -102,5 +102,5 @@ export class PruefungManagerForStudents {
     }
 
 
-    
+
 }

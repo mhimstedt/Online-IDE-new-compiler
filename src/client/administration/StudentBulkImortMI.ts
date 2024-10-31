@@ -312,11 +312,11 @@ export class StudentBulkImportMI extends AdminMenuItem {
     showStep1Paste() {
 
         let description: string = `
-        Zum Importieren wird eine Tabelle mit den Spalten Rufname, Familienname, Username und (optional:) Passwort benötigt, 
-        wobei die Daten in den Zellen jeweils mit Tab-Zeichen getrennt sind. Sie erhalten dieses Format beispielsweise, 
+        Zum Importieren wird eine Tabelle mit den Spalten Rufname, Familienname, Username und (optional:) Passwort benötigt,
+        wobei die Daten in den Zellen jeweils mit Tab-Zeichen getrennt sind. Sie erhalten dieses Format beispielsweise,
         indem Sie eine Tabelle in Excel in die Zwischenablage kopieren. <br> Falls die erste Zeile Spaltenköpfe mit
         den korrekten Bezeichnern (Rufname, Familienname, Username, Passwort) enthält, kümmert sich der Import-Algorithmus
-        um die richtige Reihenfolge und blendet ggf. auch überflüssige Spalten aus. Falls eine Zeile kein Passwort enthält, 
+        um die richtige Reihenfolge und blendet ggf. auch überflüssige Spalten aus. Falls eine Zeile kein Passwort enthält,
         setzt die Online-IDE ein Zufallspasswort.<br>
         Bitte fügen Sie den Inhalt der Tabelle per Copy-Paste in dieses Eingabefeld ein:`
 
@@ -381,7 +381,7 @@ export class StudentBulkImportMI extends AdminMenuItem {
             let password: string = StudentBulkImportMI.getRandomPassword();
             if(columnMapping["passwort"] && line[columnMapping["passwort"]] != null){
                 password = line[columnMapping["passwort"]].trim()
-            } 
+            }
 
             userData.push({
                 id: id++,
@@ -422,7 +422,7 @@ export class StudentBulkImportMI extends AdminMenuItem {
                         categories.set(i, true);
                     }
                 }
-            }        
+            }
             goodPasswordFound = categories.size >= minimumNumberOfCategries;
         }
 

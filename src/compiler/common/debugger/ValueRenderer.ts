@@ -18,7 +18,7 @@ export class ValueRenderer {
         return data.text;
     }
 
-    private static quickArrayOutputHelper(a: any[], data: ArrayOutputData, maxLength: number, 
+    private static quickArrayOutputHelper(a: any[], data: ArrayOutputData, maxLength: number,
         oldArray?: any[], pulseClass?: string) {
         let index: number = 0;
         data.text += "[";
@@ -34,7 +34,7 @@ export class ValueRenderer {
                     let textChanged = text != oldText;
                     text = text.replaceAll("<", "&lt;")
                     text = text.replaceAll(">", "&gt;")
-        
+
                     if(textChanged){
                         text = `<span class="${pulseClass}">${text}</span>`;
                     }

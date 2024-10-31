@@ -101,7 +101,7 @@ int j1;
 int i = 0;
 do{
     i1 = i;
-    
+
     int j = 0;
     do{
         j1 = j;
@@ -134,7 +134,7 @@ assertEquals(6, n, "Test continue in do..while-loop");
 
 /**::
  * for-loop with ArrayList as iterator
- * { "expectedOutput": "12\n13\n14\n" } 
+ * { "expectedOutput": "12\n13\n14\n" }
  */
 
 var list = new ArrayList<Integer>();
@@ -283,7 +283,7 @@ while(i < max) {
 
 int k = 0;
 for(int i = 0; i < max - 2; i++) {
-   if(isPrime[i] && isPrime[i + 2]) { 
+   if(isPrime[i] && isPrime[i + 2]) {
       k++;
    }
 }

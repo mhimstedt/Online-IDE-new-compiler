@@ -38,15 +38,15 @@ export class ObjectClass {
     }
 
     /**
-     * 
+     *
      * To understand wait and notify see this answer:
      * https://stackoverflow.com/questions/75679994/why-notify-method-is-needed-in-java-synchronization
-     * 
+     *
      * In almost all cases all you need is synchronized methods, nothing else.
-     * 
-     * @param t 
-     * @param callback 
-     * @param milliseconds 
+     *
+     * @param t
+     * @param callback
+     * @param milliseconds
     */
     _mj$wait$void$(t: Thread, callback: CallbackFunction, milliseconds?: number) {
         if (this.threadHoldingLockToThisObject != t) {
@@ -147,8 +147,8 @@ export class ObjectClass {
 
     /**
      * returns 1 if thread may pass, 0 otherwise
-     * @param t 
-     * @param pushLockObject 
+     * @param t
+     * @param pushLockObject
      */
     beforeEnteringSynchronizedBlock(t: Thread): number {
 

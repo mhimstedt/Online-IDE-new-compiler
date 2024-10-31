@@ -9,15 +9,15 @@ import { ViteTestAssertions } from "./ViteTestAssertions";
 import { CompilerFileMockup } from "./CompilerFileMockup";
 
 class StoreOutputPrintManager implements IPrintManager {
-    
+
     output: string = "";
-    
+
     isTestPrintManager(): boolean {
         return true;
     }
 
     printHtmlElement(htmlElement: HTMLElement): void {
-        
+
     }
 
     print(text: string | undefined, withNewline: boolean, color: number | undefined): void {
@@ -31,7 +31,7 @@ class StoreOutputPrintManager implements IPrintManager {
     }
 
     flush(): void {
-        
+
     }
 }
 
@@ -119,7 +119,7 @@ function compileAndTest(name: string, program: string, lineOffset: number, expec
         let executable = await compiler.compileIfDirty();
         if (!executable){
             return;
-        } 
+        }
 
         executable.findMainModule(true);
 

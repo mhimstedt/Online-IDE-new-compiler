@@ -14,7 +14,7 @@ import { GNGModule } from '../../compiler/java/runtime/graphics/gng/GNGModule.js
 import { Compiler } from '../../compiler/common/Compiler.js';
 
 export class Workspace extends CompilerWorkspace {
-    
+
     name: string;
     path: string;
     isFolder: boolean;
@@ -25,7 +25,7 @@ export class Workspace extends CompilerWorkspace {
     version: number;
     // published_to 0: none; 1: class; 2: school; 3: all
     published_to: number;
-    
+
     repository_id: number;    // id of repository-workspace
     has_write_permission_to_repository: boolean; // true if owner of this working copy has write permission to repository workspace
 
@@ -49,7 +49,7 @@ export class Workspace extends CompilerWorkspace {
     settings: WorkspaceSettings = {
         libraries: []
     };
-    
+
     constructor(name: string, private main: MainBase, owner_id: number){
         super(main);
         this.name = name;
@@ -125,7 +125,7 @@ export class Workspace extends CompilerWorkspace {
     renderSynchronizeButton(panelElement: AccordionElement) {
         let $buttonDiv = panelElement?.$htmlFirstLine?.find('.jo_additionalButtonRepository');
         if ($buttonDiv == null) return;
-        
+
         let that = this;
         let myMain: Main = <Main><any>this.main;
 
@@ -163,7 +163,7 @@ export class Workspace extends CompilerWorkspace {
 
     static restoreFromData(wd: WorkspaceData, main: MainBase): Workspace {
 
-        let settings: WorkspaceSettings = (wd.settings != null && wd.settings.startsWith("{")) ? JSON.parse(wd.settings) : {libraries: []}; 
+        let settings: WorkspaceSettings = (wd.settings != null && wd.settings.startsWith("{")) ? JSON.parse(wd.settings) : {libraries: []};
 
         //@ts-ignore
         if(settings.libaries){
@@ -214,7 +214,7 @@ export class Workspace extends CompilerWorkspace {
     }
 
     getCurrentlyEditedFile(): File | undefined {
-        return <File | undefined>(super.getCurrentlyEditedFile());    
+        return <File | undefined>(super.getCurrentlyEditedFile());
     }
 
     getFirstFile(): File | undefined {

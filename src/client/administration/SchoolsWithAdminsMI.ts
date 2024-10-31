@@ -319,7 +319,7 @@ export class SchoolsWithAdminsMI extends AdminMenuItem {
             cd.id = response.id;
             this.schoolGrid.add(cd);
             this.schoolGrid.refresh();
-            setTimeout(() => {                
+            setTimeout(() => {
                 let index = this.schoolGrid.records.findIndex(r => r["id"] == cd.id);
                 //@ts-ignore
                 this.schoolGrid.scrollIntoView(index, undefined, true);

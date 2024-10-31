@@ -53,13 +53,13 @@ export class EditableSpritesheet {
         }
     }
 
-    addSprite(spriteData: SpriteData, linesCount:number, columnscount:number, 
+    addSprite(spriteData: SpriteData, linesCount:number, columnscount:number,
         margin:number, space:number, series:string, indexFrom: number): SpriteData[] {
 
         let newSprites: SpriteData[] = [];
 
         if(columnscount > 1 || linesCount > 1){
-            
+
             let width = Math.trunc((spriteData.width - 2*margin + space)/columnscount - space);
             let heigth = Math.trunc((spriteData.height - 2*margin + space)/linesCount - space);
 

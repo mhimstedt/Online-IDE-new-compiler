@@ -185,7 +185,7 @@ export class GNGFigur extends ObjectClass implements IGNGEventListener {
     }
 
     _entfernen() {
-        this.group.world.unRegisterGNGEventListener(this, "aktionAusführen");        
+        this.group.world.unRegisterGNGEventListener(this, "aktionAusführen");
         this.group.world.unRegisterGNGEventListener(this, "tasteGedrückt");
         this.group.world.unRegisterGNGEventListener(this, "sondertasteGedrückt");
         this.group.world.unRegisterGNGEventListener(this, "mausGeklickt");

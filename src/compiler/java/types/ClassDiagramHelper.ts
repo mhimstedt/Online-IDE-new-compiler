@@ -25,7 +25,7 @@ export class ClassDiagramHelper {
                 usedSystemClasses.add(cd.klass);
             }
         }
-        
+
     }
 
 
@@ -43,9 +43,9 @@ export class ClassDiagramHelper {
 
         for (let a of klass.fields) {
             let type: JavaType | undefined = a.type;
-            if (type && (a.type instanceof JavaClass) || (a.type instanceof JavaInterface) 
+            if (type && (a.type instanceof JavaClass) || (a.type instanceof JavaInterface)
                 || (a.type instanceof JavaArrayType)) {
-                if (["ArrayList", "List", "LinkedList"].indexOf(type.identifier) >= 0 && 
+                if (["ArrayList", "List", "LinkedList"].indexOf(type.identifier) >= 0 &&
                 type instanceof GenericVariantOfJavaClass && type.genericTypeParameters?.length == 1) {
                     type = type.typeMap.get(type.genericTypeParameters[0]);
                 }
@@ -67,7 +67,7 @@ export class ClassDiagramHelper {
                 } else {
                     cda.identifier += ", " + a.identifier;
                 }
-            } 
+            }
         }
 
         return cd;

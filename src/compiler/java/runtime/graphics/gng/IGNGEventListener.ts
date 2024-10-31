@@ -1,7 +1,7 @@
 import { Thread } from "../../../../common/interpreter/Thread.ts";
 import { StringClass } from "../../system/javalang/ObjectClassStringClass.ts";
 
-export const GNGEventListenerTypes = ["aktionAusführen", "tasteGedrückt", "sondertasteGedrückt", 
+export const GNGEventListenerTypes = ["aktionAusführen", "tasteGedrückt", "sondertasteGedrückt",
     "mausGeklickt", "taktImpulsAusführen", "ausführen", "taste", "sondertaste", "geklickt"] as const;
 export type GNGEventListenerType = typeof GNGEventListenerTypes[number];
 

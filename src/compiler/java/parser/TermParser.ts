@@ -70,10 +70,10 @@ export abstract class TermParser extends TokenIterator {
     /**
      * Grammar:
      * https://docs.oracle.com/javase/specs/jls/se8/html/jls-19.html
-     * 
+     *
      * Operator precedence:
      * https://introcs.cs.princeton.edu/java/11precedence/
-     * 
+     *
      */
 
 
@@ -176,7 +176,7 @@ export abstract class TermParser extends TokenIterator {
     }
 
     /**
-     * 
+     *
      */
 
     parseTermUnary(): ASTTermNode | undefined {
@@ -350,7 +350,7 @@ export abstract class TermParser extends TokenIterator {
 
         let lambdaNode = this.nodeFactory.buildLambdaFunctionDeclarationNode(this.cct);
 
-        // form (int x, y) -> ... or 
+        // form (int x, y) -> ... or
         if (this.tt == TokenType.leftBracket) {
             this.nextToken();
             //@ts-ignore
@@ -559,9 +559,9 @@ export abstract class TermParser extends TokenIterator {
     }
 
     /**
-     * 
+     *
      * @param node  is undefinded except for instantiating objects of named private classes like object.new ClassIdentifier(...)
-     * @returns 
+     * @returns
      */
     parseNewObjectInstantiation(node: ASTTermNode | undefined): ASTNewObjectNode | ASTAnonymousClassNode | undefined {
         let startToken = this.cct;

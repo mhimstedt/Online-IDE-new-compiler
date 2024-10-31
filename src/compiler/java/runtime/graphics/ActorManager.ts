@@ -99,7 +99,7 @@ export class ActorManager {
     }
 
     startActMethods(){
-        
+
     }
 
     clear() {

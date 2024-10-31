@@ -23,5 +23,5 @@ export class DayOfWeekEnum extends EnumClass {
         new DayOfWeekEnum(JRC.DayOfWeekSundayConst(), DayOfWeek.sunday)
     ]
 
-    
+
 }

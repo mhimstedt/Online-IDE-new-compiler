@@ -24,7 +24,7 @@ export class EllipseClass extends FilledShapeClass {
 
         { type: "method", signature: "final void setRadiusY(double radiusY)", native: EllipseClass.prototype._setRadiusY, comment: JRC.EllipseSetRadiusYComment },
         { type: "method", signature: "final double getRadiusY()", template: '(§1.radiusY*§1.scaleFactor)', comment: JRC.EllipseGetRadiusYComment },
-        
+
         { type: "method", signature: "final Ellipse copy()", java: EllipseClass.prototype._mj$copy$Ellipse$, comment: JRC.EllipseCopyComment },
 
         { type: "method", signature: "final boolean containsPoint(double x, double y)", native: EllipseClass.prototype._containsPoint , comment: JRC.shapeContainsPointComment},
@@ -60,12 +60,12 @@ export class EllipseClass extends FilledShapeClass {
         this._cj$_constructor_$FilledShape$(t, () => {
             this.centerXInitial = mx;
             this.centerYInitial = my;
-            
+
             this.mx = mx;
             this.my = my;
             this.radiusX = radiusX;
             this.radiusY = radiusY;
-    
+
             this.render();
             if(callback) callback();
         });   // call base class constructor
@@ -126,7 +126,7 @@ export class EllipseClass extends FilledShapeClass {
                 alignment: 0.5
             })
         }
-        
+
         g.closePath();
 
     };
@@ -135,13 +135,13 @@ export class EllipseClass extends FilledShapeClass {
         this.radiusX = radius / this.container.scale.x;
 
         this.render();
-    }    
+    }
 
     _setRadiusY(radius: number){
         this.radiusY = radius / this.container.scale.y;
 
         this.render();
-    }    
+    }
 
     containsPoint(x: number, y: number) {
 
@@ -165,7 +165,7 @@ export class EllipseClass extends FilledShapeClass {
         t.s.push(new StringClass(this._debugOutput()));
 
         if(callback) callback();
-        
+
         return;
     }
 

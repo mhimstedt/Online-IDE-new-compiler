@@ -82,7 +82,7 @@ export class PrintManager implements IPrintManager {
 
     flush() {
 
-        // If there are more than maxLines in next output batch: 
+        // If there are more than maxLines in next output batch:
         // Delete surplus lines before printing them and empty output-div
         if (this.newLines >= this.maxLines) {
 
@@ -149,7 +149,7 @@ export class PrintManager implements IPrintManager {
                 if (!this.lastSpan.endsWith("</span>")) this.lastSpan += "</span>";
                 this.$lastSpan = jQuery(this.lastSpan);
                 this.$lastDiv.append(this.$lastSpan);
-                
+
                 this.lastSpan = "";
                 this.$lastSpan = null;
 

@@ -21,5 +21,5 @@ export class AlignmentEnum extends EnumClass {
         new AlignmentEnum("bottom", Alignment.bottom)
     ]
 
-    
+
 }

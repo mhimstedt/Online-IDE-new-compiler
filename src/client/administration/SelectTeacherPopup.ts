@@ -5,16 +5,16 @@ export class SelectTeacherPopup {
 
     static callbackCancel: () => void;
     static callbackOK: (teacher: TeacherData) => void;
-    
+
     static open(className: string, teacherList: TeacherData[],
         callbackCancel: () => void,
         callbackOK: (teacher: TeacherData) => void) {
-            
+
             SelectTeacherPopup.callbackOK = callbackOK;
             SelectTeacherPopup.callbackCancel = callbackCancel;
 
             teacherList.forEach(td => td["text"] = td.userData.familienname + ", " + td.userData.rufname + " (" + td.userData.username + ")");
-            
+
             let form = new w2form({
                 name: 'SelectTeacherForm',
                 style: 'border: 0px; background-color: transparent;',

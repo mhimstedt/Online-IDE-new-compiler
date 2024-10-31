@@ -79,7 +79,7 @@ export class ClassDiagram extends Diagram {
             inactive: classBoxesSrc.active.map(cb => cb.copy()).concat(classBoxesSrc.inactive.map(cb => cb.copy())),
             active: [],
             displaySystemClasses: classBoxesSrc.displaySystemClasses,
-            parametersWithTypes: classBoxesSrc.parametersWithTypes 
+            parametersWithTypes: classBoxesSrc.parametersWithTypes
         };
 
         this.classBoxesRepository[newWorkspaceId] = classBoxesDest;
@@ -225,8 +225,8 @@ export class ClassDiagram extends Diagram {
 
         // recursively register system classes that are used by other system classes
         let inspectedUsedSystemClasses: Set<JavaClass | JavaInterface>;
-        inspectedUsedSystemClasses = new Set();  
-         
+        inspectedUsedSystemClasses = new Set();
+
         while (inspectedUsedSystemClasses.size < usedSystemClasses.size) {
             let typesToInspect = usedSystemClasses.difference(inspectedUsedSystemClasses);
             inspectedUsedSystemClasses = new Set(usedSystemClasses);

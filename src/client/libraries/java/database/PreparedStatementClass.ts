@@ -123,19 +123,19 @@ export class PreparedStatementClass extends ObjectClass {
         t.scheduler.interpreter.showProgramPointer(undefined, "DatabaseManager");
         this.connection.main.getBottomDiv().showHideBusyIcon(true);
         t.state = ThreadState.waiting;
-        
+
         this.connection.executeQuery(query, (error: string, queryResult: QueryResult) => {
-            
+
             if(error != null){
                 // this callback is called by a network-event, so if we just throw an exception
                 // it won't get catched by thread.run.
                 t.throwRuntimeExceptionOnLastExecutedStep(new RuntimeExceptionClass(error));
                 return;
-            } 
+            }
 
             let resultSet = new ResultSetClass(queryResult);
             t.s.push(resultSet);
-            
+
             this.connection.main.getBottomDiv().showHideBusyIcon(false);
             t.state = ThreadState.runnable;
 
@@ -152,18 +152,18 @@ export class PreparedStatementClass extends ObjectClass {
         t.scheduler.interpreter.showProgramPointer(undefined, "DatabaseManager");
         this.connection.main.getBottomDiv().showHideBusyIcon(true);
         t.state = ThreadState.waiting;
-        
+
         this.connection.executeWriteStatement(query, (error: string, lastRowId: number) => {
-            
+
             if(error != null){
                 // this callback is called by a network-event, so if we just throw an exception
                 // it won't get catched by thread.run.
                 t.throwRuntimeExceptionOnLastExecutedStep(new RuntimeExceptionClass(error));
                 return;
-            } 
+            }
 
             t.s.push(lastRowId);
-            
+
             this.connection.main.getBottomDiv().showHideBusyIcon(false);
             t.state = ThreadState.runnable;
 

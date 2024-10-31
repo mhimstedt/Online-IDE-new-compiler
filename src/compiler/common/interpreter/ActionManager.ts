@@ -32,13 +32,13 @@ export class ActionManager {
     public init(){
 
         let $element:JQuery<any> | undefined = this.$mainElement;
-        
+
         if(!$element) $element = jQuery(document);
 
         let that = this;
-        $element.on("keydown", function (event: JQuery.KeyDownEvent) { 
+        $element.on("keydown", function (event: JQuery.KeyDownEvent) {
             if(event != null){
-                that.executeKeyDownEvent(event); 
+                that.executeKeyDownEvent(event);
             }
         });
 
@@ -128,22 +128,22 @@ export class ActionManager {
 
     }
 
-    
+
 
 
     public isActive(actionIdentifier: string): boolean {
 
         let ae: ActionEntry = this.actions[actionIdentifier];
-        
+
         if(ae == null) return false;
 
         return ae.active;
-    
+
     }
 
     public setActive(actionIdentifier: string, active: boolean){
         let ae: ActionEntry = this.actions[actionIdentifier];
-        
+
         if(ae != null){
             ae.active = active;
         }
@@ -228,9 +228,9 @@ export class ActionManager {
     /**
      * Register a context key for monaco editor. This can be used to add preconditions
      * to editor actions
-     * 
-     * @param identifier 
-     * @param editorContextKey 
+     *
+     * @param identifier
+     * @param editorContextKey
      */
     registerEditorContextKey(identifier: string, editorContextKey: EditorContextKey){
         this.editorContextKeys.set(identifier, editorContextKey);

@@ -10,7 +10,7 @@ export type LdToken = {
 export class LibraryDeclarationLexer {
 
 
-    static keywordToTokenTypeMap: Map<string, TokenType> = 
+    static keywordToTokenTypeMap: Map<string, TokenType> =
     new Map(
         [
             ["class", TokenType.keywordClass],

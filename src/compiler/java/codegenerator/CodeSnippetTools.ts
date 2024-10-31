@@ -20,7 +20,7 @@ export class SnippetFramer {
         // if(snippet instanceof CodeSnippetContainer && snippet.endsWithNextStepMark()){
         //     framedSnippet.addNextStepMark();
         // }
-        
+
         return framedSnippet;
     }
 

@@ -11,19 +11,19 @@ export class LoadController {
     private lastTickTime?: number;
 
     constructor(private scheduler: Scheduler, private interpreter: Interpreter) {
-        
+
     }
 
     /**
      * This method is called periodically. It computes number of steps to execute in a way
      * that consumes this.maxLoadFactor of CPU-Time at most.
-     * 
+     *
      * As it doesn't know exactly how long an average step takes it feeds
      * Scheduler.run in batches and measures elapsed time after each batch.
-     * 
+     *
      * This is the outer one of three main loops:
      * LoadController.tick calls Scheduler.run calls Thread.run
-     * 
+     *
      * @param timerIntervalInMs the interval this method is called
      */
     tick(timerIntervalInMs: number) {
@@ -43,10 +43,10 @@ export class LoadController {
         let numberOfBatchesSoFar: number = 0;
         while ((performance.now() - t0) / timerIntervalInMs < this.maxLoadFactor &&  // <- this ensures we don't overload the system
             this.scheduler.state == SchedulerState.running) {
-            
+
             // let it run!
             let schedulerExitState = this.scheduler.run(this.numberOfStepsPerBatch);
-            
+
             // exit prematurely if scheduler has nothing more to do
             if(schedulerExitState == SchedulerExitState.nothingMoreToDo){
                 break;

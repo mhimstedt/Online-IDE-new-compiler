@@ -377,7 +377,7 @@ class HamsterSpriteHelper {
         this.sprite.localTransform.translate(-centerX, -centerY);
         this.sprite.localTransform.rotate(d * Math.PI / 2);
         this.sprite.localTransform.translate(centerX, centerY);
-        
+
         this.sprite.setFromMatrix(this.sprite.localTransform);
         this.sprite.updateLocalTransform();
         this.direction = direction;

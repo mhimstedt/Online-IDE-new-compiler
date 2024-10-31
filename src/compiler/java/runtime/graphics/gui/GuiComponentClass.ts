@@ -15,13 +15,13 @@ export class GuiComponentClass extends FilledShapeClass implements InternalMouse
 
     static __javaDeclarations: LibraryDeclarations = [
         {type: "declaration", signature: "abstract class GuiComponent extends FilledShape", comment: JRC.GUIComponentClassComment},
-        
+
         {type: "method", signature: "GuiComponent()", java: GuiComponentClass.prototype._cj$_constructor$GuiComponent$ },
 
         {type: "method", signature: "void addChangeListener(ChangeListener changeListener)", native: GuiComponentClass.prototype.addChangeListener, comment: JRC.GUIComponentAddChangeListenerComment},
         {type: "method", signature: "final double getWidth()", template: `§1.width`,  comment: JRC.GUIComponentGetWidthComment},
         {type: "method", signature: "final double getHeight()", template: `§1.height`, comment: JRC.GUIComponentGetHeightComment},
-        
+
         // listener
         {type: "method", signature: "void onChange(String newValue)", java: GuiComponentClass.prototype._mj$onChange$void$String, comment: JRC.GUIComponentOnChangeComment},
     ];
@@ -43,12 +43,12 @@ export class GuiComponentClass extends FilledShapeClass implements InternalMouse
 
     _cj$_constructor$GuiComponent$(t: Thread, callback: CallbackFunction, registerAsMouseListener: boolean, registerAsKeyboardListener: boolean){
 
-        this._cj$_constructor_$FilledShape$(t, () => {            
+        this._cj$_constructor_$FilledShape$(t, () => {
             this.scheduler = t.scheduler;
             this.registerAsMouseListener = registerAsMouseListener;
             this.registerAsKeyboardListener = registerAsKeyboardListener;
             this.registerAsListener(t);
-            
+
             this.centerXInitial = 0;
             this.centerYInitial = 0;
             if(callback) callback();

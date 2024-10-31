@@ -46,7 +46,7 @@ export class ColorClass extends ObjectClass {
             let intColor = ColorHelper.predefinedColors[colorName];
 
             let c = new ColorClass();
-            
+
             c.red = (intColor & 0xff0000) >> 16;
             c.green = (intColor & 0xff00) >> 8;
             c.blue = (intColor & 0xff);
@@ -208,7 +208,7 @@ export class ColorClass extends ObjectClass {
     _mj$equals$boolean$Object(t: Thread, callback: CallbackFunction, otherObject: ObjectClassOrNull): void {
         if(otherObject instanceof ColorClass){
             if(otherObject == null){
-                t.s.push(false); 
+                t.s.push(false);
                 if(callback) callback();
                 return;
             }

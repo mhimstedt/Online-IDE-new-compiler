@@ -46,7 +46,7 @@ export class ArrayListClass extends SystemCollection implements BaseListType {
 
         // override toString-method
         { type: "method", signature: "String toString()", java: ArrayListClass.prototype._mj$toString$String$, comment: JRC.objectToStringComment },
-        // 
+        //
     ]
 
     static type: NonPrimitiveType;

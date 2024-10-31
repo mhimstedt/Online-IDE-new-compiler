@@ -28,7 +28,7 @@ export class IterableInterface extends InterfaceClass {
 
                 iterator._mj$hasNext$boolean$(t, () => {
                     if(t.s.pop()){
-                        
+
                         iterator._mj$next$E$(t, () => {
                             let element = t.s.pop();
                             action._mj$accept$void$T(t, f, element);

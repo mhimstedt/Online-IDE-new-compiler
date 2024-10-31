@@ -9,7 +9,7 @@ export class PushClientManager extends BasePushClientManager {
     public static subscribe(eventType: PushEventType, handler: PushMessageHandler) {
         PushClientManager.getInstance().subscribe(eventType, handler);
     }
-    
+
     public static unsubscribe(eventType: PushEventType){
         PushClientManager.getInstance().unsubscribe(eventType);
     }

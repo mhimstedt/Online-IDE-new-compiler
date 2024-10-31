@@ -44,13 +44,13 @@ export class WorkspaceImporterExporter {
     static importWorkspace(wse: ExportedWorkspace, path: string[], main: MainBase, owner_id: number): Workspace {
 
         let ws: Workspace = new Workspace(wse.name, main, owner_id);
-        
+
         ws.isFolder = false;
         ws.path = path.join("/");
         ws.settings = wse.settings;
         main.addWorkspace(ws);
         for(let exportedFile of wse.modules){
-            ws.addFile(WorkspaceImporterExporter.importFile(main, exportedFile));           
+            ws.addFile(WorkspaceImporterExporter.importFile(main, exportedFile));
         }
 
         return ws;
@@ -58,12 +58,12 @@ export class WorkspaceImporterExporter {
 
     private static importFile(main: IMain, ef: ExportedFile): File {
         let file = new File(main, ef.name);
-        
-        file.setText(ef.text);    
+
+        file.setText(ef.text);
         file.identical_to_repository_version = ef.identical_to_repository_version;
         file.is_copy_of_id = ef.is_copy_of_id;
         file.repository_file_version = ef.repository_file_version;
-        
+
         return file;
     }
 

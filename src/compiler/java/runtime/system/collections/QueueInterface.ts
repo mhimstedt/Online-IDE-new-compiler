@@ -13,7 +13,7 @@ export class QueueInterface extends CollectionInterface {
         { type: "method", signature: "E remove()", java: QueueInterface.prototype._mj$remove$E$, comment: JRC.queueRemoveComment },
         { type: "method", signature: "E poll()", java: QueueInterface.prototype._mj$poll$E$, comment: JRC.queuePollComment },
         { type: "method", signature: "E peek()", java: QueueInterface.prototype._mj$peek$E$, comment: JRC.queuePeekComment },
-        
+
     ]
 
     static type: NonPrimitiveType;

@@ -10,7 +10,7 @@ export type GNGPoint = {
 }
 
 export class GNGBaseFigur extends ObjectClass {
-    
+
     static __javaDeclarations: LibraryDeclarations = [
         {type: "declaration", signature: "abstract class GNGBaseFigur extends Object"},
 
@@ -49,7 +49,7 @@ export class GNGBaseFigur extends ObjectClass {
 
     setGNGBackgroundColor(){
         if(this.filledShape.world.shapesWhichBelongToNoGroup.length == 1){
-            this.filledShape.world._setBackgroundColor("#e6e6e6");                
+            this.filledShape.world._setBackgroundColor("#e6e6e6");
         }
     }
 

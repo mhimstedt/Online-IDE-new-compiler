@@ -17,7 +17,7 @@ export class RightDiv {
 
         this.$tabs = $rightDiv.find('.jo_tabs');
         this.$headings = $rightDiv.find('.jo_tabheadings');
-        
+
         let withClassDiagram = this.$headings.find('.jo_classDiagramTabHeading').length > 0;
 
         if(withClassDiagram){
@@ -30,7 +30,7 @@ export class RightDiv {
         $rightDiv.find('.jo_whole-window').on("click", () => {
 
             that.isWholePage = !that.isWholePage;
-            
+
             let $wholeWindow = jQuery('.jo_whole-window');
 
             if (!that.isWholePage) {

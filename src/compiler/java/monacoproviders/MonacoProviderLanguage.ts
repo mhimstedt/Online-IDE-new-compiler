@@ -78,6 +78,6 @@ export class MonacoProviderLanguage {
     "en": (isAbstract ? "implement " : "override ") + `method ${methodIdentifier} of base class.`,
     })
 
-    
+
 
 }

@@ -34,7 +34,7 @@ class MissingStatements {
         this.symbols.push(symbol);
         this.symbolReadHappened.push(false);
         this.symbolWriteHappened.push(withInitialization);
-    }    
+    }
 
     onSymbolRead(symbol: BaseSymbol, range: IRange, errors: Error[]){
         let i = this.symbols.indexOf(symbol);
@@ -53,11 +53,11 @@ class MissingStatements {
             this.symbolWriteHappened[i] = true;
         }
     }
-    
+
     onReturnHappened(){
         this.returnHappened = true;
     }
-    
+
     onCloseBranch(errors: Error[]){
         let start: number = 0;
 
@@ -67,24 +67,24 @@ class MissingStatements {
             for(let i = 0; i < this.parent.symbolReadHappened.length; i++){
                 if(this.symbolReadHappened[i]) this.parent.symbolReadHappened[i] = true;
                 start = this.parent.symbolReadHappened.length;
-            }        
-        } 
+            }
+        }
 
         for(let i = start; i < this.symbolReadHappened.length; i++){
             if(!this.symbolReadHappened[i]){
                 let error = JCM.noReadAccessForVariable(this.symbols[i].identifier)
-                errors.push({message: error.message, id: error.id , level: "info", range: this.symbols[i].identifierRange});                    
-            }   
+                errors.push({message: error.message, id: error.id , level: "info", range: this.symbols[i].identifierRange});
+            }
         }
-        
+
     }
-    
+
 }
 
 export class MissingStatementManager {
-    
+
     stack: MissingStatements[] = [];
-    
+
     beginMethodBody(parameters: JavaParameter[]){
         this.stack = [];
         let missingStatements = new MissingStatements();
@@ -95,11 +95,11 @@ export class MissingStatementManager {
         }
         this.stack.push(missingStatements);
     }
-    
+
     openBranch(){
         this.stack.push(new MissingStatements(this.stack[this.stack.length - 1]));
     }
-    
+
     closeBranch(errors: Error[]){
         this.stack.pop()?.onCloseBranch(errors);
     }
@@ -110,58 +110,58 @@ export class MissingStatementManager {
         if(currentMissingStatements.childrenWithReturnStatement == currentMissingStatements.childrenCount){
             currentMissingStatements.returnHappened = true;
         }
-        
+
         currentMissingStatements.childrenCount = 0;
         currentMissingStatements.childrenWithReturnStatement = 0;
     }
-    
+
     endMethodBody(method: JavaMethod | undefined, errors: Error[]){
         let currentMissingStatements = this.stack[this.stack.length - 1];
         if(!currentMissingStatements) return;
-        
+
         if(method && method.returnParameterType && method.returnParameterType.identifier != "void"){
             if(!currentMissingStatements.returnHappened && !method.isConstructor){
                 let error = JCM.returnStatementMissing(method.identifier, method.returnParameterType.identifier);
-                errors.push({message: error.message, id: error.id, level: "error", range: method.identifierRange});                    
+                errors.push({message: error.message, id: error.id, level: "error", range: method.identifierRange});
             }
         }
 
         currentMissingStatements.onCloseBranch(errors);
     }
-    
+
     addSymbolDeclaration(symbol: BaseSymbol, withInitialization: boolean){
         let currentMissingStatements = this.stack[this.stack.length - 1];
         if(currentMissingStatements) currentMissingStatements.addSymbolDeclaration(symbol, withInitialization);
-    }    
-    
+    }
+
     onSymbolAccess(symbol: BaseSymbol, range: IRange, errors: Error[], isWrite: boolean){
         if(isWrite){
             this.onSymbolWrite(symbol, range, errors);
         } else {
             this.onSymbolRead(symbol, range, errors);
-        } 
+        }
     }
 
     onSymbolRead(symbol: BaseSymbol, range: IRange, errors: Error[]){
         let currentMissingStatements = this.stack[this.stack.length - 1];
         if(currentMissingStatements) currentMissingStatements.onSymbolRead(symbol, range, errors);
     }
-    
+
     onSymbolWrite(symbol: BaseSymbol, range: IRange, errors: Error[]){
         let currentMissingStatements = this.stack[this.stack.length - 1];
         if(currentMissingStatements) currentMissingStatements.onSymbolWrite(symbol, range, errors);
     }
-    
+
     onReturnHappened(){
         let currentMissingStatements = this.stack[this.stack.length - 1];
         if(currentMissingStatements) currentMissingStatements.onReturnHappened();
     }
-    
+
     onCloseBranch(errors: Error[]){
         let currentMissingStatements = this.stack[this.stack.length - 1];
-        if(currentMissingStatements) currentMissingStatements.onCloseBranch(errors);        
+        if(currentMissingStatements) currentMissingStatements.onCloseBranch(errors);
     }
-    
+
     hasReturnHappened(){
         let currentMissingStatements = this.stack[this.stack.length - 1];
         if(currentMissingStatements) return currentMissingStatements.returnHappened;

@@ -44,7 +44,7 @@ export class JavaKaraWorldClass extends FilledShapeClass {
         { type: "method", signature: "final void setMushroom(int x, int y)", native: JavaKaraWorldClass.prototype.setOrRemoveMushroom, comment: JRC.JavaKaraWorldSetMushroomComment },
         { type: "method", signature: "final boolean isEmpty(int x, int y)", native: JavaKaraWorldClass.prototype.isEmpty, comment: JRC.JavaKaraWorldIsEmptyComment },
         { type: "method", signature: "final void init(string s)", native: JavaKaraWorldClass.prototype.init, comment: JRC.JavaKaraWorldInitComment },
-        
+
         { type: "method", signature: "final void scale(double factor)", native: JavaKaraWorldClass.prototype.scaleNew, comment: JRC.shapeScaleComment1 },
 
     ]
@@ -346,7 +346,7 @@ export class JavaKaraWorldClass extends FilledShapeClass {
 
 
 
- 
+
 export class JavaKaraClass extends ObjectClass {
     static __javaDeclarations: LibraryDeclarations = [
         { type: "declaration", signature: "class Kara extends Object", comment: JRC.KaraClassComment },
@@ -410,7 +410,7 @@ export class JavaKaraClass extends ObjectClass {
 class KaraSprite {
 
     static directions: KaraDirection[] = [{ index: 0, dx: 0, dy: -1 }, { index: 1, dx: -1, dy: 0 }, { index: 2, dx: 0, dy: 1 }, { index: 3, dx: 1, dy: 0 }];
-    
+
 
     sprite: PIXI.Sprite;
 
@@ -491,7 +491,7 @@ class KaraSprite {
         this.sprite.localTransform.translate(-centerX, -centerY);
         this.sprite.localTransform.rotate(-d * Math.PI / 2);
         this.sprite.localTransform.translate(centerX, centerY);
-        
+
         this.sprite.setFromMatrix(this.sprite.localTransform);
 
         this.sprite.updateLocalTransform();

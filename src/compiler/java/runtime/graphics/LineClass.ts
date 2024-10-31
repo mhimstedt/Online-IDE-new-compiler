@@ -79,7 +79,7 @@ export class LineClass extends FilledShapeClass {
                 alignment: 0.5
             })
         }
-        
+
     };
 
     _setPoints(x1: number, y1: number, x2: number, y2: number){
@@ -101,7 +101,7 @@ export class LineClass extends FilledShapeClass {
         t.s.push(new StringClass(this._debugOutput()));
 
         if(callback) callback();
-        
+
         return;
     }
 
@@ -112,6 +112,6 @@ export class LineClass extends FilledShapeClass {
         return s;
     }
 
-    
+
 
 }

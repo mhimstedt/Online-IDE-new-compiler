@@ -19,5 +19,5 @@ export class RepeatTypeEnum extends EnumClass {
         new RepeatTypeEnum("backAndForth", RepeatType.backAndForth)
     ]
 
-    
+
 }

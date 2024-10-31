@@ -61,7 +61,7 @@ export class RoundedRectangleClass extends FilledShapeClass {
         this._cj$_constructor_$FilledShape$(t, () => {
             this.centerXInitial = left + width / 2;
             this.centerYInitial = top + height / 2;
-    
+
             this.left = left;
             this.top = top;
             this.width = width;
@@ -75,8 +75,8 @@ export class RoundedRectangleClass extends FilledShapeClass {
             this.addCenterCircle(left + width - radius, top + height - radius, 3*Math.PI/2);
             this.addCenterCircle(left + width - radius, top + radius, 0);
             this.hitPolygonInitial.push({x: left + radius, y: top});
-    
-    
+
+
             this.render();
         });   // call base class constructor
 
@@ -124,7 +124,7 @@ export class RoundedRectangleClass extends FilledShapeClass {
                 alignment: 0.5
             })
         }
-        
+
         g.closePath();
 
     };
@@ -164,7 +164,7 @@ export class RoundedRectangleClass extends FilledShapeClass {
         t.s.push(new StringClass(this._debugOutput()));
 
         if(callback) callback();
-        
+
         return;
     }
 
@@ -174,6 +174,6 @@ export class RoundedRectangleClass extends FilledShapeClass {
         return s;
     }
 
-    
+
 
 }

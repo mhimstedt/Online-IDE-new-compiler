@@ -9,7 +9,7 @@ export class Helper {
 
     public static openHelper(text: string, targetElement: JQuery<HTMLElement>, direction: HelperDirection) {
 
-        let $helper = jQuery('.jo_arrow_box'); 
+        let $helper = jQuery('.jo_arrow_box');
         $helper.removeClass(['jo_arrow_box_left', 'jo_arrow_box_right', 'jo_arrow_box_top', 'jo_arrow_box_bottom']);
 
         $helper.addClass('jo_arrow_box_' + direction);
@@ -93,7 +93,7 @@ export class Helper {
 
             switch (id) {
                 case "folderButton":
-                    text = `Mit diesem Button können Sie in der Liste der Workspaces Ordner anlegen. 
+                    text = `Mit diesem Button können Sie in der Liste der Workspaces Ordner anlegen.
                     <ul>
                     <li>Bestehende Workspaces lassen sich mit der Maus in Ordner ziehen.</li>
                     <li>Wollen Sie einen Workspace in die oberste Ordnerebene bringen, so ziehen Sie ihn einfach auf den "Workspaces"-Balken.</li>
@@ -106,17 +106,17 @@ export class Helper {
                     direction = "top";
                     break;
                 case "speedControlHelper":
-                    text = `Mit dem Geschwindigkeitsregler können  
-                            Sie einstellen, wie schnell das Programm abläuft. 
-                            Bei Geschwindigkeiten bis 10 Steps/s wird 
+                    text = `Mit dem Geschwindigkeitsregler können
+                            Sie einstellen, wie schnell das Programm abläuft.
+                            Bei Geschwindigkeiten bis 10 Steps/s wird
                             während des Programmablaufs der Programzeiger gezeigt
-                            und die Anzeige der Variablen auf der linken 
+                            und die Anzeige der Variablen auf der linken
                             Seite stets aktualisiert.`;
                     direction = "top";
                     $element = main.programControlButtons.speedControl.$grip;
                     break;
                 case "newFileHelper":
-                    text = `Es gibt noch keine Programmdatei im Workspace. <br> Nutzen Sie den Button 
+                    text = `Es gibt noch keine Programmdatei im Workspace. <br> Nutzen Sie den Button
                         <span class='img_add-file-dark jo_inline-image'></span> um eine Programmdatei anzulegen.
                         `;
                     direction = "left";
@@ -134,11 +134,11 @@ export class Helper {
                     break;
                 case "stepButtonHelper":
                     text = `Mit den Buttons "Step over"
-                        (<span class='img_step-over-dark jo_inline-image'></span>, Taste F8), 
-                        "Step into" 
-                        (<span class='img_step-into-dark jo_inline-image'></span>, Taste F7) und 
-                        "Step out" 
-                        (<span class='img_step-out-dark jo_inline-image'></span>, Taste F9)  
+                        (<span class='img_step-over-dark jo_inline-image'></span>, Taste F8),
+                        "Step into"
+                        (<span class='img_step-into-dark jo_inline-image'></span>, Taste F7) und
+                        "Step out"
+                        (<span class='img_step-out-dark jo_inline-image'></span>, Taste F9)
                         können Sie das Programm schrittweise ausführen und sich nach jedem Schritt die Belegung der Variablen ansehen. <br>
                         <ul><li><span class='img_step-over-dark jo_inline-image'></span> Step over führt den nächsten Schritt aus, insbesondere werden Methodenaufrufe in einem Schritt durchgeführt.</li>
                         <li><span class='img_step-into-dark jo_inline-image'></span> Step into führt auch den nächsten Schritt aus, geht bei Methodenaufrufen aber in die Methode hinein und führt auch die Anweisungen innerhalb der Methode schrittweise aus.</li>
@@ -148,7 +148,7 @@ export class Helper {
                     direction = "top";
                     $element = main.programControlButtons.getButton("interpreter.stepOver");
                     break;
-                case "consoleHelper": 
+                case "consoleHelper":
                     text=`
                         Hier können Sie Anweisungen oder Terme eingeben, die nach Bestätigung mit der Enter-Taste ausgeführt/ausgewertet werden. Das Ergebnis sehen Sie im Bereich über der Eingabezeile. <br>
                         Falls das Programm gerade pausiert (z.B. bei Ausführung in Einzelschritten) können Sie auch auf die Variablen des aktuellen Sichtbarkeitsbereiches zugreifen.

@@ -9,9 +9,9 @@ export class SymbolTableSection {
 
     children: StackElementDebuggerEntry[] = [];
 
-    constructor(public treeview: Treeview<DebuggerSymbolEntry>, 
+    constructor(public treeview: Treeview<DebuggerSymbolEntry>,
         public symbolTable: BaseSymbolTable, public debugger1: Debugger) {
-        
+
         // divToRenderInto.prepend(this.treeview.outerDiv);
 
         let symbols = symbolTable.getSymbolsForDebugger();

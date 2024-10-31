@@ -22,7 +22,7 @@ export class Sliders {
 
             jQuery(document).on(mousePointer + "move.slider1", (mm: JQuery.MouseMoveEvent) => {
                 let dx = mm.clientX - x;
-                
+
                 that.moveLeftPanel(dx);
 
                 x = mm.clientX;
@@ -138,7 +138,7 @@ export class Sliders {
         });
 
     }
-    
+
     moveRightDiv(dx: number) {
         let $editor = jQuery('#editor>.monaco-editor');
         let $rightDiv = jQuery('#rightdiv');
@@ -148,7 +148,7 @@ export class Sliders {
 
         let mewidth = Number.parseInt($editor.css('width').replace('px', ''));
         $editor.css('width', (mewidth + dx) + "px");
-        
+
         this.main.getMainEditor().layout();
         if(this.main.bottomDiv.homeworkManager.diffEditor != null){
             this.main.bottomDiv.homeworkManager.diffEditor.layout();

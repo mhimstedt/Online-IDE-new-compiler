@@ -12,8 +12,8 @@ export class PhongMaterial3dClass extends Material3dClass {
         {type: "method", signature: "PhongMaterial3d(int color, double shininess)", native: PhongMaterial3dClass.prototype._phongMaterialConstructor, comment: JRC.phongMaterial3dConstructorComment },
         {type: "method", signature: "PhongMaterial3d(string color, double shininess)", native: PhongMaterial3dClass.prototype._phongMaterialConstructor, comment: JRC.phongMaterial3dConstructorComment },
         {type: "method", signature: "PhongMaterial3d(Color color, double shininess)", native: PhongMaterial3dClass.prototype._phongMaterialConstructor, comment: JRC.phongMaterial3dConstructorComment },
-        
-        
+
+
         {type: "field", signature: "private double shininess", template: "§1.material.shininess", comment: JRC.phongMaterial3dShininessComment },
         {type: "method", signature: "void setShininess(double shininess)", template: "§1.material.shininess = §2", comment: JRC.phongMaterial3dShininessComment },
         {type: "method", signature: "double getShininess()", template: "§1.materialshininess", comment: JRC.phongMaterial3dShininessComment },

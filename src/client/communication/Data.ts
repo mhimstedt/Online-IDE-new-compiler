@@ -827,7 +827,7 @@ export type StudentPruefungStateInfo = {
     timestamp: number,
     state: string,
     running: boolean
-} 
+}
 
 export type GetPruefungStudentStatesRequest = {
     pruefungId: number
@@ -862,16 +862,16 @@ export type KlassData = {
 }
 
 export type WorkspaceShortData = {
-    id: number, 
+    id: number,
     path: string,
-    name: string, 
+    name: string,
     text?: string,
     files: string[]
 }
 
 export type GetPruefungenForLehrkraftResponse = {
     pruefungen: Pruefung[];
-    klassen: KlassData[];    
+    klassen: KlassData[];
     workspaces: WorkspaceShortData[];
 }
 

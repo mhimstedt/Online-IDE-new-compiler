@@ -137,7 +137,7 @@ export function kreisSchneidetStrecke(m: Punkt, r: number, p1: Punkt, p2: Punkt)
  * Kreis: (x-mx)^2 + (y-my)^2 = r^2
  *
  * Schneiden der beiden liefert eine quadratische Gleichung in t, die wir lösen...
- 
+
  */
 
     let x1 = p1.x;
@@ -180,7 +180,7 @@ export function schnittpunkteKreisStrecke(m: Punkt, r: number, p1: Punkt, p2: Pu
  * Kreis: (x-mx)^2 + (y-my)^2 = r^2
  *
  * Schneiden der beiden liefert eine quadratische Gleichung in t, die wir lösen...
- 
+
  */
 
     let x1 = p1.x;
@@ -307,7 +307,7 @@ export function abstandPunktZuStrecke(a: Punkt, b: Punkt, p: Punkt){
     let s2 = p.y - fy;
 
     return Math.sqrt(s1*s1 + s2*s2);
-    
+
 }
 
 export function abstandPunktZuGerade(a: Punkt, b: Punkt, p: Punkt) {

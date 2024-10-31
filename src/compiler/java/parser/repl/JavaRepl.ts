@@ -85,7 +85,7 @@ export class JavaRepl {
                     let oldNumberOfChildTables = symbolTable.childTables.length;
 
                     programAndModule = this.replCompiler.compile(statement, symbolTable, interpreter.executable, withToStringCall);
-                    
+
                     symbolTable.childTables.splice(oldNumberOfChildTables, symbolTable.childTables.length - oldNumberOfChildTables);
                 }
 
@@ -116,7 +116,7 @@ export class JavaRepl {
         let currentProgramState = threadBefore?.currentProgramState;
         let lastExecutedStep = currentProgramState?.lastExecutedStep;
 
-        
+
         let thread = this.prepareThread(programAndModule);
         if (!thread) {
             return undefined;
@@ -137,7 +137,7 @@ export class JavaRepl {
         return thread.replReturnValue;
 
     }
- 
+
     async executeAsync(statement: string, withMaxSpeed: boolean): Promise<ReplReturnValue> {
 
         let interpreter = this.getInterpreter();
@@ -157,14 +157,14 @@ export class JavaRepl {
         let p = new Promise<any>((resolve, reject) => {
 
             let thread: Thread | undefined;
-            
+
             let callback = (returnValue: ReplReturnValue) => {
-                
+
                 if(currentProgramState) currentProgramState.lastExecutedStep = lastExecutedStep;
                 if(stackSizeBefore) threadBefore?.s.splice(stackSizeBefore, threadBefore?.s.length - stackSizeBefore);
                 if(returnValue){
                     returnValue.errors = programAndModule?.module?.errors;
-                    
+
                     resolve(returnValue);
                 }
             }
@@ -175,8 +175,8 @@ export class JavaRepl {
                 resolve(undefined);
                 return;
             }
-            
-    
+
+
             interpreter.setState(SchedulerState.running);
 
         })
@@ -188,7 +188,7 @@ export class JavaRepl {
 
 
 
-    prepareThread(programAndModule: { module: JavaReplCompiledModule; program: Program | undefined; }, 
+    prepareThread(programAndModule: { module: JavaReplCompiledModule; program: Program | undefined; },
         callback?: (returnValue: ReplReturnValue) => void,
                    withMaxSpeed: boolean = true): Thread | undefined {
 
@@ -223,9 +223,9 @@ export class JavaRepl {
         }
 
         currentThread.lastTimeThreadWasRun = performance.now();
-        
+
         let oldState = scheduler.state;
-        
+
         scheduler.callbackAfterReplProgramFinished = () => {
             currentThread.maxStepsPerSecond = saveMaxStepsPerSecond;
             currentThread.state = ThreadState.runnable;

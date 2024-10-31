@@ -24,7 +24,7 @@ export class DecimalFormatClass extends ObjectClass {
     static __javaDeclarations: LibraryDeclarations = [
         {type: "declaration", signature: "class DecimalFormat extends Object" , comment: JRC.DecimalFormatClassComment},
         {type: "method", signature: "DecimalFormat(string format)", native: DecimalFormatClass.prototype._constructor1  , comment: JRC.decimalFormatConstructorComment},
-        
+
         {type: "method", signature: "public final string format(double number)", template: '§1.format(§2)' , comment: JRC.decimalFormatFormatComment},
     ]
     position: number=0;
@@ -90,10 +90,10 @@ export class DecimalFormatClass extends ObjectClass {
         }
 
         let retExponential = '';
-        
+
         let retInteger = '';
         let retFraction = '';
-        
+
         let exp = integerPart.length - 1;
         if (expNumberWithSignPart != null) exp += Number.parseInt(expNumberWithSignPart);
         if (exp > this.pattern.maximumIntegerDigits) {
@@ -116,7 +116,7 @@ export class DecimalFormatClass extends ObjectClass {
                         fNumber += 1;
                     }
                     let fString: string = "" + fNumber;
-                    if(fString.startsWith("2")){ 
+                    if(fString.startsWith("2")){
                         integerPart = "" + (Number.parseInt(integerPart) + 1);
                     }
                     fractionPart = fString.substring(1, fString.length);
@@ -219,7 +219,7 @@ export class DecimalFormatClass extends ObjectClass {
         while (this.comes("#", false)) {
             while (this.comes("#", true)){
                 if(groupingStarted) integerGrouping++;
-            }  
+            }
             if (this.comes(",", true)) {
                 groupingStarted = true;
                 this.pattern.groupingSize = integerGrouping;

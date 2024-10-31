@@ -213,12 +213,12 @@ export class SystemModule extends JavaLibraryModule {
             // Graphics
             ColorClass, DirectionEnum, AlignmentEnum,
             MouseListenerInterface,
-            WorldClass, ActorClass, ShapeClass, FilledShapeClass, RectangleClass, 
+            WorldClass, ActorClass, ShapeClass, FilledShapeClass, RectangleClass,
             CollisionPairClass, GroupClass,
             ScaleModeEnum, RepeatTypeEnum, SpriteLibraryEnum, TileImageClass, SpriteClass, // Sprite
             CircleClass, EllipseClass, ArcClass, SectorClass,
             PolygonClass, TriangleClass, LineClass, BitmapClass, TextClass, RoundedRectangleClass,
-            TurtleClass, 
+            TurtleClass,
             MethodOfDestroyedGOExceptionClass,
 
             // Graphics 3D

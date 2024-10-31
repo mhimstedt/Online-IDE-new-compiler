@@ -47,7 +47,7 @@ export class RobotCubeFactory {
     private getGrassCubeGeometry() {
         if(!this.grassCubeGeometry){
             this.grassCubeGeometry = new THREE.BoxGeometry(1, 1, 1);
-        
+
             let uvCoordinates = [
                 [2, 2], [3, 2], [2, 1], [3, 1],  // right side
                 [0, 2], [1, 2], [0, 1], [1, 1],  // left side
@@ -68,7 +68,7 @@ export class RobotCubeFactory {
     private getBrickGeometry() {
         if(!this.brickGeometry){
             this.brickGeometry = new THREE.BoxGeometry(1, 0.5, 1);
-        
+
             let uvCoordinates = [
                 [1, 1], [2, 1], [1, 0.5], [2, 0.5],  // right side
                 [1, 1], [2, 1], [1, 0.5], [2, 0.5],  // left side
@@ -133,7 +133,7 @@ export class RobotCubeFactory {
         geometry.rotateY(-Math.PI/2);
         geometry.rotateZ(-Math.PI/2);
         geometry.translate(-this.robotWorld.maxX/2 - 1.5, 0, -this.robotWorld.maxY/2 + 2.5)
-        const material = new THREE.MeshBasicMaterial({ 
+        const material = new THREE.MeshBasicMaterial({
             map: this.world3d.textureManager3d.getSpritesheetBasedTexture("robot", 11),
             side: THREE.DoubleSide,
             transparent: true
@@ -143,5 +143,5 @@ export class RobotCubeFactory {
     }
 
 
-} 
+}
 

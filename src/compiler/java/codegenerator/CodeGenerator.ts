@@ -84,7 +84,7 @@ export class CodeGenerator extends InnerClassCodeGenerator {
     }
 
     insertJsonMethods(klass: JavaClass) {
-        
+
             let hasParameterlessConstructor = klass.methods.filter(m => m.isConstructor && m.parameters.length == 0);
             let doesExtendSystemClass: boolean = false;
             let klass1: IJavaClass | undefined = klass.getExtends();
@@ -104,7 +104,7 @@ export class CodeGenerator extends InnerClassCodeGenerator {
             toJsonMethod.returnParameterType = this.stringType;
 
             klass.methods.push(toJsonMethod);
-            
+
             //@ts-ignore
             klass.runtimeClass!.prototype._mn$toJson$string$ = function(){
                 return new JsonTool().toJson(this);

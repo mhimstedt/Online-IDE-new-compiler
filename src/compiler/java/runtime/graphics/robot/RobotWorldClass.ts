@@ -223,13 +223,13 @@ export class RobotWorldClass extends ObjectClass {
     }
 
     /**
-     * 
-     * @param initString 
-     * " ": empty 
+     *
+     * @param initString
+     * " ": empty
      * "_": no brick, yellow marker
      * "Y", "G", "B", "R": switch marker color
      * "y", "g", "b", "r": switch brick color
-     * "1", ..., "9": 1, ..., 9 bricks 
+     * "1", ..., "9": 1, ..., 9 bricks
      * "1m", ..., "9m": 1, ..., 9 bricks with markers on them
      */
     initFromString(initString: string) {

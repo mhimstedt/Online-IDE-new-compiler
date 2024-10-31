@@ -109,7 +109,7 @@ export class CheckboxClass extends GuiTextComponentClass {
             this.pixiText.y = 0;
 
             this.container = new PIXI.Container();
-            
+
             this.container.addChild(this.backgroundGraphics);
             this.container.addChild(this.pixiText);
             this.container.addChild(this.cross);

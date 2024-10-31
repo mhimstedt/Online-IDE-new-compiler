@@ -23,7 +23,7 @@ export type TreeviewConfig<E> = {
     comparator?: (externalElement1: E, externalElement2: E) => number,
     minHeight?: number,
     buttonAddFolders?: boolean,
-    
+
     buttonAddElements?: boolean,
     buttonAddElementsCaption?: string,
     defaultIconClass?: string,

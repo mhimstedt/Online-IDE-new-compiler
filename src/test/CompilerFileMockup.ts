@@ -18,7 +18,7 @@ export class CompilerFileMockup {
      * monaco editor counts LanguageChangedListeners and issues ugly warnings in console if more than
      * 200, 300, ... are created. Unfortunately it creates one each time a monaco.editor.ITextModel is created.
      * To keep monaco.editor.ITextModel instance count low we instantiate it only when needed and dispose of it
-     * when switching to another workspace. Meanwhile we store file text here: 
+     * when switching to another workspace. Meanwhile we store file text here:
      */
     private __textWhenMonacoModelAbsent: string = "";
     private storedMonacoModelVersion: number = 0;
@@ -37,7 +37,7 @@ export class CompilerFileMockup {
 
         this.notifyListeners();
     }
-    
+
     getMonacoVersion(): number {
             return this.storedMonacoModelVersion;
     }

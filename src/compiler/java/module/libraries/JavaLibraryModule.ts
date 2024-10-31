@@ -13,12 +13,12 @@ export type LibraryKlassType = {
 export type JavaTypeMap = { [identifier: string]: JavaType };
 
 export abstract class JavaLibraryModule extends JavaBaseModule {
-    
+
     classes: (Klass & LibraryKlassType)[] = [];
-    
+
     constructor() {
         super(new CompilerFile("Library file"), true);
         this.setDirty(false);
     }
-    
+
 }

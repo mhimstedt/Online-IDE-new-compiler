@@ -29,29 +29,29 @@ export class CollectionsClass extends ObjectClass {
         list._mj$size$int$(t, () => {
             let size = t.s.pop();
             let shuffleCount: number = size * 2;
-            
+
             let f = () => {
                 if(shuffleCount > 0){
                     let index1 = Math.floor(Math.random()*size);
                     let index2 = Math.floor(Math.random()*size);
-                    
+
                     list._mj$get$E$int(t, () => {
                         let w1 = t.s.pop();
 
                         list._mj$get$E$int(t, () => {
                             let w2 = t.s.pop();
-                            
+
                             list._mj$set$E$int$E(t, () => {
                                 list._mj$set$E$int$E(t, () => {
-                                    
+
                                     f();
-                                
+
                                 }, index2, w1);
-    
+
                             }, index1, w2);
 
                         }, index2);
-    
+
                     }, index1);
 
                 } else {
@@ -65,7 +65,7 @@ export class CollectionsClass extends ObjectClass {
     }
 
     static sortListWithComparator(t: Thread, callback: CallbackFunction, list: ListInterface, comparator: ComparatorInterface){
-        
+
         if(list instanceof SystemCollection){
             SystemCollection.sortWithComparator(t, callback, comparator, list);
             return;
@@ -85,7 +85,7 @@ export class CollectionsClass extends ObjectClass {
                     if(callback) callback();
                     return;
                 }
-                
+
                 if(object2 == null){
                     t.s.push(-1);
                     if(callback) callback();
@@ -98,7 +98,7 @@ export class CollectionsClass extends ObjectClass {
         }
 
         CollectionsClass.sortListWithComparator(t, callback, list, comparator);
-        
+
     }
 
 

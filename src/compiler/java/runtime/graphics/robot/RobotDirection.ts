@@ -19,7 +19,7 @@ export class RobotDirection {
         this.index = (this.index - 1 + 4) % 4;
         this.robot.steve.rotateY(-Math.PI/2);
     }
-    
+
     turnLeft() {
         this.index = (this.index + 1 + 4) % 4;
         this.robot.steve.rotateY(Math.PI/2);

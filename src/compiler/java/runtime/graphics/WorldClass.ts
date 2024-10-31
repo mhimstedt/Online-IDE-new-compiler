@@ -99,7 +99,7 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
 
         this.interpreter = t.scheduler.interpreter;
         let interpreter = this.interpreter;
-        
+
         interpreter.graphicsManager?.registerGraphicSystem(this);
 
         let existingWorld = <WorldClass>interpreter.retrieveObject("WorldClass");
@@ -358,7 +358,7 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
             (shape) => {
                 shape._move(-dx, -dy);
             });
-            
+
         stage.worldTransform.copyFrom(stage.localTransform);
         this.shapesWhichBelongToNoGroup.forEach((shape) => shape.worldTransformDirty = true);
     }
@@ -419,7 +419,7 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
 
         let moveX: number = 0;
         let moveY: number = 0;
- 
+
         let shapeX: number = shape._getCenterX();
         let shapeY: number = shape._getCenterY();
 

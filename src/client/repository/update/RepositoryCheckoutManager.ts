@@ -264,7 +264,7 @@ export class RepositoryCheckoutManager {
                 let newWorkspace = that.main.networkManager.createNewWorkspaceFromWorkspaceData(response.new_workspace);
                 that.main.projectExplorer.workspaceListPanel.sortElements();
                 setTimeout(() => {
-                    that.main.projectExplorer.setWorkspaceActive(newWorkspace, true);                    
+                    that.main.projectExplorer.setWorkspaceActive(newWorkspace, true);
                 }, 400);
 
                 alert('Der neue Workspace ' + response.new_workspace.name + " wurde erfolgreich angelegt.");

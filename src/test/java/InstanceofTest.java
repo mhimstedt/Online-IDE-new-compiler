@@ -11,7 +11,7 @@ assertFalse(t instanceof Integer, "instanceof");
 
 
 class Test implements TestInterface {
-   
+
 }
 
 

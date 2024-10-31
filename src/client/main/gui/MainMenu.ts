@@ -58,7 +58,7 @@ export class MainMenu {
                             },
                             {
                                 identifier: "Aktuellen Workspace exportieren",
-                                action: () => { 
+                                action: () => {
                                     let ws: Workspace = this.main.currentWorkspace;
                                     if(ws == null){
                                         alert('Kein Workspace ausgewählt.');
@@ -157,8 +157,8 @@ export class MainMenu {
                             { identifier: "Zoom normal", action: () => { this.main.editor.setFontSize(14); } },
                             { identifier: "Zoom in (Strg + Mausrad)", action: () => { this.main.editor.changeEditorFontSize(4); } },
                             { identifier: "-" },
-                            { identifier: "Automatischer Zeilenumbruch ein/aus", action: () => { 
-                                let wordWrap = this.main.editor.editor.getOption(monaco.editor.EditorOption.wordWrap); 
+                            { identifier: "Automatischer Zeilenumbruch ein/aus", action: () => {
+                                let wordWrap = this.main.editor.editor.getOption(monaco.editor.EditorOption.wordWrap);
                                 wordWrap = wordWrap == "on" ? "off" : "on";
                                 this.main.editor.editor.updateOptions({wordWrap: wordWrap});
                             } },
@@ -260,7 +260,7 @@ export class MainMenu {
                                 action: () => {
                                     new IssueReporter(this.main).show();
                                 }
-                            },                           
+                            },
                             { identifier: "-" },
                             {
                                 identifier: "Über die Online-IDE...",

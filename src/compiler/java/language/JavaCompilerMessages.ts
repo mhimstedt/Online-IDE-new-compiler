@@ -7,7 +7,7 @@ import { IRange } from "../../common/range/Range";
 export class JCM {
 
     /**
-     * Messages for class BinopCastCodeGenerator  
+     * Messages for class BinopCastCodeGenerator
      */
 
     static typeLeftOperandNotFound = () => le({
@@ -106,7 +106,7 @@ export class JCM {
     })
 
     /**
-     * Messages for Java CodeGenerator 
+     * Messages for Java CodeGenerator
      */
 
     static interfaceOnlyDefaultMethodsHaveBody = () => le({
@@ -142,7 +142,7 @@ export class JCM {
     static methodImitatesConstructor = (identifier: string) => le({
         "de": "Die Methode " + identifier + " trägt denselben Bezeichner wie die Klasse, hat aber einen Rückgabewert und ist damit KEIN Konstruktor. Das ist irreführend.",
         "en": "Method " + identifier + " has same identifier as class and an return type. Therefore it is no constructor. This is irritating."
-        
+
     })
 
     static abstractMethodsDontHaveMethodBodies = () => le({
@@ -175,7 +175,7 @@ export class JCM {
         "en": `Can't figure out exptected type of array elements.\nHint: Try syntax 'new int[]{1, 2, 3}'.`,
     })
 
-    
+
     /**
      * Messages for class CodePrinter:
      */
@@ -825,4 +825,4 @@ export class JCM {
     "de": "Der Wert null",
     "en": "null value",
     })
-}            
+}

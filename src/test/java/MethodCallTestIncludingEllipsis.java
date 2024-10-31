@@ -20,7 +20,7 @@ class A {
  * Static method invocation
  */
 
-A.a = 10;           
+A.a = 10;
 
 A a = new A();
 a.b = 20;
@@ -38,11 +38,11 @@ class A {
 
    static int staticGetA(){
       return a;
-   } 
+   }
 
    static int staticGetB(){
       return b;
-   } 
+   }
 
    void test(){
       assertEquals(10, staticGetA(), "Calling static method from non-static method of same class works");

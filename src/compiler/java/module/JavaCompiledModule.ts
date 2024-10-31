@@ -46,7 +46,7 @@ export class JavaCompiledModule extends JavaBaseModule {
 
     errors: Error[] = [];
 
-    symbolTables: JavaSymbolTable[] = [];  // contains one symbol table for main program and one for each class/interface/enum in global scope    
+    symbolTables: JavaSymbolTable[] = [];  // contains one symbol table for main program and one for each class/interface/enum in global scope
 
     typePositions: { [line: number]: TypePosition[] } = {};
 
@@ -158,7 +158,7 @@ export class JavaCompiledModule extends JavaBaseModule {
                     if (step) return [step];
                 }
 
-                // A instance initializer may have been copied to several constructors, so if 
+                // A instance initializer may have been copied to several constructors, so if
                 // breakpoint in instance initializer is set there may be several steps to
                 // consider setting a breakpoint in.
                 let steps: Step[] = [];
@@ -193,18 +193,18 @@ export class JavaCompiledModule extends JavaBaseModule {
 
     hasMainProgram(): boolean {
         return this.getClassWithStartableMainMethod() != null;
- 
+
     }
 
     getClassWithStartableMainMethod(): JavaClass | undefined {
         if(this.mainClass){
             let mainMethod = this.mainClass.methods.find(m => m.identifier == JavaCompilerStringConstants.mainMethodIdentifier)
-    
+
             if (mainMethod) {
                 let statements = mainMethod.statement as ASTBlockNode;
                 if(statements.statements.length > 0) return this.mainClass.resolvedType;
             }
-    
+
         }
 
         if(!this.ast) return undefined;
@@ -242,7 +242,7 @@ export class JavaCompiledModule extends JavaBaseModule {
     dependsOnOtherDirtyModule(): boolean {
         return this.compiledSymbolsUsageTracker.existsDependencyToOtherDirtyModule();
     }
-    
+
     dependsOnModuleWithErrors(): boolean {
         return this.compiledSymbolsUsageTracker.existsDependencyToOtherModuleWithErrors();
     }

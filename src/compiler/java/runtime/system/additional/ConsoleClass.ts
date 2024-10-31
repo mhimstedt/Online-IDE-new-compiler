@@ -24,5 +24,5 @@ export class ConsoleClass extends ObjectClass {
             console.log(object);
         }
     }
- 
+
 }

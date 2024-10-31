@@ -5,7 +5,7 @@ import { GenericTypeParameter } from "../../../types/GenericTypeParameter";
 import { JavaType } from "../../../types/JavaType";
 
 export class NullType extends JavaType {
-    
+
     constructor(module: JavaBaseModule){
         super("null", EmptyRange.instance, module);
     }
@@ -13,7 +13,7 @@ export class NullType extends JavaType {
     getAbsoluteName(): string {
         return "null";
     }
-    
+
     getCompletionItemDetail(): string {
         return JCM.nullType();
     }
@@ -22,7 +22,7 @@ export class NullType extends JavaType {
     isUsableAsIndex(): boolean {
         return false;
     }
-    
+
     getDefaultValue() {
         return 0;
     }
@@ -35,8 +35,8 @@ export class NullType extends JavaType {
     }
 
     getDeclaration(): string {
-        return "null";    
+        return "null";
     }
 
-    
+
 }

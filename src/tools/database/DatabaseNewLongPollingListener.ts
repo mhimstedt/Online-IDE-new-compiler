@@ -15,7 +15,7 @@ type DatabaseChangedSSEMessage = {
 
 type OnServerStatementsCallback = (firstNewStatementIndex: number, newStatements: string[], rollbackToVersion: number) => void
 
-export class DatabaseNewLongPollingListener {    
+export class DatabaseNewLongPollingListener {
 
     private static openListeners: DatabaseNewLongPollingListener[] = [];
 
@@ -27,7 +27,7 @@ export class DatabaseNewLongPollingListener {
 
     constructor(private networkManager: NetworkManager,
         private token: string, private databaseId: number, private onServerSentStatementsCallback: OnServerStatementsCallback) {
-        
+
         this.isClosed = false;
         DatabaseNewLongPollingListener.openListeners.push(this);
 
@@ -126,7 +126,7 @@ export class DatabaseNewLongPollingListener {
             })
 
         } catch (ex) {
-            
+
         }
     }
 

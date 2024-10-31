@@ -26,26 +26,26 @@ export class GradingManager {
         this.$gradingTab.empty();
 
         let $markColumn = makeDiv(null, "jo_grading_markcolumn");
-        
+
         this.$gradingMark = jQuery('<input type="text" class="jo_grading_mark"></input>');
         this.$gradingPoints = jQuery('<input type="text" class="jo_grading_points"></input>');
         this.$attendedExam = jQuery('<input type="checkbox" class="jo_grading_attended_exam"></input>');
-        
+
         this.$gradingMark.on('input', () => {that.onChange()})
         this.$gradingPoints.on('input', () => {that.onChange()})
         this.$attendedExam.on('input', () => {that.onChange()})
-        
+
         let $l1 = makeDiv(null, "jo_grading_markdiv");
         let $l2 = makeDiv(null, "jo_grading_markdiv");
         let $l3 = makeDiv(null, "jo_grading_markdiv");
-        
+
         $l1.append(makeDiv(null, null, "Punkte:"), this.$gradingPoints);
         $l2.append(makeDiv(null, null, "Note:", {"margin-top": "3px"}), this.$gradingMark);
         $l3.append(makeDiv(null, null, "Anwesend:", {"margin-top": "3px"}), this.$attendedExam);
-        
+
         $markColumn.append($l1, $l2, $l3);
-        
-        
+
+
         this.$gradingCommentMarkdown = jQuery(`<textarea class="jo_grading_commentmarkdown" placeholder="Bemerkung..."></textarea>`);
         this.$gradingCommentMarkdown.on('input', () => {that.onChange()})
 
@@ -68,11 +68,11 @@ export class GradingManager {
     setValues(ws: Workspace){
 
         if(ws == null) return;
-        
+
         let hideGrading: boolean = false;
 
         if(!this.main.user.is_teacher){
-            hideGrading = this.isEmptyOrNull(ws.grade) && 
+            hideGrading = this.isEmptyOrNull(ws.grade) &&
                 this.isEmptyOrNull(ws.points) && this.isEmptyOrNull(ws.comment) && ws.attended_exam != true;
         }  else {
             hideGrading = this.main.workspacesOwnerId == this.main.user.id;

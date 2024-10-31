@@ -4,7 +4,7 @@ import { MethodOfDestroyedGOExceptionClass } from "../system/javalang/MethodOfDe
 
 /**
  * Each destroyed graphical object (that is: child class of shape) gets its container-field
- * set to a ContainerProxy-object. This helps to print useful exception messages if a 
+ * set to a ContainerProxy-object. This helps to print useful exception messages if a
  * method of container is called later without hurting performance.
  */
 export class ContainerProxy {
@@ -27,9 +27,9 @@ export class ContainerProxy {
                 if(prop == "getWorldTransform"){
                     return Matrix.IDENTITY;
                 }
-                
+
                 throw new MethodOfDestroyedGOExceptionClass(InterpreterMessages.MethodOfDestroyedGraphicObjectCalled());
-                
+
                 // return function (...args) {
                 //     // console.log(`Intercepted '${prop}' with arguments ${JSON.stringify(args)}`);
                 //     // target.callMethod(prop);

@@ -44,7 +44,7 @@ export class HttpResponseClass extends ObjectClass {
 
     _getStatusText(): string {
         return this.response.statusText;
-    }    
+    }
 
     _getRequest(): HttpRequestClass {
         return this.request;

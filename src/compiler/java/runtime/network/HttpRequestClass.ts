@@ -17,7 +17,7 @@ export class HttpRequestClass extends ObjectClass {
         {type: "method", signature: "HttpRequest POST(string data)", native: HttpRequestClass.prototype._post, comment: JRC.HttpRequestPOSTComment},
         {type: "method", signature: "HttpRequest GET(string data)", native: HttpRequestClass.prototype._get, comment: JRC.HttpRequestGETComment},
 
-        
+
 
     ]
 

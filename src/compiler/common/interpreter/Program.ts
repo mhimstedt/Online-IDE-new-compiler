@@ -48,7 +48,7 @@ export class Step {
             } else {
                 thread.haltAtNextBreakpoint = true;
                 return this.originalRun!(thread, stack, stackBase);
-            }    
+            }
         }
 
         if (this.originalRun) return; // breakpoint already set
@@ -111,7 +111,7 @@ export class Program {
 
     isReplProgram?: boolean;
 
-    constructor(public module: Module, public symbolTable: BaseSymbolTable | undefined, 
+    constructor(public module: Module, public symbolTable: BaseSymbolTable | undefined,
         public methodIdentifierWithClass: string) {
 
         module.programsToCompileToFunctions.push(this);
@@ -217,7 +217,7 @@ export class Program {
                     if(nearestStep){
                         if(Math.abs(step.range.startLineNumber! - line) < Math.abs(nearestStep.range.startLineNumber! - line)){
                             nearestStep = step;
-                        }    
+                        }
                     } else {
                         nearestStep = step;
                     }

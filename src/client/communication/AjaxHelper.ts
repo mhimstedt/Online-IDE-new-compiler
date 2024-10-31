@@ -49,7 +49,7 @@ export function ajax(url: string, request: any, successCallback: (response: any)
         if(!url.startsWith("http")){
             url = "servlet/" + url;
         }
-   
+
 
     showNetworkBusy(true);
     let time = performance.now();
@@ -73,7 +73,7 @@ export function ajax(url: string, request: any, successCallback: (response: any)
                 csrfToken = response["csrfToken"];
                 PushClientManager.getInstance().open();
             }
-            
+
 
             showNetworkBusy(false);
             if (response.success != null && response.success == false || typeof (response) == "string" && response == '') {
@@ -85,7 +85,7 @@ export function ajax(url: string, request: any, successCallback: (response: any)
                     // setTimeout(() => newLogin(url, request, successCallback, errorCallback), 10000);
                     // location.reload();
                 }
-                
+
                 console.log("Netzwerkfehler: " + error);
 
                 if (errorCallback) errorCallback(error);
@@ -157,9 +157,9 @@ export async function ajaxAsync(url: string, data: any): Promise<any>{
         }
 
         if(obj == null){
-            alert("Fehler beim Übertragen der Daten.");             
+            alert("Fehler beim Übertragen der Daten.");
         } else if(obj.success != true){
-            alert("Fehler beim Übertragen der Daten:\n" + obj.message);             
+            alert("Fehler beim Übertragen der Daten:\n" + obj.message);
         }
 
         return obj;

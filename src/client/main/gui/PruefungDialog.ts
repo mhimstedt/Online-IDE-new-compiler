@@ -155,7 +155,7 @@ export class PruefungDialog {
 
     }
 
-   
+
 
     enableOrDisableClassSelect() {
         let classSelectDisabled: boolean = this.pruefung != null && this.pruefung.state != 'preparing';
@@ -318,20 +318,20 @@ export class PruefungDialog {
         <div>
         <h3>Zu den Zuständen:</h3>
         <ul>
-            <li>Jede Prüfung durchläuft (i.d.R. der Reihe nach) die vier Zustände "Vorbereitung", "Prüfung läuft", "Korrektur" und "Herausgabe". 
+            <li>Jede Prüfung durchläuft (i.d.R. der Reihe nach) die vier Zustände "Vorbereitung", "Prüfung läuft", "Korrektur" und "Herausgabe".
                  Je nach Zustand ändert sich die Ansicht der Prüfung bei den Schüler/innen und bei der Lehrkraft (s.u.).</li>
-            <li>Mit den Buttons "Zustand vor" und "Zustand zurück" oben können Sie die Prüfung in den jeweils nächsten/vorhergehenden Zustand versetzen. 
+            <li>Mit den Buttons "Zustand vor" und "Zustand zurück" oben können Sie die Prüfung in den jeweils nächsten/vorhergehenden Zustand versetzen.
                 <div style="font-weight: bold">Die Zustandsänderung wird erst nach Klick auf den OK-Button wirksam.</div></li>
-            <li><span class="joe_pruefung_state">Zustand "Vorbereitung": </span><span class="img_test-state-preparing joe_pruefung_preview_img"></span> 
+            <li><span class="joe_pruefung_state">Zustand "Vorbereitung": </span><span class="img_test-state-preparing joe_pruefung_preview_img"></span>
                 <div>
-                In diesem Zustand sehen die Schüler/innen die Prüfung noch nicht. Klickt die Lehrkraft die Prüfung im Navigator links an, dann sieht sie darüber 
+                In diesem Zustand sehen die Schüler/innen die Prüfung noch nicht. Klickt die Lehrkraft die Prüfung im Navigator links an, dann sieht sie darüber
                 den Vorlagen-Workspace der Prüfung. Jede Datei, die sie dort erstellt, wird beim Übergang zum Zustand "Prüfung läuft" in den Prüfungsworkspace jeder Schülerin/jedes Schülers kopiert.
                 </div>
             </li>
             <li><span class="joe_pruefung_state">Zustand "Prüfung läuft": </span> <span class="img_test-state-running joe_pruefung_preview_img"></span>
                 <div>
                 Beim Übergang in den Zustand "Prüfung läuft" werden die Prüfungsworkspaces der Schüler/innen erstellt. Sie enthalten Kopien aller Dateien aus dem Vorlagen-Workspace der Prüfung.
-                Die Schüler/innen sehen ab jetzt nur noch den Prüfungs-Workspace und können schreibend darauf zugreifen. Die Menüzeile der Online-IDE erscheint rot gefärbt, so dass die Lehrkraft 
+                Die Schüler/innen sehen ab jetzt nur noch den Prüfungs-Workspace und können schreibend darauf zugreifen. Die Menüzeile der Online-IDE erscheint rot gefärbt, so dass die Lehrkraft
                 schnell sehen kann, auf welchen Rechnern der Prüfungsmodus aktiv ist.
                 </div>
             </li>
@@ -344,13 +344,13 @@ export class PruefungDialog {
             </li>
             <li><span class="joe_pruefung_state">Zustand "Herausgabe": </span> <span class="img_test-state-opening joe_pruefung_preview_img"></span>
                 <div>
-                Die Schüler/innen sehen in diesem Zustand in der Liste ihrer Workspaces einen Ordner "Prüfungen". Er enthält den Prüfungsworkspace. Klicken sie auf diesen, so können sie 
+                Die Schüler/innen sehen in diesem Zustand in der Liste ihrer Workspaces einen Ordner "Prüfungen". Er enthält den Prüfungsworkspace. Klicken sie auf diesen, so können sie
                 <span style="font-weight: bold"> nur lesend</span> auf die enthaltenen Dateien zugreifen. Wurde eine Datei durch die Lehrkraft verändert, so erscheint oberhalb des Editor-Bereichs der Button "Korrekturen zeigen". Nach
-                Klick darauf zeigt die IDE die Korrekturen in einer Diff-Ansicht. 
+                Klick darauf zeigt die IDE die Korrekturen in einer Diff-Ansicht.
                 <div>Die Lehrkraft sieht die Prüfung genau so wie im Zustand "Korrektur".</div>
                 </div>
             </li>
-    
+
         </ul>
         </div>
         `)

@@ -12,7 +12,7 @@ export function extrudeMargin(extrudeMarginInformation, filename1){
             if (err) throw err;
 
             for(let i = 0; i < extrudeMarginInformation.length; i++){
-                
+
                 let emi = extrudeMarginInformation[i];
 
                 extrudeMarginIntern(image, emi);

@@ -181,11 +181,11 @@ export class GNGTurtle extends ObjectClass implements IGNGEventListener {
     }
 
     _entfernen(){
-        this.turtle.world.unRegisterGNGEventListener(this, "aktionAusführen");        
+        this.turtle.world.unRegisterGNGEventListener(this, "aktionAusführen");
         this.turtle.world.unRegisterGNGEventListener(this, "tasteGedrückt");
         this.turtle.world.unRegisterGNGEventListener(this, "sondertasteGedrückt");
         this.turtle.world.unRegisterGNGEventListener(this, "mausGeklickt");
         this.turtle.destroy();
-    }   
+    }
 
 }

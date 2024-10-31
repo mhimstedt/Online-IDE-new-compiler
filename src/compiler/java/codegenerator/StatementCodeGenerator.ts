@@ -188,7 +188,7 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
         if (!(elementType || node.elementType.kind == TokenType.varType) || !collectionSnippet || !collectionSnippet.type) return undefined;
 
         /*
-        * Local variables declared in head of for statement are valid inside whole for statement, 
+        * Local variables declared in head of for statement are valid inside whole for statement,
         * so we need a symbol table that encompasses the whole for statement:
         */
         let forLoopSymbolTable = this.pushAndGetNewSymbolTable(node.range, false);
@@ -389,7 +389,7 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
     compileForStatement(node: ASTForLoopNode): CodeSnippet | undefined {
 
         /*
-        * Local variables declared in head of for statement are valid inside whole for statement, 
+        * Local variables declared in head of for statement are valid inside whole for statement,
         * so we need a symbol table that encompasses the whole for statement:
         */
         this.pushAndGetNewSymbolTable(node.range, false);
@@ -699,7 +699,7 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
     }
 
     /*
-        Preliminary implementation 
+        Preliminary implementation
         For TODOs -> switch-case.md
     */
 

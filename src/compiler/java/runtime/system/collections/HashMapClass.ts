@@ -160,7 +160,7 @@ export class HashMapClass extends ObjectClass {
                     f(callback);
                 });
             }
-            
+
         }
 
         f = (callback: () => void) => {
@@ -169,7 +169,7 @@ export class HashMapClass extends ObjectClass {
                 s += "]";
                 callback();
                 return;
-            } 
+            }
             let entry = entries[index];
             if(index > 0) s += ", ";
             s += "{";

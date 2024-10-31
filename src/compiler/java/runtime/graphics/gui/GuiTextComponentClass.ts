@@ -50,7 +50,7 @@ export class GuiTextComponentClass extends GuiComponentClass {
             align: "center"
         });
 
-        _cj$_constructor_$GuiTextComponent$(t: Thread, callback: CallbackFunction, 
+        _cj$_constructor_$GuiTextComponent$(t: Thread, callback: CallbackFunction,
             registerAsMouseListener: boolean, registerAsKeyboardListener: boolean,
             fontsize: number, text: string, fontFamily?: string){
                 this._cj$_constructor$GuiComponent$(t, () => {
@@ -58,9 +58,9 @@ export class GuiTextComponentClass extends GuiComponentClass {
                     this.fontFamily = fontFamily || "sans serif";
                     this.text = text;
                     if (this.fontsize == 0) this.fontsize = 10;
-            
+
                     this.textStyle.fontSize = fontsize;
-            
+
                     if (fontFamily != null) {
                         this.textStyle.fontFamily = fontFamily;
                     }

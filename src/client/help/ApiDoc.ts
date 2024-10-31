@@ -163,7 +163,7 @@ export class ApiDoc {
                     $main.append(jQuery('<div class="jo_documentation">' + this.docToString(method.documentation) + '</div>'));
                 }
             }
-        }     
+        }
     }
 
     docToString(documentation: string | (() => string) | undefined): string {
@@ -193,13 +193,13 @@ export class ApiDoc {
                     $main.append(jQuery('<div class="jo_documentation">' + this.docToString(attribute.documentation) + '</div>'));
                 }
             }
-        }     
+        }
     }
 
 }
 
-jQuery(() => { 
-    
+jQuery(() => {
+
         //@ts-ignore
         window.require.config({ paths: { 'vs': 'lib/monaco-editor/dev/vs' } });
         //@ts-ignore
@@ -211,17 +211,17 @@ jQuery(() => {
             },
             ignoreDuplicateModules: ["vs/editor/editor.main"]
         });
-    
+
         //@ts-ignore
         window.require(['vs/editor/editor.main'], function () {
 
-            new ApiDoc().start(); 
-    
+            new ApiDoc().start();
+
             // main.loadWorkspace();
-    
-    
+
+
         });
-    
-    
-    
+
+
+
 });

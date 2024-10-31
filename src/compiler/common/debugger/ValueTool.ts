@@ -23,11 +23,11 @@ export class ValueTool {
         if(value.constructor.isPrimitiveTypeWrapper) return false;
         return true;
     }
-    
+
     static isEnum(value: any): boolean {
         return value instanceof EnumClass;
     }
-    
+
     static isPrimitiveTypeOrNull(value: any): boolean {
         if(value === null) return true;
         if(typeof value == "object") return false;
@@ -67,7 +67,7 @@ export class ValueTool {
     }
 
     static hasChildren(value: any){
-        return value && (ValueTool.isArray(value) || 
+        return value && (ValueTool.isArray(value) ||
         (ValueTool.isObject(value) && !ValueTool.isPrimitiveTypeOrNull(value) && !ValueTool.isEnum(value)));
     }
 
@@ -101,9 +101,9 @@ export class ValueTool {
                             value: value[field.internalName]
                         })
                     }
-                }    
+                }
             }
-            
+
         }
 
         return children;
@@ -114,11 +114,11 @@ export class ValueTool {
         if(value == null) return 'null';
         if(typeof value == 'object'){
             let type = <NonPrimitiveType>value.constructor.type;
-            
+
             if(value instanceof EnumClass){
                 return ValueTool.renderEnum(value, <JavaEnum>type).substring(0, maxLength);
             }
-            
+
             if(type.isPrimitiveTypeWrapper){
                 return (<IPrimitiveTypeWrapper>value).debugOutput().substring(0, maxLength);
             }
@@ -127,13 +127,13 @@ export class ValueTool {
 
         } else {
             return ValueTool.renderPrimitiveValue(value, typeHint).substring(0, maxLength);
-        }    
+        }
     }
 
     //TODO: Type hint...
     static renderPrimitiveValue(value: any, typeHint?: JavaType){
         switch(typeof value){
-            case "string": 
+            case "string":
                 let ret = JSON.stringify(value);
                 if(typeHint && typeHint.identifier == 'char'){
                     if(ret.startsWith('"') && ret.endsWith('"')) ret = ret.substring(1, ret.length - 2);

@@ -60,7 +60,7 @@ export class SchoolSettings extends AdminMenuItem {
     }
 
     async fetchSchoolSettings():Promise<GetSchoolSettingsResponse>{
-        
+
         let request: GetSchoolSettingsRequest = {school_id: this.administration.userData.schule_id}
 
         return await ajaxAsync("/servlet/getSchoolSettings", request);
@@ -71,7 +71,7 @@ export class SchoolSettings extends AdminMenuItem {
         let vidis_schulkennung: string = this.form.record.vidis_schulkennung;
 
         let request: UpdateSchoolSettingsRequest = {
-            school_id: this.administration.userData.schule_id, 
+            school_id: this.administration.userData.schule_id,
             vidis_schulkennung: vidis_schulkennung
         }
 
@@ -87,7 +87,7 @@ export class SchoolSettings extends AdminMenuItem {
         this.$tableLeft.empty();
     }
 
-    checkPermission(user: UserData): boolean { 
+    checkPermission(user: UserData): boolean {
         return user.is_schooladmin;
     }
 

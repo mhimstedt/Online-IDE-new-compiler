@@ -7,17 +7,17 @@ export class EmbeddedSlider {
     otherDiv!: HTMLElement;
 
     /**
-     * A div contains container and another div. Between the latter two 
+     * A div contains container and another div. Between the latter two
      * a slider should get inserted.
-     * @param container 
+     * @param container
      * @param firstLast true, if container is left/on top of other div; false if otherwise
      * @param horVert true, if container and other div are left/right of another; false if they are on top/below each other
-     * @param callback 
-     * @param otherDiv 
+     * @param callback
+     * @param otherDiv
      */
     constructor(private container: HTMLElement,
         private firstLast: boolean, private horVert: boolean,
-        private callback: (newLength: number) => void, 
+        private callback: (newLength: number) => void,
         otherDiv?: HTMLElement) {
 
         this.initSlider();
@@ -65,23 +65,23 @@ export class EmbeddedSlider {
 
         //@ts-ignore
         this.sliderDiv.addEventListener(mousePointer + "down", (md: PointerEvent) => {
-            
+
             let x = md.clientX;
             let y = md.clientY;
-            
+
             let ownRectangle = this.container.getBoundingClientRect();
             let ownStartHeight = ownRectangle.height;
             let ownStartWidth = ownRectangle.width;
             let otherRectangle = this.otherDiv.getBoundingClientRect();
             let otherStartHeight = otherRectangle.height;
             let otherStartWidth = otherRectangle.width;
-            
+
             let moveListener: EventListener;
             //@ts-ignore
             document.addEventListener(mousePointer + "move", moveListener = (mm: PointerEvent) => {
                 let dx = mm.clientX - x;
                 let dy = mm.clientY - y;
-                
+
                 if (this.horVert) {
                     let newHeight = ownStartHeight + (this.firstLast ? -dy : dy);
                     let newOtherHeight = otherStartHeight + (this.firstLast ? dy : -dy);
@@ -100,13 +100,13 @@ export class EmbeddedSlider {
                     this.callback(newWidth);
                 }
                 this.container.style.flex = "0 1 auto";
-                
+
             });
-            
+
             let upListener: EventListener;
             //@ts-ignore
             document.addEventListener(mousePointer + "up", upListener = () => {
-                
+
                 document.removeEventListener(mousePointer + "move", moveListener);
                 document.removeEventListener(mousePointer + "up", upListener);
             });

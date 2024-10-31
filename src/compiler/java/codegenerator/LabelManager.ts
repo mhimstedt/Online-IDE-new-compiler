@@ -55,7 +55,7 @@ export class JumpToLabelCodeSnippet extends CodeSnippet {
     constructor(private label: LabelCodeSnippet){
         super();
     }
-    
+
     flattenInto(flatList: CodeSnippet[]): void {
         flatList.push(this);
     }
@@ -66,7 +66,7 @@ export class JumpToLabelCodeSnippet extends CodeSnippet {
     }
 
     emit(): string {
-        return "return " + this.label.stepIndex + ";\n";    
+        return "return " + this.label.stepIndex + ";\n";
     }
 
     emitToStep(currentStep: Step, _steps: Step[]): Step {

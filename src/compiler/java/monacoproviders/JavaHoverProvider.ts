@@ -73,7 +73,7 @@ export class JavaHoverProvider {
         // if(typeof text["value"] !== "undefined") text = text.value;
         // switch (type) {
         //     case "string ":
-        //     case "String ": 
+        //     case "String ":
         //     if(replReturnValue.value){
         //         text = '"' + text + '"';
         //     } else {
@@ -198,7 +198,7 @@ export class JavaHoverProvider {
             // if(resultObject?.getType){
             //     // let type = (<RuntimeObject>resultObject).getType();
             //     declarationAsString = typeIdentifier + " " + identifier + ": " + ValueRenderer.renderValue(resultObject, 12);
-            // } else 
+            // } else
 
             declarationAsString = this.replReturnValueToOutput(replReturnValue, identifier);
             return {

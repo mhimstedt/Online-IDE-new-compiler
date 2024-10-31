@@ -22,31 +22,31 @@ export class DequeInterface extends QueueInterface {
         { type: "method", signature: "E pop()", java: DequeInterface.prototype._mj$pop$E$, comment: JRC.dequePopComment },
         { type: "method", signature: "void push(E element)", java: DequeInterface.prototype._mj$push$void$E, comment: JRC.dequePushComment },
         { type: "method", signature: "Iterator<E> descendingIterator()", java: DequeInterface.prototype._mj$descendingIterator$Iterator$, comment: JRC.dequeDescendingIteratorComment },
-        
+
     ]
 
     static type: NonPrimitiveType;
 
     _mj$removeFirstOccurrence$boolean$E(t: Thread, callback: CallbackFunction, element: ObjectClass) { }
-    
+
     _mj$removeLastOccurrence$boolean$E(t: Thread, callback: CallbackFunction, element: ObjectClass) { }
 
     _mj$addFirst$void$E(t: Thread, callback: CallbackFunction, element: ObjectClass) { }
 
     _mj$addLast$void$E(t: Thread, callback: CallbackFunction, element: ObjectClass) { }
-    
+
     _mj$removeFirst$E$(t: Thread, callback: CallbackFunction) { }
-    
+
     _mj$removeLast$E$(t: Thread, callback: CallbackFunction) { }
-    
+
     _mj$peekFirst$E$(t: Thread, callback: CallbackFunction) { }
-    
+
     _mj$peekLast$E$(t: Thread, callback: CallbackFunction) { }
-    
+
     _mj$pop$E$(t: Thread, callback: CallbackFunction) { }
-    
+
     _mj$push$void$E(t: Thread, callback: CallbackFunction, element: ObjectClass) { }
-    
+
     _mj$descendingIterator$Iterator$(t: Thread, callback: CallbackFunction) { }
 
 

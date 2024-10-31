@@ -15,4 +15,4 @@ assertEquals(3, hm.size(), "HashMap.size");
 
 hm.forEach((k, v) -> {
       println(k + ": " + v);
-}); 
+});

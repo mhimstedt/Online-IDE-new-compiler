@@ -11,7 +11,7 @@ export class TabManager {
 
     constructor(private container: HTMLElement, headings: string[]){
         this.container.classList.add('jo_tabs_container');
-        
+
         this.headingsDiv = document.createElement('div');
         this.headingsDiv.classList.add('jo_tabs_tabheadings')
         this.container.appendChild(this.headingsDiv);

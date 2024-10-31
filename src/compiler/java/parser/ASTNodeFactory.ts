@@ -32,48 +32,48 @@ export class ASTNodeFactory {
         this.collectedTypenodesGettingRegisteredAtTypeResolver.push(type);
 
         return type;
-        
+
     }
-    
+
     buildVoidTypeNode(startRange?: IRange): ASTVoidTypeNode {
         if (!startRange) startRange = this.parser.cct.range;
-        
+
         let type: ASTVoidTypeNode = {
             kind: TokenType.voidType,
             range: startRange
         }
 
         this.collectedTypenodesGettingRegisteredAtTypeResolver.push(type);
-    
+
         return type;
     }
-    
+
     buildVarTypeNode(startRange?: IRange): ASTVarTypeNode {
         if (!startRange) startRange = this.parser.cct.range;
-        
+
         let type: ASTVarTypeNode = {
             kind: TokenType.varType,
             range: startRange
         }
 
         this.collectedTypenodesGettingRegisteredAtTypeResolver.push(type);
-    
+
         return type;
     }
-    
+
     buildArrayTypeNode(arrayOf: ASTTypeNode, startRange?: IRange, additionalDimension: number = 1): ASTArrayTypeNode {
         if (!startRange) startRange = this.parser.cct.range;
-        
+
         let ret: ASTArrayTypeNode;
 
         /**
          * Store String[] always as string[] for performance reasons and to reduce memory footprint?
-         * It suffices to uncomment this: 
+         * It suffices to uncomment this:
          */
         if(arrayOf.kind == TokenType.baseType && (<ASTBaseTypeNode>arrayOf).identifiers[0].identifier == "String"){
             (<ASTBaseTypeNode>arrayOf).identifiers[0].identifier = "string";
         }
-        
+
         if (arrayOf.kind == TokenType.arrayType) {
             let atype = <ASTArrayTypeNode>arrayOf;
             ret = {
@@ -82,7 +82,7 @@ export class ASTNodeFactory {
                 arrayDimensions: atype.arrayDimensions + additionalDimension,
                 arrayOf: atype.arrayOf
             }
-            
+
         } else {
             ret = {
                 kind: TokenType.arrayType,
@@ -91,16 +91,16 @@ export class ASTNodeFactory {
                 arrayOf: arrayOf
             }
         }
-        
+
         this.collectedTypenodesGettingRegisteredAtTypeResolver.push(ret);
-    
+
         return ret;
-        
+
     }
-    
+
     buildGenericTypeInstantiationNode(baseType: ASTTypeNode, startRange?: IRange): ASTGenericTypeInstantiationNode {
         if (!startRange) startRange = this.parser.cct.range;
-        
+
         return {
             kind: TokenType.genericTypeInstantiation,
             range: startRange,
@@ -172,7 +172,7 @@ export class ASTNodeFactory {
             innerTypes: [],
             annotations: [],
             resolvedType: undefined,
-            module: module, 
+            module: module,
             isAnonymousInnerType: false,
             isMainClass: false
         }
@@ -211,7 +211,7 @@ export class ASTNodeFactory {
             isSynchronized: modifiers.isSynchronized,
             resolvedType: undefined,
             innerTypes: [],
-            module: module, 
+            module: module,
             isAnonymousInnerType: false
         }
 
@@ -262,7 +262,7 @@ export class ASTNodeFactory {
             fieldsOrInstanceInitializers: [], // only static fields and static initializers...,
             resolvedType: undefined,
             innerTypes: [],
-            module: module, 
+            module: module,
             isAnonymousInnerType: false
         }
 
@@ -403,7 +403,7 @@ export class ASTNodeFactory {
             identifierRange: identifier.range,
             range: identifier.range,
             nodeToGetObject: nodeToGetObject,
-            parameterValues: [], 
+            parameterValues: [],
             commaPositions: [],
             rightBracketPosition: undefined
         }

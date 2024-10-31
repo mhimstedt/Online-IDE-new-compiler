@@ -20,5 +20,5 @@ export class DirectionEnum extends EnumClass {
         new DirectionEnum("left", Direction.left)
     ]
 
-    
+
 }

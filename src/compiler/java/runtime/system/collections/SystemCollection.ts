@@ -16,7 +16,7 @@ export abstract class SystemCollection extends ObjectClass {
             let z = elements[index1];
             elements[index1] = elements[index2];
             elements[index2] = z;
-        }                
+        }
         return;
     }
 

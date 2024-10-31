@@ -73,7 +73,7 @@ export class Diagram {
         $svgElement.on('mousedown', (ev1) => {
             x = ev1.screenX;
             y = ev1.screenY;
-            
+
             jQuery(document).on('mousemove.diagram', (ev) => {
                 let dx = ev.screenX - x;
                 let dy = ev.screenY - y;
@@ -92,13 +92,13 @@ export class Diagram {
         });
 
 
-    }    
+    }
 
     adjustCenterRectangle(){
         this.$centerRectangle.attr({
             x: this.marginCm + "cm",
             y: this.marginCm + "cm",
-            width: (this.widthCm - 2*this.marginCm) + "cm",    
+            width: (this.widthCm - 2*this.marginCm) + "cm",
             height: (this.heightCm - 2*this.marginCm) + "cm"
         });
     }
@@ -183,7 +183,7 @@ export class Diagram {
 
 
         this.setSize(newWidthCm, newHeightCm);
-        
+
 
         return {isAdjusted: isAdjusted};
 
@@ -283,7 +283,7 @@ export class Diagram {
 
         for(let element of elements){
 
-            let insideX = Math.abs(element.leftCm + element.widthCm/2 - leftCm - widthCm/2) 
+            let insideX = Math.abs(element.leftCm + element.widthCm/2 - leftCm - widthCm/2)
                        <= (element.widthCm + widthCm)/2 + minDistance;
 
             let insideY = Math.abs(element.topCm + element.heightCm/2 - topCm - heightCm/2) <= (element.heightCm + heightCm)/2 + minDistance;

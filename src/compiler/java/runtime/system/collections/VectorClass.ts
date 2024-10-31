@@ -9,7 +9,7 @@ export class VectorClass extends ArrayListClass {
 
         { type: "method", signature: "Vector()", native: VectorClass.prototype._constructor , comment: JRC.vectorConstructorComment},
 
-        // 
+        //
     ]
 
     static type: NonPrimitiveType;

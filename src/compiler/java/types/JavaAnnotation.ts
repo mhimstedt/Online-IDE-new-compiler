@@ -5,7 +5,7 @@ import { IRange } from "../../common/range/Range";
 export class JavaAnnotation {
 
     constructor(public identifier: string, public range: IRange){
-        
+
     }
 
 }

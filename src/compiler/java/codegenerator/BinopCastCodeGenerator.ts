@@ -193,7 +193,7 @@ export abstract class BinopCastCodeGenerator {
             this.pushError(JCM.operatorNotFeasibleForOperands(operatorIdentifier, lIdentifier, rIdentifier), "error", operatorRange);
         }
 
-        // now both types are in [char, byte, short, int, long, float, double] 
+        // now both types are in [char, byte, short, int, long, float, double]
         // operators are +, -, *, /, %, ShiftOperations and ComparisonOperations but not == or !=
 
         // char +*/% integer => integer
@@ -206,12 +206,12 @@ export abstract class BinopCastCodeGenerator {
             rTypeIndex = nInteger;
         }
 
-        // now both types are in [byte, short, int, long, float, double] 
+        // now both types are in [byte, short, int, long, float, double]
         if (comparisonOperators.indexOf(operator) >= 0) return new BinaryOperatorTemplate(operatorIdentifier, false).applyToSnippet(this.booleanType, wholeRange, leftSnippet, rightSnippet);
 
 
-        // now both types are in [byte, short, int, long, float, double] 
-        // operators are +, -, *, /, %, ShiftOperations 
+        // now both types are in [byte, short, int, long, float, double]
+        // operators are +, -, *, /, %, ShiftOperations
         if (shiftOperators.indexOf(operator) >= 0) {
             if (lTypeIndex >= nFloat || rTypeIndex >= nFloat) {
                 this.pushError(JCM.operatorNotFeasibleForOperands(operatorIdentifier, lIdentifier, rIdentifier), "error", operatorRange);
@@ -220,7 +220,7 @@ export abstract class BinopCastCodeGenerator {
             return new BinaryOperatorTemplate(operatorIdentifier, false).applyToSnippet(leftType, wholeRange, leftSnippet, rightSnippet);
         }
 
-        // now both types are in [byte, short, int, long, float, double] 
+        // now both types are in [byte, short, int, long, float, double]
         // operators are +, -, *, /, %
         let resultType = this.primitiveTypes[Math.max(lTypeIndex, rTypeIndex)];
         return new BinaryOperatorTemplate(operatorIdentifier, false).applyToSnippet(resultType, wholeRange, leftSnippet, rightSnippet);
@@ -299,7 +299,7 @@ export abstract class BinopCastCodeGenerator {
     }
 
     /**
-     * one of the operands is of type string 
+     * one of the operands is of type string
      * both operators are unboxed and operation is not in [==, !=]
      */
     compileBinaryOperationWithStrings(leftSnippet: CodeSnippet, rightSnippet: CodeSnippet, lTypeIndex: number, rTypeIndex: number, lIdentifier: string, rIdentifier: string, operator: BinaryOperator, operatorRange: IRange, wholeRange: IRange): CodeSnippet | undefined {
@@ -455,7 +455,7 @@ export abstract class BinopCastCodeGenerator {
 
         if(operator == TokenType.divisionAssignment && leftTypeIndex >= nByte && leftTypeIndex <= nLong){
             return new TwoParameterTemplate(`§1 = Math.trunc(§1/(§2 || ${Helpers.throwArithmeticException}("${JCM.divideByZero()}", ${wholeRange.startLineNumber}, ${wholeRange.startColumn}, ${wholeRange.endLineNumber}, ${wholeRange.endColumn})))`)
-                .applyToSnippet(leftSnippet.type!, wholeRange, leftSnippet, rightSnippet);    
+                .applyToSnippet(leftSnippet.type!, wholeRange, leftSnippet, rightSnippet);
         }
 
         return new BinaryOperatorTemplate(operatorAsString, false).applyToSnippet(leftSnippet.type!, wholeRange, leftSnippet, rightSnippet);
@@ -491,7 +491,7 @@ export abstract class BinopCastCodeGenerator {
                 }
             } else {
                 // cast object to object
-                if (castType == "explicit" && this.canCastTo(snippet.type, castTo, "explicit") 
+                if (castType == "explicit" && this.canCastTo(snippet.type, castTo, "explicit")
                     || castType == "implicit" && this.canCastTo(snippet.type, castTo, "implicit")) {
                     return snippet;
                 }
@@ -571,7 +571,7 @@ export abstract class BinopCastCodeGenerator {
 
 
         // now both types are in nByte = 5, nShort = 6, nInteger = 7, nLong = 8, nFloat = 9, nDouble = 10
-        if (snippetTypeIndex <= castToTypeIndex) 
+        if (snippetTypeIndex <= castToTypeIndex)
         {
             snippet.type = castTo;
             return snippet;
@@ -633,7 +633,7 @@ export abstract class BinopCastCodeGenerator {
 
         let typeFromIndex = primitiveTypeMap[typeFrom.identifier] || boxedTypesMap[typeFrom.identifier];
         let typeToIndex = primitiveTypeMap[typeTo.identifier] || boxedTypesMap[typeTo.identifier];
-        
+
         if (typeToIndex == nString ){
             if(castType == "explicit" || typeFromIndex == nString) return true;
         }
@@ -660,16 +660,16 @@ export abstract class BinopCastCodeGenerator {
 
         if (typeFromIndex == typeToIndex) return true;
 
-        
+
         if (castType == "explicit"){
             if (typeFromIndex == nBoolean) return false;
-            
+
             if (typeFromIndex == nChar) {
                 return typeToIndex >= nByte && typeToIndex <= nDouble;
             }
             return true;
-        }  
-        
+        }
+
         return canCastImplicit[typeFromIndex][typeToIndex];
     }
 
@@ -738,7 +738,7 @@ export abstract class BinopCastCodeGenerator {
         let constant = snippet.getConstantValue();
         let boxedType = this.libraryTypestore.getType(boxedIdentifier);
         let boxedSnippet = SnippetFramer.frame(snippet, `new ${Helpers.classes}["${boxedIdentifier}"](§1)`, boxedType);
-        
+
         if(snippet instanceof StringCodeSnippet) snippet.setConstantValue(constant || null);
 
         return boxedSnippet;
@@ -856,10 +856,10 @@ export abstract class BinopCastCodeGenerator {
     }
 
     /**
- * 
+ *
  *  Compiles expressions like new MyAbstractClass(p1, p2){ attributeDeclarations, instanceInitializers, methodDeclarations }
- * 
- * @param node 
+ *
+ * @param node
  */
     abstract compileAnonymousInnerClass(node: ASTAnonymousClassNode): CodeSnippet | undefined;
 

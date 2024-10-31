@@ -13,18 +13,18 @@ export class Material3dClass extends ObjectClass {
         { type: "method", signature: "void setColor(Color color)", native: Material3dClass.prototype.setColor, comment: JRC.material3dSetColorComment },
         { type: "method", signature: "void setColor(int color)", native: Material3dClass.prototype.setColor, comment: JRC.material3dSetColorComment },
         { type: "method", signature: "void setColor(String color)", native: Material3dClass.prototype.setColor, comment: JRC.material3dSetColorComment },
-        
+
         { type: "method", signature: "int getColor()", native: Material3dClass.prototype.getColor, comment: JRC.material3dGetColorComment },
-        
-        
+
+
         { type: "field", signature: "private boolean transparent", comment: JRC.material3dSetTransparentComment },
         { type: "method", signature: "boolean isTransparent()", template: "§1.material.transparent", comment: JRC.material3dIsTransparentComment },
         { type: "method", signature: "void setTransparent(boolean value)", template: "§1.material.transparent = §2", comment: JRC.material3dSetTransparentComment },
-        
+
         { type: "field", signature: "private boolean flatShading", comment: JRC.material3dFlatShadingComment },
         { type: "method", signature: "boolean isFlatShading()", template: "§1.material.flatShading", comment: JRC.material3dFlatShadingComment },
         { type: "method", signature: "void setFlatShading(boolean value)", template: "§1.material.flatShading = §2", comment: JRC.material3dFlatShadingComment },
-        
+
         { type: "field", signature: "private double alpha", comment: JRC.material3dAlphaComment },
         { type: "method", signature: "void setAlpha(double value)", template: "§1.alpha = §2", comment: JRC.material3dAlphaComment },
         { type: "method", signature: "double getAlpha(double value)", template: "§1.alpha", comment: JRC.material3dAlphaComment },

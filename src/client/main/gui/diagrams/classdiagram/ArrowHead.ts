@@ -45,13 +45,13 @@ export class ArrowHead {
         let dy = position2Cm.y - position1Cm.y;
 
         let d = Math.sqrt(dx*dx+dy*dy);
-        
+
         if(d < 0.00001) return {path: "", stroke: "none", fill: "none"};
 
         let ex = dx/d;
         let ey = dy/d;
 
-        let path: string = "M " + position2Cm.x * DiagramUnitCm / DiagramArrow.cmPerPx 
+        let path: string = "M " + position2Cm.x * DiagramUnitCm / DiagramArrow.cmPerPx
             + " " + position2Cm.y * DiagramUnitCm / DiagramArrow.cmPerPx;
 
         let arrow = this.arrows[type];

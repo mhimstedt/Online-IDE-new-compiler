@@ -45,7 +45,7 @@ export class GNGZeichenfensterClass extends ObjectClass {
             return 800;
         }
     }
-    
+
     static _mj$MalflächenHöheGeben$int$(t: Thread){
         let world = t.scheduler.interpreter.retrieveObject("WorldClass") as IWorld;
         if(world){

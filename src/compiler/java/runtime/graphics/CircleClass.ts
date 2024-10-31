@@ -49,11 +49,11 @@ export class CircleClass extends FilledShapeClass {
         this._cj$_constructor_$FilledShape$(t, () => {
             this.centerXInitial = mx;
             this.centerYInitial = my;
-            
+
             this.mx = mx;
             this.my = my;
             this.radius = radius;
-    
+
             this.render();
             if(callback) callback();
         });   // call base class constructor
@@ -115,7 +115,7 @@ export class CircleClass extends FilledShapeClass {
                 alignment: 0.5
             })
         }
-        
+
         g.closePath();
 
     };
@@ -124,7 +124,7 @@ export class CircleClass extends FilledShapeClass {
         this.radius = radius / this.container.scale.x;
 
         this.render();
-    }    
+    }
 
     containsPoint(x: number, y: number) {
 
@@ -148,10 +148,10 @@ export class CircleClass extends FilledShapeClass {
             this.container.worldTransform.apply(p1, p1);
 
             let radius1 = this.radius * this.container.scale.x
-            
+
             let p2 = new PIXI.Point(otherShape.centerXInitial, otherShape.centerYInitial);
             otherShape.container.worldTransform.apply(p2, p2);
-            
+
             let radius2 = otherShape.radius * otherShape.container.scale.x
 
             let d1 = p1.x - p2.x;
@@ -170,7 +170,7 @@ export class CircleClass extends FilledShapeClass {
         t.s.push(new StringClass(this._debugOutput()));
 
         if(callback) callback();
-        
+
         return;
     }
 

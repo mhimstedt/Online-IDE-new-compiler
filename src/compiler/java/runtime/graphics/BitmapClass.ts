@@ -26,10 +26,10 @@ export class BitmapClass extends ShapeClass {
         { type: "method", signature: "final void setColor(int x, int y, string color)", native: BitmapClass.prototype._setColor, comment: JRC.BitmapSetColorComment },
         { type: "method", signature: "final Color getColor(int x, int y)", native: BitmapClass.prototype._getColor, comment: JRC.BitmapGetColorComment },
         { type: "method", signature: "final int getColorAsInt(int x, int y)", native: BitmapClass.prototype._getColorAsInt, comment: JRC.BitmapGetColorComment },
-        
+
         { type: "method", signature: "final boolean isColor(int x, int y, string colorAsRGBString)", native: BitmapClass.prototype._isColor, comment: JRC.BitmapIsColorComment },
         { type: "method", signature: "final boolean isColor(int x, int y, int color)", native: BitmapClass.prototype._isColor, comment: JRC.BitmapIsColorComment },
-        
+
         { type: "method", signature: "final Position screenCoordinatesToBitmapCoordinates(double x, double y)", native: BitmapClass.prototype._worldCoordinatesToBitmapCoordinates, comment: JRC.BitmapWorldCoordinatesToBitmapCoordinatesComment },
 
         { type: "method", signature: "final void fillAll(int color, double alpha)", native: BitmapClass.prototype._fillAll, comment: JRC.BitmapFillAllComment },
@@ -131,13 +131,13 @@ export class BitmapClass extends ShapeClass {
 
         if (!clone) {
 
-            this.texture = PIXI.Texture.from(new PIXI.BufferImageSource({resource: u8Array, 
+            this.texture = PIXI.Texture.from(new PIXI.BufferImageSource({resource: u8Array,
                 width: this.anzahlX,
                 height: this.anzahlY,
                 scaleMode: "nearest",
-                format: "rgba8unorm",        // unfortunately the only one that works..           
+                format: "rgba8unorm",        // unfortunately the only one that works..
                 alphaMode: "premultiplied-alpha", // 'no-premultiply-alpha' | 'premultiply-alpha-on-upload' | 'premultiplied-alpha'
-                
+
             }))
 
         } else {

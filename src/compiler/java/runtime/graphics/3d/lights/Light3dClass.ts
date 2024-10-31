@@ -18,7 +18,7 @@ export class Light3dClass extends Object3dClass {
         { type: "method", signature: "Light3d()", java: Light3dClass.prototype._cj$_constructor_$Light3d$ },
         { type: "field", signature: "public Material3d material"},
 
-        
+
         { type: "method", signature: "void move(double x,double y,double z)"},
         { type: "method", signature: "final void move(Vector3 v)", native:Light3dClass.prototype.vmove},
         { type: "method", signature: "void moveTo(double x,double y,double z)"},
@@ -27,12 +27,12 @@ export class Light3dClass extends Object3dClass {
         { type: "method", signature: "void rotateX(double angleDeg)",native: Light3dClass.prototype.rotateX },
         { type: "method", signature: "void rotateY(double angleDeg)",native: Light3dClass.prototype.rotateY },
         { type: "method", signature: "void rotateZ(double angleDeg)",native: Light3dClass.prototype.rotateZ },
-        
+
         { type: "field", signature: "private double intensity"},
         { type: "method", signature: "void setIntensity(double intensity)",native: Light3dClass.prototype.setIntensity },
         { type: "method", signature: "double getIntensity()",native: Light3dClass.prototype.getIntensity },
-        
-        
+
+
         { type: "field", signature: "private int color"},
         { type: "method", signature: "void setColor(int color)",native: Light3dClass.prototype.setColor },
         { type: "method", signature: "void setColor(String color)",native: Light3dClass.prototype.setColor },
@@ -56,7 +56,7 @@ export class Light3dClass extends Object3dClass {
     _cj$_constructor_$Light3d$(t: Thread, callback: CallbackParameter){
         super._cj$_constructor_$Object3d$(t, callback);
         this.world3d.scene.add(this.light);
-    }    
+    }
 
     move(x:number,y:number,z:number):void{
         this.light.position.set(this.light.position.x+x,this.light.position.y+y,this.light.position.z+z)

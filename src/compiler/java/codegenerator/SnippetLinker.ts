@@ -24,9 +24,9 @@ export class SnippetLinker {
             let snippet = flatList[i];
             if(snippet instanceof NextStepMark){
                 if(onlyLabelsSinceLastStepMark){
-                    flatList.splice(i, 1); 
+                    flatList.splice(i, 1);
                     i--;
-                } 
+                }
                 onlyLabelsSinceLastStepMark = true;
             } else if(!(snippet instanceof LabelCodeSnippet)){
                 onlyLabelsSinceLastStepMark = false;
@@ -41,7 +41,7 @@ export class SnippetLinker {
         for(let snippet of flatList){
             currentStep = snippet.emitToStep(currentStep, steps, program.module);
         }
-        
+
         if(!currentStep.isEmpty()) steps.push(currentStep);
 
         program.stepsSingle = steps;

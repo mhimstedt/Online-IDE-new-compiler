@@ -84,7 +84,7 @@ function worker(event) {
         }
 
     } catch (err) {
-        
+
         //@ts-ignore
         return postMessage({
             id: data["id"],

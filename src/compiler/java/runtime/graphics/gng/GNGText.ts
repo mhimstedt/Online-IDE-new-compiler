@@ -21,7 +21,7 @@ export class GNGText extends GNGBaseFigur {
         {type: "method", signature: "string getText()", template: '§1.text', comment: "Gibt den Textinhalt zurück."},
 
     ];
-    
+
     static type: NonPrimitiveType;
 
     get text(): string {
@@ -31,7 +31,7 @@ export class GNGText extends GNGBaseFigur {
     get textgroesse(): number {
         return (<TextClass>this.filledShape).fontsize;
     }
-    
+
     renderGNG(): void {
         let textShape = <TextClass>this.filledShape;
         textShape.x = this.moveAnchor.x;
@@ -63,7 +63,7 @@ export class GNGText extends GNGBaseFigur {
 
         let text = new TextClass();
         this.filledShape = text;
-        
+
         text._cj$_constructor_$Text$double$double$double$string(t, () => {
             t.s.pop();
             t.s.push(this);
@@ -84,7 +84,7 @@ export class GNGText extends GNGBaseFigur {
         (<TextClass>this.filledShape).text = text;
         this.renderGNG();
     }
-    
+
     _textGroesseSetzen(fontSize: number){
         (<TextClass>this.filledShape).fontsize = fontSize;
         this.renderGNG();

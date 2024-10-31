@@ -44,7 +44,7 @@ export class FilledShapeClass extends ShapeClass {
 
 
         // { type: "method", signature: "final boolean isKeyUp(string key)", java: ActorClass.prototype._mj$isKeyUp$boolean$string },
-        
+
     ]
 
     static type: NonPrimitiveType;
@@ -60,12 +60,12 @@ export class FilledShapeClass extends ShapeClass {
     _cj$_constructor_$FilledShape$(t: Thread, callback: CallbackFunction){
         this._cj$_constructor_$Shape$(t, callback);   // call base class constructor
 
-        
+
 
     }
 
     render(){
-        
+
     }
 
     copyFrom(otherFilledShape: FilledShapeClass){
@@ -85,11 +85,11 @@ export class FilledShapeClass extends ShapeClass {
         c.fromIntAndAlpha(this.fillColor, this.fillAlpha);
         return c;
     }
-    
+
     _getFillColorAsInt(): number {
         return this.fillColor || 0x0;
     }
-    
+
     _getBorderColor(): ColorClass {
         if(this.borderColor==null){
             return null;

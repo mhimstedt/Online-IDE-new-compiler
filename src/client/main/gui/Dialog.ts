@@ -97,7 +97,7 @@ export class Dialog {
         let cb: string = '<input type="checkbox" name="' + name + '"' + (ischecked ? ' checked' : '') + '>';
         let $checkbox = jQuery(cb);
         let $description = jQuery('<label for="' + name + '">' + description + "</label>");
-        
+
         let $div = jQuery('<div class="jo_checkbox_div"></div>')
         $div.append($checkbox, $description);
 

@@ -436,7 +436,7 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
                     //     id: "editor.action.triggerParameterHints",
                     //     title: '123',
                     //     arguments: []
-                    // },    
+                    // },
                     insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
                     kind: monaco.languages.CompletionItemKind.Snippet,
                     range: range
@@ -451,7 +451,7 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
                     //     id: "editor.action.triggerParameterHints",
                     //     title: '123',
                     //     arguments: []
-                    // },    
+                    // },
                     insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
                     kind: monaco.languages.CompletionItemKind.Snippet,
                     range: range

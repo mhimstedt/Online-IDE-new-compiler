@@ -14,7 +14,7 @@ import { DummyAssertionObserver } from "./IAssertionObserver";
 export class AssertionsClass extends ObjectClass {
 
     /**
-     * BEWARE: §1, §2 and §3 can be 'pop()', therefore they must NOT be inside for-loops in templates below! 
+     * BEWARE: §1, §2 and §3 can be 'pop()', therefore they must NOT be inside for-loops in templates below!
      */
 
     static __javaDeclarations: LibraryDeclarations = [
@@ -66,7 +66,7 @@ export class AssertionsClass extends ObjectClass {
              template: `let _z_ = §3; let _y_ = §2; let _x_ = §1; ${Helpers.classes}["Assertions"].${AssertionsClass._assertEqualsObject.name}(${StepParams.thread}, this, _x_, _y_, _z_);`
         },
         {
-            type: "method", signature: "public static void fail(string message)", 
+            type: "method", signature: "public static void fail(string message)",
             template: `let _x_ = §1; for(__ao of ${Helpers.assertionObservers}){__ao.${DummyAssertionObserver.prototype.notifyOnFail.name}(${StepParams.thread}, this, _x_);}`
         },
     ]
@@ -84,13 +84,13 @@ export class AssertionsClass extends ObjectClass {
     static _assertEqualsObject(t: Thread, step: Step, actual: ObjectClass, expected: ObjectClass, message: string){
         let actualString = "null";
         let expectedString = "null";
-        
+
         let callObservers = () => {
             for(let ao of t.assertionObservers){
                 ao.notifyOnAssertEqualsObject(t, step, actualString, expectedString, message)
             }
         }
-        
+
         let convertActual = (callback: CallbackParameter) => {
             if(actual != null){
                 actual._mj$toString$String$(t, () => {

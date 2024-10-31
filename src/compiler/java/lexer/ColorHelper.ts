@@ -222,7 +222,7 @@ export class ColorHelper {
         if (m1) {
             return {
                 color: parseInt(m1[1]) * 0x10000 + parseInt(m1[2]) * 0x100 + parseInt(m1[3]),
-                alpha: parseFloat(m1[4]) 
+                alpha: parseFloat(m1[4])
             };
         }
 

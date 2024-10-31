@@ -46,16 +46,16 @@ export class SpeedControl {
     }
 
     initGUI(){
-        
+
         let mousedownX: number;
         let oldPosition: number;
         let that = this;
         that.overallWidth = convertPxToNumber(this.$outer.css('width'));
         that.gripWidth = convertPxToNumber(that.$grip.css('width'));
         that.xMax = that.overallWidth - that.gripWidth;
-        
+
         let mousePointer = window.PointerEvent ? "pointer" : "mouse";
-        
+
         that.$outer.on(mousePointer + 'down', (e) => {
 
             let x = e.pageX! - that.$outer.offset()!.left - 4;
@@ -71,8 +71,8 @@ export class SpeedControl {
             // });
 
         });
-        
-        
+
+
         this.$grip.on(mousePointer + 'down', (e, x) => {
             if(x == null) x = e.clientX;
             mousedownX = x;
@@ -108,7 +108,7 @@ export class SpeedControl {
 
         if(stepsPerSecond == "max"){
             stepsPerSecond = this.maxSpeed;;
-        } 
+        }
 
         if(stepsPerSecond > this.intervalBorders[this.intervalBorders.length - 1]){
             this.$grip.css('left', this.xMax + 'px');
@@ -162,20 +162,20 @@ export class SpeedControl {
         }
 
         this.setInterpreterSpeed(speed);
-        
+
         // console.log( speed + ' steps/s entspricht ' + this.interpreter.timerDelayMs + ' ms zwischen Steps')
 
     }
-    
+
     setInterpreterSpeed(stepsPerSecond: number){
-        
+
         let isMaxSpeed: boolean = false;
         let speedString = "" + SpeedControl.printMillions(stepsPerSecond);
         if(stepsPerSecond >= this.intervalBorders[this.intervalBorders.length - 1] - 10 - 10){
             speedString = "maximum speed";
             isMaxSpeed = true;
         }
-        
+
         this.$display.html(speedString + " steps/s");
 
         this.interpreter.setStepsPerSecond(stepsPerSecond, isMaxSpeed);

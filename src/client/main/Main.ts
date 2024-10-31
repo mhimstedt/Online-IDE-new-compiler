@@ -175,7 +175,7 @@ export class Main implements MainBase {
 
         if(singleUseToken){
             this.login.initGUI();
-            this.login.loginWithVidis(singleUseToken);    
+            this.login.loginWithVidis(singleUseToken);
         } else {
             this.login.initGUI();
         }
@@ -240,7 +240,7 @@ export class Main implements MainBase {
             printManager, this.actionManager,
             graphicsManager, keyboardManager,
             breakpointManager, this.debugger,
-            programPointerManager, inputManager, 
+            programPointerManager, inputManager,
             fileManager, exceptionMarker, this);
 
         let errorMarker = new ErrorMarker();
@@ -250,7 +250,7 @@ export class Main implements MainBase {
         */
         this.language = new JavaLanguage(this, errorMarker);
         this.language.registerLanguageAtMonacoEditor(this);
-        
+
         new JUnitTestrunner(this, jQuery('.jo_testrunnerTab')[0]);
 
         this.getCompiler().eventManager.on('compilationFinished', this.onCompilationFinished, this);

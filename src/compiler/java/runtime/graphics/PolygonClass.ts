@@ -21,7 +21,7 @@ export class PolygonClass extends FilledShapeClass {
         { type: "method", signature: "Polygon(boolean closeAndFill, double... coordinates)", java: PolygonClass.prototype._cj$_constructor_$Polygon$boolean$double_I, comment: JRC.PolygonConstructor2Comment },
         { type: "method", signature: "Polygon(boolean closeAndFill, double[] coordinates)", java: PolygonClass.prototype._cj$_constructor_$Polygon$boolean$double_I, comment: JRC.PolygonConstructor1Comment },
         { type: "method", signature: "Polygon(Shape shape)", java: PolygonClass.prototype._cj$_constructor_$Polygon$Shape, comment: JRC.PolygonConstructorShapeComment },
-        
+
         { type: "method", signature: "void addPoint(double x, double y)", native: PolygonClass.prototype._addPoint, comment: JRC.PolygonAddPointComment },
         { type: "method", signature: "void setPoints(double[] points)", native: PolygonClass.prototype._setPoints, comment: JRC.PolygonSetPointsComment },
         { type: "method", signature: "void addPoints(double[] points)", native: PolygonClass.prototype._addPoints, comment: JRC.PolygonAddPointsComment },

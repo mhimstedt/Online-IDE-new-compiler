@@ -220,7 +220,7 @@ export class ExportImportMI extends AdminMenuItem {
             let cd: SchoolData = request.data;
             cd.id = response.id;
             this.schoolGrid.add(cd);
-            setTimeout(() => {                
+            setTimeout(() => {
                 let index = this.schoolGrid.records.findIndex(r => r["id"] == cd.id);
                 //@ts-ignore
                 this.schoolGrid.scrollIntoView(index, undefined, true);

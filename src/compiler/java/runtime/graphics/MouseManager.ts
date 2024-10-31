@@ -35,7 +35,7 @@ export class MouseManager {
         this.javaMouseListeners = [];
         this.shapesWithImplementedMouseMethods = [];
         this.listeners = new Map();
-    
+
     }
 
     registerListeners() {

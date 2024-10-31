@@ -15,11 +15,11 @@ export class ColorConverter {
         }
 
         if(typeof color == "number") return color;
-        
+
         if(typeof color == "string"){
             return ColorHelper.parseColorToOpenGL(color).color || 0xffffff;
         }
-        
+
         return color.red * 0x10000 + color.green * 0x100 + color.blue;
     }
 

@@ -37,9 +37,9 @@ export class BreakpointManager {
         editor.onDidChangeModel(() => {
             this.renderBreakpointDecorators();
         })
-        
+
     }
-    
+
     attachToInterpreter(interpreter: Interpreter){
 
         interpreter.eventManager.on("resetRuntime", () => {
@@ -106,7 +106,7 @@ export class BreakpointManager {
         if (!monacoEditorModel) return;
         for (let decoration of monacoEditorModel.getAllDecorations()) {
             let marginClassName = decoration.options.marginClassName;
-            
+
             if (marginClassName && ["jo_margin_breakpoint", "jo_margin_breakpoint_inactive"].indexOf(marginClassName) >= 0) {
                 let breakpoint = breakpointInfoForModule.decoratorIdToBreakpointMap[decoration.id];
                 if (breakpoint != null) {

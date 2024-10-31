@@ -39,11 +39,11 @@ export class ExceptionPrinter {
      */
 
     /**
-     * 
-     * @param exception 
-     * @param stacktrace 
-     * @param printManager 
-     * @returns 
+     *
+     * @param exception
+     * @param stacktrace
+     * @param printManager
+     * @returns
      */
 
     static printWithLinks(exception: Exception, stacktrace: Stacktrace, printManager?: IPrintManager, main?: IMain) {
@@ -59,7 +59,7 @@ export class ExceptionPrinter {
     }
 
     static getHtmlWithLinks(exception: Exception, stacktrace: Stacktrace, main: IMain | undefined): HTMLDivElement {
-        
+
         let outerDiv = DOM.makeDiv(undefined, 'jo_exceptionPrinter_outer');
 
         let headingDiv = DOM.makeDiv(outerDiv, 'jo_exceptionPrinter_heading');

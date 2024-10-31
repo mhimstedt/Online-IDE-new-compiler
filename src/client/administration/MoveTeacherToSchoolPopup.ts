@@ -5,16 +5,16 @@ export class MoveTeacherToSchoolPopup {
 
     static callbackCancel: () => void;
     static callbackOK: (newSchoolId: SchoolData) => void;
-    
+
     static open(name: string, oldSchool: SchoolData, schoolDataList: SchoolData[],
         callbackCancel: () => void,
         callbackOK: (newSchoolId: SchoolData) => void) {
-            
+
             schoolDataList.forEach(sd => sd.text = sd.name);
 
             MoveTeacherToSchoolPopup.callbackOK = callbackOK;
             MoveTeacherToSchoolPopup.callbackCancel = callbackCancel;
-            
+
             let form = new w2form({
                 name: 'MoveTeacherForm',
                 style: 'border: 0px; background-color: transparent;',

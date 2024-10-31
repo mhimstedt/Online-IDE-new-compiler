@@ -137,7 +137,7 @@ export class Executable {
         if (unitTestMode) {
             this.mainModule = this.moduleManager.modules.find(m => m.isStartable());
         }
-        
+
         if(currentlyOpenedModule){
             if (currentlyOpenedModule.isStartable()) {
                 this.mainModule = currentlyOpenedModule;

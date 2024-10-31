@@ -77,10 +77,10 @@ export class DecimalFormat {
         }
 
         let retExponential = '';
-        
+
         let retInteger = '';
         let retFraction = '';
-        
+
         let exp = integerPart.length - 1;
         if (expNumberWithSignPart != null) exp += Number.parseInt(expNumberWithSignPart);
         if (exp > this.pattern.maximumIntegerDigits) {
@@ -103,7 +103,7 @@ export class DecimalFormat {
                         fNumber += 1;
                     }
                     let fString: string = "" + fNumber;
-                    if(fString.startsWith("2")){ 
+                    if(fString.startsWith("2")){
                         integerPart = "" + (Number.parseInt(integerPart) + 1);
                     }
                     fractionPart = fString.substring(1, fString.length);
@@ -206,7 +206,7 @@ export class DecimalFormat {
         while (this.comes("#", false)) {
             while (this.comes("#", true)){
                 if(groupingStarted) integerGrouping++;
-            }  
+            }
             if (this.comes(",", true)) {
                 groupingStarted = true;
                 this.pattern.groupingSize = integerGrouping;

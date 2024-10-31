@@ -62,10 +62,10 @@ export class Administration {
                 $button.on('click', () => {
 
                     jQuery('#main-heading').empty();
-                    
+
                     if(this.activeMenuItem != null) this.activeMenuItem.destroy();
                     this.activeMenuItem = mi;
-                    
+
                     jQuery('#main-table-left').empty().css("flex-grow", "1");
                     jQuery('#main-table-right').empty().css("flex-grow", "1");
                     this.removeGrid(jQuery('#main-table-left'));

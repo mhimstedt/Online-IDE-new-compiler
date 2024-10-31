@@ -185,7 +185,7 @@ export class HomeworkManager {
                     that.main.projectExplorer.fileListPanel.select(moduleWithWorkspace.file, false);
             });
         })
-        
+
     }
 
 

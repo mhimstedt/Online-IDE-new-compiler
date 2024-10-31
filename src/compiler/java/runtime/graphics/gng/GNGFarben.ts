@@ -15,4 +15,4 @@ export var GNGFarben: {[identifier: string]: number} = {
     "braun": 0x804000,
     "grau": 0x808080,
     "schwarz": 0x000000
-} 
+}

@@ -14,17 +14,17 @@ export class Object3dClass extends ActorClass {
     static __javaDeclarations: LibraryDeclarations = [
         { type: "declaration", signature: "abstract final class Object3d extends Actor", comment: JRC.Object3dClassComment },
         { type: "method", signature: "Object3d()", java: Object3dClass.prototype._cj$_constructor_$Object3d$ },
-        
+
         { type: "method", signature: "abstract void move(double x,double y,double z)", native:Object3dClass.prototype.move },
         { type: "method", signature: "final void move(Vector3 v)", native: Object3dClass.prototype.vmove },
-        
+
         { type: "method", signature: "abstract void moveTo(double x,double y,double z)", native: Object3dClass.prototype.moveTo},
         { type: "method", signature: "final void moveTo(Vector3 p)", native: Object3dClass.prototype.vmoveTo },
-        
+
         { type: "method", signature: "abstract void rotateX(double angleDeg)",native: Object3dClass.prototype.rotateX },
         { type: "method", signature: "abstract void rotateY(double angleDeg)",native: Object3dClass.prototype.rotateY },
         { type: "method", signature: "abstract void rotateZ(double angleDeg)",native: Object3dClass.prototype.rotateZ },
-        
+
         { type: "method", signature: "abstract void scaleX(double angleDeg)",native: Object3dClass.prototype.scaleX },
         { type: "method", signature: "abstract void scaleY(double angleDeg)",native: Object3dClass.prototype.scaleY },
         { type: "method", signature: "abstract void scaleZ(double angleDeg)",native: Object3dClass.prototype.scaleZ },
@@ -39,7 +39,7 @@ export class Object3dClass extends ActorClass {
 
     _cj$_constructor_$Object3d$(t: Thread, callback: CallbackParameter) {
 
-        
+
         t.s.push(this);
         this.world3d = t.scheduler.interpreter.retrieveObject("World3dClass");
         if (!this.world3d) {
@@ -64,7 +64,7 @@ export class Object3dClass extends ActorClass {
     rotateY(angleDeg:number): void{}
     rotateZ(angleDeg:number): void{}
 
-    scaleX(factor:number): void{} 
+    scaleX(factor:number): void{}
     scaleY(factor:number): void{}
     scaleZ(factor:number): void{}
 

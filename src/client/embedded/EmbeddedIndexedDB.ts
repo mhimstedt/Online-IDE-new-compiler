@@ -17,7 +17,7 @@ export class EmbeddedIndexedDB {
             request.onsuccess = function (this: IDBRequest<IDBDatabase>, ev: Event) {
                 that.db = request.result;
                 that.db.onerror = function(event) {
-                    // Allgemeine Fehlerbehandlung, die für alle Anfragen an die Datenbank gilt. 
+                    // Allgemeine Fehlerbehandlung, die für alle Anfragen an die Datenbank gilt.
                     // @ts-ignore
                     console.log("Datenbankfehler: " + event.target.error.message);
                   };

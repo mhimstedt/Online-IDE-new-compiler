@@ -2,7 +2,7 @@ import { Exception } from "./ExceptionInfo";
 
 export interface IPrintManager {
     print(text: string | undefined, withNewline: boolean, color: number | undefined): void;
-    
+
     flush(): void;
 
     clear(): void;
@@ -13,7 +13,7 @@ export interface IPrintManager {
 }
 
 export class DummyPrintManager implements IPrintManager {
-    
+
     printHtmlElement(htmlElement: HTMLElement): void {
         throw new Error("Method not implemented.");
     }
@@ -22,7 +22,7 @@ export class DummyPrintManager implements IPrintManager {
     }
 
     flush(): void {
-        
+
     }
 
     clear(): void {

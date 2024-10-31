@@ -65,7 +65,7 @@ export class ClassBox extends DiagramElement {
         cb1.active = false;
         cb1.withMethods = this.withMethods;
         cb1.withFields = this.withFields;
-        
+
         cb1.isSystemClass = this.isSystemClass;
         return cb1;
     }

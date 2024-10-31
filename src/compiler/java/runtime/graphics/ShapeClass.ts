@@ -184,7 +184,7 @@ export class ShapeClass extends ActorClass {
 
     /*
      * TermCodeGenerator.invokeConstructor does compiler magic to ensure that this method is called AFTER the constructor
-     * of the child class of Shape is FULLY finished 
+     * of the child class of Shape is FULLY finished
      */
     _registerListeners(t: Thread) {
         super._registerListeners(t);

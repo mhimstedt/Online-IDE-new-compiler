@@ -115,7 +115,7 @@ export class Parser extends StatementParser {
 
         /**
          * Map<String, Integer> test(ArrayList<String> list){...} // -> static method
-         * 
+         *
          * others: statements of main method
          */
 
@@ -552,7 +552,7 @@ export class Parser extends StatementParser {
     }
 
     parseGenericParameterDefinition(): ASTGenericParameterDeclarationNode[] {
-        // e.g. <E extends ArrayList<Integer> & Throwable, F super String> 
+        // e.g. <E extends ArrayList<Integer> & Throwable, F super String>
         // in example above Definition of E is the first generic parameter definition, definition of F the second one
         let genericParameterDefinitions: ASTGenericParameterDeclarationNode[] = [];
         if (this.comesToken(TokenType.lower, true)) {

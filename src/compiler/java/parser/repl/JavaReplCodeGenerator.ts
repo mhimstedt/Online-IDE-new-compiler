@@ -52,7 +52,7 @@ export class JavaReplCodeGenerator extends StatementCodeGenerator {
                     let lastSnippet = new StringCodeSnippet(`${Helpers.toString}(__t, undefined, ${Helpers.threadStack}[${Helpers.threadStack}.length - 1]);\n`);
                     snippets.push(lastSnippet);
                 }
-                
+
                 this.module.returnType = snippet.type;
 
             }

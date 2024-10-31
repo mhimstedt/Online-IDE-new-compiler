@@ -53,7 +53,7 @@ export function stringWrap(s: string, length: number ): string{
   return s.replace(
     new RegExp(`(?![^\\n]{1,${length}}$)([^\\n]{1,${length}})\\s`, 'g'), '$1\n'
   );
-} 
+}
 
 export function formatAsJavadocComment(s: string, indent: number|string = ""): string {
   let indentString = "";

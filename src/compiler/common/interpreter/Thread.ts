@@ -137,7 +137,7 @@ export class Thread {
 
                         /**
                          * Behold, here the steps run!
-                         * parameter identifers inside function: 
+                         * parameter identifers inside function:
                          *                    t, s, sb, h
                          */
 
@@ -163,7 +163,7 @@ export class Thread {
 
                 currentProgramState.stepIndex = stepIndex;
                 // this.currentProgram might by now not be the same as before this inner while-loop
-                // because callMethod or returnFromMethod may have been called since from within 
+                // because callMethod or returnFromMethod may have been called since from within
                 // step.run
             }
 
@@ -395,7 +395,7 @@ export class Thread {
 
         if (this.programStack.length > 0) {
             this.currentProgramState = this.programStack[this.programStack.length - 1];
-            // if (this.scheduler.executeMode == ExecuteMode.singleSteps && 
+            // if (this.scheduler.executeMode == ExecuteMode.singleSteps &&
             //     this.currentProgramState.currentStepList == this.currentProgramState.program.stepsMultiple) {
             //     this.switchFromMultipleToSingleStep(this.currentProgramState);
             // }
@@ -461,7 +461,7 @@ export class Thread {
 
     /**
      * call a java method which is executed by this thread
-     * @param program 
+     * @param program
      */
     pushProgram(program: Program, callback?: CallbackFunction) {
         // Object creation is faster than Object.assign, see
@@ -486,7 +486,7 @@ export class Thread {
 
     /**
      * call a java method which is executed by this thread
-     * @param program 
+     * @param program
      */
     pushReplProgram(program: Program, callback?: CallbackFunction) {
 
@@ -543,11 +543,11 @@ export class Thread {
 
     /**
      * Runtime method to throw Arithmetic exception
-     * @param message 
-     * @param startLineNumber 
-     * @param startColumn 
-     * @param endLineNumber 
-     * @param endColumn 
+     * @param message
+     * @param startLineNumber
+     * @param startColumn
+     * @param endLineNumber
+     * @param endColumn
      */
     AE(message: string, startLineNumber: number, startColumn: number, endLineNumber: number, endColumn: number) {
 
@@ -708,10 +708,10 @@ export class Thread {
         return "" + element;
     }
 
-    /* 
+    /*
      * The following methods are used to check array indices, see TermCodeGenerator.compileSelectArrayElement
      *  java: 17 + a[3][4]   -> javascript: 17 + __t.ArrayValue2(a, 3, 4)
-     * 
+     *
      *  java: a[4] = 17 -> javascript: (__t.lastCheckedArray = a)[__t.CheckLastIndex(4)] = 17   (__t stores result of __t.Array1(a, 3))
      *  java: a[3][4] = 17 -> javascript: __t.Array1(a, 3)[__t.CheckLastIndex(4)] = 17   (__t stores result of __t.Array1(a, 3))
      *  java: a[3][4][5] = 17 -> javascript: __t.Array2(a, 3, 4)[__t.CheckLastIndex(5)] = 17 (__t stores result of __t.Array2(a, 3, 4))

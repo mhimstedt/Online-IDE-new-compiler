@@ -5,7 +5,7 @@ export type TextContainer = {text: string};
 
 export class ArrayToStringCaster {
 
-    public static arrayOfObjectsToString(textContainer: TextContainer, t: Thread, 
+    public static arrayOfObjectsToString(textContainer: TextContainer, t: Thread,
         array: any[], callback?: CallbackParameter, maximumLength: number = 200) {
 
         if (array == null) {
@@ -55,7 +55,7 @@ export class ArrayToStringCaster {
                     }, maximumLength)
                     return;
                 } else if(typeof element == 'object') {
-                    // element is object => call it's toString()-method! 
+                    // element is object => call it's toString()-method!
                     element._mj$toString$String$(t, () => {
                         textContainer.text += t.s.pop().value;
                         if (array.length > 0) {
@@ -96,6 +96,6 @@ export class ArrayToStringCaster {
 
     }
 
-    
+
 
 }

@@ -26,8 +26,8 @@ window.onload = () => {
         //     document.getElementById('message2').textContent = "Bitte geben Sie Ihren Familiennamen ein.";
         // } else {
             document.getElementById('message2').textContent = "";
-            document.getElementById('login-spinner').style.visibility = "visible";   
-            
+            document.getElementById('login-spinner').style.visibility = "visible";
+
             let request: VidisNewUserRequest = {
                 singleUseToken: singleUseToken,
                 rufname: "",
@@ -51,12 +51,12 @@ window.onload = () => {
             document.getElementById('message1').textContent = "Bitte geben Sie Ihr Passwort ein.";
         } else {
             document.getElementById('message1').textContent = "";
-            document.getElementById('login-spinner').style.visibility = "visible";   
-            
+            document.getElementById('login-spinner').style.visibility = "visible";
+
             let request: VidisNewUserRequest = {
                 singleUseToken: singleUseToken,
                 username: username,
-                password: password, 
+                password: password,
                 rufname: null, familienname: null, klasse: null
             }
 
@@ -70,14 +70,14 @@ window.onload = () => {
 }
 
 function doVidisRequest(request: VidisNewUserRequest){
- 
+
     fetch("/servlet/vidisNewUser", {
         method: "POST",
         body: JSON.stringify(request)
     }).then(resp => {
         resp.json().then((newUserResponse: NewUserResponse) => {
             if(newUserResponse.success){
-                
+
                 if(newUserResponse.fromSqlIde){
                     window.location.assign("https://sql-ide.de/index.html?singleUseToken=" + newUserResponse.singleUseToken);
                 } else {

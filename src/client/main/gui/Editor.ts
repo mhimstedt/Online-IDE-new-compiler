@@ -224,7 +224,7 @@ export class Editor {
     }
 
     createContextKeys(){
-        Object.values(SchedulerState).filter(v => typeof v == 'string').forEach(key => 
+        Object.values(SchedulerState).filter(v => typeof v == 'string').forEach(key =>
             this.main.getActionManager().registerEditorContextKey("Scheduler_" + key, this.editor.createContextKey("Scheduler_" + key, false))
         );
     }
@@ -281,7 +281,7 @@ export class Editor {
                 fontSize: fontSizePx
             });
 
-            // editor does not set fontSizePx, but fontSizePx * zoomfactor with unknown zoom factor, so 
+            // editor does not set fontSizePx, but fontSizePx * zoomfactor with unknown zoom factor, so
             // we have to do this dirty workaround:
             let newEditorfs = this.editor.getOptions().get(monaco.editor.EditorOption.fontSize);
             let factor = newEditorfs / fontSizePx;

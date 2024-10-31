@@ -36,7 +36,7 @@ export class ActorClass extends ObjectClass implements IActor {
         { type: "method", signature: "final boolean isDestroyed()", native: ActorClass.prototype._isDestroyed, comment: JRC.actorIsDestroyedComment },
         { type: "method", signature: "final void stopActing()", native: ActorClass.prototype._stopActing, comment: JRC.actorStopActingComment },
         { type: "method", signature: "final void restartActing()", native: ActorClass.prototype._restartActing, comment: JRC.actorRestartActingComment },
-        
+
         { type: "method", signature: "final boolean isGamepadButtonDown(int gamepadIndex, int buttonIndex)", native: ActorClass.prototype._isGamepadButtonDown, comment: JRC.actorIsGamepadButtonDownComment },
         { type: "method", signature: "final boolean isGamepadConnected(int gamepadIndex)", native: ActorClass.prototype._isGamepadConnected, comment: JRC.actorIsGamepadConnectedComment },
         { type: "method", signature: "final double getGamepadAxisValue(int gamepadIndex, int axisIndex)", native: ActorClass.prototype._getGamepadAxisValue, comment: JRC.actorGetGamepadAxisValueComment },
@@ -62,7 +62,7 @@ export class ActorClass extends ObjectClass implements IActor {
 
     /*
     * TermCodeGenerator.invokeConstructor does compiler magic to ensure that this method is called AFTER the constructor
-    * of the child class of actor is FULLY finished 
+    * of the child class of actor is FULLY finished
     */
     _registerListeners(t: Thread) {
         this.actorManager = t.scheduler.interpreter.actorManager;
