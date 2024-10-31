@@ -1,3 +1,5 @@
+import { Howl } from 'howler'
+
 export type SoundType = {
     url: string,
     name: string,
