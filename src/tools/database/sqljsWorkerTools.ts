@@ -3,7 +3,7 @@
  */
 export function createDb(SQL, buffer) {
 
-    db = new SQL.Database(buffer);
+    const db = new SQL.Database(buffer);
 
     db.create_function("isDate", function (inputText) {
 
