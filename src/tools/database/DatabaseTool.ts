@@ -87,6 +87,8 @@ export class DatabaseTool {
             //@ts-ignore
             this.worker = new WorkerSim();
         } else {
+            // JS6-way to do it:
+            // this.worker = await import("./sqljsWorker.ts?worker");
             this.worker = new Worker(url);
         }
         let that = this;
