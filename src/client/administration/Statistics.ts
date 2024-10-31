@@ -1,6 +1,7 @@
 import Chart from "chart.js";
 import { ajax, extractCsrfTokenFromGetRequest } from "../communication/AjaxHelper.js";
 import { GetStatisticsRequest, GetStatisticsResponse, StatisticData } from "../communication/Data.js";
+import moment from 'moment'
 import jQuery from 'jquery'
 
 import '/include/css/statistics.css';
