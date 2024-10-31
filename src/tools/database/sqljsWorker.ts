@@ -1,9 +1,11 @@
 //@ts-ignore
-importScripts('../lib/sql.js/sql-wasm.js');
+// importScripts('../lib/sql.js/sql-wasm.js');
+importScripts('sql.js/dist/sql-wasm.js');
 
 //@ts-ignore
 var initsql = initSqlJs({
     locateFile: name => (self.location + "").replace("worker/sqljs-worker.js", "") + 'lib/sql.js/' + name
+    // locateFile: name => '../lib/sql.js/' + name
    });
 var db;
 var SQL;
