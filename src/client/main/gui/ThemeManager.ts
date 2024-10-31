@@ -1,3 +1,5 @@
+import * as monaco from 'monaco-editor'
+
 export type Theme = {
     name: string,
     monacoTheme: string,

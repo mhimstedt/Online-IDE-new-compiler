@@ -1,11 +1,10 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+import * as monaco from 'monaco-editor'
+
+
 export function defineMyJava() {
-    monaco.languages.register({ id: 'myJava', 
+    monaco.languages.register({ id: 'myJava',
     extensions: ['.learnJava'],
-    //  mimetypes: ["text/x-java-source", "text/x-java"]  
+    //  mimetypes: ["text/x-java-source", "text/x-java"]
     });
 
     let conf: monaco.languages.LanguageConfiguration = {
@@ -196,7 +195,7 @@ export function defineMyJava() {
                 [/"""/, 'string', '@pop'],
                 [/"/, 'string', '@pop']
             ],
-            
+
         },
     };
 

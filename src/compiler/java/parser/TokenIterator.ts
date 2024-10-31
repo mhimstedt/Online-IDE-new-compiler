@@ -6,6 +6,8 @@ import { Token, TokenList } from "../lexer/Token";
 import { JavaCompiledModule } from "../module/JavaCompiledModule.ts";
 import { TokenType, TokenTypeReadable } from "../TokenType";
 import { ASTNode } from "./AST";
+import * as monaco from 'monaco-editor'
+
 
 export class TokenIterator {
 

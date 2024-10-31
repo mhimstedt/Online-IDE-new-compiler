@@ -10,9 +10,10 @@ import { StaticNonPrimitiveType } from "./StaticNonPrimitiveType.ts";
 import { Visibility } from "./Visibility.ts";
 import { BaseObjectType } from "../../common/BaseType.ts";
 import { JavaAnnotation } from "./JavaAnnotation.ts";
+import type * as monaco from 'monaco-editor'
 
 /**
- * A NonPrimitiveType 
+ * A NonPrimitiveType
  *  - may have attributes
  *  - may have fields (de: "Attribute")
  *  - may have methods

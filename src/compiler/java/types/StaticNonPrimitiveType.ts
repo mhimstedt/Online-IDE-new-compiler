@@ -5,11 +5,12 @@ import { JavaType } from "./JavaType";
 import { JavaMethod } from "./JavaMethod";
 import { NonPrimitiveType } from "./NonPrimitiveType";
 import { Visibility } from "./Visibility.ts";
+import type * as monaco from 'monaco-editor'
 
 export class StaticNonPrimitiveType extends JavaType {
 
     isMainClass: boolean = false;
-    
+
     getAbsoluteName(): string {
         return this.nonPrimitiveType.getAbsoluteName();
     }
@@ -31,13 +32,13 @@ export class StaticNonPrimitiveType extends JavaType {
         super(nonPrimitiveType.identifier, nonPrimitiveType.identifierRange, nonPrimitiveType.module);
     }
 
-    getCompletionItems(visibilityUpTo: Visibility, leftBracketAlreadyThere: boolean, identifierAndBracketAfterCursor: string, 
+    getCompletionItems(visibilityUpTo: Visibility, leftBracketAlreadyThere: boolean, identifierAndBracketAfterCursor: string,
         rangeToReplace: monaco.IRange, methodContext: JavaMethod | undefined): monaco.languages.CompletionItem[]{
 
             return this.nonPrimitiveType.getCompletionItems(visibilityUpTo, leftBracketAlreadyThere, identifierAndBracketAfterCursor,
                 rangeToReplace, methodContext, true);
 
-        } 
+        }
 
 
     fastExtendsImplements(identifier: string) {

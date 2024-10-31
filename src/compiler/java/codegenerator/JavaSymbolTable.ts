@@ -1,6 +1,5 @@
 import { BaseStackframe, BaseSymbol, BaseSymbolTable, SymbolOnStackframe as SymbolOnStack, SymbolOnStackframe } from "../../common/BaseSymbolTable";
-import { Position } from "../../common/range/Position.ts";
-import { IRange, Range } from "../../common/range/Range";
+import { IRange } from "../../common/range/Range";
 import { TokenType } from "../TokenType.ts";
 import { JavaCompiledModule } from "../module/JavaCompiledModule";
 import { JavaClass } from "../types/JavaClass";
@@ -12,6 +11,8 @@ import { JavaParameter } from "../types/JavaParameter.ts";
 import { StaticNonPrimitiveType } from "../types/StaticNonPrimitiveType.ts";
 import { Visibility } from "../types/Visibility.ts";
 import { JavaLocalVariable } from "./JavaLocalVariable";
+import * as monaco from 'monaco-editor'
+
 
 export type LocalVariableInformation = {
     symbol: JavaLocalVariable | JavaField,
@@ -20,9 +21,9 @@ export type LocalVariableInformation = {
 
 
 export class JavaSymbolTable extends BaseSymbolTable {
-    
+
     declare childTables: JavaSymbolTable[];
-    
+
     declare parent?: JavaSymbolTable;
 
     declare identifierToSymbolMap: Map<string, JavaLocalVariable>;
@@ -33,7 +34,7 @@ export class JavaSymbolTable extends BaseSymbolTable {
         public methodContext?: JavaMethod){
 
         super(range, parent);
-        
+
         if(parent){
             if(!classContext) this.classContext = (<JavaSymbolTable>parent).classContext;
             if(!methodContext) this.methodContext = (<JavaSymbolTable>parent).methodContext;
@@ -45,7 +46,7 @@ export class JavaSymbolTable extends BaseSymbolTable {
 
         if(withStackFrame){
             // inside non-static java-methods: 1st element on stack is this
-            this.stackframe = new BaseStackframe(classContext ? 1 : 0);    
+            this.stackframe = new BaseStackframe(classContext ? 1 : 0);
         }
     }
 
@@ -100,11 +101,11 @@ export class JavaSymbolTable extends BaseSymbolTable {
                 return {
                     symbol: field,
                     outerClassLevel: outerClassLevel
-                } 
+                }
             }
-            
+
         }
-        
+
         if(this.parent){
             if(this.parent.classContext == this.classContext){
                 return this.parent.findSymbolIntern(identifier, upToVisibility, false, outerClassLevel);
@@ -114,8 +115,8 @@ export class JavaSymbolTable extends BaseSymbolTable {
         }
 
         return undefined;
-    }   
-    
+    }
+
     public addSymbol(symbol: BaseSymbol): void {
         super.addSymbol(symbol);
         if(symbol instanceof SymbolOnStack){
@@ -126,7 +127,7 @@ export class JavaSymbolTable extends BaseSymbolTable {
     public insertInvisibleParameter(){
         this.getStackFrame()?.insertInvisibleParameter();
     }
-    
+
     getStackFrame(): BaseStackframe | undefined {
         let st: JavaSymbolTable = this;
         while(!st.stackframe && st.parent){
@@ -134,7 +135,7 @@ export class JavaSymbolTable extends BaseSymbolTable {
         }
         return st.stackframe;
     }
-    
+
     getLocalVariableCompletionItems(rangeToReplace: monaco.IRange): monaco.languages.CompletionItem[] {
         let items: monaco.languages.CompletionItem[] = [];
         this.identifierToSymbolMap.forEach((symbol, identifier) => {

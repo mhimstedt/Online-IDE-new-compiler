@@ -1,7 +1,6 @@
-import { HistoryEntry } from '../../../client/main/gui/Editor';
-import { Workspace } from '../../../client/workspace/Workspace';
+import * as monaco from 'monaco-editor'
 import { IMain } from '../../common/IMain';
-import { SchedulerState } from '../../common/interpreter/SchedulerState';
+
 
 export class JavaAddEditorShortcuts {
     static addActions(editor: monaco.editor.IStandaloneCodeEditor, main?: IMain) {

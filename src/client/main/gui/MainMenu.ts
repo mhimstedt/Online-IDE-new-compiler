@@ -8,6 +8,8 @@ import { Workspace } from "../../workspace/Workspace.js";
 import { downloadFile } from "../../../tools/HtmlTools.js";
 import { WorkspaceImporterExporter } from "../../workspace/WorkspaceImporterExporter.js";
 import { IssueReporter } from "./IssueReporter.js";
+import * as monaco from 'monaco-editor'
+
 
 declare var BUILD_DATE: string;
 declare var APP_VERSION: string;

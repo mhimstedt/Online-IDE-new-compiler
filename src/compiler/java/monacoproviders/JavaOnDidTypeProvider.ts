@@ -1,9 +1,11 @@
 import { IPosition } from "../../common/range/Position";
+import * as monaco from 'monaco-editor'
+
 
 export class JavaOnDidTypeProvider {
     static configureEditor(editor: monaco.editor.IStandaloneCodeEditor) {
         //@ts-ignore
-        editor.onDidType((text: string) => { 
+        editor.onDidType((text: string) => {
 
             if(editor.getModel()?.getLanguageId() != 'myJava') return;
 
@@ -17,14 +19,14 @@ export class JavaOnDidTypeProvider {
                 editor.executeEdits("new-bullets", [
                     { range, text: insertText }
                 ]);
-    
+
                 // Set position after bulletText
                 editor.setPosition({
                     lineNumber: newLine,
                     column: newColumn
                 });
             };
-    
+
             if (text === "\n") {
                 const model = editor.getModel()!;
                 const position = editor.getPosition()!;
@@ -47,9 +49,9 @@ export class JavaOnDidTypeProvider {
                 const model = editor.getModel()!;
                 const position = editor.getPosition()!;
                 const selection = editor.getSelection()!;
-    
+
                 const isSelected = selection.startColumn != selection.endColumn || selection.startLineNumber != selection.endLineNumber;
-    
+
                 const line = model.getLineContent(position.lineNumber);
                 let doInsert: boolean = true;
                 let charBefore1: string = "x";
@@ -60,7 +62,7 @@ export class JavaOnDidTypeProvider {
                 if (position.column - 1 < line.length) {
                     charAfter = line.charAt(position.column - 1);
                 }
-    
+
                 if (!isSelected) {
                     if (charBefore1 != '"' && charAfter != '"') {
                         insertTextAndSetCursor(position, '"', position.lineNumber, position.column);
@@ -77,11 +79,11 @@ export class JavaOnDidTypeProvider {
                         editor.executeEdits("new-bullets", [
                             { range, text: '' }
                         ]);
-    
+
                     }
                 }
-        
-    
+
+
             }
 
          });

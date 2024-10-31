@@ -3,8 +3,10 @@ import { SystemModule } from "../../runtime/system/SystemModule";
 import { GenericTypeParameter } from "../../types/GenericTypeParameter";
 import { JavaType } from "../../types/JavaType";
 import { JavaTypeStore } from "../JavaTypeStore";
-import { JavaLibraryModule, JavaTypeMap, LibraryKlassType } from "./JavaLibraryModule";
+import { JavaLibraryModule } from "./JavaLibraryModule";
 import { LibraryDeclarationParser } from "./LibraryDeclarationParser";
+import type * as monaco from 'monaco-editor'
+
 
 export class JavaLibraryModuleManager {
 
@@ -38,12 +40,12 @@ export class JavaLibraryModuleManager {
         this.javaTypes = [];
 
         ldp.currentTypeStore = this.typestore;
-    
+
         for(let module of this.libraryModules){
             for (let klass of module.classes) {
                 let npt = ldp.parseClassOrEnumOrInterfaceDeclarationWithoutGenerics(klass, module);
                 this.typestore.addType(npt);
-                this.javaTypes.push(npt);        
+                this.javaTypes.push(npt);
             }
 
             for(let type of module.types){
@@ -63,7 +65,7 @@ export class JavaLibraryModuleManager {
                 ldp.parseClassOrInterfaceDeclarationGenericsAndExtendsImplements(klass, this.typestore, module);
                 ldp.genericParameterMapStack.pop();
             }
-        }        
+        }
 
         for(let module of this.libraryModules){
             for(let klass of module.classes){
@@ -71,7 +73,7 @@ export class JavaLibraryModuleManager {
                 ldp.parseFieldsAndMethods(klass, this.typestore, module);
                 ldp.genericParameterMapStack.pop();
             }
-        }        
+        }
 
         for(let javaClass of this.typestore.getClasses()){
             javaClass.checkIfInterfacesAreImplementedAndSupplementDefaultMethods();

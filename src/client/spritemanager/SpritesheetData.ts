@@ -2,10 +2,11 @@ import { MainBase } from "../main/MainBase.js";
 import { CacheManager } from "../../tools/CacheManager.js";
 import { Workspace } from "../workspace/Workspace.js";
 import { PixiSpritesheetData } from "./PixiSpritesheetData.js";
-import * as PIXI from 'pixi.js';
 import jQuery from 'jquery';
 import { csrfToken } from "../communication/AjaxHelper.js";
 import { JavaEnum } from "../../compiler/java/types/JavaEnum.js";
+import * as UPNG from 'upng-js'
+import JSZip from 'jszip'
 
 
 export class SpritesheetData {
@@ -22,9 +23,9 @@ export class SpritesheetData {
         if (workspace.spritesheetId != null || spritesheetURL != null) {
             await this.load(workspace.spritesheetId != null ? workspace.spritesheetId : spritesheetURL);
 
-            
+
             if (this.pngImageData != null && this.pixiSpritesheetData != null) {
-                
+
                 let graphicsManager = main.getInterpreter().graphicsManager;
                 graphicsManager.setUserData(this.pixiSpritesheetData, this.pngImageData);
 

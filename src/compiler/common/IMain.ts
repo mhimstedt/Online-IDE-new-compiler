@@ -9,6 +9,8 @@ import { CompilerFile } from "./module/CompilerFile.ts";
 import { CompilerWorkspace } from "./module/CompilerWorkspace.ts";
 import { IPosition } from "./range/Position.ts";
 import { IRange } from "./range/Range.ts";
+import type * as monaco from 'monaco-editor'
+
 
 export interface IMain {
 

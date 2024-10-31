@@ -13,6 +13,7 @@ import '/include/css/disassembler.css';
 import { Klass } from "../interpreter/StepFunction";
 import { NonPrimitiveType } from "../../java/types/NonPrimitiveType";
 import { JavaClass } from "../../java/types/JavaClass.ts";
+import * as monaco from 'monaco-editor'
 
 type DisassembledStep = {
     element: HTMLElement;

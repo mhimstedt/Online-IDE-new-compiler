@@ -1,6 +1,7 @@
 import { IMain } from "../../common/IMain.ts";
 import { Range } from "../../common/range/Range.ts";
 import { JavaCompiledModule } from "../module/JavaCompiledModule.ts";
+import * as monaco from 'monaco-editor'
 
 export class JavaSymbolAndMethodMarker {
 
@@ -76,7 +77,7 @@ export class JavaSymbolAndMethodMarker {
             decorations.push({
                 range: { startColumn: 0, startLineNumber: methodRange.startLineNumber, endColumn: 100, endLineNumber: methodRange.endLineNumber },
                 options: {
-                    className: 'jo_highlightMethod', isWholeLine: true, 
+                    className: 'jo_highlightMethod', isWholeLine: true,
                     overviewRuler: {
                         color: { id: "jo_highlightMethod" },
                         darkColor: { id: "jo_highlightMethod" },
@@ -84,7 +85,7 @@ export class JavaSymbolAndMethodMarker {
                     },
                     minimap: {
                         color: { id: 'jo_highlightMethod' },
-                        
+
                         position: monaco.editor.MinimapPosition.Inline
                     },
                     zIndex: -100

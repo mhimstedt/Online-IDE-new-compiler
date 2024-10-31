@@ -5,8 +5,8 @@ import { AccordionElement } from "../main/gui/Accordion";
 import { Main } from "../main/Main";
 import { Patcher } from "./Patcher";
 import { Workspace } from "./Workspace";
+import type * as monaco from 'monaco-editor'
 
-type OnDidChangeContentListener = () => void;
 
 export class File extends CompilerFile {
 
@@ -72,19 +72,19 @@ export class File extends CompilerFile {
 
         if(!hadMonacoModel && !this.main.isEmbedded()){
             model.onDidChangeContent(() => {
-                let main1: Main = <Main>this.main;    
+                let main1: Main = <Main>this.main;
                 if(main1.workspacesOwnerId != main1.user.id){
                     if(this.text_before_revision == null || this.student_edited_after_revision){
                         this.student_edited_after_revision = false;
                         this.text_before_revision = this.getText();
-                        
+
                         this.setSaved(false);
                         main1.networkManager.sendUpdates(null, false);
                         main1.bottomDiv.homeworkManager.showHomeWorkRevisionButton();
                         main1.projectExplorer.renderHomeworkButton(this);
                     }
                 } else {
-                    this.student_edited_after_revision = true; 
+                    this.student_edited_after_revision = true;
                 }
 
             })

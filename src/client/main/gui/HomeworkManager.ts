@@ -4,6 +4,8 @@ import { dateToStringWithoutTime, stringToDate } from "../../../tools/StringTool
 import { Workspace } from "../../workspace/Workspace.js";
 import { Main } from "../Main.js";
 import { File } from '../../workspace/File.js';
+import * as monaco from 'monaco-editor'
+
 
 type FileWithWorkspace = {
     file: File,

@@ -1,13 +1,15 @@
 import { IMain } from "../../common/IMain.ts";
 import { UsagePosition } from "../../common/UsagePosition.ts";
 import { JavaCompiledModule } from "../module/JavaCompiledModule.ts";
+import * as monaco from 'monaco-editor'
+
 
 export class JavaRenameProvider implements monaco.languages.RenameProvider {
 
     constructor(private main: IMain) {
     }
 
-    provideRenameEdits(model: monaco.editor.ITextModel, position: monaco.Position, newName: string, token: monaco.CancellationToken): 
+    provideRenameEdits(model: monaco.editor.ITextModel, position: monaco.Position, newName: string, token: monaco.CancellationToken):
     monaco.languages.ProviderResult<monaco.languages.WorkspaceEdit & monaco.languages.Rejection> {
 
         let editor = monaco.editor.getEditors().find(e => e.getModel() == model);
@@ -17,17 +19,17 @@ export class JavaRenameProvider implements monaco.languages.RenameProvider {
 
         if(!usagePosition){
             return;
-        } 
+        }
 
         let edits: monaco.languages.IWorkspaceTextEdit[] = [];
 
         for(let module of this.main.getCompiler().getAllModules()){
-            
+
             let allUsagePositions = (<JavaCompiledModule>module).getUsagePositionsForSymbol(usagePosition?.symbol);
-    
+
             if(!allUsagePositions) continue;
-    
-    
+
+
             for(let up of allUsagePositions){
                 if(!up.file.getMonacoModel()!?.uri) continue;
                 edits.push({

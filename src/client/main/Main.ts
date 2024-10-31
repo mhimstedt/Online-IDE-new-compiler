@@ -50,6 +50,8 @@ import { Disassembler } from '../../compiler/common/disassembler/Disassembler.js
 import { ExceptionMarker } from '../../compiler/common/interpreter/ExceptionMarker.js';
 import { JUnitTestrunner } from '../../compiler/common/testrunner/JUnitTestrunner.js';
 import { IPosition } from '../../compiler/common/range/Position.js';
+import type * as monaco from 'monaco-editor'
+
 
 export class Main implements MainBase {
 

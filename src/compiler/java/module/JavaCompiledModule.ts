@@ -23,6 +23,8 @@ import { StaticNonPrimitiveType } from "../types/StaticNonPrimitiveType.ts";
 import { JavaBaseModule } from "./JavaBaseModule";
 import { JavaModuleManager } from "./JavaModuleManager";
 import { TypePosition } from "./TypePosition.ts";
+import type * as monaco from 'monaco-editor'
+
 
 export type JavaMethodCallPosition = {
     identifierRange: monaco.IRange,

@@ -7,6 +7,8 @@ import { Thread } from "../interpreter/Thread";
 import { Position } from "../range/Position.ts";
 import { IRange } from "../range/Range.ts";
 import { CompilerFile } from "./CompilerFile";
+import type * as monaco from 'monaco-editor'
+
 
 export abstract class Module {
 

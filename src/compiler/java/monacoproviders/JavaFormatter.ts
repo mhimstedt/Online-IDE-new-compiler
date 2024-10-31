@@ -1,7 +1,9 @@
-import { IRange, Range } from "../../common/range/Range";
+import { IRange } from "../../common/range/Range";
 import { Lexer } from "../lexer/Lexer";
 import { Token, TokenList } from "../lexer/Token";
 import { TokenType } from "../TokenType";
+import * as monaco from 'monaco-editor'
+
 
 export class JavaFormatter implements monaco.languages.DocumentFormattingEditProvider,
     monaco.languages.OnTypeFormattingEditProvider {

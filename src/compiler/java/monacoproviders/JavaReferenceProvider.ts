@@ -1,15 +1,17 @@
 import { IMain } from "../../common/IMain.ts";
 import { UsagePosition } from "../../common/UsagePosition.ts";
 import { JavaCompiledModule } from "../module/JavaCompiledModule.ts";
+import * as monaco from 'monaco-editor'
+
 
 export class JavaReferenceProvider implements monaco.languages.ReferenceProvider {
 
     constructor(private main: IMain) {
     }
 
-    provideReferences(model: monaco.editor.ITextModel, position: monaco.Position, context: monaco.languages.ReferenceContext, token: monaco.CancellationToken): 
+    provideReferences(model: monaco.editor.ITextModel, position: monaco.Position, context: monaco.languages.ReferenceContext, token: monaco.CancellationToken):
     monaco.languages.ProviderResult<monaco.languages.Location[]> {
-        
+
         let editor = monaco.editor.getEditors().find(e => e.getModel() == model);
         if(!editor) return;
 
@@ -17,17 +19,17 @@ export class JavaReferenceProvider implements monaco.languages.ReferenceProvider
 
         if(!usagePosition){
             return;
-        } 
+        }
 
         let locations: monaco.languages.Location[] = [];
 
         for(let module of this.main.getCompiler().getAllModules()){
-            
+
             let allUsagePositions = (<JavaCompiledModule>module).getUsagePositionsForSymbol(usagePosition?.symbol);
-    
+
             if(!allUsagePositions) continue;
-    
-    
+
+
             for(let up of allUsagePositions){
                 if(!up.file.getMonacoModel()?.uri) continue;
                 locations.push({

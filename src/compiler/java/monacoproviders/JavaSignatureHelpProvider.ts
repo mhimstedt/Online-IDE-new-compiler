@@ -2,6 +2,8 @@ import { IMain } from "../../common/IMain.ts";
 import { JavaCompiledModule, JavaMethodCallPosition } from "../module/JavaCompiledModule.ts";
 import { JavaArrayType } from "../types/JavaArrayType.ts";
 import { JavaMethod } from "../types/JavaMethod.ts";
+import type * as monaco from 'monaco-editor'
+
 
 export class JavaSignatureHelpProvider implements monaco.languages.SignatureHelpProvider {
 

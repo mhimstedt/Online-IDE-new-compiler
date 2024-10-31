@@ -3,6 +3,13 @@ import * as PIXI from 'pixi.js';
 import { ThemeManager } from "../main/gui/ThemeManager.js";
 import { MainEmbedded } from "./MainEmbedded.js";
 
+import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
+import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
+import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker'
+import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
+import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
+
+
 // All css files for embedded online-ide:
 import "/include/css/bottomdiv.css";
 import "/include/css/debugger.css";
@@ -14,7 +21,6 @@ import "/include/css/run.css";
 
 import spritesheetjson from '/include/graphics/spritesheet.json.txt';
 import spritesheetpng from '/include/graphics/spritesheet.png';
-
 import { PixiSpritesheetData } from "../spritemanager/PixiSpritesheetData.js";
 
 declare var APP_VERSION: string;
@@ -37,67 +43,50 @@ function loadSpritesheet() {
         pathPraefix = pathPraefix.substring(0, pathPraefix.length - 1);
     }
 
-        fetch(pathPraefix + `${spritesheetjson}`)
-            .then((response) => response.json())
-            .then((spritesheetData: PixiSpritesheetData) => {
-                PIXI.Assets.load(pathPraefix + `${spritesheetpng}`).then((texture: PIXI.Texture) => {
-                    let source: PIXI.ImageSource = texture.source;
-                    source.minFilter = "nearest";
-                    source.magFilter = "nearest";
+    fetch(pathPraefix + `${spritesheetjson}`)
+        .then((response) => response.json())
+        .then((spritesheetData: PixiSpritesheetData) => {
+            PIXI.Assets.load(pathPraefix + `${spritesheetpng}`).then((texture: PIXI.Texture) => {
+                let source: PIXI.ImageSource = texture.source;
+                source.minFilter = "nearest";
+                source.magFilter = "nearest";
 
-                    spritesheetData.meta.size.w = texture.width;
-                    spritesheetData.meta.size.h = texture.height;
-                    let spritesheet = new PIXI.Spritesheet(texture, spritesheetData);
-                    spritesheet.parse().then(() => {
-                        PIXI.Assets.cache.set('spritesheet', spritesheet);
-                    });
-                })
-            });
-            
+                spritesheetData.meta.size.w = texture.width;
+                spritesheetData.meta.size.h = texture.height;
+                let spritesheet = new PIXI.Spritesheet(texture, spritesheetData);
+                spritesheet.parse().then(() => {
+                    PIXI.Assets.cache.set('spritesheet', spritesheet);
+                });
+            })
+        });
 }
 
-async function initMonacoEditor(): Promise<void> {
+function initMonacoEditor(): void {
+    // see https://github.com/microsoft/monaco-editor/blob/main/docs/integrate-esm.md#using-vite
+    // https://dev.to/lawrencecchen/monaco-editor-svelte-kit-572
+    // https://github.com/microsoft/monaco-editor/issues/4045
 
-    return new Promise((resolve) => {
-
-        let prefix = "";
-        let editorPath = "lib/monaco-editor/dev/vs"
-        //@ts-ignore
-        if (window.javaOnlineDir != null) {
-            //@ts-ignore
-            prefix = window.javaOnlineDir;
+    self.MonacoEnvironment = {
+        getWorker: (_workerId, label) => {
+            switch (label) {
+                case 'json':
+                    return new jsonWorker()
+                case 'css':
+                case 'scss':
+                case 'less':
+                    return new cssWorker()
+                case 'html':
+                case 'handlebars':
+                case 'razor':
+                    return new htmlWorker()
+                case 'typescript':
+                case 'javascript':
+                    return new tsWorker()
+                default:
+                    return new editorWorker()
+            }
         }
-
-        //@ts-ignore
-        if (window.monacoEditorPath != null) {
-            //@ts-ignore
-            editorPath = window.monacoEditorPath;
-        }
-
-        //@ts-ignore
-        window.AMDLoader.Configuration.ignoreDuplicateModules = ["jquery"];
-
-        //@ts-ignore
-        window.require.config({ paths: { 'vs': prefix + editorPath } });
-        //@ts-ignore
-        window.require.config({
-            'vs/nls': {
-                availableLanguages: {
-                    '*': 'de'
-                }
-            },
-            ignoreDuplicateModules: ["vs/editor/editor.main", 'jquery']
-        });
-
-        //@ts-ignore
-        window.require(['vs/editor/editor.main'], function () {
-
-            resolve();
-
-        });
-
-    })
-
+    };
 
 }
 
@@ -196,10 +185,10 @@ jQuery(function () {
 
     let embeddedStarter = new EmbeddedStarter();
 
-    initMonacoEditor().then(() => {
-        embeddedStarter.initEditor();
-        embeddedStarter.initGUI();
-    })
+    initMonacoEditor()
+
+    embeddedStarter.initEditor();
+    embeddedStarter.initGUI();
 
     //@ts-ignore
     p5.disableFriendlyErrors = true

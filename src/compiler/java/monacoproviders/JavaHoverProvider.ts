@@ -1,7 +1,6 @@
 import { removeJavadocSyntax } from "../../../tools/StringTools.ts";
 import { IMain } from "../../common/IMain.ts";
 import { ValueRenderer } from "../../common/debugger/ValueRenderer.ts";
-import { ValueTool } from "../../common/debugger/ValueTool.ts";
 import { SchedulerState } from "../../common/interpreter/SchedulerState.ts";
 import { Module } from "../../common/module/Module.ts";
 import { Range } from "../../common/range/Range.ts";
@@ -12,6 +11,8 @@ import { JavaField } from "../types/JavaField.ts";
 import { JavaMethod } from "../types/JavaMethod.ts";
 import { JavaParameter } from "../types/JavaParameter.ts";
 import { NonPrimitiveType } from "../types/NonPrimitiveType.ts";
+import * as monaco from 'monaco-editor'
+
 
 export class JavaHoverProvider {
 

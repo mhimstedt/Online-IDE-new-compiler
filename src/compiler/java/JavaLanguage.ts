@@ -14,9 +14,10 @@ import { JavaRenameProvider } from "./monacoproviders/JavaRenameProvider";
 import { JavaSignatureHelpProvider } from "./monacoproviders/JavaSignatureHelpProvider";
 import { JavaSymbolAndMethodMarker } from "./monacoproviders/JavaSymbolAndMethodMarker";
 import { JavaRepl as JavaRepl } from "./parser/repl/JavaRepl";
+import * as monaco from 'monaco-editor'
 
 export class JavaLanguage extends Language {
-    
+
     providersRegistered: boolean = false;
     compiler: JavaCompiler;
     repl: JavaRepl;
@@ -30,7 +31,7 @@ export class JavaLanguage extends Language {
     registerLanguageAtMonacoEditor(): void {
         JavaLanguage.registerLanguage();
         this.registerProviders();
-    }  
+    }
 
     private registerProviders(){
 
@@ -58,7 +59,7 @@ export class JavaLanguage extends Language {
         monaco.languages.register({
             id: 'myJava',
             extensions: ['.learnJava'],
-            //  mimetypes: ["text/x-java-source", "text/x-java"]  
+            //  mimetypes: ["text/x-java-source", "text/x-java"]
         });
 
         let conf: monaco.languages.LanguageConfiguration = {

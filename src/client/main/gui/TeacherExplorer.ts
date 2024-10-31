@@ -6,6 +6,8 @@ import { Workspace } from "../../workspace/Workspace.js";
 import { GUIToggleButton } from "../../../tools/components/GUIToggleButton.js";
 import jQuery from "jquery";
 import { PushClientManager } from "../../communication/pushclient/PushClientManager.js";
+import * as monaco from 'monaco-editor'
+
 
 export class TeacherExplorer {
 
