@@ -89,9 +89,6 @@ export class Interpreter {
         public exceptionMarker?: ExceptionMarker, private main?: IMain
     ) {
 
-        //@ts-ignore
-        if (typeof p5 === 'object') p5.disableFriendlyErrors = true
-
         this.printManager = printManager || new DummyPrintManager();
 
         this.graphicsManager?.setInterpreter(this);
