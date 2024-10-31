@@ -1,3 +1,4 @@
+import Chart from "chart.js";
 import { ajax, extractCsrfTokenFromGetRequest } from "../communication/AjaxHelper.js";
 import { GetStatisticsRequest, GetStatisticsResponse, StatisticData } from "../communication/Data.js";
 import jQuery from 'jquery'
