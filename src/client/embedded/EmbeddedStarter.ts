@@ -23,6 +23,7 @@ import spritesheetjson from '/include/graphics/spritesheet.json.txt';
 import spritesheetpng from '/include/graphics/spritesheet.png';
 import { PixiSpritesheetData } from "../spritemanager/PixiSpritesheetData.js";
 
+
 declare var APP_VERSION: string;
 
 export type JOScript = {
@@ -189,9 +190,6 @@ jQuery(function () {
 
     embeddedStarter.initEditor();
     embeddedStarter.initGUI();
-
-    //@ts-ignore
-    p5.disableFriendlyErrors = true
 
     loadSpritesheet();
 
