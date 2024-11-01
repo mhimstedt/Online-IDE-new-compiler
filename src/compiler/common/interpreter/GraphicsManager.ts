@@ -59,7 +59,8 @@ export class GraphicsManager {
             let textureNew = PIXI.Texture.from(new PIXI.BufferImageSource({
                 resource: this.pngImageData,
                 width: this.pixiSpritesheetData.meta.size.w,
-                height: this.pixiSpritesheetData.meta.size.h
+                height: this.pixiSpritesheetData.meta.size.h,
+                alphaMode: "no-premultiply-alpha"
             }))
 
             this.pixiUserSpritesheet = new PIXI.Spritesheet(textureNew, this.pixiSpritesheetData);
