@@ -355,7 +355,12 @@ export class Interpreter {
                 this.stop(false);
             });
 
-        this.actionManager.registerAction("interpreter.stepOver", ['F6'], "Einzelschritt (Step over)",
+        this.actionManager.registerAction("interpreter.toggleBreakpoint", ['F9'], "Haltepunkt an/aus",
+            () => {
+                this.breakpointManager.toggleBreakpoint(this.main.getMainEditor().getSelection().startLineNumber);
+            });
+
+        this.actionManager.registerAction("interpreter.stepOver", ['F10'], "Einzelschritt (Step over)",
             () => {
                 this.executeOneStep(false);
             });
