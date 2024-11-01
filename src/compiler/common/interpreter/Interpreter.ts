@@ -376,9 +376,8 @@ export class Interpreter {
             });
 
         this.actionManager.registerAction("interpreter.goto", [], "Goto",
-            (name: string, buttonToggler?: ButtonToggler, pressed_key?: string, ...args: any[]) => {
-                const lineNo = args[0]
-                this.goto(lineNo)
+            () => {
+                this.goto(this.main.getMainEditor().getSelection().startLineNumber)
             });
     }
 

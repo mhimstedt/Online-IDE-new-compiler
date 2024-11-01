@@ -85,7 +85,7 @@ export class JavaAddEditorShortcuts {
             // Method that will be executed when the action is triggered.
             // @param editor The editor instance is passed in as a convenience
             run: (ed) => {
-                main.getActionManager().trigger("interpreter.goto", editor.getSelection().startLineNumber)
+                main.getActionManager().trigger("interpreter.goto")
             }
         });
 
