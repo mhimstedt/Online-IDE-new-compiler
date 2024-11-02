@@ -129,7 +129,14 @@ export class CompilerFile {
     }
 
     restoreViewState(editor: monaco.editor.IStandaloneCodeEditor) {
-        if (this.editorState) editor.restoreViewState(this.editorState);
+        if (this.editorState) {
+            try{
+                editor.restoreViewState(this.editorState)
+            }catch(e){
+                
+            }
+        };
+        this.editorState = null;
     }
 
     hasMonacoModel(): boolean {

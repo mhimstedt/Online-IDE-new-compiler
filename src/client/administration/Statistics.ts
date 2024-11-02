@@ -7,6 +7,7 @@ import jQuery from 'jquery'
 import '/assets/css/statistics.css';
 
 
+
 class Statistics {
 
     //@ts-ignore
