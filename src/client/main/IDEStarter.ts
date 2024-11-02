@@ -13,24 +13,25 @@ import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker'
 import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
 import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 
+import "/assets/fonts/fonts.css";
+import "/assets/css/diagram.css";
 
 // All css files for fullscreen online-ide:
-import "/include/css/bottomdiv.css";
-import "/include/css/debugger.css";
-import "/include/css/editor.css";
-import "/include/css/editorStatic.css";
-import "/include/css/helper.css";
-import "/include/css/icons.css";
-import "/include/css/run.css";
-import "/include/css/dialog.css";
-import "/include/css/synchronize-repo.css";
-import "/include/css/updatecreate-repo.css";
-import "/include/css/spritemanager.css";
+import "/assets/css/bottomdiv.css";
+import "/assets/css/debugger.css";
+import "/assets/css/editor.css";
+import "/assets/css/editorStatic.css";
+import "/assets/css/helper.css";
+import "/assets/css/icons.css";
+import "/assets/css/run.css";
+import "/assets/css/dialog.css";
+import "/assets/css/synchronize-repo.css";
+import "/assets/css/updatecreate-repo.css";
+import "/assets/css/spritemanager.css";
 
-import spritesheetjson from '/include/graphics/spritesheet.json.txt';
-import spritesheetpng from '/include/graphics/spritesheet.png';
+import spritesheetjson from '/assets/graphics/spritesheet.json.txt';
+import spritesheetpng from '/assets/graphics/spritesheet.png';
 import { PixiSpritesheetData } from "../spritemanager/PixiSpritesheetData.js";
-import * as p5 from 'p5';
 
 
 declare var BUILD_DATE: string;

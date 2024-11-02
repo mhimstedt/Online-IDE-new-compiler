@@ -1,7 +1,7 @@
 import { findGetParameter } from '../../tools/HtmlTools';
 import { setCookie } from '../../tools/HttpTools';
 import { VidisNewUserRequest } from '../communication/Data';
-import '/include/css/registerUser.css';
+import '/assets/css/registerUser.css';
 
 type NewUserResponse = {success: boolean, message: string, fromSqlIde: boolean, singleUseToken: string}
 

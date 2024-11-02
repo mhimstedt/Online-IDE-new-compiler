@@ -1,5 +1,5 @@
-import '/include/css/imagesprites.css';
-import '/include/css/spriteLibrary.css';
+import '/assets/css/imagesprites.css';
+import '/assets/css/spriteLibrary.css';
 import jQuery from 'jquery';
 import { extractCsrfTokenFromGetRequest } from '../communication/AjaxHelper.js';
 import { SpriteLibrary } from '../../compiler/java/runtime/graphics/SpriteLibrary.js';

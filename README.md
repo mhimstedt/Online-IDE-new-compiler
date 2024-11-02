@@ -7,7 +7,7 @@ Java-ähnliche Programmiersprache (Compiler, Interpreter, Debugger) mit IDE, die
 Die IDE gibt es in zwei Varianten: als **[Online-IDE für Schulen](https://www.online-ide.de)** zur Verwendung im Unterricht und bei den Schüler/innen zuhause sowie als kleine **[Embedded-IDE](#2-embedded-ide)** (Open Source, GNU GPL v3), die in beliebige Webseiten eingebunden werden kann und mit der beispielsweise Informatiklehrkräfte begleitend zum Unterricht eine interaktive Dokumentation für die Schüler/innen erstellen können, [ähnlich wie LearnJ](https://www.learnj.de).
 
 ## 1. Online-IDE für Schulen
-![Online-IDE](public/assets/graphics/Online-IDE.png)
+![Online-IDE](assets/graphics/Online-IDE.png)
 Mit der Online-IDE können Schüler/innen im Browser [in einer Java-ähnlichen Programmiersprache](https://www.learnj.de/doku.php?id=unterschiede_zu_java:start) programmieren. Die Programme werden auf dem Server gespeichert, so dass zuhause dieselbe Programmierumgebung bereitsteht wie in der Schule - ganz ohne Installation.
 
 Die Lehrkraft hat Zugriff auf die Workspaces der Schüler/innen, so dass sie Hausaufgaben bequem korrigieren und bei Programmfehlern schnell helfen kann.
@@ -94,7 +94,7 @@ for(int i = 0; i < 10; i++){
 </div>
 ```
 Dieses Beispiel erscheint so im Browser:
-![Beispiel 1](public/assets/graphics/Beispiel_1.png)
+![Beispiel 1](assets/graphics/Beispiel_1.png)
 
 ### Beispiel mit Dateiliste, Console, Fehlerliste und Tipp
 ```html
@@ -139,7 +139,7 @@ vy = v * Math.sin(w);
 </div>
 ```
 Dieses Beispiel erscheint so im Browser:
-![Beispiel 2](public/assets/graphics/Beispiel_2.png)
+![Beispiel 2](assets/graphics/Beispiel_2.png)
 
 ### Das Attribut data-java-online
 Im Attribut `data-java-online` kann die Embedded-IDE konfiguriert werden:

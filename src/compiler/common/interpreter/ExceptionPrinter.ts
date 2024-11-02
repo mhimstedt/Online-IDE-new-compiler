@@ -3,7 +3,7 @@ import { IMain } from "../IMain";
 import { Exception } from "./ExceptionInfo";
 import { IPrintManager } from "./IPrintManager";
 import { Stacktrace } from "./ThrowableType";
-import '/include/css/exception.css';
+import '/assets/css/exception.css';
 
 
 export class ExceptionPrinter {

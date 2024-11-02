@@ -5,7 +5,7 @@ import { IRange } from "../range/Range";
 import { Step } from "./Program";
 import { SchedulerState } from "./SchedulerState";
 import { IThrowable } from "./ThrowableType";
-import '/include/css/exceptionmarker.css';
+import '/assets/css/exceptionmarker.css';
 
 export class ExceptionMarker {
 

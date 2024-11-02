@@ -10,9 +10,9 @@ import * as marginExtruder from './marginExtruder.js';
 // var marginExtruder = require('./marginExtruder.js');
 
 let dir = "./material/spritesheet-files/"
-let output_dir = "./include/graphics/"
+let output_dir = "./assets/graphics/"
 let cssGraphicURL = "../graphics/spritesheet.png"
-let cssFilename = "./include/css/imagesprites.css"
+let cssFilename = "./assets/css/imagesprites.css"
 
 // Generate our spritesheet
 

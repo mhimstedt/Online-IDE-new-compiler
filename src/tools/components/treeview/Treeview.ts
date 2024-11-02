@@ -1,7 +1,7 @@
 import { DOM } from '../../DOM.ts';
 import { TreeviewAccordion } from './TreeviewAccordion.ts';
-import '/include/css/treeview.css';
-import '/include/css/icons.css';
+import '/assets/css/treeview.css';
+import '/assets/css/icons.css';
 import { ExpandCollapseComponent, ExpandCollapseState } from '../ExpandCollapseComponent.ts';
 import { IconButtonComponent, IconButtonListener } from '../IconButtonComponent.ts';
 import { TreeviewNode, TreeviewNodeOnClickHandler } from './TreeviewNode.ts';

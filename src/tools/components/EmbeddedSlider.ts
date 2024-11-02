@@ -1,4 +1,4 @@
-import '/include/css/slider.css';
+import '/assets/css/slider.css';
 import { DOM } from '../DOM';
 
 export class EmbeddedSlider {

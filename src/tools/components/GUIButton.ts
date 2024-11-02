@@ -1,5 +1,5 @@
 import jQuery from "jquery";
-import "/include/css/guibutton.css";
+import "/assets/css/guibutton.css";
 
 type Listener = () => void;
 

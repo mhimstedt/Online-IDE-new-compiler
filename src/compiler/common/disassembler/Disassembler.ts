@@ -9,7 +9,7 @@ import { Step } from "../interpreter/Program";
 import { CompilerFile } from "../module/CompilerFile";
 import { ProgramPointerPositionInfo } from "../monacoproviders/ProgramPointerManager";
 import { IRange } from "../range/Range";
-import '/include/css/disassembler.css';
+import '/assets/css/disassembler.css';
 import { Klass } from "../interpreter/StepFunction";
 import { NonPrimitiveType } from "../../java/types/NonPrimitiveType";
 import { JavaClass } from "../../java/types/JavaClass.ts";

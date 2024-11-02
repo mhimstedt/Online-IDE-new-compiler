@@ -5,7 +5,7 @@ var quotes = getQuotes();
 var externalQuotesValue = 'single';
 var symbols = /[\r\n%#()<>?\[\\\]^`{|}]/g;
 
-let path = './include/icons';
+let path = './material/icons';
 
 let filenameToURLMap: { [filename: string]: string } = {};
 let filenames: string[] = [];
@@ -27,7 +27,7 @@ fs.readdir(path, function (err, items) {
         }
     }
 
-    fs.writeFile('./include/css/icons.css', iconCss, () => {
+    fs.writeFile('./assets/css/icons.css', iconCss, () => {
         console.log('Done!');
     });
 

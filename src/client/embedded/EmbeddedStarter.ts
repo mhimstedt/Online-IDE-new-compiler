@@ -11,16 +11,17 @@ import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 
 
 // All css files for embedded online-ide:
-import "/include/css/bottomdiv.css";
-import "/include/css/debugger.css";
-import "/include/css/editor.css";
-import "/include/css/embedded.css";
-import "/include/css/helper.css";
-import "/include/css/icons.css";
-import "/include/css/run.css";
+import "/assets/fonts/fonts.css";
+import "/assets/css/bottomdiv.css";
+import "/assets/css/debugger.css";
+import "/assets/css/editor.css";
+import "/assets/css/embedded.css";
+import "/assets/css/helper.css";
+import "/assets/css/icons.css";
+import "/assets/css/run.css";
 
-import spritesheetjson from '/include/graphics/spritesheet.json.txt';
-import spritesheetpng from '/include/graphics/spritesheet.png';
+import spritesheetjson from '/assets/graphics/spritesheet.json.txt';
+import spritesheetpng from '/assets/graphics/spritesheet.png';
 import { PixiSpritesheetData } from "../spritemanager/PixiSpritesheetData.js";
 
 

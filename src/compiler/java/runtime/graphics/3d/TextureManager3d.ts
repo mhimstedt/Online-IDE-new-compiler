@@ -3,8 +3,8 @@ import { PixiSpritesheetData } from '../../../../../client/spritemanager/PixiSpr
 import { Interpreter } from '../../../../common/interpreter/Interpreter';
 import { JRC } from '../../../language/JavaRuntimeLibraryComments';
 import { RuntimeExceptionClass } from '../../system/javalang/RuntimeException';
-import spritesheetjson from '/include/graphics/spritesheet.json.txt';
-import spritesheetpng from '/include/graphics/spritesheet.png';
+import spritesheetjson from '/assets/graphics/spritesheet.json.txt';
+import spritesheetpng from '/assets/graphics/spritesheet.png';
 
 export class TextureManager3d {
 

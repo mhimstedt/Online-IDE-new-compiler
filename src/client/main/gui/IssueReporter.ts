@@ -2,7 +2,7 @@ import { DOM } from "../../../tools/DOM.js";
 import { ajax, ajaxAsync } from "../../communication/AjaxHelper.js";
 import { Main } from "../Main.js";
 import { Dialog } from "./Dialog.js";
-import '/include/css/issuereporter.css';
+import '/assets/css/issuereporter.css';
 
 type ReportIssueRequest = {
     workspace_id: number,

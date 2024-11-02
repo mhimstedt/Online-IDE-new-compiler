@@ -1,6 +1,6 @@
 import { Treeview } from './Treeview.ts';
-import '/include/css/treeview.css';
-import '/include/css/icons.css';
+import '/assets/css/treeview.css';
+import '/assets/css/icons.css';
 import { DOM } from '../../DOM.ts';
 import { ExpandCollapseState } from '../ExpandCollapseComponent.ts';
 import { TreeviewSplitter } from './TreeviewSplitter.ts';
