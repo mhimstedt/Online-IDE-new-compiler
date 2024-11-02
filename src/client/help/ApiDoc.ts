@@ -11,6 +11,10 @@ import { extractCsrfTokenFromGetRequest } from "../communication/AjaxHelper.js";
 import { HelpMessages } from './HelpMessages.js';
 import * as monaco from 'monaco-editor'
 
+import "/assets/fonts/fonts.css";
+import "/assets/css/apidoc.css";
+
+
 export class ApiDoc {
     async start() {
 

@@ -12,9 +12,9 @@ import { AutoLogout } from "../main/AutoLogout.js";
 import { SchoolSettings as SchoolSettingsMI } from "./SchoolSettingsMI.js";
 import jQuery from 'jquery'
 
-import "/include/css/icons.css";
-import "/include/css/administration.css";
-
+import "/assets/css/icons.css";
+import "/assets/css/administration.css";
+import "/assets/fonts/fonts.css";
 
 export class Administration {
 

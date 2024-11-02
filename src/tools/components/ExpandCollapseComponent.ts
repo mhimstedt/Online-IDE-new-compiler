@@ -1,5 +1,5 @@
 import { DOM } from "../DOM.ts";
-import '/include/css/icons.css';
+import '/assets/css/icons.css';
 
 export type ExpandCollapseState = "expanded" | "collapsed";
 

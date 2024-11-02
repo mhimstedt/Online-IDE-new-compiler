@@ -4,7 +4,8 @@ import { GetStatisticsRequest, GetStatisticsResponse, StatisticData } from "../c
 import moment from 'moment'
 import jQuery from 'jquery'
 
-import '/include/css/statistics.css';
+import '/assets/css/statistics.css';
+
 
 
 class Statistics {

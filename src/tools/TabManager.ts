@@ -1,4 +1,4 @@
-import '/include/css/tabs.css';
+import '/assets/css/tabs.css';
 
 export class TabManager {
 

@@ -2,7 +2,7 @@ import { DOM } from "../../../tools/DOM";
 import { TokenType } from "../TokenType";
 import { TokenList } from "./Token";
 
-import '/include/css/tokenprinter.css';
+import '/assets/css/tokenprinter.css';
 
 export class TokenPrinter {
 

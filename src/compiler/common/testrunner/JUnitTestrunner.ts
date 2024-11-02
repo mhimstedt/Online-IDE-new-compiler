@@ -10,7 +10,7 @@ import { Module } from "../module/Module";
 import { AssertionResult } from "./AggregatingAssertionObserver";
 import { JUnitTestrunnerLanguage } from "./JUnitTestrunnerLanguage";
 import { JUnitTreeviewEntry } from "./JUnitTreeviewEntry";
-import '/include/css/junit.css';
+import '/assets/css/junit.css';
 import { JUnitProgressbar } from './JUnitProgressbar';
 import { TreeviewNode } from '../../../tools/components/treeview/TreeviewNode';
 import * as monaco from 'monaco-editor';

@@ -13,7 +13,7 @@ import { DebuggerSymbolEntry } from "./DebuggerSymbolEntry";
 import { DebuggerWatchEntry } from "./DebuggerWatchEntry.ts";
 import { DebuggerWatchSection } from "./DebuggerWatchSection.ts";
 import { SymbolTableSection } from "./SymbolTableSection";
-import '/include/css/debugger.css';
+import '/assets/css/debugger.css';
 import { IPosition } from "../range/Position.ts";
 import { Range } from "../range/Range.ts";
 
