@@ -22,6 +22,7 @@ while(minute.length < 2) minute = "0" + minute;
 var buildDate = curr_date + "." + curr_month + "." + curr_year + ", " + hour + ":" + minute + " Uhr";
 
 export default defineConfig({
+  appType: 'mpa', // to serve 404 on "not found" (instead of serving index.html)
   define: {
     'APP_VERSION': JSON.stringify(pkg.version),
     'BUILD_DATE': JSON.stringify(buildDate)

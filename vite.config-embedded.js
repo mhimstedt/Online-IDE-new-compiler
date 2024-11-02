@@ -24,6 +24,7 @@ export default defineConfig({
     'BUILD_DATE': JSON.stringify(buildDate)
   },
   build: {
+    appType: 'mpa', // to serve 404 on "not found" (instead of serving index.html)
     sourcemap: true,
     rollupOptions: {
       input: {
