@@ -414,13 +414,15 @@ export abstract class StatementParser extends TermParser {
 
     parseReturn(): ASTReturnNode {
         let returnToken = this.getAndSkipToken();
-
-        let term = this.tt == TokenType.semicolon ? undefined : this.parseTerm();
-
+        let term;
+        if(this.tt==TokenType.semicolon){
+            term=undefined;
+        }else{
+            term = this.parseTerm();
+            this.expect(TokenType.semicolon);
+        }
         while (this.comesToken(TokenType.semicolon, true)) { }
-
         return this.nodeFactory.buildReturnNode(returnToken, term);
-
     }
 
 }
