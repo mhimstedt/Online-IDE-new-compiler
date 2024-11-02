@@ -1,4 +1,5 @@
 import { DOM } from "../../../tools/DOM";
+import { JavaCompilerStringConstants } from "../../java/JavaCompilerStringConstants";
 import { IMain } from "../IMain";
 import { Exception } from "./ExceptionInfo";
 import { IPrintManager } from "./IPrintManager";
@@ -48,7 +49,14 @@ export class ExceptionPrinter {
         for (let ste of stacktrace) {
             if (!ste.range) continue;
             let stacktraceDiv = DOM.makeDiv(outerDiv, 'jo_exceptionPrinter_stacktrace');
-            stacktraceDiv.innerHTML = `at ${ste.methodIdentifierWithClass} (<span class="jo_stacktraceLink">File ${ste.file.name}: ${ste.range.startLineNumber}</span>)`;
+            let location;
+            if(ste.methodIdentifierWithClass.endsWith("."+JavaCompilerStringConstants.mainMethodIdentifier)){
+                stacktraceDiv.innerHTML = `in main programm (<span class="jo_stacktraceLink">File ${ste.file.name}: ${ste.range.startLineNumber}</span>)`;
+            }else if(ste.methodIdentifierWithClass.startsWith("$MainClass")){
+                stacktraceDiv.innerHTML = `in ${ste.methodIdentifierWithClass.split(".")[1]} (<span class="jo_stacktraceLink">File ${ste.file.name}: ${ste.range.startLineNumber}</span>)`;
+            }else{
+                stacktraceDiv.innerHTML = `at ${ste.methodIdentifierWithClass} (<span class="jo_stacktraceLink">File ${ste.file.name}: ${ste.range.startLineNumber}</span>)`;
+            }
 
             let linkSpan = stacktraceDiv.getElementsByClassName("jo_stacktraceLink")[0];
             linkSpan.addEventListener("click", () => {
