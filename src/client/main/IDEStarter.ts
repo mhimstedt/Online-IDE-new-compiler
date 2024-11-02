@@ -32,8 +32,6 @@ import "/assets/css/spritemanager.css";
 import spritesheetjson from '/assets/graphics/spritesheet.json.txt';
 import spritesheetpng from '/assets/graphics/spritesheet.png';
 import { PixiSpritesheetData } from "../spritemanager/PixiSpritesheetData.js";
-import * as p5 from 'p5';
-
 
 
 declare var BUILD_DATE: string;
