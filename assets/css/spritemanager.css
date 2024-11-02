@@ -191,7 +191,7 @@
 }
 
 .jo_spritepreview-innerbox {
-    background: url('/assets/graphics/checkerboard-background.png');
+    background: url('../graphics/checkerboard-background.png');
     background-repeat: repeat;
 }
 

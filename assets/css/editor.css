@@ -146,7 +146,7 @@ body .monaco-editor-hover .monaco-tokenized-source {
 }
 
 .jo_parenthesis_warning>.jo_warning_light {
-    background-image: url("assets/graphics/Warnlampe_css.png");
+    background-image: url("../graphics/Warnlampe_css.png");
     position: absolute;
     z-index: 1;
     width: 100%;
@@ -874,7 +874,7 @@ body .monaco-editor-hover .monaco-tokenized-source {
     margin-top: 2px; */
     /* width: 16px;
     height: 16px; */
-    /* background-image: url('/assets/projectexplorer/start-dark.svg'); */
+    /* background-image: url('../projectexplorer/start-dark.svg'); */
 }
 
 .jo_file>.jo_delete, .jo_file .jo_pruefung_settings {

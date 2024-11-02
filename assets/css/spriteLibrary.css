@@ -125,7 +125,7 @@ h1 {
 }
 
 .jo_spritelibrary-innerbox {
-    background: url('/assets/graphics/checkerboard-background.png');
+    background: url('../graphics/checkerboard-background.png');
     background-repeat: repeat;
 }
 
