@@ -1,0 +1,60 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug IDE Edge",
+            "request": "launch",
+            "type": "msedge",
+            "url": "http://localhost:3000",
+          
+            "webRoot": "${workspaceFolder}"
+        },
+        {
+            "name": "Debug Embedded Edge",
+            "request": "launch",
+            "type": "msedge",
+            "url": "http://localhost:3000/embedded.html",
+            "webRoot": "${workspaceFolder}"
+        },
+        {
+            "name": "Debug registerUser.html",
+            "request": "launch",
+            "type": "msedge",
+            "url": "http://localhost:3000/registerUser.html",
+            "webRoot": "${workspaceFolder}"
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Debug IDE Chrome",
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}"
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Debug Embedded Chrome",
+            "url": "http://localhost:3000/embedded.html",
+            "webRoot": "${workspaceFolder}"
+        },
+        {
+            "name": "Convert SVGs",
+            "type": "node",
+            "request": "launch",
+            "args": [
+                "${workspaceRoot}/src/development/svgencoder.js"
+            ],
+            "cwd": "${workspaceRoot}"
+        },
+        {
+            "name": "Generate Spritesheet",
+            "program": "${workspaceFolder}/src/development/spritesheetgenerator.js",
+            "request": "launch",
+            "type": "node"
+        }
+
+    ]
+}
