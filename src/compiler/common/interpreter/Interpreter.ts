@@ -1,4 +1,3 @@
-import { ProgramState } from './ProgramState';
 import { ActorManager } from "../../java/runtime/graphics/ActorManager.ts";
 import { IWorld } from "../../java/runtime/graphics/IWorld.ts";
 import { IAssertionObserver } from "../../java/runtime/unittests/IAssertionObserver.ts";
@@ -330,7 +329,7 @@ export class Interpreter {
 
         if (!this.actionManager) return;
 
-        this.actionManager.registerAction("interpreter.start", ['F4'], "Programm starten",
+        this.actionManager.registerAction("interpreter.start", ['F5'], "Programm starten",
             () => {
                 if (this.actionManager!.isActive("interpreter.start")) {
                     this.start();
@@ -340,7 +339,7 @@ export class Interpreter {
 
             });
 
-        this.actionManager.registerAction("interpreter.pause", ['F4'], "Pause",
+        this.actionManager.registerAction("interpreter.pause", ['F5'], "Pause",
             () => {
                 if (this.actionManager!.isActive("interpreter.start")) {
                     this.start();
@@ -355,12 +354,17 @@ export class Interpreter {
                 this.stop(false);
             });
 
-        this.actionManager.registerAction("interpreter.stepOver", ['F6'], "Einzelschritt (Step over)",
+        this.actionManager.registerAction("interpreter.toggleBreakpoint", ['F9'], "Haltepunkt an/aus",
+            () => {
+                this.breakpointManager.toggleBreakpoint(this.main.getMainEditor().getSelection().startLineNumber);
+            });
+
+        this.actionManager.registerAction("interpreter.stepOver", ['F10'], "Einzelschritt (Step over)",
             () => {
                 this.executeOneStep(false);
             });
 
-        this.actionManager.registerAction("interpreter.stepInto", ['F7'], "Einzelschritt (Step into)",
+        this.actionManager.registerAction("interpreter.stepInto", ['F11'], "Einzelschritt (Step into)",
             () => {
                 this.executeOneStep(true);
             });
@@ -376,9 +380,8 @@ export class Interpreter {
             });
 
         this.actionManager.registerAction("interpreter.goto", [], "Goto",
-            (name: string, buttonToggler?: ButtonToggler, pressed_key?: string, ...args: any[]) => {
-                const lineNo = args[0]
-                this.goto(lineNo)
+            () => {
+                this.goto(this.main.getMainEditor().getSelection().startLineNumber)
             });
     }
 

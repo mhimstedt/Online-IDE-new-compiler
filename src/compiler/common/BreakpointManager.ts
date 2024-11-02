@@ -21,7 +21,7 @@ class BreakpointInfoForModule {
 
 export class BreakpointManager {
 
-    moduleToBreakpointInfoForModuleMap: Map<Module, BreakpointInfoForModule> = new Map();
+    #moduleToBreakpointInfoForModuleMap: Map<Module, BreakpointInfoForModule> = new Map();
 
     constructor(public main: IMain) {
         let editor = main.getMainEditor();
@@ -30,12 +30,12 @@ export class BreakpointManager {
                 e.target.type !== monaco.editor.MouseTargetType.GUTTER_LINE_NUMBERS) {
                 return;
             }
-            this.onMarginMouseDown(e.target.position.lineNumber);
+            this.toggleBreakpoint(e.target.position.lineNumber);
             return;
         });
 
         editor.onDidChangeModel(() => {
-            this.renderBreakpointDecorators();
+            this.#renderBreakpointDecorators();
         })
 
     }
@@ -43,28 +43,26 @@ export class BreakpointManager {
     attachToInterpreter(interpreter: Interpreter){
 
         interpreter.eventManager.on("resetRuntime", () => {
-            this.writeAllBreakpointsIntoPrograms();
+            this.#writeAllBreakpointsIntoPrograms();
         })
 
     }
 
-    onMarginMouseDown(lineNumber: number) {
-
-        let breakpointInfoForModule = this.getBreakpointInfoForModule();
+    toggleBreakpoint(lineNumber: number) {
+        const breakpointInfoForModule = this.#getBreakpointInfoForModule();
         if (!breakpointInfoForModule) return;
 
-        this.toggleBreakpoint(lineNumber, breakpointInfoForModule);
-        this.renderBreakpointDecorators();
-
+        this.#toggleBreakpoint(lineNumber, breakpointInfoForModule);
+        this.#renderBreakpointDecorators();
     }
 
 
-    renderBreakpointDecorators() {
+    #renderBreakpointDecorators() {
 
-        let breakpointInfoForModule = this.getBreakpointInfoForModule();
+        let breakpointInfoForModule = this.#getBreakpointInfoForModule();
         if (!breakpointInfoForModule) return;
 
-        this.getBreakpointPositionsFromEditor(breakpointInfoForModule);
+        this.#getBreakpointPositionsFromEditor(breakpointInfoForModule);
 
         let decorations: monaco.editor.IModelDeltaDecoration[] = [];
 
@@ -101,7 +99,7 @@ export class BreakpointManager {
 
     }
 
-    getBreakpointPositionsFromEditor(breakpointInfoForModule: BreakpointInfoForModule) {
+    #getBreakpointPositionsFromEditor(breakpointInfoForModule: BreakpointInfoForModule) {
         let monacoEditorModel = breakpointInfoForModule.module.file.getMonacoModel();
         if (!monacoEditorModel) return;
         for (let decoration of monacoEditorModel.getAllDecorations()) {
@@ -116,15 +114,15 @@ export class BreakpointManager {
         }
     }
 
-    toggleBreakpoint(lineNumber: number, breakpointInfoForModule: BreakpointInfoForModule) {
+    #toggleBreakpoint(lineNumber: number, breakpointInfoForModule: BreakpointInfoForModule) {
 
-        this.getBreakpointPositionsFromEditor(breakpointInfoForModule);
-        if (!this.getAndRemoveBreakpoint(lineNumber, breakpointInfoForModule)) {
-            this.setBreakpoint(lineNumber, breakpointInfoForModule);
+        this.#getBreakpointPositionsFromEditor(breakpointInfoForModule);
+        if (!this.#getAndRemoveBreakpoint(lineNumber, breakpointInfoForModule)) {
+            this.#setBreakpoint(lineNumber, breakpointInfoForModule);
         }
     }
 
-    setBreakpoint(line: number, breakpointInfoForModule: BreakpointInfoForModule): Breakpoint {
+    #setBreakpoint(line: number, breakpointInfoForModule: BreakpointInfoForModule): Breakpoint {
 
         let breakpoint: Breakpoint = {
             lineNumber: line,
@@ -140,7 +138,7 @@ export class BreakpointManager {
     }
 
 
-    getAndRemoveBreakpoint(lineNumber: number, breakpointInfoForModule: BreakpointInfoForModule): Breakpoint | undefined {
+    #getAndRemoveBreakpoint(lineNumber: number, breakpointInfoForModule: BreakpointInfoForModule): Breakpoint | undefined {
 
         for (let i = 0; i < breakpointInfoForModule.breakpoints.length; i++) {
             let b = breakpointInfoForModule.breakpoints[i];
@@ -155,26 +153,26 @@ export class BreakpointManager {
 
     }
 
-    getBreakpointInfoForModule(module?: Module): BreakpointInfoForModule | undefined {
+    #getBreakpointInfoForModule(module?: Module): BreakpointInfoForModule | undefined {
         module = module || this.main.getCurrentWorkspace()?.getCurrentlyEditedModule();
         if (!module) return undefined;
 
-        let breakpointInfoForModule = this.moduleToBreakpointInfoForModuleMap.get(module);
+        let breakpointInfoForModule = this.#moduleToBreakpointInfoForModuleMap.get(module);
         if (!breakpointInfoForModule) {
             breakpointInfoForModule = new BreakpointInfoForModule(module);
-            this.moduleToBreakpointInfoForModuleMap.set(module, breakpointInfoForModule);
+            this.#moduleToBreakpointInfoForModuleMap.set(module, breakpointInfoForModule);
         }
 
         return breakpointInfoForModule;
     }
 
-    writeAllBreakpointsIntoPrograms() {
+    #writeAllBreakpointsIntoPrograms() {
         let executable = this.main.getInterpreter().executable;
         if (!executable) return;
 
         for (let module of executable.moduleManager.modules) {
             if (!module) continue;
-            let breakpointInfoForModule = this.getBreakpointInfoForModule(module);
+            let breakpointInfoForModule = this.#getBreakpointInfoForModule(module);
             if (!breakpointInfoForModule) continue;
             for (let program of module.programsToCompileToFunctions) {
                 for (let step of program.stepsSingle) {
@@ -182,7 +180,7 @@ export class BreakpointManager {
                 }
             }
 
-            this.getBreakpointPositionsFromEditor(breakpointInfoForModule);
+            this.#getBreakpointPositionsFromEditor(breakpointInfoForModule);
 
             for (let breakpoint of breakpointInfoForModule.breakpoints) {
                 let step = module.findStep(breakpoint.lineNumber);

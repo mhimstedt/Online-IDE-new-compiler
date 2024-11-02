@@ -3,7 +3,7 @@ import { SoundTools } from '../../../tools/SoundTools';
 
 export type ButtonToggler = (state: boolean) => void;
 
-export type ActionListener = (name: string, buttonToggler?: ButtonToggler, pressed_key?: string, ...args: any[]) => void;
+export type ActionListener = (name: string, buttonToggler?: ButtonToggler, pressed_key?: string) => void;
 
 interface EditorContextKey {set(value: any): void;}
 
@@ -44,10 +44,10 @@ export class ActionManager {
 
     }
 
-    trigger(actionIdentifier: string, ...args: any[]) {
+    trigger(actionIdentifier: string) {
         let ae = this.actions[actionIdentifier];
         if(ae != null){
-            ae.actionListeners.forEach(listener => listener(actionIdentifier, undefined, "", ...args));
+            ae.actionListeners.forEach(listener => listener(actionIdentifier, undefined, ""));
         }
     }
 
