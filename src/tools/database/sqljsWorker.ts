@@ -1,12 +1,10 @@
-//@ts-ignore
-// importScripts('../lib/sql.js/sql-wasm.js');
-importScripts('sql.js/dist/sql-wasm.js');
+import initSqlJs from 'sql.js/dist/sql-wasm'
+import wasmUrl from 'sql.js/dist/sql-wasm.wasm?url' // vite magic: get url as string, let vite track the dependency
 
-//@ts-ignore
-var initsql = initSqlJs({
-    locateFile: name => (self.location + "").replace("worker/sqljs-worker.js", "") + 'lib/sql.js/' + name
-    // locateFile: name => '../lib/sql.js/' + name
-   });
+const initsql = initSqlJs({
+    locateFile: name => wasmUrl
+});
+
 var db;
 var SQL;
 

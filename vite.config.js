@@ -33,10 +33,6 @@ export default defineConfig({
       '/servlet/websocket': { target: 'ws://localhost:5500', ws: true },
       '/servlet/pushWebsocket': { target: 'ws://localhost:5500', ws: true },
       // '/servlet/subscriptionwebsocket': { target: 'ws://localhost:5500', ws: true },
-      '/worker': {
-        rewrite: (path) => path.replace('/worker', '/dist/worker'),
-        target: "http://localhost:3000"
-      }
     }
   },
   build: {
@@ -51,7 +47,6 @@ export default defineConfig({
         shortcuts: resolve(__dirname, 'shortcuts.html'),
         registeruser: resolve(__dirname, 'registerUser.html'),
         'diagram-worker': './src/client/main/gui/diagrams/classdiagram/Router.ts',
-        'sqljs-worker': './src/tools/database/sqljsWorker.ts'
       },
       output: {
         entryFileNames: assetInfo => {

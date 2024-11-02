@@ -76,20 +76,14 @@ export class DatabaseTool {
 
         // console.log("Starting worker...");
 
-        let url: string = "worker/sqljs-worker.js"
-        if (this.main.isEmbedded()) {
-            //@ts-ignore
-            url = window.javaOnlineDir + url;
-        }
-
         //@ts-ignore
         if (window.jo_doc) {
             //@ts-ignore
             this.worker = new WorkerSim();
         } else {
-            // JS6-way to do it:
-            // this.worker = await import("./sqljsWorker.ts?worker");
-            this.worker = new Worker(url);
+            // see https://v3.vitejs.dev/guide/features.html#web-workers
+            // see https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers
+            this.worker = new Worker(new URL("./sqljsWorker.ts", import.meta.url), { type: 'module' });
         }
         let that = this;
 
