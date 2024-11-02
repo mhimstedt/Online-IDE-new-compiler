@@ -3,6 +3,8 @@ import { makeDiv, openContextMenu } from "../../../tools/HtmlTools.js";
 import { Repository, RepositoryFileEntry, RepositoryHistoryEntry, RepositoryHistoryFileEntry } from "../../communication/Data.js";
 import { SynchronizationManager } from "./RepositorySynchronizationManager.js";
 import { SynchroWorkspace } from "./SynchroWorkspace.js";
+import diff_match_patch from 'diff-match-patch'
+
 
 export class HistoryElement {
 

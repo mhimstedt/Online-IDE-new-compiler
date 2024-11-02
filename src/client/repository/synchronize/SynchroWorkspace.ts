@@ -6,6 +6,7 @@ import { Workspace } from "../../workspace/Workspace.js";
 import { HistoryElement } from "./HistoryElement.js";
 import { SynchronizationManager } from "./RepositorySynchronizationManager.js";
 import * as monaco from 'monaco-editor'
+import diff_match_patch from 'diff-match-patch'
 
 
 export type SynchroFileState = "original" | "changed" | "new" | "deleted";
