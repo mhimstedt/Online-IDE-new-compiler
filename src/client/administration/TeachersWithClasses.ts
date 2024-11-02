@@ -1,9 +1,9 @@
 import { AdminMenuItem } from "./AdminMenuItem.js";
-import { UserData, CRUDUserRequest, CRUDSchoolRequest, CRUDResponse, SchoolData, GetSchoolDataRequest, GetSchoolDataResponse, TeacherData, ClassData, CRUDClassRequest, GetTeacherDataRequest, GetTeacherDataResponse } from "../communication/Data.js";
+import { UserData, CRUDUserRequest, CRUDResponse, TeacherData, ClassData, CRUDClassRequest, GetTeacherDataRequest, GetTeacherDataResponse } from "../communication/Data.js";
 import { ajax, ajaxAsync } from "../communication/AjaxHelper.js";
 import { PasswordPopup } from "./PasswordPopup.js";
 import { SelectTeacherPopup } from "./SelectTeacherPopup.js";
-import { w2alert, w2grid, w2utils } from "../lib/w2ui-2.0.es6.js";
+import { w2alert, w2grid, w2utils } from 'w2ui'
 
 
 export class TeachersWithClassesMI extends AdminMenuItem {

@@ -30,6 +30,8 @@ import "/include/css/spritemanager.css";
 import spritesheetjson from '/include/graphics/spritesheet.json.txt';
 import spritesheetpng from '/include/graphics/spritesheet.png';
 import { PixiSpritesheetData } from "../spritemanager/PixiSpritesheetData.js";
+import * as p5 from 'p5';
+
 
 declare var BUILD_DATE: string;
 declare var APP_VERSION: string;
@@ -94,8 +96,7 @@ window.onload = () => {
 
     document.getElementById('versionDiv').textContent = "Version " + APP_VERSION + " vom " + BUILD_DATE;
 
-    //@ts-ignore
-    p5.disableFriendlyErrors = true
+    // p5.disableFriendlyErrors = true
 
     let main = new Main();
     loadSpritesheet();
@@ -123,9 +124,6 @@ window.onload = () => {
 
     main.spriteManager = new SpriteManager(main);
     // main.spriteManager.initGUI();
-
-    //@ts-ignore
-    p5.disableFriendlyErrors = true
 
 
     // document.body.innerText = 'Hello World!';

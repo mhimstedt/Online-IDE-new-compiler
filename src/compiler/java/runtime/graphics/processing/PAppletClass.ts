@@ -1,4 +1,4 @@
-// import p5 from "p5";  // unfortunately this breaks vite-test
+import p5 from "p5";  
 import { DOM } from "../../../../../tools/DOM";
 import { GraphicSystem } from "../../../../common/interpreter/GraphicsManager";
 import { Interpreter } from "../../../../common/interpreter/Interpreter";
@@ -9,8 +9,6 @@ import { JRC } from "../../../language/JavaRuntimeLibraryComments";
 import { LibraryDeclarations } from "../../../module/libraries/DeclareType";
 import { NonPrimitiveType } from "../../../types/NonPrimitiveType";
 import { ObjectClass } from "../../system/javalang/ObjectClassStringClass";
-
-type p5 = any;
 
 
 export class PAppletClass extends ObjectClass implements GraphicSystem {
@@ -345,7 +343,7 @@ export class PAppletClass extends ObjectClass implements GraphicSystem {
         this.width = width;
         this.height = height;
         this.onSizeChanged();
-        this.p5o.createCanvas(this.width, this.height, renderer);
+        this.p5o.createCanvas(this.width, this.height);
 
         let canvas = this.containerInner.getElementsByTagName('canvas');
         if (canvas.length > 0) {
@@ -362,8 +360,10 @@ export class PAppletClass extends ObjectClass implements GraphicSystem {
         let that = this;
         this.canvasCreated = false;
         let drawMethodPending: boolean = true;
-
+        
         let sketch = (p5: p5) => {
+            
+            p5.disableFriendlyErrors = true;
 
             p5.setup = function () {
                 that.renderer = p5.P2D;
@@ -452,7 +452,6 @@ export class PAppletClass extends ObjectClass implements GraphicSystem {
 
         }
 
-        //@ts-ignore
         new p5(sketch, containerInner);
         let canvas = this.containerInner.getElementsByTagName('canvas');
         if (canvas.length > 0) {

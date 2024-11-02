@@ -1,15 +1,10 @@
 import { AdminMenuItem } from "./AdminMenuItem.js";
-import { UserData, ClassData, CRUDClassRequest, CRUDUserRequest, CRUDResponse, GetClassesDataRequest, GetClassesDataResponse, ChangeClassOfStudentsRequest, ChangeClassOfStudentsResponse, BulkCreateUsersRequest, BulkCreateUsersResponse } from "../communication/Data.js";
+import { UserData, ClassData, GetClassesDataRequest, GetClassesDataResponse, BulkCreateUsersRequest, BulkCreateUsersResponse } from "../communication/Data.js";
 import { ajax } from "../communication/AjaxHelper.js";
 import { Administration } from "./Administration.js";
-import { TeachersWithClassesMI } from "./TeachersWithClasses.js";
-import { PasswordPopup } from "./PasswordPopup.js";
-import { UserMenu } from "../main/gui/UserMenu.js";
 import { setSelectItems, getSelectedObject } from "../../tools/HtmlTools.js";
-import { w2grid } from "../lib/w2ui-2.0.es6.js";
+import { w2grid } from 'w2ui'
 
-declare var w2prompt: any;
-declare var w2alert: any;
 
 type Step = "Step 1 Paste" | "Step 2 check" | "Step 3 import" | "Step 4 print";
 

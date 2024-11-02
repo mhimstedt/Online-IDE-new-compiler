@@ -1,6 +1,6 @@
 import { ajaxAsync } from "../communication/AjaxHelper";
 import { UserData } from "../communication/Data";
-import { w2form } from "../lib/w2ui-2.0.es6";
+import { w2form } from 'w2ui'
 import { Administration } from "./Administration";
 import { AdminMenuItem } from "./AdminMenuItem";
 
