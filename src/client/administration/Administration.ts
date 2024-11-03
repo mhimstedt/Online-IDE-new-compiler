@@ -16,6 +16,10 @@ import "/assets/css/icons.css";
 import "/assets/css/administration.css";
 import "/assets/fonts/fonts.css";
 
+import w2uiLocale from '/assets/w2uilocale/de-de.json?url'
+
+
+
 export class Administration {
 
     activeMenuItem: AdminMenuItem = null;
@@ -39,7 +43,7 @@ export class Administration {
 
         let that = this;
         //@ts-ignore
-        w2utils.locale('de-de');
+        w2utils.locale(w2uiLocale);
 
         ajax("getUserData", {}, (response: GetUserDataResponse) => {
             that.userData = response.user;
