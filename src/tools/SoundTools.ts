@@ -1,5 +1,23 @@
 import { Howl } from 'howler'
 
+import nearby_explosion_with_debris from "/assets/mp3/nearby_explosion_with_debris.mp3"
+import nearby_explosion from "/assets/mp3/nearby_explosion.mp3"
+import far_bomb from "/assets/mp3/far_bomb.mp3"
+import cannon_boom from "/assets/mp3/cannon_boom.mp3"
+import far_explosion from "/assets/mp3/far_explosion.mp3"
+import laser_shoot from "/assets/mp3/laser_shoot.mp3"
+import short_bell from "/assets/mp3/short_bell.mp3"
+import flamethrower from "/assets/mp3/flamethrower.mp3"
+import digging from "/assets/mp3/digging.mp3"
+import short_digging from "/assets/mp3/short_digging.mp3"
+import shoot from "/assets/mp3/shoot.mp3"
+import short_shoot from "/assets/mp3/short_shoot.mp3"
+import step from "/assets/mp3/step.mp3"
+import boulder from "/assets/mp3/boulder.mp3"
+import pong_d5 from "/assets/mp3/pong_d5.wav"
+import pong_f5 from "/assets/mp3/pong_f5.wav"
+
+
 export type SoundType = {
     url: string,
     name: string,
@@ -12,82 +30,82 @@ export class SoundTools {
 
     static sounds: SoundType[] = [
         {
-            url: "assets/mp3/nearby_explosion_with_debris.mp3",
+            url: nearby_explosion_with_debris,
             name: "nearby_explosion_with_debris",
             description: "nahe Explosion mit herabfallenden Trümmern"
         },
         {
-            url: "assets/mp3/nearby_explosion.mp3",
+            url: nearby_explosion,
             name: "nearby_explosion",
             description: "nahe Explosion"
         },
         {
-            url: "assets/mp3/far_bomb.mp3",
+            url: far_bomb,
             name: "far_bomb",
             description: "fernes Geräusch einer Bombe"
         },
         {
-            url: "assets/mp3/cannon_boom.mp3",
+            url: cannon_boom,
             name: "cannon_boom",
             description: "einzelner Kanonendonner"
         },
         {
-            url: "assets/mp3/far_explosion.mp3",
+            url: far_explosion,
             name: "far_explosion",
             description: "ferne Explosion"
         },
         {
-            url: "assets/mp3/laser_shoot.mp3",
+            url: laser_shoot,
             name: "laser_shoot",
             description: "Laserschuss (oder was man dafür hält...)"
         },
         {
-            url: "assets/mp3/short_bell.mp3",
+            url: short_bell,
             name: "short_bell",
             description: "kurzes Klingeln (wie bei alter Landenkasse)"
         },
         {
-            url: "assets/mp3/flamethrower.mp3",
+            url: flamethrower,
             name: "flamethrower",
             description: "Flammenwerfer"
         },
         {
-            url: "assets/mp3/digging.mp3",
+            url: digging,
             name: "digging",
             description: "Geräusch beim Sandschaufeln"
         },
         {
-            url: "assets/mp3/short_digging.mp3",
+            url: short_digging,
             name: "short_digging",
             description: "kurzes Geräusch beim Sandschaufeln"
         },
         {
-            url: "assets/mp3/shoot.mp3",
+            url: shoot,
             name: "shoot",
             description: "Schussgeräusch"
         },
         {
-            url: "assets/mp3/short_shoot.mp3",
+            url: short_shoot,
             name: "short_shoot",
             description: "ein kurzer Schuss"
         },
         {
-            url: "assets/mp3/step.mp3",
+            url: step,
             name: "step",
             description: "ein Schritt"
         },
         {
-            url: "assets/mp3/boulder.mp3",
+            url: boulder,
             name: "boulder",
             description: "Geräusch eines Steins, der auf einen zweiten fällt"
         },
         {
-            url: "assets/mp3/pong_d5.wav",
+            url: pong_d5,
             name: "pong_d",
             description: "Tiefer Pong-Ton"
         },
         {
-            url: "assets/mp3/pong_f5.wav",
+            url: pong_f5,
             name: "pong_f",
             description: "Hoher Pong-Ton"
         },
