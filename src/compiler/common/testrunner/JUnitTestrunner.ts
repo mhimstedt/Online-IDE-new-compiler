@@ -1,4 +1,3 @@
-import jQuery from 'jquery';
 import { EmbeddedSlider } from "../../../tools/components/EmbeddedSlider";
 import { Treeview } from "../../../tools/components/treeview/Treeview";
 import { DOM } from "../../../tools/DOM";
@@ -14,6 +13,11 @@ import '/assets/css/junit.css';
 import { JUnitProgressbar } from './JUnitProgressbar';
 import { TreeviewNode } from '../../../tools/components/treeview/TreeviewNode';
 import * as monaco from 'monaco-editor';
+
+// see https://vite.dev/guide/assets
+import compileGifUrl from '/assets/graphics/compile.gif'
+
+
 
 type MouseDownHandler = () => void;
 
@@ -215,7 +219,7 @@ export class JUnitTestrunner {
         this.executingTestDiv = DOM.makeDiv(this.outputDiv);
         this.executingTestDiv.style.marginTop = '5px';
         this.executingTestDiv.innerHTML = JUnitTestrunnerLanguage.executingTestMethod(method.classEnumInterface.identifier, method.identifier) +
-            `<img src="assets/graphics/compile.gif" />`;
+            `<img src="${compileGifUrl}" />`;
         this.executingTestDiv.scrollIntoView();
     }
 

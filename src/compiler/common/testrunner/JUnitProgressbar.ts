@@ -1,5 +1,8 @@
 import { DOM } from "../../../tools/DOM";
 
+// see https://vite.dev/guide/assets
+import compileGifUrl from '/assets/graphics/compile.gif'
+
 export class JUnitProgressbar {
 
     mainDiv: HTMLDivElement;
@@ -13,7 +16,7 @@ export class JUnitProgressbar {
         this.barDiv = DOM.makeDiv(outerBarDiv, "jo_junitProgressbarBarInner");
         this.textDiv = DOM.makeDiv(outerBarDiv, "jo_junitProgressbarText");
         this.graphicDiv = DOM.makeDiv(outerBarDiv, "jo_junitProgressbarGraphic");
-        this.graphicDiv.innerHTML = `<img src="assets/graphics/compile.gif" />`
+        this.graphicDiv.innerHTML = `<img src="${compileGifUrl}" />`
     }
 
     hide() {
