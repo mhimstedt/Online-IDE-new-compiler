@@ -576,7 +576,7 @@ export class MainEmbedded implements MainBase {
 
         this.getCompiler().eventManager.on("compilationFinished", this.onCompilationFinished, this);
 
-        this.getCompiler().startCompilingPeriodically();
+        this.getCompiler().triggerCompile();
 
         if (this.config.withPCode) {
             this.disassembler = new Disassembler(this.$disassemblerDiv[0], this);

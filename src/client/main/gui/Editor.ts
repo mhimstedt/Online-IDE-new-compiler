@@ -104,10 +104,12 @@ export class Editor {
         this.createContextKeys();
 
         this.editor.onDidChangeModelContent((e: monaco.editor.IModelContentChangedEvent) => {
-            let state = this.main.getInterpreter().scheduler.state;
-            if ([SchedulerState.stopped, SchedulerState.error, SchedulerState.not_initialized].indexOf(state) < 0) {
+            const state = this.main.getInterpreter().scheduler.state;
+            if (![SchedulerState.stopped, SchedulerState.error, SchedulerState.not_initialized].includes(state)) {
                 this.main.getActionManager().trigger("interpreter.stop");
             }
+
+            this.main.getCompiler().triggerCompile()
         })
 
         let that: Editor = this;

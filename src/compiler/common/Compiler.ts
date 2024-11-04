@@ -1,6 +1,4 @@
-import { JavaCompiledModule } from "../java/module/JavaCompiledModule";
 import { JavaLibraryModule } from "../java/module/libraries/JavaLibraryModule";
-import { JavaLibraryModuleManager } from "../java/module/libraries/JavaLibraryModuleManager";
 import { BaseType } from "./BaseType";
 import { Error } from "./Error";
 import { EventManager } from "./interpreter/EventManager";
@@ -17,8 +15,8 @@ export interface Compiler {
     setFileDirty(file: CompilerFile): void;
     getSortedAndFilteredErrors(file: CompilerFile): Error[];
     getType(identifier: string): BaseType | undefined;
-    startCompilingPeriodically(): void;
-    interruptAndStartOverAgain(): void;
+    triggerCompile(): void;
+    interruptAndStartOverAgain(): Promise<void>;
 
     setAdditionalModules(...modules: JavaLibraryModule[]): void;
 
