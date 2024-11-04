@@ -186,7 +186,7 @@ class A implements Iterable<String> {
          String next(){
             return "" + counter++;
          }
-      }
+      };
    }
 }
 
@@ -246,7 +246,7 @@ class A implements Iterable<String> {
          String next(){
             return "" + counter++;
          }
-      }
+      };
    }
 
    void forEach(Consumer<String> consumer){
