@@ -188,7 +188,6 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
 
         interpreter.isExternalTimer = false;
         this.app?.destroy({ removeView: true }, {});
-
         //@ts-ignore
         this.app = undefined;
         this.resizeObserver?.disconnect();
@@ -237,10 +236,10 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
             height: this.app!.screen.height,
             antialias: true
         };
-
         // Create two render textures... these dynamic textures will be used to draw the scene into itself
         let renderTexture = PIXI.RenderTexture.create(stageSize);
         setTimeout(() => {      // outer timeout is needed for Bitmap-objects to get fully uploaded to gpu (see mandelbrot test...)
+            if (!this.app) return;
             this.app!.renderer.render({
                 container: this.app!.stage,
                 target: renderTexture,
