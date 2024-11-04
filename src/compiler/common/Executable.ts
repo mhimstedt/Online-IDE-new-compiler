@@ -22,9 +22,9 @@ export class Executable {
     staticInitializationSequence: StaticInitializationStep[] = [];
 
     mainModule?: Module;
-    testModule?: Module;
+    #testModule?: Module;
 
-    testClassToTestMethodMap?: Map<JavaClass, JavaMethod[]>
+    #testClassToTestMethodMap?: Map<JavaClass, JavaMethod[]>
 
     isCompiledToJavascript: boolean = false;
 
@@ -37,7 +37,7 @@ export class Executable {
 
         this.findMainModule(false, lastOpenedFile, currentlyOpenedModule);
 
-        this.setupStaticInitializationSequence(globalErrors);
+        this.#setupStaticInitializationSequence(globalErrors);
 
     }
 
@@ -49,14 +49,14 @@ export class Executable {
         }
     }
 
-    setupStaticInitializationSequence(errors: Error[]) {
-        let classesToInitialize: NonPrimitiveType[] = [];
+    #setupStaticInitializationSequence(errors: Error[]) {
+        const classesToInitialize: NonPrimitiveType[] = [];
 
         this.staticInitializationSequence = [];
 
-        for (let module of this.moduleManager.modules) {
+        for (const module of this.moduleManager.modules) {
             if (!module.ast) continue;
-            for (let cdef of module.ast.innerTypes) {
+            for (const cdef of module.ast.innerTypes) {
                 if (cdef.resolvedType)
                     classesToInitialize.push(cdef.resolvedType);
             }
@@ -67,11 +67,11 @@ export class Executable {
             done = true;
 
             for (let i = 0; i < classesToInitialize.length; i++) {
-                let cti = classesToInitialize[i];
+                const cti = classesToInitialize[i];
 
                 // does class depend on other class whose static initializer hasn't run yet?
                 let dependsOnOthers: boolean = false;
-                for (let cti1 of classesToInitialize) {
+                for (const cti1 of classesToInitialize) {
                     if (cti1 != cti && cti.staticConstructorsDependOn.get(cti1)) {
                         dependsOnOthers = true;
                         break;
@@ -81,11 +81,11 @@ export class Executable {
                 if (!dependsOnOthers) {
                     if (cti.staticInitializer && cti.staticInitializer.stepsSingle.length > 0) {
                         this.staticInitializationSequence.push({
-                            klass: cti.runtimeClass!,
+                            klass: cti.runtimeClass,
                             program: cti.staticInitializer
                         })
                     }
-                    let index = classesToInitialize.indexOf(cti);
+                    const index = classesToInitialize.indexOf(cti);
                     if (index >= 0) classesToInitialize.splice(index, 1);
                     i--;    // i++ follows immediately (end of for-loop)
                     done = false;
@@ -97,40 +97,38 @@ export class Executable {
 
         if (classesToInitialize.length > 0) {
             // cyclic references! => stop with error message
-            let errorWithId = JCM.cyclicReferencesAmongStaticVariables(classesToInitialize.map(c => c.identifier).join(", "));
+            const errorWithId = JCM.cyclicReferencesAmongStaticVariables(classesToInitialize.map(c => c.identifier).join(", "));
             errors.push({ message: errorWithId.message, id: errorWithId.id, level: "error", range: EmptyRange.instance });
         }
-
-
     }
 
     hasTests(): boolean {
-        if(!this.testClassToTestMethodMap) this.getTestMethods();
-        return this.testClassToTestMethodMap!.size > 0;
+        if(!this.#testClassToTestMethodMap) this.getTestMethods();
+        return this.#testClassToTestMethodMap.size > 0;
     }
 
     getTestMethods(): Map<JavaClass, JavaMethod[]> {
-        if(this.testClassToTestMethodMap) return this.testClassToTestMethodMap;
-        this.testClassToTestMethodMap = new Map();
-        for (let module of this.moduleManager.modules) {
-            for (let type of module.types) {
+        if (this.#testClassToTestMethodMap) return this.#testClassToTestMethodMap;
+        this.#testClassToTestMethodMap = new Map();
+        for (const module of this.moduleManager.modules) {
+            for (const type of module.types) {
                 if (type instanceof JavaClass) {
-                    let testMethods2 = type.getOwnMethods()
+                    const testMethods2 = type.getOwnMethods()
                         .filter(m => !m.isConstructor && m.hasAnnotation("Test") && m.returnParameterType?.identifier == "void" && m.parameters.length == 0);
 
                     if(testMethods2.length == 0) continue;
 
-                    let list = this.testClassToTestMethodMap.get(type);
+                    let list = this.#testClassToTestMethodMap.get(type);
                     if(!list){
                         list = [];
-                        this.testClassToTestMethodMap.set(type, list);
+                        this.#testClassToTestMethodMap.set(type, list);
                     }
                     list.push(...testMethods2);
                 }
             }
         }
 
-        return this.testClassToTestMethodMap;
+        return this.#testClassToTestMethodMap;
     }
 
     findMainModule(unitTestMode: boolean, lastOpenedFile?: CompilerFile, currentlyOpenedModule?: Module) {
@@ -138,11 +136,11 @@ export class Executable {
             this.mainModule = this.moduleManager.modules.find(m => m.isStartable());
         }
 
-        if(currentlyOpenedModule){
+        if (currentlyOpenedModule) {
             if (currentlyOpenedModule.isStartable()) {
                 this.mainModule = currentlyOpenedModule;
-            } else if(!currentlyOpenedModule.hasErrors()) {
-                let lastOpenedModule = this.findModuleByFile(lastOpenedFile);
+            } else if (!currentlyOpenedModule.hasErrors()) {
+                const lastOpenedModule = this.#findModuleByFile(lastOpenedFile);
                 if (lastOpenedModule?.isStartable()) {
                     this.mainModule = lastOpenedModule;
                 } else {
@@ -151,24 +149,20 @@ export class Executable {
                 }
             }
         }
-
     }
 
-    findModuleByFile(file?: CompilerFile): Module | undefined {
+    #findModuleByFile(file?: CompilerFile): Module | undefined {
         if (!file) return undefined;
         return this.moduleManager.modules.find(m => m.file == file);
     }
 
     getAllErrors(): Error[] {
-
         let errors: Error[] = this.globalErrors;
 
-        for (let module of this.moduleManager.modules) {
+        for (const module of this.moduleManager.modules) {
             errors = errors.concat(module.errors);
         }
 
         return errors;
-
     }
-
 }
