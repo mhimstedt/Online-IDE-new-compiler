@@ -125,12 +125,12 @@ export class Executable {
     findStartableModule(suggestedModule?: Module) {
         if (suggestedModule?.isStartable()) {
             return suggestedModule
-        }
-
-        // if there is exectly one startable module, use that
-        const startableModules = this.moduleManager.modules.filter(m => m.isStartable())
-        if (startableModules.length === 1) {
-            return startableModules[0]
+        } else if (!suggestedModule?.hasErrors()) {
+            // if there is exectly one startable module, use that
+            const startableModules = this.moduleManager.modules.filter(m => m.isStartable())
+            if (startableModules.length === 1) {
+                return startableModules[0]
+            }
         }
 
         return null
