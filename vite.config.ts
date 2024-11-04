@@ -1,6 +1,8 @@
 import type { UserConfig } from 'vite'
 import commonConfig from './vite.config-common'
 
+let serverIP: string = 'localhost';
+// let serverIP: string = '172.30.95.53';
 
 export default {
     ...commonConfig,
@@ -33,10 +35,10 @@ export default {
     },
     server: {
         proxy: {
-            '/servlet': 'http://localhost:5500',
-            '/sprites': 'http://localhost:5500',
-            '/servlet/websocket': { target: 'ws://localhost:5500', ws: true },
-            '/servlet/pushWebsocket': { target: 'ws://localhost:5500', ws: true },
+            '/servlet': 'http://' + serverIP + ':5500',
+            '/sprites': 'http://' + serverIP + ':5500',
+            '/servlet/websocket': { target: 'ws://' + serverIP + ':5500', ws: true },
+            '/servlet/pushWebsocket': { target: 'ws://' + serverIP + ':5500', ws: true },
             // '/servlet/subscriptionwebsocket': { target: 'ws://localhost:5500', ws: true },
         }
     }
