@@ -281,7 +281,6 @@ export class Interpreter {
     }
 
     start() {
-
         // this.main.getBottomDiv()?.console?.clearErrors();
         if (this.scheduler.state != SchedulerState.paused && this.executable) {
             this.printManager.clear();
@@ -297,7 +296,6 @@ export class Interpreter {
         this.setState(SchedulerState.running);
 
         // this.getTimerClass().startTimer();
-
     }
 
     runMainProgramSynchronously() {
@@ -389,6 +387,10 @@ export class Interpreter {
         return this.executable != null && this.executable.hasTests();
     }
 
+    #findStartableModule(): Module | undefined {
+        return this.executable?.findStartableModule(this.main?.getCurrentWorkspace()?.getCurrentlyEditedModule())
+    }
+
     setState(state: SchedulerState) {
         if (state == SchedulerState.running) {
             this.exceptionMarker?.removeExceptionMarker();
@@ -412,7 +414,9 @@ export class Interpreter {
                 this.actionManager.setActive("interpreter." + actionId, this.#buttonActiveMatrix[actionId][state]);
             }
 
-            let mainModuleExists = this.executable?.mainModule != null;
+
+            const mainModule = this.#findStartableModule()
+            const mainModuleExists = mainModule != null
             let mainModuleExistsOrTestIsRunning = mainModuleExists || (state == 2 && this.scheduler.state == 1);
 
             let buttonStartActive = this.#buttonActiveMatrix['start'][state];
@@ -485,7 +489,7 @@ export class Interpreter {
         // }
 
         this.setState(SchedulerState.stopped);
-        this.#mainThread = this.scheduler.init(executable);
+        this.#mainThread = this.scheduler.init(executable, this.#findStartableModule());
 
         if (this.#mainThread) {
             this.codeReachedAssertions.init(executable.moduleManager);

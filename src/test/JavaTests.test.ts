@@ -121,7 +121,6 @@ function compileAndTest(name: string, program: string, lineOffset: number, expec
             return;
         }
 
-        executable.findMainModule(true);
 
         let allErrors = executable.getAllErrors().filter(error => error.level == "error");
 
