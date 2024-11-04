@@ -36,7 +36,6 @@ const compileTimeout = 500
 export class JavaCompiler implements Compiler {
 
     moduleManager: JavaModuleManager;
-    #lastOpenedFile?: CompilerFile;
     libraryModuleManager: JavaLibraryModuleManager;
 
     #errors: Error[] = [];
@@ -69,10 +68,6 @@ export class JavaCompiler implements Compiler {
     }
 
     async compileIfDirty(): Promise<Executable | undefined> {
-        if (this.#lastCompiledExecutable) {
-            this.#lastCompiledExecutable.findMainModule(false, this.#lastOpenedFile, this.main?.getCurrentWorkspace()?.getCurrentlyEditedModule());
-        }
-
         // if we're not in test mode:
         if (this.main) {
             if (this.main.getInterpreter().isRunningOrPaused()) return;
@@ -158,24 +153,19 @@ export class JavaCompiler implements Compiler {
 
         this.moduleManager.setDependsOnModuleWithErrorsFlag();
 
-        const executable = new Executable(klassObjectRegistry,
-            this.moduleManager, this.libraryModuleManager,
-            this.#errors, exceptionTree,
-            this.#lastOpenedFile, this.main?.getCurrentWorkspace()?.getCurrentlyEditedModule());
-
-        if (executable.mainModule) {
-            this.#lastOpenedFile = executable.mainModule.file;
-        }
+        const executable = new Executable(
+            klassObjectRegistry,
+            this.moduleManager,
+            this.libraryModuleManager,
+            this.#errors, exceptionTree
+        );
 
         this.#lastCompiledExecutable = executable;
 
         this.eventManager.fire("compilationFinished", this.#lastCompiledExecutable);
 
-        if (this.#lastCompiledExecutable) {
-            for (const module of this.#lastCompiledExecutable.moduleManager.modules) {
-                this.errorMarker?.markErrorsOfModule(module);
-            }
-
+        for (const module of this.#lastCompiledExecutable.moduleManager.modules) {
+            this.errorMarker?.markErrorsOfModule(module);
         }
 
         return executable;

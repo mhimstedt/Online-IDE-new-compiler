@@ -12,6 +12,8 @@ import { SchedulerState } from "./SchedulerState.ts";
 import { Helpers, KlassObjectRegistry, StepParams } from "./StepFunction.ts";
 import { Thread, ThreadStateInfoAfterRun } from "./Thread";
 import { ThreadState } from "./ThreadState.ts";
+import { Module } from "../module/Module.ts";
+
 
 export class Scheduler {
     runningThreads: Thread[] = [];
@@ -390,22 +392,20 @@ export class Scheduler {
         this.keepThread = false;
     }
 
-    init(executable: Executable): Thread | undefined {
+    init(executable: Executable, mainModule: Module): Thread | undefined {
 
         this.#initIntern(executable);
 
-        let mainThread = this.createThread("main thread");
-
-        let mainModule = executable.mainModule;
+        const mainThread = this.createThread("main thread");
 
         if (mainModule) {
-            if (!mainModule.startMainProgram(mainThread)) {
+            if (!mainModule?.startMainProgram(mainThread)) {
                 // TODO: Error "Main program not startable"
                 return undefined
             }
         }
 
-        for (let staticInitStep of executable.staticInitializationSequence) {
+        for (const staticInitStep of executable.staticInitializationSequence) {
             mainThread.pushProgram(staticInitStep.program);
         }
 

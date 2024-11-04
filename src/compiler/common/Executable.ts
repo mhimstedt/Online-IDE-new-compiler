@@ -21,9 +21,6 @@ export class Executable {
 
     staticInitializationSequence: StaticInitializationStep[] = [];
 
-    mainModule?: Module;
-    #testModule?: Module;
-
     #testClassToTestMethodMap?: Map<JavaClass, JavaMethod[]>
 
     isCompiledToJavascript: boolean = false;
@@ -32,13 +29,9 @@ export class Executable {
         public moduleManager: JavaModuleManager,
         public libraryModuleManager: JavaLibraryModuleManager,
         public globalErrors: Error[],
-        public exceptionTree: ExceptionTree,
-        lastOpenedFile?: CompilerFile, currentlyOpenedModule?: Module) {
-
-        this.findMainModule(false, lastOpenedFile, currentlyOpenedModule);
-
+        public exceptionTree: ExceptionTree
+    ) {
         this.#setupStaticInitializationSequence(globalErrors);
-
     }
 
     compileToJavascript() {
@@ -90,9 +83,7 @@ export class Executable {
                     i--;    // i++ follows immediately (end of for-loop)
                     done = false;
                 }
-
             }
-
         }
 
         if (classesToInitialize.length > 0) {
@@ -131,29 +122,18 @@ export class Executable {
         return this.#testClassToTestMethodMap;
     }
 
-    findMainModule(unitTestMode: boolean, lastOpenedFile?: CompilerFile, currentlyOpenedModule?: Module) {
-        if (unitTestMode) {
-            this.mainModule = this.moduleManager.modules.find(m => m.isStartable());
+    findStartableModule(suggestedModule?: Module) {
+        if (suggestedModule?.isStartable()) {
+            return suggestedModule
         }
 
-        if (currentlyOpenedModule) {
-            if (currentlyOpenedModule.isStartable()) {
-                this.mainModule = currentlyOpenedModule;
-            } else if (!currentlyOpenedModule.hasErrors()) {
-                const lastOpenedModule = this.#findModuleByFile(lastOpenedFile);
-                if (lastOpenedModule?.isStartable()) {
-                    this.mainModule = lastOpenedModule;
-                } else {
-                    // find first startable module...
-                    this.mainModule = this.moduleManager.modules.find(m => m.isStartable());
-                }
-            }
+        // if there is exectly one startable module, use that
+        const startableModules = this.moduleManager.modules.filter(m => m.isStartable())
+        if (startableModules.length === 1) {
+            return startableModules[0]
         }
-    }
 
-    #findModuleByFile(file?: CompilerFile): Module | undefined {
-        if (!file) return undefined;
-        return this.moduleManager.modules.find(m => m.file == file);
+        return null
     }
 
     getAllErrors(): Error[] {
