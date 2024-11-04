@@ -120,11 +120,11 @@ export class JavaCompiler implements Compiler {
 
             const lexerOutput = new Lexer().lex(module.file.getText());
             module.setLexerOutput(lexerOutput);
-            this.#progressManager.interruptIfNeeded();
+            await this.#progressManager.interruptIfNeeded();
 
             const parser = new Parser(module);
             parser.parse();
-            this.#progressManager.interruptIfNeeded();
+            await this.#progressManager.interruptIfNeeded();
         }
 
         const typeResolver = new TypeResolver(this.moduleManager, this.libraryModuleManager);
@@ -141,9 +141,8 @@ export class JavaCompiler implements Compiler {
                     this.moduleManager.typestore, exceptionTree, this.#progressManager);
                 await codegenerator.start();
                 module.setDirty(false);
-                this.#progressManager.interruptIfNeeded();
+                await this.#progressManager.interruptIfNeeded();
             }
-
         }
 
 
@@ -237,11 +236,12 @@ export class JavaCompiler implements Compiler {
             clearTimeout(this.#compileTimer)
         }
 
-        this.#compileTimer = setTimeout(() => {
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        this.#compileTimer = setTimeout(async () => {
             do {
                 try {
                     this.#progressManager.initBeforeCompiling();
-                    this.compileIfDirty();
+                    await this.compileIfDirty();
                     this.#progressManager.afterCompiling();
                 } catch (exception) {
                     this.#progressManager.afterCompiling(exception.toString());
@@ -305,7 +305,7 @@ export class JavaCompiler implements Compiler {
             this.#progressManager.interruptCompilerIfRunning(false);
         } else {
             this.#progressManager.initBeforeCompiling();
-            this.compileIfDirty();
+            await this.compileIfDirty();
             this.#progressManager.afterCompiling();
         }
 
