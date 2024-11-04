@@ -7,7 +7,7 @@ import { Executable } from "../Executable.ts";
 import { IMain } from "../IMain.ts";
 import { Module } from "../module/Module.ts";
 import { ProgramPointerManager, ProgramPointerPositionInfo } from "../monacoproviders/ProgramPointerManager.ts";
-import { ActionManager, ButtonToggler } from "./ActionManager.ts";
+import { ActionManager } from "./ActionManager.ts";
 import { CodeReachedAssertions } from "./CodeReachedAssertions.ts";
 import { EventManager } from "./EventManager";
 import { ExceptionMarker } from "./ExceptionMarker.ts";
@@ -30,12 +30,12 @@ type InterpreterEvents = "stop" | "done" | "resetRuntime" | "stateChanged" |
 
 export class Interpreter {
 
-    loadController: LoadController;
+    #loadController: LoadController;
     scheduler: Scheduler;
 
     isExternalTimer: boolean = false;
-    timerId: any;
-    timerIntervalMs: number = 33;
+    #timerId: any;
+    #timerIntervalMs: number = 33;
 
     executable?: Executable;
 
@@ -47,15 +47,15 @@ export class Interpreter {
     // keyboardTool: KeyboardTool;
     // gamepadTool: GamepadTool;
 
-    public printManager: IPrintManager;
+    printManager: IPrintManager;
 
     eventManager: EventManager<InterpreterEvents> = new EventManager();
 
     actorManager: ActorManager;
 
-    private objectStore: Map<string, any> = new Map();
+    #objectStore: Map<string, any> = new Map();
 
-    actions: string[] = ["start", "pause", "stop", "stepOver",
+    #actions: string[] = ["start", "pause", "stop", "stepOver",
         "stepInto", "stepOut", "restart"];
     //SchedulerLstatus { done, running, paused, not_initialized }
 
@@ -63,7 +63,7 @@ export class Interpreter {
     // SchedulerState i
     // export enum SchedulerState { not_initialized, running, paused, stopped, error }
 
-    buttonActiveMatrix: { [buttonName: string]: boolean[] } = {
+    #buttonActiveMatrix: { [buttonName: string]: boolean[] } = {
         "start": [false, false, true, true, true],
         "pause": [false, true, false, false, false],
         "stop": [false, true, true, false, false],
@@ -73,34 +73,39 @@ export class Interpreter {
         "restart": [false, true, true, false, false]
     }
 
-    static ProgramPointerIndentifier = "ProgramPointer";
+    static #ProgramPointerIndentifier = "ProgramPointer";
 
-    mainThread?: Thread;
+    #mainThread?: Thread;
     public stepsPerSecondGoal: number | undefined = 1e8;
     public isMaxSpeed: boolean = true;
 
 
-    constructor(printManager?: IPrintManager, private actionManager?: ActionManager,
-        public graphicsManager?: GraphicsManager, public keyboardManager?: KeyboardManager,
-        public breakpointManager?: BreakpointManager, public _debugger?: Debugger,
+    constructor(
+        printManager?: IPrintManager,
+        private actionManager?: ActionManager,
+        public graphicsManager?: GraphicsManager,
+        public keyboardManager?: KeyboardManager,
+        public breakpointManager?: BreakpointManager,
+        public _debugger?: Debugger,
         public programPointerManager?: ProgramPointerManager,
-        public inputManager?: IInputManager, public fileManager?: IFileManager,
-        public exceptionMarker?: ExceptionMarker, private main?: IMain
+        public inputManager?: IInputManager,
+        public fileManager?: IFileManager,
+        public exceptionMarker?: ExceptionMarker,
+        private main?: IMain
     ) {
-
         this.printManager = printManager || new DummyPrintManager();
 
         this.graphicsManager?.setInterpreter(this);
 
-        this.registerActions();
+        this.#registerActions();
 
         this.actorManager = new ActorManager(this);
 
         if (breakpointManager) breakpointManager.attachToInterpreter(this);
 
         this.scheduler = new Scheduler(this);
-        this.loadController = new LoadController(this.scheduler, this);
-        this.initTimer();
+        this.#loadController = new LoadController(this.scheduler, this);
+        this.#initTimer();
         this.setStepsPerSecond(1e8, true);
         this.setState(SchedulerState.not_initialized);
     }
@@ -111,7 +116,7 @@ export class Interpreter {
         // if (executable.mainModule || executable.hasTests()) {
         executable.compileToJavascript();
         if (executable.isCompiledToJavascript) {
-            this.init(executable);
+            this.#init(executable);
             this.setState(SchedulerState.stopped);
             this.eventManager.fire("afterExcecutableInitialized", executable);
         } else {
@@ -126,33 +131,32 @@ export class Interpreter {
         this.assertionObserverList.push(observer);
     }
 
-    detachAssertionObserver(observer: IAssertionObserver) {
+    #detachAssertionObserver(observer: IAssertionObserver) {
         let index = this.assertionObserverList.indexOf(observer);
         if (index >= 0) this.assertionObserverList.splice(index, 1);
     }
 
-    detachAllAssertionObservers() {
+    #detachAllAssertionObservers() {
         this.assertionObserverList = [];
     }
 
-    initTimer() {
-
+    #initTimer() {
         let that = this;
         let periodicFunction = () => {
 
             if (!that.isExternalTimer) {
-                that.timerFunction(that.timerIntervalMs);
+                that.timerFunction(that.#timerIntervalMs);
             }
 
         }
 
-        this.timerId = setInterval(periodicFunction, this.timerIntervalMs);
+        this.#timerId = setInterval(periodicFunction, this.#timerIntervalMs);
 
     }
 
     timerFunction(timerIntervalMs: number) {
         this.actorManager.callActMethods(33);
-        this.loadController.tick(timerIntervalMs);
+        this.#loadController.tick(timerIntervalMs);
     }
 
     executeOneStep(stepInto: boolean) {
@@ -162,8 +166,8 @@ export class Interpreter {
                 return;
             }
             this.printManager.clear();
-            this.init(this.executable!);
-            this.resetRuntime();
+            this.#init(this.executable!);
+            this.#resetRuntime();
             this.showProgramPointer(this.scheduler.getNextStepPosition());
             this.updateDebugger();
             this.setState(SchedulerState.paused);
@@ -191,7 +195,7 @@ export class Interpreter {
                 if (_textPositionWithModule.range.startLineNumber >= 0) {
 
                     this.programPointerManager.show(_textPositionWithModule, {
-                        key: tag || Interpreter.ProgramPointerIndentifier,
+                        key: tag || Interpreter.#ProgramPointerIndentifier,
                         isWholeLine: true,
                         className: "jo_revealProgramPointer",
                         rulerColor: "#6fd61b",
@@ -201,7 +205,7 @@ export class Interpreter {
 
                 }
             } else {
-                this.programPointerManager.hide(tag || Interpreter.ProgramPointerIndentifier);
+                this.programPointerManager.hide(tag || Interpreter.#ProgramPointerIndentifier);
             }
 
         }
@@ -209,17 +213,17 @@ export class Interpreter {
 
     pause() {
         if (this.scheduler.getNextStepPosition()) {
-            this.pauseIntern();
+            this.#pauseIntern();
         } else {
             if (this.hasActorsOrPApplet()) {
                 this.scheduler.onStartingNextThreadCallback = () => {
-                    this.pauseIntern();
+                    this.#pauseIntern();
                 }
             }
         }
     }
 
-    private pauseIntern() {
+    #pauseIntern() {
         this.setState(SchedulerState.paused);
         this.scheduler.keepThread = true;
         this.scheduler.unmarkCurrentlyExecutedSingleStep();
@@ -227,11 +231,11 @@ export class Interpreter {
         this.updateDebugger();
     }
 
-    public updateDebugger() {
+    updateDebugger() {
         this._debugger?.showCurrentThreadState();
     }
 
-    goto(lineNo: number) {
+    #goto(lineNo: number) {
         const thread = this.scheduler.getCurrentThread()
         const programState = thread.currentProgramState
 
@@ -281,8 +285,8 @@ export class Interpreter {
         // this.main.getBottomDiv()?.console?.clearErrors();
         if (this.scheduler.state != SchedulerState.paused && this.executable) {
             this.printManager.clear();
-            this.init(this.executable);
-            this.resetRuntime();
+            this.#init(this.executable);
+            this.#resetRuntime();
         }
 
         this.hideProgrampointerPosition();
@@ -315,15 +319,14 @@ export class Interpreter {
         }
     }
 
-    stepOut() {
+    #stepOut() {
         this.scheduler.stepOut(() => {
             this.pause();
         })
         this.setState(SchedulerState.running);
     }
 
-    registerActions() {
-
+    #registerActions() {
         if (!this.actionManager) return;
 
         this.actionManager.registerAction("interpreter.start", ['F5'], "Programm starten",
@@ -368,7 +371,7 @@ export class Interpreter {
 
         this.actionManager.registerAction("interpreter.stepOut", [], "Step out",
             () => {
-                this.stepOut();
+                this.#stepOut();
             });
 
         this.actionManager.registerAction("interpreter.restart", [], "Neu starten",
@@ -378,16 +381,15 @@ export class Interpreter {
 
         this.actionManager.registerAction("interpreter.goto", [], "Goto",
             () => {
-                this.goto(this.main.getMainEditor().getSelection().startLineNumber)
+                this.#goto(this.main.getMainEditor().getSelection().startLineNumber)
             });
     }
 
-    executableHasTests(): boolean {
+    #executableHasTests(): boolean {
         return this.executable != null && this.executable.hasTests();
     }
 
     setState(state: SchedulerState) {
-
         if (state == SchedulerState.running) {
             this.exceptionMarker?.removeExceptionMarker();
             if (this.main && !this.main.isEmbedded()) {
@@ -406,23 +408,23 @@ export class Interpreter {
         }
 
         if (this.actionManager) {
-            for (let actionId of this.actions) {
-                this.actionManager.setActive("interpreter." + actionId, this.buttonActiveMatrix[actionId][state]);
+            for (let actionId of this.#actions) {
+                this.actionManager.setActive("interpreter." + actionId, this.#buttonActiveMatrix[actionId][state]);
             }
 
             let mainModuleExists = this.executable?.mainModule != null;
             let mainModuleExistsOrTestIsRunning = mainModuleExists || (state == 2 && this.scheduler.state == 1);
 
-            let buttonStartActive = this.buttonActiveMatrix['start'][state];
+            let buttonStartActive = this.#buttonActiveMatrix['start'][state];
             buttonStartActive = buttonStartActive && mainModuleExistsOrTestIsRunning;
 
-            let buttonRestartActive = this.buttonActiveMatrix['restart'][state];
+            let buttonRestartActive = this.#buttonActiveMatrix['restart'][state];
             buttonRestartActive = buttonRestartActive && mainModuleExists;
 
-            let buttonStepOverActive = this.buttonActiveMatrix['stepOver'][state];
+            let buttonStepOverActive = this.#buttonActiveMatrix['stepOver'][state];
             buttonStepOverActive = buttonStepOverActive && mainModuleExistsOrTestIsRunning;
 
-            let buttonStepIntoActive = this.buttonActiveMatrix['stepInto'][state];
+            let buttonStepIntoActive = this.#buttonActiveMatrix['stepInto'][state];
             buttonStepIntoActive = buttonStepIntoActive && mainModuleExistsOrTestIsRunning;
 
             this.actionManager.showHideButtons("interpreter.start", buttonStartActive);
@@ -431,7 +433,7 @@ export class Interpreter {
             this.actionManager.setActive("interpreter.restart", buttonRestartActive);
             this.actionManager.setActive("interpreter.stepOver", buttonStepOverActive);
             this.actionManager.setActive("interpreter.stepInto", buttonStepIntoActive);
-            this.actionManager.setActive("interpreter.startTests", this.executableHasTests() && state == SchedulerState.stopped);
+            this.actionManager.setActive("interpreter.startTests", this.#executableHasTests() && state == SchedulerState.stopped);
 
             Object.values(SchedulerState).filter(v => typeof v == 'string').forEach( (key) => {
                 this.actionManager.setEditorContext("Scheduler_" + key, SchedulerState[key] == state);
@@ -457,11 +459,9 @@ export class Interpreter {
         this.eventManager.fire("stateChanged", this.scheduler.state, state);
 
         this.scheduler.setState(state);
-
-
     }
 
-    resetRuntime() {
+    #resetRuntime() {
         this.eventManager.fire("resetRuntime");
 
         // this.printManager.clear();
@@ -471,11 +471,8 @@ export class Interpreter {
         // this.gngEreignisbehandlungHelper = null;
     }
 
-    private init(executable: Executable) {
-
+    #init(executable: Executable) {
         // this.main.getBottomDiv()?.console?.clearErrors();
-
-
         // this.main.getBottomDiv()?.console?.clearExceptions();
 
         // /*
@@ -487,21 +484,18 @@ export class Interpreter {
         //     this.main.getBottomDiv()?.console?.detachValues();  // detach values from console entries
         // }
 
-
         this.setState(SchedulerState.stopped);
-        this.mainThread = this.scheduler.init(executable);
+        this.#mainThread = this.scheduler.init(executable);
 
-        if (this.mainThread) {
+        if (this.#mainThread) {
             this.codeReachedAssertions.init(executable.moduleManager);
-            this.mainThread.maxStepsPerSecond = this.stepsPerSecondGoal;
-            this.mainThread.state = ThreadState.runnable; // this statement actually makes the program run
+            this.#mainThread.maxStepsPerSecond = this.stepsPerSecondGoal;
+            this.#mainThread.state = ThreadState.runnable; // this statement actually makes the program run
         }
-
-
     }
 
     hideProgrampointerPosition(tag?: string) {
-        this.programPointerManager?.hide(tag || Interpreter.ProgramPointerIndentifier);
+        this.programPointerManager?.hide(tag || Interpreter.#ProgramPointerIndentifier);
         this.eventManager.fire("hideProgramPointer");
     }
 
@@ -515,7 +509,6 @@ export class Interpreter {
     }
 
     hasActorsOrPApplet(): boolean {
-
         if (this.retrieveObject("PAppletClass")) return true;
 
         let world: IWorld = this.retrieveObject("WorldClass");
@@ -525,8 +518,8 @@ export class Interpreter {
     setStepsPerSecond(value: number, isMaxSpeed: boolean) {
         this.stepsPerSecondGoal = isMaxSpeed ? undefined : value;
         this.isMaxSpeed = isMaxSpeed;
-        if (this.mainThread) {
-            this.mainThread.maxStepsPerSecond = isMaxSpeed ? undefined : value;
+        if (this.#mainThread) {
+            this.#mainThread.maxStepsPerSecond = isMaxSpeed ? undefined : value;
         }
 
         this.scheduler.setMaxSpeed(value, isMaxSpeed);
@@ -544,19 +537,19 @@ export class Interpreter {
         return false; // TODO
     }
 
-    public storeObject(classIdentifier: string, object: any) {
-        this.objectStore.set(classIdentifier, object);
+    storeObject(classIdentifier: string, object: any) {
+        this.#objectStore.set(classIdentifier, object);
     }
 
-    public retrieveObject(classIdentifier: string) {
-        return this.objectStore.get(classIdentifier);
+    retrieveObject(classIdentifier: string) {
+        return this.#objectStore.get(classIdentifier);
     }
 
-    public deleteObject(classIdentifier: string) {
-        this.objectStore.delete(classIdentifier);
+    deleteObject(classIdentifier: string) {
+        this.#objectStore.delete(classIdentifier);
     }
 
-    public getMain(): IMain | undefined {
+    getMain(): IMain | undefined {
         return this.main;
     }
 }

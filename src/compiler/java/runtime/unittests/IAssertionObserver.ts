@@ -1,4 +1,4 @@
-import { Step } from "../../../common/interpreter/Program";
+import { Step } from "../../../common/interpreter/Step";
 import { Thread } from "../../../common/interpreter/Thread";
 
 export interface IAssertionObserver {

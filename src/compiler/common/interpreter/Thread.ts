@@ -13,7 +13,8 @@ import { ArrayToStringCaster, TextContainer } from "./ArrayToStringCaster.ts";
 import { CallbackParameter } from "./CallbackParameter.ts";
 import { CatchBlockInfo, Exception, ExceptionInfo } from "./ExceptionInfo.ts";
 import { ExceptionPrinter } from "./ExceptionPrinter.ts";
-import { Program, Step } from "./Program";
+import { Program } from "./Program";
+import { Step } from "./Step.ts";
 import { ProgramState } from "./ProgramState.ts";
 import { Scheduler } from "./Scheduler";
 import { CallbackFunction, KlassObjectRegistry } from "./StepFunction.ts";
@@ -33,33 +34,33 @@ export class Thread {
 
     currentProgramState!: ProgramState;  // also lies on top of programStack
 
-    lastRange?: IRange;
+    #lastRange?: IRange;
 
-    private _state: ThreadState = ThreadState.new;
-    public get state() { return this._state } // setter: see below
+    #state: ThreadState = ThreadState.new;
+    get state() { return this.#state } // setter: see below
 
     exception?: Exception;
     stackTrace?: Stacktrace;
 
-    stepEndsWhenProgramstackLengthLowerOrEqual: number = -1;
-    stepEndsWhenStepIndexIsNotEqualTo: number = Number.MAX_SAFE_INTEGER;
+    #stepEndsWhenProgramstackLengthLowerOrEqual: number = -1;
+    #stepEndsWhenStepIndexIsNotEqualTo: number = Number.MAX_SAFE_INTEGER;
 
     haltAtNextBreakpoint: boolean = true;
 
-    stepCallback!: () => void;
+    #stepCallback!: () => void;
 
     classes: KlassObjectRegistry;
 
     maxStepsPerSecond?: number;
     lastTimeThreadWasRun: number = performance.now();
 
-    isExecutingReplProgram: boolean = false;
-    stacksizeBeforeREPLProgram: number = 0;
+    #isExecutingReplProgram: boolean = false;
+    #stacksizeBeforeREPLProgram: number = 0;
     replReturnValue?: ReplReturnValue;
 
     numberOfSteps: number = 0;
 
-    lastCheckedArrays: any[][] = [];
+    #lastCheckedArrays: any[][] = [];
 
     callbackAfterTerminated?: () => void;
 
@@ -101,10 +102,10 @@ export class Thread {
                 let currentStepList = currentProgramState.currentStepList;
                 let stackBase = currentProgramState.stackBase;
 
-                if (this.stepEndsWhenProgramstackLengthLowerOrEqual >= 0) {
+                if (this.#stepEndsWhenProgramstackLengthLowerOrEqual >= 0) {
                     // singlestep-mode (slower...)
                     while (this.numberOfSteps < maxNumberOfSteps &&
-                        this.state == ThreadState.runnable && !this.isSingleStepCompleted()) {
+                        this.state == ThreadState.runnable && !this.#isSingleStepCompleted()) {
                         step = currentStepList[stepIndex];
 
                         /**
@@ -122,12 +123,12 @@ export class Thread {
 
                         this.currentProgramState.stepIndex = stepIndex;
                         this.numberOfSteps++;
-                        this.lastRange = step.range as IRange;
+                        this.#lastRange = step.range as IRange;
                     }
-                    if (this.isSingleStepCompleted()) {
+                    if (this.#isSingleStepCompleted()) {
                         if (currentProgramState) currentProgramState.lastExecutedStep = step!;
-                        this.stepCallback();
-                        return { state: this._state, stepsExecuted: this.numberOfSteps }
+                        this.#stepCallback();
+                        return { state: this.#state, stepsExecuted: this.numberOfSteps }
                     }
 
                 } else {
@@ -173,14 +174,14 @@ export class Thread {
             if (currentProgramState) currentProgramState.stepIndex = stepIndex;
 
             if (exception instanceof ThrowableClass) {
-                this.throwException(exception, step!);
+                this.#throwException(exception, step!);
             } else {
-                this.handleSystemException(exception, step!, currentProgramState);
+                this.#handleSystemException(exception, step!, currentProgramState);
             }
 
         }
 
-        return { state: this._state, stepsExecuted: this.numberOfSteps }
+        return { state: this.#state, stepsExecuted: this.numberOfSteps }
     }
 
     /**
@@ -188,67 +189,64 @@ export class Thread {
      * called by a network-event in database-classes.
      */
     throwRuntimeExceptionOnLastExecutedStep(exception: Exception & IThrowable) {
-        this.throwException(exception, this.currentProgramState!.lastExecutedStep!);
+        this.#throwException(exception, this.currentProgramState!.lastExecutedStep!);
     }
 
-    handleSystemException(exception: any, step: Step, currentProgramState: ProgramState) {
-
+    #handleSystemException(exception: any, step: Step, currentProgramState: ProgramState) {
         console.log(exception);
         console.log(step!.codeAsString);
         //@ts-ignore
-        this.throwException(new SystemException("SystemException", InterpreterMessages.SystemException() + exception), step!);
+        this.#throwException(new SystemException("SystemException", InterpreterMessages.SystemException() + exception), step!);
     }
 
     public set state(state: ThreadState) {
-        this._state = state;
+        this.#state = state;
         if (state == ThreadState.terminated && this.callbackAfterTerminated) {
             this.callbackAfterTerminated();
             this.callbackAfterTerminated = undefined;
         }
     }
 
-    isSingleStepCompleted() {
-
+    #isSingleStepCompleted() {
         // if step to execute is on same position in program text as next step: execute both!
-        if (this.programStack.length == this.stepEndsWhenProgramstackLengthLowerOrEqual) {
+        if (this.programStack.length == this.#stepEndsWhenProgramstackLengthLowerOrEqual) {
             let nextStep = this.currentProgramState.program.stepsSingle[this.currentProgramState.stepIndex];
-            if (nextStep && nextStep.range && this.lastRange) {
-                if (this.lastRange.startLineNumber == nextStep.range.startLineNumber && this.lastRange.startColumn == nextStep.range.startColumn) {
+            if (nextStep && nextStep.range && this.#lastRange) {
+                if (this.#lastRange.startLineNumber == nextStep.range.startLineNumber && this.#lastRange.startColumn == nextStep.range.startColumn) {
                     return false;
                 }
             }
         }
 
-        return this.programStack.length < this.stepEndsWhenProgramstackLengthLowerOrEqual ||
-            this.programStack.length == this.stepEndsWhenProgramstackLengthLowerOrEqual &&
-            this.currentProgramState.stepIndex != this.stepEndsWhenStepIndexIsNotEqualTo;
+        return this.programStack.length < this.#stepEndsWhenProgramstackLengthLowerOrEqual ||
+            this.programStack.length == this.#stepEndsWhenProgramstackLengthLowerOrEqual &&
+            this.currentProgramState.stepIndex != this.#stepEndsWhenStepIndexIsNotEqualTo;
     }
 
     markSingleStepOver(callbackWhenSingleStepOverEnds: () => void) {
 
-        this.stepEndsWhenProgramstackLengthLowerOrEqual = this.programStack.length;
-        this.stepEndsWhenStepIndexIsNotEqualTo = this.currentProgramState.stepIndex;
+        this.#stepEndsWhenProgramstackLengthLowerOrEqual = this.programStack.length;
+        this.#stepEndsWhenStepIndexIsNotEqualTo = this.currentProgramState.stepIndex;
 
-        this.stepCallback = () => {
-            this.stepEndsWhenProgramstackLengthLowerOrEqual = -1;
+        this.#stepCallback = () => {
+            this.#stepEndsWhenProgramstackLengthLowerOrEqual = -1;
             callbackWhenSingleStepOverEnds();
         };
 
     }
 
     unmarkStep() {
-        this.stepEndsWhenProgramstackLengthLowerOrEqual = -1;
+        this.#stepEndsWhenProgramstackLengthLowerOrEqual = -1;
     }
 
     markStepOut(callbackWhenStepOutEnds: () => void) {
 
-        this.stepEndsWhenProgramstackLengthLowerOrEqual = this.programStack.length - 1;
-        this.stepEndsWhenStepIndexIsNotEqualTo = -1;
-        this.stepCallback = () => {
-            this.stepEndsWhenProgramstackLengthLowerOrEqual = -1;
+        this.#stepEndsWhenProgramstackLengthLowerOrEqual = this.programStack.length - 1;
+        this.#stepEndsWhenStepIndexIsNotEqualTo = -1;
+        this.#stepCallback = () => {
+            this.#stepEndsWhenProgramstackLengthLowerOrEqual = -1;
             callbackWhenStepOutEnds();
         };
-
     }
 
     startIfNotEmptyOrDestroy() {
@@ -261,13 +259,13 @@ export class Thread {
         }
     }
 
-    private throwException(exception: Exception & IThrowable, step: Step) {
+    #throwException(exception: Exception & IThrowable, step: Step) {
 
         exception.file = this.currentProgramState.program.module.file;
         exception.range = exception.range || step.getValidRangeOrUndefined();
         exception.thread = this;
 
-        if (this.isExecutingReplProgram) this.returnFromREPLProgram(exception, step);
+        if (this.#isExecutingReplProgram) this.returnFromREPLProgram(exception, step);
 
         let classNames = exception.getExtendedImplementedIdentifiers().slice();
         classNames.push(exception.getIdentifier());
@@ -284,7 +282,7 @@ export class Thread {
                 let exInfo = ps.exceptionInfoList.pop()!;
 
                 if (exInfo.aquiredObjectLocks) {
-                    while (exInfo.aquiredObjectLocks.length > 0) this.leaveSynchronizedBlock(exInfo.aquiredObjectLocks.pop()!);
+                    while (exInfo.aquiredObjectLocks.length > 0) this.#leaveSynchronizedBlock(exInfo.aquiredObjectLocks.pop()!);
                 }
 
                 for (let cn of classNames) {
@@ -326,7 +324,7 @@ export class Thread {
             }
 
             if (ps?.aquiredObjectLocks) {
-                while (ps.aquiredObjectLocks.length > 0) this.leaveSynchronizedBlock(ps.aquiredObjectLocks.pop()!);
+                while (ps.aquiredObjectLocks.length > 0) this.#leaveSynchronizedBlock(ps.aquiredObjectLocks.pop()!);
             }
 
             rawStackTrace.push(ps);
@@ -405,15 +403,15 @@ export class Thread {
     }
 
     startREPLProgram() {
-        this.stacksizeBeforeREPLProgram = this.s.length;
-        this.isExecutingReplProgram = true;
+        this.#stacksizeBeforeREPLProgram = this.s.length;
+        this.#isExecutingReplProgram = true;
     }
 
     /**
      * return from REPL-Program
      */
     returnFromREPLProgram(exception?: Exception & IThrowable, step?: Step) {
-        this.isExecutingReplProgram = false;
+        this.#isExecutingReplProgram = false;
 
         // TODO: getStacktrace and get exception to the output...
         let replProgram = this.programStack.pop();
@@ -423,8 +421,8 @@ export class Thread {
 
         this.replReturnValue = undefined;
 
-        let text = this.s.length > this.stacksizeBeforeREPLProgram + 1 ? this.s.pop() : undefined;
-        let value = this.s.length > this.stacksizeBeforeREPLProgram ? this.s.pop() : undefined;
+        let text = this.s.length > this.#stacksizeBeforeREPLProgram + 1 ? this.s.pop() : undefined;
+        let value = this.s.length > this.#stacksizeBeforeREPLProgram ? this.s.pop() : undefined;
 
         this.replReturnValue = {
             value: value,
@@ -433,7 +431,7 @@ export class Thread {
         }
 
         // shouldn't be necessary:
-        while (this.s.length > this.stacksizeBeforeREPLProgram) {
+        while (this.s.length > this.#stacksizeBeforeREPLProgram) {
             this.s.pop();
         }
 
@@ -685,8 +683,7 @@ export class Thread {
 
     }
 
-
-    leaveSynchronizedBlock(aquiredLock: ObjectClass) {
+    #leaveSynchronizedBlock(aquiredLock: ObjectClass) {
         aquiredLock.leaveSynchronizedBlock(this);
     }
 
@@ -759,14 +756,14 @@ export class Thread {
     }
 
     Array0(array: any[]) {
-        this.lastCheckedArrays.push(array);
+        this.#lastCheckedArrays.push(array);
         return array;
     }
 
     Array1(array: any[], index: number) {
         if (index < 0 || index >= array.length) throw new IndexOutOfBoundsExceptionClass(InterpreterMessages.ArrayIndexOutOfBoundsException(index, array.length, 1));
         let ret = array[index];
-        this.lastCheckedArrays.push(ret);
+        this.#lastCheckedArrays.push(ret);
         return ret;
     }
 
@@ -776,7 +773,7 @@ export class Thread {
         if (index2 < 0 || index2 >= a2.length) throw new IndexOutOfBoundsExceptionClass(InterpreterMessages.ArrayIndexOutOfBoundsException(index2, a2.length, 2));
 
         let ret = a2[index2];
-        this.lastCheckedArrays.push(ret);
+        this.#lastCheckedArrays.push(ret);
         return ret;
 
     }
@@ -789,12 +786,12 @@ export class Thread {
         }
 
         let ret = array;
-        this.lastCheckedArrays.push(ret);
+        this.#lastCheckedArrays.push(ret);
         return ret;
     }
 
     CheckLastIndex(index: number, dimension: number): number {
-        let array = this.lastCheckedArrays.pop();
+        let array = this.#lastCheckedArrays.pop();
         if (index < 0 || index >= array!.length) throw new IndexOutOfBoundsExceptionClass(InterpreterMessages.ArrayIndexOutOfBoundsException(index, array!.length, dimension));
         return index;
     }

@@ -1,4 +1,4 @@
-import { Step } from "../../common/interpreter/Program";
+import { Step } from "../../common/interpreter/Step";
 import { StepParams } from "../../common/interpreter/StepFunction";
 import { Module } from "../../common/module/Module";
 import { EmptyRange, IRange } from "../../common/range/Range";

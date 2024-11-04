@@ -2,7 +2,7 @@ import { BaseSymbol } from "../../common/BaseSymbolTable.ts";
 import { Error } from "../../common/Error";
 import { UsagePosition } from "../../common/UsagePosition.ts";
 import { CodeFragment } from "../../common/disassembler/CodeFragment.ts";
-import { Step } from "../../common/interpreter/Program";
+import { Step } from "../../common/interpreter/Step.ts";
 import { Thread } from "../../common/interpreter/Thread.ts";
 import { CompilerFile } from "../../common/module/CompilerFile";
 import { Position } from "../../common/range/Position.ts";
@@ -237,7 +237,6 @@ export class JavaCompiledModule extends JavaBaseModule {
         return true;
 
     }
-
 
     dependsOnOtherDirtyModule(): boolean {
         return this.compiledSymbolsUsageTracker.existsDependencyToOtherDirtyModule();

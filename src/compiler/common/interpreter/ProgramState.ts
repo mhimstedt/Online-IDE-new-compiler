@@ -1,6 +1,7 @@
 import { ObjectClass } from "../../java/runtime/system/javalang/ObjectClassStringClass";
 import { ExceptionInfo, Exception } from "./ExceptionInfo";
-import { Program, Step } from "./Program";
+import { Program } from "./Program";
+import { Step } from "./Step";
 
 
 

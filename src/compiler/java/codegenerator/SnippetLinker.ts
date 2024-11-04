@@ -1,4 +1,5 @@
-import { Program, Step } from "../../common/interpreter/Program";
+import { Program } from "../../common/interpreter/Program";
+import { Step } from "../../common/interpreter/Step";
 import { CodeSnippet } from "./CodeSnippet";
 import { NextStepMark } from "./CodeSnippetKinds";
 import { LabelCodeSnippet } from "./LabelManager";

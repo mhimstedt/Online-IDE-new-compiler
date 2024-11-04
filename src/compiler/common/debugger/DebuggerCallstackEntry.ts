@@ -1,6 +1,7 @@
 import { DebM } from "./DebuggerMessages";
 import { BaseSymbolTable } from "../BaseSymbolTable";
-import { Program, Step } from "../interpreter/Program";
+import { Program } from "../interpreter/Program";
+import { Step } from "../interpreter/Step";
 import { ProgramState } from "../interpreter/ProgramState";
 import { IRange } from "../range/Range";
 

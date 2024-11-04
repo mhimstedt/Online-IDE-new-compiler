@@ -2,7 +2,7 @@ import { IMain } from "../IMain";
 import { CompilerFile } from "../module/CompilerFile";
 import { ProgramPointerPositionInfo } from "../monacoproviders/ProgramPointerManager";
 import { IRange } from "../range/Range";
-import { Step } from "./Program";
+import { Step } from "./Step";
 import { SchedulerState } from "./SchedulerState";
 import { IThrowable } from "./ThrowableType";
 import '/assets/css/exceptionmarker.css';

@@ -5,7 +5,7 @@ import { CodeFragment } from "./CodeFragment";
 
 import { Executable } from "../Executable";
 import { IMain } from "../IMain";
-import { Step } from "../interpreter/Program";
+import { Step } from "../interpreter/Step.ts";
 import { CompilerFile } from "../module/CompilerFile";
 import { ProgramPointerPositionInfo } from "../monacoproviders/ProgramPointerManager";
 import { IRange } from "../range/Range";

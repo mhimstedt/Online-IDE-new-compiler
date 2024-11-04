@@ -1,4 +1,4 @@
-import { Step } from "../../common/interpreter/Program";
+import { Step } from "../../common/interpreter/Step";
 import { CodeSnippet as CodeSnippet } from "./CodeSnippet";
 
 

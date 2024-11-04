@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import { TestContext } from 'vitest';
-import { Step } from "../compiler/common/interpreter/Program";
+import { Step } from "../compiler/common/interpreter/Step";
 import { Thread } from "../compiler/common/interpreter/Thread";
 import { getLine, threeDez } from "../tools/StringTools";
 import { DummyAssertionObserver } from '../compiler/java/runtime/unittests/IAssertionObserver';

@@ -5,7 +5,8 @@ import { Executable } from "../Executable.ts";
 import { InterpreterMessages } from "../language/InterpreterMessages.ts";
 import { ProgramPointerPositionInfo } from "../monacoproviders/ProgramPointerManager.ts";
 import { Interpreter } from "./Interpreter";
-import { Program, Step } from "./Program";
+import { Program } from "./Program";
+import { Step } from "./Step.ts";
 import { SchedulerExitState } from "./SchedulerExitState.ts";
 import { SchedulerState } from "./SchedulerState.ts";
 import { Helpers, KlassObjectRegistry, StepParams } from "./StepFunction.ts";
@@ -14,28 +15,28 @@ import { ThreadState } from "./ThreadState.ts";
 
 export class Scheduler {
     runningThreads: Thread[] = [];
-    suspendedThreads: Thread[] = [];
-    storedThreads?: Thread[] = undefined;
+    #suspendedThreads: Thread[] = [];
+    #storedThreads?: Thread[] = undefined;
 
-    currentThreadIndex: number = 0;
+    #currentThreadIndex: number = 0;
     state!: SchedulerState;
 
     keepThread: boolean = false;    // for single step mode
 
     classObjectRegistry: KlassObjectRegistry = {};
 
-    timeStampProgramStarted: number = 0;
+    #timeStampProgramStarted: number = 0;
     stepCountSinceStartOfProgram: number = 0;
-    libraryTypeStore?: JavaTypeStore;
+    #libraryTypeStore?: JavaTypeStore;
 
-    lastTimeDebuggeroutputWritten: number = 0;
-    updateDebuggerEveryMs: number = 1000;
+    #lastTimeDebuggeroutputWritten: number = 0;
+    #updateDebuggerEveryMs: number = 1000;
 
     // if pause button is pressed when there is no thread
     // and Program has actors then interpreter sets this callback:
     onStartingNextThreadCallback?: () => void;
 
-    callbackAfterProgramFinished?: () => void;
+    #callbackAfterProgramFinished?: () => void;
 
     callbackAfterReplProgramFinished?: () => void;
 
@@ -88,7 +89,7 @@ export class Scheduler {
         while (numberOfStepsInThisRun < numberOfStepsMax && this.state == SchedulerState.running) {
 
             // watchdog: if all threads had beed run once and no one executed a step then exit the loop to avoid endless looping when there's nothing to do:
-            if (this.currentThreadIndex == 0) {
+            if (this.#currentThreadIndex == 0) {
                 if (lastStoredStepsInThisRun == numberOfStepsInThisRun || this.runningThreads.length == 0) {
                     break;
                 }
@@ -96,10 +97,10 @@ export class Scheduler {
             }
 
             // fetch next thread (round robin)
-            let currentThread = this.runningThreads[this.currentThreadIndex];
+            let currentThread = this.runningThreads[this.#currentThreadIndex];
             if (!currentThread) {
                 if (this.runningThreads.length > 0) {
-                    this.currentThreadIndex = 0;
+                    this.#currentThreadIndex = 0;
                     currentThread = this.runningThreads[0];
                     lastStoredStepsInThisRun = -1;
                 } else {
@@ -147,9 +148,9 @@ export class Scheduler {
                     case ThreadState.terminatedWithException:
                         // TODO: Print Exception if present
 
-                        this.runningThreads.splice(this.currentThreadIndex, 1);
-                        if (this.currentThreadIndex > this.runningThreads.length - 1) {
-                            this.currentThreadIndex = -1;   // it gets incremented by 1 later on
+                        this.runningThreads.splice(this.#currentThreadIndex, 1);
+                        if (this.#currentThreadIndex > this.runningThreads.length - 1) {
+                            this.#currentThreadIndex = -1;   // it gets incremented by 1 later on
                             this.keepThread = false;
                         }
 
@@ -166,9 +167,9 @@ export class Scheduler {
                             if (threadState.state == ThreadState.terminatedWithException) {
                                 this.interpreter.setState(SchedulerState.error);
                             }
-                            if (this.callbackAfterProgramFinished) {
-                                let cb = this.callbackAfterProgramFinished;
-                                this.callbackAfterProgramFinished = undefined;
+                            if (this.#callbackAfterProgramFinished) {
+                                let cb = this.#callbackAfterProgramFinished;
+                                this.#callbackAfterProgramFinished = undefined;
                                 cb();
                             }
                             return SchedulerExitState.nothingMoreToDo;
@@ -196,9 +197,9 @@ export class Scheduler {
             // If user pressed stepOver or stepInto button then she/he expects
             // program pointer to stay inside current thread. Therefore keepThread == true is set in this case.
             if (!this.keepThread) {
-                this.currentThreadIndex++;
-                if (this.currentThreadIndex >= this.runningThreads.length) {
-                    this.currentThreadIndex = 0;
+                this.#currentThreadIndex++;
+                if (this.#currentThreadIndex >= this.runningThreads.length) {
+                    this.#currentThreadIndex = 0;
                 }
             }
         }
@@ -211,7 +212,7 @@ export class Scheduler {
     setState(newState: SchedulerState) {
         switch (newState) {
             case SchedulerState.running:
-                this.timeStampProgramStarted = performance.now();
+                this.#timeStampProgramStarted = performance.now();
                 this.stepCountSinceStartOfProgram = 0;
                 break;
             case SchedulerState.stopped:
@@ -219,22 +220,22 @@ export class Scheduler {
                 if (this.state == SchedulerState.running) {
                     let printManager = this.interpreter.printManager;
                     if(!printManager.isTestPrintManager()){
-                        let dt = performance.now() - this.timeStampProgramStarted;
+                        let dt = performance.now() - this.#timeStampProgramStarted;
                         let stepsPerSecond = Math.round(this.stepCountSinceStartOfProgram / dt * 1000);
                         this.interpreter.printManager.print("", true, undefined);
                         this.interpreter.printManager.print(InterpreterMessages.ExecutionTime() + ": " +
                             Math.round(dt * 100) / 100 + " ms, " +
                             this.stepCountSinceStartOfProgram + " steps, " +
-                            this.printMillions(stepsPerSecond) + " steps/s", true, undefined);
+                            this.#printMillions(stepsPerSecond) + " steps/s", true, undefined);
                     }
                 }
-                this.terminateAllThreads();
+                this.#terminateAllThreads();
                 break;
         }
         this.state = newState;
     }
 
-    printMillions(n: number): string {
+    #printMillions(n: number): string {
         if (n < 1e6) return "" + Math.trunc(n);
 
         n = Math.trunc(n / 1e3) * 1e3 / 1e6;
@@ -243,16 +244,16 @@ export class Scheduler {
     }
 
 
-    terminateAllThreads() {
+    #terminateAllThreads() {
         this.runningThreads.forEach(t => t.state = ThreadState.terminated);
-        this.suspendedThreads.forEach(t => t.state = ThreadState.terminated);
+        this.#suspendedThreads.forEach(t => t.state = ThreadState.terminated);
 
         this.runningThreads.length = 0;
-        this.suspendedThreads.length = 0;
+        this.#suspendedThreads.length = 0;
     }
 
-    private ifBreakpointPresentDisableOnce() {
-        let currentThread = this.runningThreads[this.currentThreadIndex];
+    #ifBreakpointPresentDisableOnce() {
+        let currentThread = this.runningThreads[this.#currentThreadIndex];
         let programState = currentThread.currentProgramState;
         if (currentThread) {
             let currentStep = programState.currentStepList[programState.stepIndex];
@@ -265,7 +266,7 @@ export class Scheduler {
     runSingleStepKeepingThread(stepInto: boolean, callback: () => void) {
         this.keepThread = true;
 
-        this.ifBreakpointPresentDisableOnce();
+        this.#ifBreakpointPresentDisableOnce();
 
         let thread = this.getCurrentThread();
         if (thread == null) return;
@@ -297,7 +298,7 @@ export class Scheduler {
 
     stepOut(callback: () => void) {
         this.keepThread = true;
-        let thread = this.runningThreads[this.currentThreadIndex];
+        const thread = this.runningThreads[this.#currentThreadIndex];
         if (thread == null) return;
         thread.markStepOut(() => {
             callback();
@@ -309,7 +310,7 @@ export class Scheduler {
      * cancel this single-step execution
      */
     unmarkCurrentlyExecutedSingleStep() {
-        let thread = this.runningThreads[this.currentThreadIndex];
+        let thread = this.runningThreads[this.#currentThreadIndex];
         if (thread) thread.unmarkStep();
     }
 
@@ -334,18 +335,18 @@ export class Scheduler {
         let index = this.runningThreads.indexOf(thread);
         if (index >= 0) {
             this.runningThreads.splice(index, 1);
-            if (this.currentThreadIndex >= index) {
-                this.currentThreadIndex--;
+            if (this.#currentThreadIndex >= index) {
+                this.#currentThreadIndex--;
             }
         }
-        this.suspendedThreads.push(thread);
+        this.#suspendedThreads.push(thread);
     }
 
     restoreThread(thread: Thread) {
         thread.state = ThreadState.runnable;
-        let index = this.suspendedThreads.indexOf(thread);
+        let index = this.#suspendedThreads.indexOf(thread);
         if (index >= 0) {
-            this.suspendedThreads.splice(index, 1);
+            this.#suspendedThreads.splice(index, 1);
         }
 
         if (thread.state >= ThreadState.terminated) return;
@@ -353,8 +354,8 @@ export class Scheduler {
         this.runningThreads.push(thread);
     }
 
-    public getNextStep(currentThread?: Thread): Step | undefined {
-        currentThread = currentThread || this.runningThreads[this.currentThreadIndex];
+    getNextStep(currentThread?: Thread): Step | undefined {
+        currentThread = currentThread || this.runningThreads[this.#currentThreadIndex];
         if (!currentThread) return undefined;
         let programState = currentThread.currentProgramState;
         let step = programState.currentStepList[programState.stepIndex];
@@ -365,7 +366,7 @@ export class Scheduler {
      * for displaying next program position in editor
      */
     getNextStepPosition(currentThread?: Thread): ProgramPointerPositionInfo | undefined {
-        currentThread = currentThread || this.runningThreads[this.currentThreadIndex];
+        currentThread = currentThread || this.runningThreads[this.#currentThreadIndex];
         if (!currentThread) return undefined;
         let programState = currentThread.currentProgramState;
         let step = programState?.currentStepList[programState.stepIndex];
@@ -378,20 +379,20 @@ export class Scheduler {
         }
     }
 
-    private initIntern(executable: Executable) {
+    #initIntern(executable: Executable) {
         this.classObjectRegistry = executable.classObjectRegistry;
-        this.libraryTypeStore = executable.libraryModuleManager.typestore;
+        this.#libraryTypeStore = executable.libraryModuleManager.typestore;
 
         this.runningThreads = [];
-        this.suspendedThreads = [];
-        this.currentThreadIndex = 0;
+        this.#suspendedThreads = [];
+        this.#currentThreadIndex = 0;
 
         this.keepThread = false;
     }
 
     init(executable: Executable): Thread | undefined {
 
-        this.initIntern(executable);
+        this.#initIntern(executable);
 
         let mainThread = this.createThread("main thread");
 
@@ -414,7 +415,7 @@ export class Scheduler {
     initJUnitTestMethodAndReturnMainThread(executable: Executable | undefined, method: JavaMethod, callback: () => void): Thread | undefined {
         if (!executable) return undefined;
 
-        this.initIntern(executable);
+        this.#initIntern(executable);
 
         let mainThread = this.createThread("main thread");
 
@@ -451,7 +452,7 @@ export class Scheduler {
         }
 
         mainThread.pushProgram(program);
-        this.callbackAfterProgramFinished = callback;
+        this.#callbackAfterProgramFinished = callback;
 
         for (let staticInitStep of executable.staticInitializationSequence) {
             mainThread.pushProgram(staticInitStep.program);
@@ -462,7 +463,7 @@ export class Scheduler {
     }
 
     getCurrentThread(): Thread | undefined {
-        return this.runningThreads[this.currentThreadIndex];
+        return this.runningThreads[this.#currentThreadIndex];
     }
 
     resetLastTimeExecutedTimestamps() {
@@ -486,32 +487,32 @@ export class Scheduler {
         this.runningThreads.filter(t => t.name != 'act method-thread').forEach(t => t.maxStepsPerSecond = isMaxSpeed ? undefined : value);
     }
 
-    removeAllThreads() {
+    #removeAllThreads() {
         this.runningThreads = [];
-        this.suspendedThreads = [];
+        this.#suspendedThreads = [];
     }
 
     setAsCurrentThread(standaloneThread: Thread) {
         let index = this.runningThreads.indexOf(standaloneThread);
         if (index >= 0) {
-            this.currentThreadIndex = index;
+            this.#currentThreadIndex = index;
         } else {
             this.runningThreads.push(standaloneThread);
-            this.currentThreadIndex = this.runningThreads.length - 1;
+            this.#currentThreadIndex = this.runningThreads.length - 1;
         }
         standaloneThread.state = ThreadState.runnable;
     }
 
     saveAllThreadsBut(currentThread: Thread) {
-        this.storedThreads = this.runningThreads.filter(t => t != currentThread);
+        this.#storedThreads = this.runningThreads.filter(t => t != currentThread);
         this.runningThreads = [currentThread];
-        this.currentThreadIndex = 0;
+        this.#currentThreadIndex = 0;
     }
 
     retrieveThreads() {
-        if (this.storedThreads) {
-            this.runningThreads = this.runningThreads.concat(this.storedThreads);
-            this.currentThreadIndex = 0;
+        if (this.#storedThreads) {
+            this.runningThreads = this.runningThreads.concat(this.#storedThreads);
+            this.#currentThreadIndex = 0;
         }
     }
 

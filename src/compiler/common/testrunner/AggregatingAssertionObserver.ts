@@ -1,6 +1,6 @@
 import exp from "constants";
 import { IAssertionObserver } from "../../java/runtime/unittests/IAssertionObserver";
-import { Step } from "../interpreter/Program";
+import { Step } from "../interpreter/Step";
 import { Thread } from "../interpreter/Thread";
 import { JUnitTestrunnerLanguage } from "./JUnitTestrunnerLanguage";
 import { DOM } from "../../../tools/DOM";

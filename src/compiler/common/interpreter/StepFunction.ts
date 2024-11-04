@@ -1,4 +1,3 @@
-import { ObjectClass } from "../../java/runtime/system/javalang/ObjectClassStringClass.ts";
 import { IRange } from "../range/Range.ts";
 import { Thread } from "./Thread.ts";
 
@@ -51,7 +50,6 @@ export class Helpers {
     static returnFromReplProgram = StepParams.thread + "." + Thread.prototype.returnFromREPLProgram.name;
     static leaveAllSynchronizedBlocksInCurrentMethod = StepParams.thread + "." + Thread.prototype.leaveAllSynchronizedBlocksInCurrentMethod.name;
 
-
     static callbackParameter = "callback";
 
     static elementRelativeToStackbase(index: number) {
@@ -61,7 +59,6 @@ export class Helpers {
     static checkNPE(object: string, range: IRange){
         return `(${object} || ${Helpers.throwNPE}(${range.startLineNumber}, ${range.startColumn}, ${range.endLineNumber}, ${range.endColumn}))`;
     }
-
 
     static outerClassAttributeIdentifier = "__outerClass";
 }
@@ -77,5 +74,3 @@ export class Helpers {
 
 export type Klass = { new(...args: any[]): any, [index: string]: any };
 export type KlassObjectRegistry = Record<string, Klass>;
-
-
