@@ -100,25 +100,27 @@ export class JavaHoverProvider {
         let editor = monaco.editor.getEditors().find(e => e.getModel() == model);
         if (!editor) return;
 
-        let selection: monaco.Selection | null = editor.getSelection();
+        // let selection: monaco.Selection | null = editor.getSelection();
 
-        if (selection != null) {
-            if (selection.startLineNumber != selection.endLineNumber || selection.startColumn != selection.endColumn) {
-                if (
-                    (selection.startLineNumber < position.lineNumber || selection.startLineNumber == position.lineNumber && selection.startColumn <= position.column) &&
-                    (selection.endLineNumber > position.lineNumber || selection.endLineNumber == position.lineNumber && selection.endColumn >= position.column)
-                ) {
-                    if (this.main.getInterpreter().scheduler.state != SchedulerState.paused) return;
-                    let text = model.getValueInRange(selection);
-                    let replReturnValue = this.main.getRepl().executeSynchronously(text);
+        // if (selection != null) {
+        //     return;
 
-                    return {
-                        range: selection,
-                        contents: [{ value: this.replReturnValueToOutput(replReturnValue, text) }],
-                    };
-                }
-            }
-        }
+        //     if (selection.startLineNumber != selection.endLineNumber || selection.startColumn != selection.endColumn) {
+        //         if (
+        //             (selection.startLineNumber < position.lineNumber || selection.startLineNumber == position.lineNumber && selection.startColumn <= position.column) &&
+        //             (selection.endLineNumber > position.lineNumber || selection.endLineNumber == position.lineNumber && selection.endColumn >= position.column)
+        //         ) {
+        //             if (this.main.getInterpreter().scheduler.state != SchedulerState.paused) return;
+        //             let text = model.getValueInRange(selection);
+        //             let replReturnValue = this.main.getRepl().executeSynchronously(text);
+
+        //             return {
+        //                 range: selection,
+        //                 contents: [{ value: this.replReturnValueToOutput(replReturnValue, text) }],
+        //             };
+        //         }
+        //     }
+        // }
 
         let module: Module | undefined = this.main.getCurrentWorkspace()?.getModuleForMonacoModel(model);
 
