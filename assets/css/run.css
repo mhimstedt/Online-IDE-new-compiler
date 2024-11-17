@@ -10,14 +10,16 @@
     --runBackgroundColor: rgba(255, 255, 255, 0.2);
 
     #rightdiv {
-        position: relative;
+        /* position: relative; */
+        display: flex;
+        flex-direction: row;
         width: 360px;
         height: 100%;
         border-left: 1px solid var(--slider);
         box-sizing: border-box;
         /* background-color: #1e1e1e; */
         background-color: var(--backgroundDark);
-        z-index: 2;     /* over #main */
+        /* z-index: 2; */
     }
 
     .jo_rightdiv-rightside-container {
@@ -35,9 +37,9 @@
     }
 
     #rightdiv-inner{
-        position: absolute;
-        top: 0;
-        left: 0;
+        /* position: absolute; */
+        /* top: 0;
+        left: 0; */
         width: 100%;
         height: 100%;
     }
