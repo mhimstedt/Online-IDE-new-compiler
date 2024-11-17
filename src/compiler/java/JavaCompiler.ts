@@ -69,7 +69,6 @@ export class JavaCompiler implements Compiler {
     }
 
     async compileIfDirty(): Promise<Executable | undefined> {
-        console.log("Hier!");
         // if we're not in test mode:
         if (this.main) {
             if (this.main.getInterpreter().isRunningOrPaused()) return;
