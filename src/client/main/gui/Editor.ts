@@ -101,6 +101,11 @@ export class Editor {
         }
         );
 
+        // un-bind F12:
+        // https://github.com/microsoft/monaco-editor/issues/287
+        this.editor._standaloneKeybindingService.addDynamicKeybinding("-editor.action.revealDefinition", 0, () => {});
+
+
         this.createContextKeys();
 
         this.editor.onDidChangeModelContent((e: monaco.editor.IModelContentChangedEvent) => {
