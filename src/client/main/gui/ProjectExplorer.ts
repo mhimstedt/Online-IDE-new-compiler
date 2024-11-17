@@ -719,6 +719,7 @@ export class ProjectExplorer {
             });
 
             this.main.bottomDiv.gradingManager?.setValues(w);
+            this.main.getCompiler().triggerCompile();
 
         } else {
             this.setFileActive(null);

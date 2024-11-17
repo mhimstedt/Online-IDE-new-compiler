@@ -254,7 +254,7 @@ export class Main implements MainBase {
         new JUnitTestrunner(this, jQuery('.jo_testrunnerTab')[0]);
 
         this.getCompiler().eventManager.on('compilationFinished', this.onCompilationFinished, this);
-        this.getCompiler().triggerCompile();
+        // this.getCompiler().triggerCompile();
 
         this.disassembler = new Disassembler(this.bottomDiv.getDisassemblerDiv(), this);
 

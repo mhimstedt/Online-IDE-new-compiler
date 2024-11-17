@@ -269,6 +269,8 @@ export class MainEmbedded implements MainBase {
         file.restoreViewState(this.getMainEditor());
 
         this.disassembler?.disassemble();
+
+        this.getCompiler().triggerCompile();
     }
 
     eraseDokuwikiSearchMarkup(text: string): string {
@@ -576,7 +578,7 @@ export class MainEmbedded implements MainBase {
 
         this.getCompiler().eventManager.on("compilationFinished", this.onCompilationFinished, this);
 
-        this.getCompiler().triggerCompile();
+        // this.getCompiler().triggerCompile();
 
         if (this.config.withPCode) {
             this.disassembler = new Disassembler(this.$disassemblerDiv[0], this);
