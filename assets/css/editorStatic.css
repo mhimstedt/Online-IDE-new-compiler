@@ -1,3 +1,14 @@
+/*
+ * This file is not used by embedded-IDE
+ */
+
+html {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
 body.joeCssFence {
     position: relative;
     padding: 0;
