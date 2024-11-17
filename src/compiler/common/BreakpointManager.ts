@@ -31,6 +31,10 @@ export class BreakpointManager {
                 return;
             }
             this.toggleBreakpoint(e.target.position.lineNumber);
+
+            // issue #25: set breakpoint: F5 not working
+            main.getMainEditor().focus()
+
             return;
         });
 
