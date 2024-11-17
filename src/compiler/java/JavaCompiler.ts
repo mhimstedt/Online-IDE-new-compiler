@@ -48,7 +48,8 @@ export class JavaCompiler implements Compiler {
 
     #progressManager = new CompilingProgressManager();
 
-    #compileTimer: NodeJS.Timeout
+    #compileTimer: NodeJS.Timeout;
+    lastTimeCompilationStarted: number = 0;
 
     constructor(public main?: IMain, private errorMarker?: ErrorMarker) {
         this.libraryModuleManager = new JavaLibraryModuleManager();
@@ -68,6 +69,7 @@ export class JavaCompiler implements Compiler {
     }
 
     async compileIfDirty(): Promise<Executable | undefined> {
+        console.log("Hier!");
         // if we're not in test mode:
         if (this.main) {
             if (this.main.getInterpreter().isRunningOrPaused()) return;
@@ -226,10 +228,16 @@ export class JavaCompiler implements Compiler {
             clearTimeout(this.#compileTimer)
         }
 
+        // ensure that there's at least compileTimeout ms between two compilation runs
+        let timeout: number = compileTimeout - (performance.now() - this.lastTimeCompilationStarted);
+        if(timeout < 0) timeout = 0;
+        
+
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         this.#compileTimer = setTimeout(async () => {
             do {
                 try {
+                    this.lastTimeCompilationStarted = performance.now();
                     this.#progressManager.initBeforeCompiling();
                     await this.compileIfDirty();
                     this.#progressManager.afterCompiling();
@@ -240,7 +248,7 @@ export class JavaCompiler implements Compiler {
                     }
                 }
             } while (this.#progressManager.restartNecessary())
-        }, compileTimeout)
+        }, timeout)
     }
 
     findModuleByFile(file: CompilerFile): Module | undefined {
