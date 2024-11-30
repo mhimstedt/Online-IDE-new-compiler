@@ -1,5 +1,6 @@
-import { KlassData, Pruefung, SchoolData, WorkspaceShortData } from "../communication/Data";
+import { KlassData, Pruefung, WorkspaceShortData } from "../communication/Data";
 import { w2form, w2popup, w2ui } from 'w2ui'
+
 
 export class NewPruefungPopup {
 

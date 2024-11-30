@@ -1,6 +1,7 @@
 import { SchoolData } from "../communication/Data";
 import { w2form, w2popup } from 'w2ui'
 
+
 export class MoveTeacherToSchoolPopup {
 
     static callbackCancel: () => void;

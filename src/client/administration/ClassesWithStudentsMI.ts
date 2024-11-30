@@ -5,6 +5,8 @@ import { Administration } from "./Administration.js";
 import { PasswordPopup } from "./PasswordPopup.js";
 import { w2alert, w2form, w2grid, w2popup, w2ui, w2utils } from 'w2ui'
 import { StudentBulkImportMI } from "./StudentBulkImortMI.js";
+import jQuery from 'jquery'
+
 
 export class ClassesWithStudentsMI extends AdminMenuItem {
 

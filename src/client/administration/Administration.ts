@@ -7,10 +7,12 @@ import { ClassesWithStudentsMI } from "./ClassesWithStudentsMI.js";
 import { StudentBulkImportMI } from "./StudentBulkImortMI.js";
 import { ExportImportMI } from "./ExportImportMI.js";
 import { Pruefungen } from "./Pruefungen.js";
-import { w2utils } from 'w2ui'
+import { w2utils } from 'w2ui';
 import { AutoLogout } from "../main/AutoLogout.js";
 import { SchoolSettings as SchoolSettingsMI } from "./SchoolSettingsMI.js";
 import jQuery from 'jquery'
+
+import 'w2ui/w2ui-2.0.css';
 
 import "/assets/css/icons.css";
 import "/assets/css/administration.css";

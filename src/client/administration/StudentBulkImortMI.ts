@@ -4,6 +4,8 @@ import { ajax } from "../communication/AjaxHelper.js";
 import { Administration } from "./Administration.js";
 import { setSelectItems, getSelectedObject } from "../../tools/HtmlTools.js";
 import { w2grid } from 'w2ui'
+import jQuery from 'jquery'
+
 
 
 type Step = "Step 1 Paste" | "Step 2 check" | "Step 3 import" | "Step 4 print";
@@ -129,20 +131,20 @@ export class StudentBulkImportMI extends AdminMenuItem {
         Eine Liste der Zugangsdaten zum Ausdrucken erhalten Sie durch Klick auf den Button "Drucken...".
         `
 
-        this.$tableLeft.append($('<div class="jo_bulk_heading">Schritt 4: Fertig!</div>'));
-        let $description = $(`<div class="jo_bulk_description"></div>`);
+        this.$tableLeft.append(jQuery('<div class="jo_bulk_heading">Schritt 4: Fertig!</div>'));
+        let $description = jQuery(`<div class="jo_bulk_description"></div>`);
         $description.html(description);
         this.$tableLeft.append($description);
 
-        let $buttondiv = $(`<div class="jo_bulk_buttondiv" style="justify-content: space-between"></div>`);
+        let $buttondiv = jQuery(`<div class="jo_bulk_buttondiv" style="justify-content: space-between"></div>`);
         this.$tableLeft.append($buttondiv);
-        let $buttonPrint = $(`<div class="jo_buttonContinue jo_button jo_active">Drucken...</div>`);
+        let $buttonPrint = jQuery(`<div class="jo_buttonContinue jo_button jo_active">Drucken...</div>`);
         $buttondiv.append($buttonPrint);
 
-        let $buttonWriteUsers = $(`<div class="jo_buttonContinue jo_button jo_active">OK</div>`);
+        let $buttonWriteUsers = jQuery(`<div class="jo_buttonContinue jo_button jo_active">OK</div>`);
         $buttondiv.append($buttonWriteUsers);
 
-        let $printDiv = $('#print');
+        let $printDiv = jQuery('#print');
         $printDiv.empty();
         this.usersToWrite.forEach((user) => {
             $printDiv.append(`<div style="page-break-inside: avoid;">
@@ -155,9 +157,9 @@ export class StudentBulkImportMI extends AdminMenuItem {
         });
 
         $buttonPrint.on('click', () => {
-            $('#outer').css('display', 'none');
+            jQuery('#outer').css('display', 'none');
             window.print();
-            $('#outer').css('display', '');
+            jQuery('#outer').css('display', '');
         })
 
         $buttonWriteUsers.on('click', () => {
@@ -174,19 +176,19 @@ export class StudentBulkImportMI extends AdminMenuItem {
 
         let description: string = `Die Schüler/innen können jetzt angelegt und der Klasse ${this.selectedClass.name} zugeordnet werden.`
 
-        this.$tableLeft.append($('<div class="jo_bulk_heading">Schritt 3: Benutzer anlegen</div>'));
-        let $description = $(`<div class="jo_bulk_description"></div>`);
+        this.$tableLeft.append(jQuery('<div class="jo_bulk_heading">Schritt 3: Benutzer anlegen</div>'));
+        let $description = jQuery(`<div class="jo_bulk_description"></div>`);
         $description.html(description);
         this.$tableLeft.append($description);
 
-        let $buttondiv = $(`<div class="jo_bulk_buttondiv" style="justify-content: space-between"></div>`);
+        let $buttondiv = jQuery(`<div class="jo_bulk_buttondiv" style="justify-content: space-between"></div>`);
         this.$tableLeft.append($buttondiv);
-        let $buttonBack = $(`<div class="jo_buttonContinue jo_button jo_active">Zurück</div>`);
+        let $buttonBack = jQuery(`<div class="jo_buttonContinue jo_button jo_active">Zurück</div>`);
         $buttondiv.append($buttonBack);
-        let $buttonWriteUsers = $(`<div class="jo_buttonWriteUsers jo_button jo_active">Benutzer anlegen</div>`);
+        let $buttonWriteUsers = jQuery(`<div class="jo_buttonWriteUsers jo_button jo_active">Benutzer anlegen</div>`);
         $buttondiv.append($buttonWriteUsers);
 
-        this.$protocol = $('<div class="jo_bulk_protocol"></div>');
+        this.$protocol = jQuery('<div class="jo_bulk_protocol"></div>');
         this.$tableLeft.append(this.$protocol);
         this.$protocol.hide();
 
@@ -224,8 +226,8 @@ export class StudentBulkImportMI extends AdminMenuItem {
 
         let description: string = `Bitte wählen Sie im Auswahlfeld die Klasse aus, in die die Schülerdaten importiert werden sollen. Sie können die Daten in der Tabelle noch bearbeiten, bevor Sie sie zur Überprüfung (noch kein Import!) absenden.`
 
-        this.$tableLeft.append($('<div class="jo_bulk_heading">Schritt 2: Daten überprüfen</div>'));
-        let $description = $(`<div class="jo_bulk_description"></div>`);
+        this.$tableLeft.append(jQuery('<div class="jo_bulk_heading">Schritt 2: Daten überprüfen</div>'));
+        let $description = jQuery(`<div class="jo_bulk_description"></div>`);
         $description.html(description);
         this.$tableLeft.append($description);
 
@@ -233,7 +235,7 @@ export class StudentBulkImportMI extends AdminMenuItem {
             school_id: this.administration.userData.schule_id
         }
 
-        let $select = <JQuery<HTMLSelectElement>>$('<select class="jo_bulk_chooseClass"></select>');
+        let $select = <JQuery<HTMLSelectElement>>jQuery('<select class="jo_bulk_chooseClass"></select>');
         this.$tableLeft.append($select);
 
         ajax('getClassesData', request, (response: GetClassesDataResponse) => {
@@ -248,15 +250,15 @@ export class StudentBulkImportMI extends AdminMenuItem {
         });
 
 
-        let $buttondiv = $(`<div class="jo_bulk_buttondiv" style="justify-content: space-between"></div>`);
+        let $buttondiv = jQuery(`<div class="jo_bulk_buttondiv" style="justify-content: space-between"></div>`);
         this.$tableLeft.append($buttondiv);
-        let $buttonBack = $(`<div class="jo_buttonContinue jo_button jo_active">Zurück</div>`);
+        let $buttonBack = jQuery(`<div class="jo_buttonContinue jo_button jo_active">Zurück</div>`);
         $buttondiv.append($buttonBack);
-        let $buttonContinue = $(`<div class="jo_buttonContinue jo_button jo_active">Daten überprüfen...</div>`);
+        let $buttonContinue = jQuery(`<div class="jo_buttonContinue jo_button jo_active">Daten überprüfen...</div>`);
         $buttondiv.append($buttonContinue);
 
-        this.$tableLeft.append($('<div class="jo_bulk_heading_protocol">Fehlerprotokoll</div>'));
-        this.$protocol = $('<div class="jo_bulk_protocol"></div>');
+        this.$tableLeft.append(jQuery('<div class="jo_bulk_heading_protocol">Fehlerprotokoll</div>'));
+        this.$protocol = jQuery('<div class="jo_bulk_protocol"></div>');
         this.$tableLeft.append(this.$protocol);
 
         $buttonBack.on('click', () => {
@@ -315,18 +317,18 @@ export class StudentBulkImportMI extends AdminMenuItem {
         setzt die Online-IDE ein Zufallspasswort.<br>
         Bitte fügen Sie den Inhalt der Tabelle per Copy-Paste in dieses Eingabefeld ein:`
 
-        this.$tableLeft.append($('<div class="jo_bulk_heading">Schritt 1: Daten einlesen</div>'));
-        let $description = $(`<div class="jo_bulk_description"></div>`);
+        this.$tableLeft.append(jQuery('<div class="jo_bulk_heading">Schritt 1: Daten einlesen</div>'));
+        let $description = jQuery(`<div class="jo_bulk_description"></div>`);
         this.$tableLeft.append($description);
         // this.$tableLeft.append(description);
 
-        this.$importTextArea = $(`<textarea class="jo_bulk_importarea"></textarea>`);
+        this.$importTextArea = jQuery(`<textarea class="jo_bulk_importarea"></textarea>`);
         this.$tableLeft.append(this.$importTextArea);
         this.$importTextArea.html('');
 
-        let $buttondiv = $(`<div class="jo_bulk_buttondiv" style="justify-content: flex-end"></div>`);
+        let $buttondiv = jQuery(`<div class="jo_bulk_buttondiv" style="justify-content: flex-end"></div>`);
         this.$tableLeft.append($buttondiv);
-        let $buttonContinue = $(`<div class="jo_buttonContinue jo_button jo_active">Weiter</div>`);
+        let $buttonContinue = jQuery(`<div class="jo_buttonContinue jo_button jo_active">Weiter</div>`);
         $buttondiv.append($buttonContinue);
 
         $buttonContinue.on('click', () => {
@@ -334,8 +336,8 @@ export class StudentBulkImportMI extends AdminMenuItem {
             this.showStep("Step 2 check");
         })
 
-        // this.$tableLeft.append($('<div class="jo_bulk_heading_protocol">Importprotokoll</div>'));
-        // this.$protocol = $('<div class="jo_bulk_protocol"></div>');
+        // this.$tableLeft.append(jQuery('<div class="jo_bulk_heading_protocol">Importprotokoll</div>'));
+        // this.$protocol = jQuery('<div class="jo_bulk_protocol"></div>');
         // this.$tableLeft.append(this.$protocol);
 
         $description.html(description);
@@ -437,7 +439,7 @@ export class StudentBulkImportMI extends AdminMenuItem {
         }
 
         if (lines.length < 2) {
-            // this.$protocol.append($(`<div>In den Daten sind weniger als zwei Zeilen zu finden. Es wird daher nicht nach einer Kopfzeile gesucht.</div>`))
+            // this.$protocol.append(jQuery(`<div>In den Daten sind weniger als zwei Zeilen zu finden. Es wird daher nicht nach einer Kopfzeile gesucht.</div>`))
             return { columnMapping: columnMapping, line1HasHeaders: false };
         }
 
@@ -461,9 +463,9 @@ export class StudentBulkImportMI extends AdminMenuItem {
             }
         }
 
-        // this.$protocol.append($(`<div>In der 1. Zeile wurden folgende Spaltenköpfe gefunden: ${headersFound.join(", ")}</div>`));
+        // this.$protocol.append(jQuery(`<div>In der 1. Zeile wurden folgende Spaltenköpfe gefunden: ${headersFound.join(", ")}</div>`));
         // if (missingHeaders.length > 0)
-        //     this.$protocol.append($(`<div class="jo_bulk_error">Nicht gefunden wurden: ${missingHeaders.join(", ")}</div>`));
+        //     this.$protocol.append(jQuery(`<div class="jo_bulk_error">Nicht gefunden wurden: ${missingHeaders.join(", ")}</div>`));
 
         let line1HasHeaders = missingHeaders.length < 2;
 
@@ -475,7 +477,7 @@ export class StudentBulkImportMI extends AdminMenuItem {
 
         for (let line of lines) {
             if (line.length < maxColumnIndex + 1) {
-                // this.$protocol.append($(`<div class="jo_bulk_error">In Zeile ${lineNumber} gibt es nur ${line.length} Spalten. Benötigt werden aber ${maxColumnIndex + 1} Spalten.</div>`));
+                // this.$protocol.append(jQuery(`<div class="jo_bulk_error">In Zeile ${lineNumber} gibt es nur ${line.length} Spalten. Benötigt werden aber ${maxColumnIndex + 1} Spalten.</div>`));
             }
             lineNumber++;
         }

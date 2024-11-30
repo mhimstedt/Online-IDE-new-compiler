@@ -6,6 +6,8 @@ import { GUIButton } from "../../tools/components/GUIButton";
 import { makeDiv } from "../../tools/HtmlTools";
 import { AdminMenuItem } from "./AdminMenuItem";
 import { NewPruefungPopup } from "./NewPruefungPopup";
+import jQuery from 'jquery'
+
 
 type GetPruefungForPrintingRequest = {
     pruefungId: number
@@ -257,7 +259,7 @@ export class Pruefungen extends AdminMenuItem {
             onChange: (event) => { this.onUpdatePruefung(event) }
         })
 
-        this.pruefungTable.render($('#pruefungTable')[0]);
+        this.pruefungTable.render(jQuery('#pruefungTable')[0]);
 
         //@ts-ignore
         let oldGetCellEditable: (ind: number, col_ind: number) => any = this.pruefungTable.getCellEditable;
@@ -315,7 +317,7 @@ export class Pruefungen extends AdminMenuItem {
 
         })
 
-        this.studentTable.render($('#studentTable')[0]);
+        this.studentTable.render(jQuery('#studentTable')[0]);
 
         // Actions
         let $actionsDiv = jQuery('#pruefungActions');

@@ -4,6 +4,7 @@ import { ajax, ajaxAsync } from "../communication/AjaxHelper.js";
 import { PasswordPopup } from "./PasswordPopup.js";
 import { SelectTeacherPopup } from "./SelectTeacherPopup.js";
 import { w2alert, w2grid, w2utils } from 'w2ui'
+import jQuery from 'jquery'
 
 
 export class TeachersWithClassesMI extends AdminMenuItem {

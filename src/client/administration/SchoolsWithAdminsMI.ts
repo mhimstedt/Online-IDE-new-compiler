@@ -5,6 +5,8 @@ import { PasswordPopup } from "./PasswordPopup.js";
 import { MoveTeacherToSchoolPopup } from "./MoveTeacherToSchoolPopup.js";
 import { w2grid, w2utils, w2alert } from 'w2ui'
 import { StudentBulkImportMI } from "./StudentBulkImortMI.js";
+import jQuery from 'jquery'
+
 
 // declare var w2prompt: any;
 

@@ -3,6 +3,8 @@ import { UserData } from "../communication/Data";
 import { w2form } from 'w2ui'
 import { Administration } from "./Administration";
 import { AdminMenuItem } from "./AdminMenuItem";
+import jQuery from 'jquery'
+
 
 
 type GetSchoolSettingsRequest = {school_id: number};

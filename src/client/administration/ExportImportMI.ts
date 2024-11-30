@@ -2,6 +2,8 @@ import { AdminMenuItem } from "./AdminMenuItem.js";
 import { UserData, CRUDSchoolRequest, CRUDResponse, SchoolData, GetSchoolDataRequest, GetSchoolDataResponse, ImportSchoolsResponse, GetMessagesResponse, GetMessagesRequest } from "../communication/Data.js";
 import { ajax, csrfToken } from "../communication/AjaxHelper.js";
 import { w2grid } from 'w2ui'
+import jQuery from 'jquery'
+
 
 declare var w2alert: any;
 
