@@ -103,8 +103,16 @@ export class Editor {
 
         // un-bind F12:
         // https://github.com/microsoft/monaco-editor/issues/287
-        this.editor._standaloneKeybindingService.addDynamicKeybinding("-editor.action.revealDefinition", 0, () => {});
 
+        // not included in type definitions:
+        // this.editor._standaloneKeybindingService?.addDynamicKeybinding("-editor.action.revealDefinition", 0, () => {});
+
+        // better alternative (see https://github.com/microsoft/monaco-editor/issues/102), 
+        // but: we WANT F12 to reveal definition...
+        // monaco.editor.addKeybindingRule({
+        //     command: "-editor.action.revealDefinition",
+        //     keybinding: monaco.KeyCode.F12
+        // })
 
         this.createContextKeys();
 
