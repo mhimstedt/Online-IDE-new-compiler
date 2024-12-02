@@ -91,7 +91,7 @@ export class JavaSignatureHelpProvider implements monaco.languages.SignatureHelp
             let i = 0;
             for (let method of methodCallPosition.possibleMethods) {
                 let m = <JavaMethod>method;
-                if (m.parameters.length > parameterIndex) {
+                if (parameterIndex == 0 || m.parameters.length > parameterIndex) {
 
                     signatureInformationList.push(this.makeSignatureInformation(m));
                     if (m == methodCallPosition.bestMethod) {
