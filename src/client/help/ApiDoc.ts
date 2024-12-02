@@ -11,6 +11,13 @@ import { extractCsrfTokenFromGetRequest } from "../communication/AjaxHelper.js";
 import { HelpMessages } from './HelpMessages.js';
 import * as monaco from 'monaco-editor'
 
+import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
+import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
+import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker'
+import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
+import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
+
+
 import "/assets/fonts/fonts.css";
 import "/assets/css/apidoc.css";
 
@@ -202,30 +209,38 @@ export class ApiDoc {
 
 }
 
-jQuery(() => {
+function initMonacoEditor(): void {
+    // see https://github.com/microsoft/monaco-editor/blob/main/docs/integrate-esm.md#using-vite
+    // https://dev.to/lawrencecchen/monaco-editor-svelte-kit-572
+    // https://github.com/microsoft/monaco-editor/issues/4045
 
-        //@ts-ignore
-        window.require.config({ paths: { 'vs': 'lib/monaco-editor/dev/vs' } });
-        //@ts-ignore
-        window.require.config({
-            'vs/nls': {
-                availableLanguages: {
-                    '*': 'de'
-                }
-            },
-            ignoreDuplicateModules: ["vs/editor/editor.main"]
-        });
+    self.MonacoEnvironment = {
+        getWorker: (_workerId, label) => {
+            switch (label) {
+                case 'json':
+                    return new jsonWorker()
+                case 'css':
+                case 'scss':
+                case 'less':
+                    return new cssWorker()
+                case 'html':
+                case 'handlebars':
+                case 'razor':
+                    return new htmlWorker()
+                case 'typescript':
+                case 'javascript':
+                    return new tsWorker()
+                default:
+                    return new editorWorker()
+            }
+        }
+    };
 
-        //@ts-ignore
-        window.require(['vs/editor/editor.main'], function () {
+}
 
-            new ApiDoc().start();
-
-            // main.loadWorkspace();
-
-
-        });
+window.onload = () => {
+    initMonacoEditor();
+    new ApiDoc().start();
+}
 
 
-
-});
