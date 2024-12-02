@@ -10,6 +10,7 @@ import { NonPrimitiveType } from "../../../types/NonPrimitiveType.ts";
 import { EnumClass } from "./EnumClass.ts";
 import { ObjectClass, StringClass } from "./ObjectClassStringClass.ts";
 import { RunnableInterface } from "./RunnableInterface.ts";
+import { CallbackParameter } from "../../../../common/interpreter/CallbackParameter.ts";
 
 
 
@@ -34,7 +35,7 @@ export class SemaphoreClass extends ObjectClass {
         super();
     }
 
-    _jconstructor(t: Thread, permits: number) {
+    _jconstructor(t: Thread, callback: CallbackParameter, permits: number) {
         t.s.push(this);
         this.permitsAvailable = permits;
     }
