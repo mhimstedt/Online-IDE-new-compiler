@@ -532,7 +532,9 @@ export class InnerClassCodeGenerator extends StatementCodeGenerator {
 
         for (let parameter of method.parameters) {
             this.currentSymbolTable.addSymbol(parameter);
-            this.registerUsagePosition(parameter, parameter.identifierRange);
+            // The following line is not necessary as parameters already got registered
+            // at TypeResolver.buildMethods:
+            // this.registerUsagePosition(parameter, parameter.identifierRange);
         }
 
 
