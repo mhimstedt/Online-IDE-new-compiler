@@ -516,7 +516,11 @@ export class InnerClassCodeGenerator extends StatementCodeGenerator {
         if (!method) return;
 
         method.setAnnotations(methodNode.annotations.map(this.compileAnnotation));
-        this.registerUsagePosition(method, methodNode.identifierRange);
+        if(method.isConstructor){
+            this.registerUsagePosition(method.classEnumInterface, methodNode.identifierRange);
+        } else {
+            this.registerUsagePosition(method, methodNode.identifierRange);
+        }
 
         if (methodNode.isContructor) {
             if (classContext.outerType && !classContext.isStatic) {
