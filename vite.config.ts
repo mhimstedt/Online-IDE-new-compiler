@@ -17,7 +17,6 @@ export default {
             statistics: './statistics.html',
             shortcuts: './shortcuts.html',
             registeruser: './registerUser.html',
-            'diagram-worker': './src/client/main/gui/diagrams/classdiagram/Router.ts',
         },
         // output: {
         //   entryFileNames: assetInfo => {

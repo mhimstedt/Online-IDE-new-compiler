@@ -30,6 +30,16 @@ export abstract class NonPrimitiveType extends JavaType implements BaseObjectTyp
     abstract getOwnMethods(): JavaMethod[];
     abstract getAllMethods(): JavaMethod[];
 
+    private _isMainClass?: boolean;
+
+    set isMainClass(isMainClass: boolean){
+        this._isMainClass = true;
+    }
+
+    get isMainClass(): boolean {
+        return this._isMainClass != null;
+    }
+
     getOwnAndInheritedFields(): JavaField[] {
         return this.getFields();
     }
@@ -42,7 +52,6 @@ export abstract class NonPrimitiveType extends JavaType implements BaseObjectTyp
     visibility: Visibility = TokenType.keywordPublic;
     isStatic: boolean = false; // static inner classes behave differently from non-static inner classes
     isFinal: boolean = false;
-    isMainClass?: boolean;
 
     private _outerType?: NonPrimitiveType | StaticNonPrimitiveType;      // a local class defined inside a static method has a StaticNonPrimitiveType outerType
 

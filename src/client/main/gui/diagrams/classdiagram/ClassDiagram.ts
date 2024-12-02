@@ -10,6 +10,7 @@ import { JavaClass } from '../../../../../compiler/java/types/JavaClass.js';
 import { JavaInterface } from '../../../../../compiler/java/types/JavaInterface.js';
 import { JavaCompiledModule } from '../../../../../compiler/java/module/JavaCompiledModule.js';
 import { ClassDiagramHelper } from '../../../../../compiler/java/types/ClassDiagramHelper.js';
+import RouterWorker from './Router?worker';
 
 type ClassBoxes = {
     active: ClassBox[],
@@ -212,8 +213,8 @@ export class ClassDiagram extends Diagram {
 
 
             typeList.filter((type) => {
-                return type instanceof JavaClass ||
-                    type instanceof JavaInterface
+                return (type instanceof JavaClass ||
+                    type instanceof JavaInterface) && !type.isMainClass
             }).forEach((klass: JavaClass | JavaInterface) => {
                 let cb: ClassBox = this.findAndEnableClass(klass, this.currentClassBoxes, newClassesToDraw);
                 if (cb != null) newClassBoxes.push(cb);
@@ -299,7 +300,7 @@ export class ClassDiagram extends Diagram {
             this.routingWorker.terminate();
         }
 
-        this.routingWorker = new Worker('worker/diagram-worker.js');
+        this.routingWorker = new RouterWorker();   // this is a webworker!
         let that = this;
         this.routingWorker.onmessage = function (e) {
             // when worker finished:

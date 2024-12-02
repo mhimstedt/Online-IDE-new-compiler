@@ -118,6 +118,8 @@ export class JavaTypeStore {
                 })
             } else {
                 let npt = <NonPrimitiveType>type;
+                if(npt.isMainClass) return;
+                
                 if (classContext instanceof NonPrimitiveType && !npt.isVisibleFrom(classContext)) return;
 
                 let kind: monaco.languages.CompletionItemKind = monaco.languages.CompletionItemKind.Class;

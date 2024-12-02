@@ -49,6 +49,8 @@ export abstract class IJavaClass extends JavaTypeWithInstanceInitializer {
     getCompletionItems(visibilityUpTo: Visibility, leftBracketAlreadyThere: boolean, identifierAndBracketAfterCursor: string,
         rangeToReplace: monaco.IRange, methodContext: JavaMethod | undefined, onlyStatic?: false): monaco.languages.CompletionItem[] {
 
+        if(this.isMainClass) return [];
+
         let itemList: monaco.languages.CompletionItem[] = [];
 
         for (let field of this.getFields().filter(f => f.visibility <= visibilityUpTo && (f._isStatic || !onlyStatic))) {
