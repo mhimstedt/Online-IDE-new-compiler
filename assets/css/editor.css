@@ -1,3 +1,32 @@
+.jo_contextmenu {
+    position:absolute;
+    z-index: 1000;
+    cursor: pointer;
+    background-color: var(--contextmenu-background);
+    padding: 4px 0;
+    box-shadow: 0px 2px 5px 1px rgba(0,0,0,0.75);
+    color: var(--contextmenu-color);
+    font-family: 'Roboto', sans-serif;
+    font-size: 10pt;
+}
+
+.jo_contextmenu>div {
+    padding: 5px 8px;
+    min-width: 80px;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.jo_contextmenu>div:hover {
+    background-color: var(--contextmenu-hover-background);
+    color: var(--contextmenu-hover-color);
+}
+
+.jo_contextmenu>div:hover:active {
+    font-weight: bold;
+}
+
+
 @keyframes jo_warning_lamp {
     0%   {filter: opacity(0)}
     50%  {filter: opacity(1)}
@@ -910,34 +939,6 @@
     .jo_inplaceeditor {
         z-index: 1000;
         border: 1px solid var(--inplace-editor);
-    }
-
-    .jo_contextmenu {
-        position:absolute;
-        z-index: 1000;
-        cursor: pointer;
-        background-color: var(--contextmenu-background);
-        padding: 4px 0;
-        box-shadow: 0px 2px 5px 1px rgba(0,0,0,0.75);
-        color: var(--contextmenu-color);
-        font-family: 'Roboto', sans-serif;
-        font-size: 10pt;
-    }
-
-    .jo_contextmenu>div {
-        padding: 5px 8px;
-        min-width: 80px;
-        user-select: none;
-        -webkit-user-select: none;
-    }
-
-    .jo_contextmenu>div:hover {
-        background-color: var(--contextmenu-hover-background);
-        color: var(--contextmenu-hover-color);
-    }
-
-    .jo_contextmenu>div:hover:active {
-        font-weight: bold;
     }
 
     .jo_error-filename:before {
