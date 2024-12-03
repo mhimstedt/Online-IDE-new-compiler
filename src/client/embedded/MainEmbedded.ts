@@ -803,11 +803,11 @@ export class MainEmbedded implements MainBase {
         }
 
         if (this.config.withPCode) {
-            this.$disassemblerDiv = jQuery('<div class="jo_scrollable jo_pcodeTab">PCode</div>');
+            this.$disassemblerDiv = jQuery('<div class="jo_scrollable jo_pcodeTab"></div>');
             $tabs.append(this.$disassemblerDiv);
         }
 
-        this.$junitDiv = jQuery('<div class="jo_scrollable jo_junitTab">Testrunner</div>');
+        this.$junitDiv = jQuery('<div class="jo_scrollable jo_junitTab"></div>');
         $tabs.append(this.$junitDiv);
 
 
