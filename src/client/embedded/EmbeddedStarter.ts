@@ -26,6 +26,7 @@ import { PixiSpritesheetData } from "../spritemanager/PixiSpritesheetData.js";
 
 
 declare var APP_VERSION: string;
+declare var BUILD_DATE: string;
 
 export type JOScript = {
     title: string,
@@ -195,6 +196,6 @@ jQuery(function () {
     loadSpritesheet();
 
     //@ts-ignore
-    console.log(APP_VERSION);
+    console.log("Online-IDE embedded Version " + APP_VERSION + " vom " + BUILD_DATE);
 
 });
