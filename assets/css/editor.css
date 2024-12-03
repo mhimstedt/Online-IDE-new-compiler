@@ -146,7 +146,7 @@
         width: 25vw;
     }
 
-    .jo_parenthesis_warning {
+    /* .jo_parenthesis_warning {
         visibility: hidden;
         user-select: none;
         position: absolute;
@@ -172,9 +172,9 @@
         z-index: 2;
         left: 22px;
         top: 15px;
-    }
+    } */
 
-    .jo_parenthesis_warning>.jo_warning_light {
+    /* .jo_parenthesis_warning>.jo_warning_light {
         background-image: url("../graphics/Warnlampe_css.png");
         position: absolute;
         z-index: 1;
@@ -187,7 +187,7 @@
         animation-name: jo_warning_lamp;
         animation-duration: 800ms;
         animation-iteration-count: infinite;
-    }
+    } */
 
     #bitteWarten>div>div {
         font-size: 32px;
