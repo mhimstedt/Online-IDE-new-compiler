@@ -10,6 +10,7 @@ export function hash(s: string){
 }
 
 export function escapeHtml(unsafe: string): string {
+  if(typeof unsafe == 'undefined') return "";
   return unsafe
       .replace(/['"]+/g, '')
        .replace(/&/g, "&amp;")

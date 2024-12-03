@@ -286,9 +286,10 @@ export class AccordionPanel {
     getUniqueNewElementName(): string {
         let i = 0;
         let name: string;
-        while (this.elements.some(fd => fd.name == (name = this.newElementPraefix + " " + i + this.newElementSuffix))) {
+        do {
+            name = this.newElementPraefix + " " + i + this.newElementSuffix;
             i++;
-        }
+        } while (this.elements.some(fd => fd.name == name))
 
         return name;
 
@@ -485,7 +486,7 @@ export class AccordionPanel {
         ${this.withDeleteButton && !element.readonly ? '<div class="jo_delete img_delete jo_button jo_active' + (false ? " jo_delete_always" : "") + '"></div>' : ""}
         ${!jo_mouseDetected ? '<div class="jo_settings_button img_ellipsis-dark jo_button jo_active"></div>' : ""}
         </div>`);
-
+        
         let name = escapeHtml(element.name);
         let $filenameElement = element.$htmlFirstLine.find('.jo_filename');
         if (name == '_Prüfungen' && element.isFolder) {
