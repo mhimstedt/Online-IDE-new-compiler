@@ -138,7 +138,11 @@ export class JUnitTestrunner {
         if (executable) {
 
             let testClassToTestMethodMap = executable.getTestMethods();
-            if (testClassToTestMethodMap.size == 0) {
+
+            let size = 0;
+            testClassToTestMethodMap.forEach((methodList, klass) => size += methodList.length);
+
+            if (size == 0) {
                 let example = JUnitTestrunnerLanguage.noTestsAvailableExampleProgram();
                 monaco.editor.colorize(example, "myJava", {}).then(
                     (html) => {
@@ -147,7 +151,7 @@ export class JUnitTestrunner {
                 );
 
             } else {
-                this.outputDiv.setHTMLUnsafe(JUnitTestrunnerLanguage.testsFound(testClassToTestMethodMap.size));
+                this.outputDiv.setHTMLUnsafe(JUnitTestrunnerLanguage.testsFound(size));
             }
 
             testClassToTestMethodMap.forEach((methods, klass) => {
