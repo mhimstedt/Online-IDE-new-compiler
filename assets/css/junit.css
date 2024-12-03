@@ -10,6 +10,10 @@
         height: 100%;
     }
 
+    .jo_junitTab {
+        height: 100%;
+    }
+
     /* JUnitTestrunner divs */
     .jo_junitTestrunnerMain {
         display: flex;
@@ -42,7 +46,7 @@
     }
 
     .jo_junitTestrunnerOutput {
-        height: 100%;
+        /* height: 100%; */
         flex: 1;
         /* white-space: pre-wrap; */
         overflow: auto;
