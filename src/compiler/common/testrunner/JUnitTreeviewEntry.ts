@@ -52,10 +52,9 @@ export class JUnitTreeviewEntry {
                 this.testrunner.main.showProgramPosition(this.klass.module.file, this.klass.identifierRange);
             }
         }
+        this.addChildren();
 
         this.setCaption();
-
-        this.addChildren();
 
     }
 
@@ -99,9 +98,10 @@ export class JUnitTreeviewEntry {
 
         this.treeviewNode.caption = `<span class="jo_junitCaption">${name}</span>`;
 
-        let numberOfTests = this.getTestCount();
+        this.calculateTestProgress();
+
         let rightSideHtml = `<span class="jo_junit_captionRightside">${this.testProgress.passed}<span class="img_junit-passed-dark"></span>` +
-            `${numberOfTests - this.testProgress.passed - this.testProgress.failed}<span class="img_junit-todo-dark" style="left: -4px; width: 12px"></span>` +
+            `${this.testProgress.overall - this.testProgress.passed - this.testProgress.failed}<span class="img_junit-todo-dark" style="left: -4px; width: 12px"></span>` +
             `${this.testProgress.failed}<span class="img_junit-failed-dark"></span></span>`;
 
         this.treeviewNode.setRightPartOfCaptionHtml(rightSideHtml);
@@ -111,6 +111,7 @@ export class JUnitTreeviewEntry {
         let thisIsGlobalTestScope: boolean = !notifyProgressChange;
         if (thisIsGlobalTestScope) {
             this.reset();
+            this.calculateTestProgress();
             this.testrunner.progressbar.showProgress(this.testProgress.overall, this.testProgress.passed, this.testProgress.failed);
         }
 
@@ -127,11 +128,6 @@ export class JUnitTreeviewEntry {
         } else {
             for (let child of this.children) {
                 await child.runTests((passed: boolean) => {
-                    if (passed) {
-                        this.testProgress.passed++;
-                    } else {
-                        this.testProgress.failed++;
-                    }
                     this.setCaption();
                     if (thisIsGlobalTestScope) {
                         this.testrunner.progressbar.showProgress(this.testProgress.overall, this.testProgress.passed, this.testProgress.failed);
@@ -143,7 +139,16 @@ export class JUnitTreeviewEntry {
 
 
         }
+
+        let parent = this.parent;
+        while(parent != null){
+            parent.setCaption();
+            parent = parent.parent;
+        }
+
     }
+
+
 
     private async runSingleTest(method: JavaMethod): Promise<void> {
         let promise = new Promise<void>((resolve, reject) => {
@@ -237,16 +242,26 @@ export class JUnitTreeviewEntry {
         }
     }
 
-    getTestCount() {
-        if (this.method) return 1;
-        let count = 0;
-        this.children.forEach(c => count += c.getTestCount());
-        return count;
+    calculateTestProgress() {
+        if (this.method){
+            this.testProgress.overall = 1;
+        } else {
+            this.testProgress.passed = 0;
+            this.testProgress.failed = 0;
+            this.testProgress.overall = 0;
+            
+            this.children.forEach(c => {
+                c.calculateTestProgress();
+                this.testProgress.overall += c.testProgress.overall;
+                this.testProgress.passed += c.testProgress.passed;
+                this.testProgress.failed += c.testProgress.failed;
+            });
+        }         
     }
 
     reset() {
         this.testProgress = {
-            overall: this.getTestCount(),
+            overall: 0,
             passed: 0,
             failed: 0
         }
