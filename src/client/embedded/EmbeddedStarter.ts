@@ -170,6 +170,7 @@ export class EmbeddedStarter {
 
     async initDiv($div: JQuery<HTMLElement>, scriptList: JOScript[]) {
 
+        $div.addClass('joeCssFence');
         for (let script of scriptList) {
             if (script.url != null) {
                 const response = await fetch(script.url)

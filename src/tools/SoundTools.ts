@@ -123,6 +123,7 @@ export class SoundTools {
         if (window.javaOnlineDir != null) {
             //@ts-ignore
             praefix = window.javaOnlineDir;
+            if(praefix.endsWith("/")) praefix = praefix.substring(0, praefix.length - 1);
         }
         if (!SoundTools.isInitialized) {
             SoundTools.isInitialized = true;
