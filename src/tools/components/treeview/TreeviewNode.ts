@@ -67,6 +67,8 @@ export class TreeviewNode<E> {
 
     private currentIconClass?: string;
 
+    private tooltip: string;
+
     private _onClickHandler?: TreeviewNodeOnClickHandler<E>;
     set onClickHandler(och: TreeviewNodeOnClickHandler<E>) {
         this._onClickHandler = och;
@@ -112,6 +114,8 @@ export class TreeviewNode<E> {
         if (!this.nodeWithChildrenDiv) {
             this.buildHtmlScaffolding();
         }
+
+        if(this.tooltip) this.nodeLineDiv.title = this.tooltip;
 
         if (this.isRootNode()) return;
 
@@ -723,6 +727,11 @@ export class TreeviewNode<E> {
 
     removeAllExpandListeners() {
         this._onExpandListener = [];
+    }
+
+    setTooltip(tooltip: string){
+        this.tooltip = tooltip;
+        if(this.nodeLineDiv) this.nodeLineDiv.title = tooltip;
     }
 
 

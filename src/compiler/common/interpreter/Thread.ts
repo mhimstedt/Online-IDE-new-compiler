@@ -66,6 +66,8 @@ export class Thread {
 
     threadObject?: any;     // For java: type is ThreadClass
 
+    lastReentrenceCounter?: number;
+
     get assertionObservers() {
         return this.scheduler.interpreter.assertionObserverList;
     }

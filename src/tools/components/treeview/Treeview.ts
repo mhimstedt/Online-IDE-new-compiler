@@ -436,4 +436,5 @@ export class Treeview<E> {
             if(node !== this.rootNode) node.detach();
         }
     }
+
 }
