@@ -29,7 +29,7 @@ export class ObjectClass {
 
     static type: NonPrimitiveType;
 
-    private waitingThreads?: Thread[];
+    private waitingOrBlockedThreads?: Thread[];
     private threadHoldingLockToThisObject?: Thread;
     private reentranceCounter?: number;                 // == 1 when thread first entered synchronized block
 
@@ -65,10 +65,17 @@ export class ObjectClass {
             t.state = ThreadState.waiting;
         }
 
-        if (!that.waitingThreads) that.waitingThreads = [];
-        if (that.waitingThreads.indexOf(t) < 0) that.waitingThreads.push(t);
+        if (!that.waitingOrBlockedThreads) that.waitingOrBlockedThreads = [];
+        if (that.waitingOrBlockedThreads.indexOf(t) < 0) that.waitingOrBlockedThreads.push(t);
 
+        this.threadHoldingLockToThisObject = undefined;
+        t.lastReentrenceCounter = this.reentranceCounter;
+        this.reentranceCounter = undefined;
+
+        // console.log("Thread " + t.name + " now waiting with reentrance counter " + t.lastReentrenceCounter + "...");
         t.scheduler.suspendThread(t);
+
+        this.restoreOneBlockedThread();
 
         if (callback) callback();
     }
@@ -78,10 +85,10 @@ export class ObjectClass {
         if (this.threadHoldingLockToThisObject != t) {
             this.throwIllegalMonitorException(t, JCM.threadWantsToNotifyAndHasNoLockOnObject());
         }
-        if (this.waitingThreads) {
-            for (let i = 0; i < this.waitingThreads.length; i++) {
-                if ([ThreadState.waiting, ThreadState.timedWaiting].indexOf(this.waitingThreads[i].state) >= 0) {
-                    this.waitingThreads[i].state = ThreadState.blocked;
+        if (this.waitingOrBlockedThreads) {
+            for (let i = 0; i < this.waitingOrBlockedThreads.length; i++) {
+                if ([ThreadState.waiting, ThreadState.timedWaiting].indexOf(this.waitingOrBlockedThreads[i].state) >= 0) {
+                    this.waitingOrBlockedThreads[i].state = ThreadState.blocked;
                     break;
                 }
             }
@@ -93,8 +100,8 @@ export class ObjectClass {
         if (this.threadHoldingLockToThisObject != t) {
             this.throwIllegalMonitorException(t, JCM.threadWantsToNotifyAndHasNoLockOnObject());
         }
-        if (this.waitingThreads) {
-            for (let t of this.waitingThreads) {
+        if (this.waitingOrBlockedThreads) {
+            for (let t of this.waitingOrBlockedThreads) {
                 t.state = ThreadState.blocked;
             }
         }
@@ -102,16 +109,21 @@ export class ObjectClass {
     }
 
     restoreOneBlockedThread() {
-        if (this.waitingThreads) {
-            for (let i = 0; i < this.waitingThreads.length; i++) {
-                let t = this.waitingThreads[i];
+        if (this.waitingOrBlockedThreads) {
+            for (let i = 0; i < this.waitingOrBlockedThreads.length; i++) {
+                let t = this.waitingOrBlockedThreads[i];
                 if (t.state == ThreadState.blocked) {
-                    this.waitingThreads.splice(i, 1);
+                    this.waitingOrBlockedThreads.splice(i, 1);
                     t.scheduler.restoreThread(t);
-                    // console.log("Thread " + t.name + " unblocked.");
-                    break;
+                    
+                    this.threadHoldingLockToThisObject = t;
+                    this.reentranceCounter = t.lastReentrenceCounter;
+
+                    // console.log("Thread " + t.name + " unblocked with reentrance counter " + t.lastReentrenceCounter + ".");
+                    return;
                 }
             }
+            // console.log("Found no blocked thread.");
         }
     }
 
@@ -154,15 +166,19 @@ export class ObjectClass {
 
         if (this.threadHoldingLockToThisObject && this.threadHoldingLockToThisObject != t) {
             t.state = ThreadState.blocked;
+            // console.log("Thread " + t.name + " tries to enter block => blocked!");
             t.scheduler.suspendThread(t);
-            if (!this.waitingThreads) this.waitingThreads = [];
-            this.waitingThreads.push(t);
+            if (!this.waitingOrBlockedThreads) this.waitingOrBlockedThreads = [];
+            this.waitingOrBlockedThreads.push(t);
             // console.log("Thread " + t.name + " blocked.");
             return 0;
         }
 
         this.threadHoldingLockToThisObject = t;
         this.reentranceCounter = this.reentranceCounter || 0;
+        if(this.reentranceCounter > 0){
+            // console.error("Thread " + t.name + " entered with reentranceCounter = " + this.reentranceCounter);
+        }
         this.reentranceCounter++;
         t.registerEnteringSynchronizedBlock(this);
         return 1;
@@ -188,10 +204,14 @@ export class ObjectClass {
         if (this.reentranceCounter == 0) {
             // console.log("Thread " + t.name + " leaves synchronized block.")
             if(registerLeaving) t.registerLeavingSynchronizedBlock();
-            this._mj$notifyAll$void$(t, undefined);
+            // this._mj$notifyAll$void$(t, undefined);
             this.threadHoldingLockToThisObject = undefined;
             this.reentranceCounter = undefined;
+            t.lastReentrenceCounter = undefined;
+            // console.log("Thread " + t.name + " leaves synchronized block.");
             this.restoreOneBlockedThread();
+        } else {
+            // console.error("Reentrence counter of " + t.name + " was > 1???");
         }
     }
 

@@ -522,4 +522,7 @@ export class Scheduler {
         this.setState(SchedulerState.stopped);
     }
 
+    getAllThreads(): Thread[] {
+        return this.runningThreads.concat(this.#suspendedThreads);
+    }
 }
