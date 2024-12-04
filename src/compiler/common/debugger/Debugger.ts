@@ -126,7 +126,7 @@ export class Debugger {
         let currentThread = scheduler.getCurrentThread();
         this.threadsTreeview.clear();
 
-        let threadList = scheduler.runningThreads;
+        let threadList = scheduler.getAllThreads();
         if(threadList.length == 0 && this.lastThread){
             threadList = [this.lastThread];
         }
@@ -137,6 +137,9 @@ export class Debugger {
             let node = this.threadsTreeview.addNode(false, caption,
                 icon, thread, thread, undefined, true
             )
+
+            node.setTooltip(caption + "(" + ThreadState[thread.state] + ")");
+            
             if(thread == currentThread) node.setSelected(true);
             node.onClickHandler = (t) => {
                 if(!t) return;
