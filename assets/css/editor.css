@@ -26,6 +26,14 @@
     font-weight: bold;
 }
 
+.jo_menulink {
+    display: inline-block;
+    text-decoration: none;
+    color: var(--fontColorNormal) !important;
+    width: 100%;
+    box-sizing: border-box;
+}
+
 
 @keyframes jo_warning_lamp {
     0%   {filter: opacity(0)}
@@ -1246,14 +1254,6 @@
         color: var(--fontColorNormal);
         box-shadow: none !important;
         border: none !important;
-    }
-
-    .jo_menulink {
-        display: inline-block;
-        text-decoration: none;
-        color: var(--fontColorNormal) !important;
-        width: 100%;
-        box-sizing: border-box;
     }
 
     .jo_editorFontSize {
