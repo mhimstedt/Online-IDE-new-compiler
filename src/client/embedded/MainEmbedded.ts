@@ -264,7 +264,11 @@ export class MainEmbedded implements MainBase {
             lineNumbersMinChars: 4
         });
 
-        this.editor.editor.setModel(file.getMonacoModel());
+        try {
+            this.editor.editor.setModel(file.getMonacoModel());
+        } catch (e){
+            console.log("Catched!");
+        }
 
         file.restoreViewState(this.getMainEditor());
 
