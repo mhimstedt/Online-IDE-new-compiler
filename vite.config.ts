@@ -18,6 +18,20 @@ export default {
             shortcuts: './shortcuts.html',
             registeruser: './registerUser.html',
         },
+        output: {
+            manualChunks: (id: string, { getModuleInfo, getModuleIds }) => {
+                if (id.includes('node_modules')){
+                    let moduleName: string = id.toString().split('node_modules/')[1].split('/')[0].toString().replace("@", "");
+                    if(id.endsWith('.css')){
+                        return moduleName + '_css';
+                    } 
+                    return moduleName;
+                } 
+
+                return undefined;
+        },
+        }
+
         // output: {
         //   entryFileNames: assetInfo => {
         //     if (assetInfo.name.indexOf('worker') >= 0) {

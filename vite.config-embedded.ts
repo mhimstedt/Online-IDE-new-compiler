@@ -3,7 +3,6 @@ import commonConfig from './vite.config-common'
 
 import prefixer from 'postcss-prefix-selector'
 
-
 export default {
     ...commonConfig,
     build: {
@@ -13,11 +12,17 @@ export default {
                 embedded: './embedded.html',
             },
             output: {
-                entryFileNames: _assetInfo => 'online-ide-embedded.js', // im Hauptverzeichnis
+                entryFileNames: _assetInfo => {
+                    return 'online-ide-embedded.js'; // im Hauptverzeichnis
+                },
                 assetFileNames: assetInfo => assetInfo.name?.endsWith('css') ? 'online-ide-embedded.css' : 'assets/[name]-[hash][extname]',
-                manualChunks: () => {
-                    // 'everything' - jetzt entstehen nur 1 CSS Asset, 1 JS Assert, plus 7 Worker JS Assets.
-                    return 'everything';
+                manualChunks: (id: string, { getModuleInfo, getModuleIds }) => {
+                    if(id.endsWith('.css')){
+                        return 'css';
+                    } 
+                    if (id.includes('node_modules')) return id.toString().split('node_modules/')[1].split('/')[0].toString().replace("@", "");
+                    // 'everything' - jetzt entstehen nur 1 CSS Asset, 1 JS Assert, plus 1 Worker JS Assets.
+                    return 'own_sourcecode';
                 },
             }
         },
