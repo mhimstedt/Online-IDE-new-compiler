@@ -224,7 +224,7 @@ export class JUnitTestrunner {
         this.executingTestDiv.style.marginTop = '5px';
         this.executingTestDiv.innerHTML = JUnitTestrunnerLanguage.executingTestMethod(method.classEnumInterface.identifier, method.identifier) +
             `<img src="${compileGifUrl}" />`;
-        this.executingTestDiv.scrollIntoView();
+        // this.executingTestDiv.scrollIntoView();
     }
 
     eraseExecutingTestCaption() {
