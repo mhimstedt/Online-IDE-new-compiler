@@ -22,24 +22,14 @@ export class TextureManager3d {
         /**
          * Create systemTexture
          */
-        let pathPraefix: string = "";
-        //@ts-ignore
-        // if (window.javaOnlineDir != null) {
-        //     //@ts-ignore
-        //     pathPraefix = window.javaOnlineDir;
-        // }
 
-        // if (pathPraefix.endsWith("/")) {
-        //     pathPraefix = pathPraefix.substring(0, pathPraefix.length - 1);
-        // }
-
-        this.systemTexture = await new THREE.TextureLoader().loadAsync(pathPraefix + spritesheetpng);
+        this.systemTexture = await new THREE.TextureLoader().loadAsync(spritesheetpng);
         this.systemTexture.colorSpace = THREE.SRGBColorSpace;
         this.systemTexture.magFilter = THREE.NearestFilter;
 
         this.systemTexture.needsUpdate = true;
 
-        this.systemSpritesheetData = await (await fetch(pathPraefix + `${spritesheetjson}`)).json();
+        this.systemSpritesheetData = await (await fetch(spritesheetjson)).json();
 
 
         /**

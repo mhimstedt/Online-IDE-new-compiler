@@ -139,17 +139,10 @@ export class RobotClass extends ObjectClass {
 
     public async init(startX: number, startY: number) {
         const loader = new GLTFLoader();
-        let pathPraefix: string = "";
-        // //@ts-ignore
-        // if (window.javaOnlineDir != null) {
-        //     //@ts-ignore
-        //     pathPraefix = window.javaOnlineDir;
-        // }
 
-        // if (!pathPraefix.endsWith("/")) {
-        //     pathPraefix = pathPraefix + "/";
-        // }
-
+        // vite doesn't support file ending gltf, therefore
+        // we have to hack a little bit to get correct URL for
+        // file scene.gltf:
         let url = "" + spritesheetpng;
         const lastSlashIndex = url.lastIndexOf('assets/');
         url = url.substring(0, lastSlashIndex);

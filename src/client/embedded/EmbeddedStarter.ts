@@ -35,17 +35,6 @@ export type JOScript = {
 }
 
 function loadSpritesheet() {
-    let pathPraefix: string = "";
-    //@ts-ignore
-    if (window.javaOnlineDir != null) {
-        //@ts-ignore
-        pathPraefix = window.javaOnlineDir;
-    }
-
-    if (pathPraefix.endsWith("/")) {
-        pathPraefix = pathPraefix.substring(0, pathPraefix.length - 1);
-    }
-
     fetch(spritesheetjson)
         .then((response) => response.json())
         .then((spritesheetData: PixiSpritesheetData) => {

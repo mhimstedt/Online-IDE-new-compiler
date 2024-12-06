@@ -118,18 +118,11 @@ export class SoundTools {
     private static isInitialized: boolean = false;
 
     public static init() {
-        let praefix: string = "";
-        //@ts-ignore
-        // if (window.javaOnlineDir != null) {
-        //     //@ts-ignore
-        //     praefix = window.javaOnlineDir;
-        //     if(praefix.endsWith("/")) praefix = praefix.substring(0, praefix.length - 1);
-        // }
         if (!SoundTools.isInitialized) {
             SoundTools.isInitialized = true;
             for (let sound of SoundTools.sounds) {
                 //@ts-ignore
-                sound.player = new Howl({ src: [praefix + sound.url], preload: true })
+                sound.player = new Howl({ src: [sound.url], preload: true })
                 SoundTools.soundMap.set(sound.name, sound);
             }
         }
