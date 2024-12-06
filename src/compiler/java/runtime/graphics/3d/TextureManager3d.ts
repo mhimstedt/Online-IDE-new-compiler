@@ -24,14 +24,14 @@ export class TextureManager3d {
          */
         let pathPraefix: string = "";
         //@ts-ignore
-        if (window.javaOnlineDir != null) {
-            //@ts-ignore
-            pathPraefix = window.javaOnlineDir;
-        }
+        // if (window.javaOnlineDir != null) {
+        //     //@ts-ignore
+        //     pathPraefix = window.javaOnlineDir;
+        // }
 
-        if (pathPraefix.endsWith("/")) {
-            pathPraefix = pathPraefix.substring(0, pathPraefix.length - 1);
-        }
+        // if (pathPraefix.endsWith("/")) {
+        //     pathPraefix = pathPraefix.substring(0, pathPraefix.length - 1);
+        // }
 
         this.systemTexture = await new THREE.TextureLoader().loadAsync(pathPraefix + spritesheetpng);
         this.systemTexture.colorSpace = THREE.SRGBColorSpace;

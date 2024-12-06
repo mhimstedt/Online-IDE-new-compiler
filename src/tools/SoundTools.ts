@@ -120,11 +120,11 @@ export class SoundTools {
     public static init() {
         let praefix: string = "";
         //@ts-ignore
-        if (window.javaOnlineDir != null) {
-            //@ts-ignore
-            praefix = window.javaOnlineDir;
-            if(praefix.endsWith("/")) praefix = praefix.substring(0, praefix.length - 1);
-        }
+        // if (window.javaOnlineDir != null) {
+        //     //@ts-ignore
+        //     praefix = window.javaOnlineDir;
+        //     if(praefix.endsWith("/")) praefix = praefix.substring(0, praefix.length - 1);
+        // }
         if (!SoundTools.isInitialized) {
             SoundTools.isInitialized = true;
             for (let sound of SoundTools.sounds) {

@@ -13,6 +13,8 @@ import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { RobotDirection } from './RobotDirection';
 import { RuntimeExceptionClass } from '../../system/javalang/RuntimeException';
 import { ExceptionClass } from '../../system/javalang/ExceptionClass';
+import spritesheetpng from '/assets/graphics/spritesheet.png';
+
 
 
 export class RobotClass extends ObjectClass {
@@ -138,17 +140,21 @@ export class RobotClass extends ObjectClass {
     public async init(startX: number, startY: number) {
         const loader = new GLTFLoader();
         let pathPraefix: string = "";
-        //@ts-ignore
-        if (window.javaOnlineDir != null) {
-            //@ts-ignore
-            pathPraefix = window.javaOnlineDir;
-        }
+        // //@ts-ignore
+        // if (window.javaOnlineDir != null) {
+        //     //@ts-ignore
+        //     pathPraefix = window.javaOnlineDir;
+        // }
 
-        if (pathPraefix.endsWith("/")) {
-            pathPraefix = pathPraefix.substring(0, pathPraefix.length - 1);
-        }
+        // if (!pathPraefix.endsWith("/")) {
+        //     pathPraefix = pathPraefix + "/";
+        // }
 
-        this.steve = (await loader.loadAsync(pathPraefix + '/assets/graphics/robot/minecraft_steve/scene.gltf')).scene;
+        let url = "" + spritesheetpng;
+        const lastSlashIndex = url.lastIndexOf('assets/');
+        url = url.substring(0, lastSlashIndex);
+
+        this.steve = (await loader.loadAsync(url + 'assets/graphics/robot/minecraft_steve/scene.gltf')).scene;
         this.steve.translateX(-this.robotWorld.maxX / 2 + startX - 1);
         this.steve.translateY(1.45);
         this.steve.translateZ(-this.robotWorld.maxY / 2 + startY - 1);

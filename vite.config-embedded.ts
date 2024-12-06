@@ -5,6 +5,7 @@ import prefixer from 'postcss-prefix-selector'
 
 export default {
     ...commonConfig,
+    base: '',
     build: {
         ...commonConfig.build,
         rollupOptions: {

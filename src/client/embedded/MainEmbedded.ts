@@ -40,6 +40,7 @@ import { ExceptionMarker } from "../../compiler/common/interpreter/ExceptionMark
 import { IPosition } from "../../compiler/common/range/Position.js";
 import { JUnitTestrunner } from "../../compiler/common/testrunner/JUnitTestrunner.js";
 import type * as monaco from 'monaco-editor'
+import { OnlineIDEAccessImpl } from "./EmbeddedInterface.js";
 
 
 type JavaOnlineConfig = {
@@ -184,6 +185,9 @@ export class MainEmbedded implements MainBase {
                     this.readScripts(() => { });
                 }
 
+                //@ts-ignore
+                window.ONLINE_IDE_ACCESS = new OnlineIDEAccessImpl();
+                OnlineIDEAccessImpl.registerIDE(this);
             });
         }
 
