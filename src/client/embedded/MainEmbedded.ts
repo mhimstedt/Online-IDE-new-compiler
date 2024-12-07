@@ -55,7 +55,8 @@ type JavaOnlineConfig = {
     hideEditor?: boolean,
     libraries?: string[],
     jsonFilename?: string,
-    spritesheetURL?: string
+    spritesheetURL?: string,
+    enableFileAccess?: boolean
 }
 
 export class MainEmbedded implements MainBase {
@@ -185,9 +186,11 @@ export class MainEmbedded implements MainBase {
                     this.readScripts(() => { });
                 }
 
-                //@ts-ignore
-                window.ONLINE_IDE_ACCESS = new OnlineIDEAccessImpl();
-                OnlineIDEAccessImpl.registerIDE(this);
+                if(this.config.enableFileAccess){
+                    //@ts-ignore
+                    window.online_ide_access = new OnlineIDEAccessImpl();
+                    OnlineIDEAccessImpl.registerIDE(this);
+                }
             });
         }
 
