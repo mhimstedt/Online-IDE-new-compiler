@@ -2,13 +2,7 @@ let base = "https://embed1.learnj.de/include/";
 
 
 let scripts = [
-    // base + "lib/p5.js/p5.js",
-    // base + 'assets/fonts/fonts.css',
-    base + 'online-ide-embedded.css',
-    // base + "lib/jquery/jquery-3.3.1.js",
-    // base + "lib/markdownit/markdownit.min.js",
-    // base + "lib/monaco-editor/dev/vs/loader.js",
-    // base + "lib/howler/howler.core.min.js"
+    base + 'online-ide-embedded.css'
 ]
 
 includeJsAndCss(scripts, () => {
