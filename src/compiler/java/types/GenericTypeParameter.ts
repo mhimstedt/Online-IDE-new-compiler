@@ -14,6 +14,8 @@ import type * as monaco from 'monaco-editor'
 
 export class GenericTypeParameter extends NonPrimitiveType {
 
+    static uniqueID: number = 1;
+
     isWildcard: boolean;
 
     private fieldCache?: JavaField[];
@@ -30,7 +32,7 @@ export class GenericTypeParameter extends NonPrimitiveType {
      */
     constructor(identifier: string, module: JavaBaseModule, identifierRange: IRange,
         public upperBounds: (IJavaClass | IJavaInterface)[] = [], public lowerBound?: IJavaClass){
-        super(identifier, identifierRange, "", module);
+        super(identifier, identifierRange, identifier + "@" + GenericTypeParameter.uniqueID++, module);
         this.isWildcard = (this.identifier == '?');
     }
 
