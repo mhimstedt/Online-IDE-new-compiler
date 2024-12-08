@@ -210,6 +210,8 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
 
         let klassType = <IJavaClass>node.type.resolvedType;
 
+        if(!klassType) return undefined;
+
         if(klassType.isAbstract()){
             this.pushError(JCM.cantInstantiateFromAbstractClass(), "error", node.range);
         }
