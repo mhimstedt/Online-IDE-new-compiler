@@ -282,6 +282,7 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
                         ci.sortText = "aa" + ci.label;
                         return ci;
                     }).filter(newItem => completionItems.findIndex(oldItem => oldItem.insertText == newItem.insertText) < 0);
+                
                 completionItems = completionItems.concat(fieldsAndMethods);
 
                 completionItems.push(
@@ -414,7 +415,7 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
 
     getAssertMethods(methodContext: JavaMethod, range: monaco.IRange): monaco.languages.CompletionItem[] {
 
-        if(methodContext.annotations.find(annotation => annotation.identifier == "Test") == null) return;
+        if(methodContext.annotations.find(annotation => annotation.identifier == "Test") == null) return [];
 
         let keywordCompletionItems: monaco.languages.CompletionItem[] = [];
         keywordCompletionItems = keywordCompletionItems.concat([
