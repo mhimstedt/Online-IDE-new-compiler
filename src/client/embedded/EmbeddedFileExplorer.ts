@@ -56,7 +56,7 @@ export class EmbeddedFileExplorer {
         let newFileName = EmbeddedMessages.NewFileName();
 
         let i = 0;
-        let name: string;
+        let name: string = newFileName + " " + i + ".java";
         while(this.fileDataList.some(fd => fd.file?.name == (name = newFileName + " " + i + ".java"))) {
             i++;
         }
