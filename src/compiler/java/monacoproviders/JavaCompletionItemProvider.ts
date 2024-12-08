@@ -269,9 +269,10 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
         completionItems = completionItems.concat(compiler.libraryModuleManager.getTypeCompletionItems(rangeToReplace));
         completionItems = completionItems.concat(compiler.moduleManager.getTypeCompletionItems(module, rangeToReplace, classContext));
 
-        if (symbolTable?.methodContext != null) {
+        let methodContext = symbolTable?.methodContext;
+        if (methodContext != null) {
 
-            completionItems = completionItems.concat(this.getAssertMethods(symbolTable, rangeToReplace));
+            completionItems = completionItems.concat(this.getAssertMethods(methodContext, rangeToReplace));
 
             if (classContext != null) {
                 // don't show class completion items (methods, fields) in main class
@@ -411,7 +412,10 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
         return null;
     }
 
-    getAssertMethods(symbolTable: JavaSymbolTable, range: monaco.IRange): monaco.languages.CompletionItem[] {
+    getAssertMethods(methodContext: JavaMethod, range: monaco.IRange): monaco.languages.CompletionItem[] {
+
+        if(methodContext.annotations.find(annotation => annotation.identifier == "Test") == null) return;
+
         let keywordCompletionItems: monaco.languages.CompletionItem[] = [];
         keywordCompletionItems = keywordCompletionItems.concat([
             {
