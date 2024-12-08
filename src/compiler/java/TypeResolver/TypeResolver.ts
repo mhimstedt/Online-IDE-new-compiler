@@ -120,7 +120,7 @@ export class TypeResolver {
         for (let klassNode of this.classDeclarationNodes) {
             let module = klassNode.module;
             let resolvedType = new JavaClass(klassNode.identifier, klassNode.identifierRange, klassNode.path, klassNode.module);
-            this.generateGenericParameters(klassNode, <JavaClass>resolvedType);
+            this.generateGenericParameters(klassNode, <JavaClass>resolvedType, module);
             klassNode.resolvedType = resolvedType;
             resolvedType.visibility = klassNode.visibility;
             resolvedType.isStatic = klassNode.isStatic;
@@ -146,7 +146,7 @@ export class TypeResolver {
         for (let interfaceNode of this.interfaceDeclarationNodes) {
             let resolvedType = new JavaInterface(interfaceNode.identifier, interfaceNode.identifierRange, interfaceNode.path, interfaceNode.module);
             let module = interfaceNode.module;
-            this.generateGenericParameters(interfaceNode, <JavaInterface>resolvedType);
+            this.generateGenericParameters(interfaceNode, <JavaInterface>resolvedType, module);
             interfaceNode.resolvedType = resolvedType;
             resolvedType.visibility = interfaceNode.visibility;
             resolvedType.documentation = interfaceNode.documentation;
@@ -199,11 +199,12 @@ export class TypeResolver {
     }
 
 
-    generateGenericParameters(node: ASTClassDefinitionNode | ASTInterfaceDefinitionNode, type: JavaClass | JavaInterface) {
+    generateGenericParameters(node: ASTClassDefinitionNode | ASTInterfaceDefinitionNode, type: JavaClass | JavaInterface, module: JavaCompiledModule) {
         for (let gpNode of node.genericParameterDeclarations) {
             let gp = new GenericTypeParameter(gpNode.identifier, type.module, gpNode.identifierRange);
             gpNode.resolvedType = gp;
             type.genericTypeParameters!.push(gp);
+            module.registerTypeUsage(gp, gp.identifierRange);
         }
     }
 
