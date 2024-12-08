@@ -1,3 +1,4 @@
+import { Klass } from "../../common/interpreter/StepFunction.ts";
 import { IRange } from "../../common/range/Range";
 import { JavaCompilerStringConstants } from "../JavaCompilerStringConstants.ts";
 import { TokenType, TokenTypeReadable } from "../TokenType";
@@ -569,9 +570,12 @@ export class GenericVariantOfJavaClass extends IJavaClass {
 
     constructor(public isGenericVariantOf: JavaClass, public typeMap: Map<GenericTypeParameter, NonPrimitiveType>) {
         super(isGenericVariantOf.identifier, isGenericVariantOf.identifierRange, isGenericVariantOf.pathAndIdentifier, isGenericVariantOf.module);
-        this.runtimeClass = this.isGenericVariantOf.runtimeClass;
         this.isFinal = this.isGenericVariantOf.isFinal;
         this.documentation = this.isGenericVariantOf.documentation;
+    }
+
+    get runtimeClass(): Klass | undefined {
+        return this.isGenericVariantOf?.runtimeClass;
     }
 
     toString(): string {

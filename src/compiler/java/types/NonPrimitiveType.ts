@@ -68,7 +68,15 @@ export abstract class NonPrimitiveType extends JavaType implements BaseObjectTyp
 
     innerTypes: (NonPrimitiveType | StaticNonPrimitiveType)[] = [];
 
-    runtimeClass?: Klass;
+    private runtimeClass_?: Klass;
+
+    public get runtimeClass(): Klass | undefined {
+        return this.runtimeClass_;
+    }
+
+    public set runtimeClass(klass: Klass){
+        this.runtimeClass_ = klass;
+    }
 
     isLibraryType: boolean = false;
 
