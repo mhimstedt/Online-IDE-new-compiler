@@ -32,9 +32,9 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
 
         let module: JavaCompiledModule;
 
-        let console = this.main.getBottomDiv()?.console;
-        if(console?.editor?.getModel() == model){
-            console.compile();
+        let onlineIDEConsole = this.main.getBottomDiv()?.console;
+        if(onlineIDEConsole?.editor?.getModel() == model){
+            onlineIDEConsole.compile();
             module = this.main.getRepl().getCurrentModule();
         } else {
             module = <JavaCompiledModule>this.main.getCurrentWorkspace()?.getModuleForMonacoModel(model);
@@ -271,6 +271,8 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
 
         if (symbolTable?.methodContext != null) {
 
+            completionItems = completionItems.concat(this.getAssertMethods(symbolTable, rangeToReplace));
+
             if (classContext != null) {
                 // don't show class completion items (methods, fields) in main class
                 let fieldsAndMethods = classContext.getCompletionItems(TokenType.keywordPrivate, leftBracketAlreadyThere,
@@ -317,6 +319,8 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
                     )
                 }
             }
+
+
 
         } else {
             // Use filename to generate completion-item for class ... ?
@@ -405,6 +409,79 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
         }
 
         return null;
+    }
+
+    getAssertMethods(symbolTable: JavaSymbolTable, range: monaco.IRange): monaco.languages.CompletionItem[] {
+        let keywordCompletionItems: monaco.languages.CompletionItem[] = [];
+        keywordCompletionItems = keywordCompletionItems.concat([
+            {
+                label: "assertEquals(expected, actual, message)",
+                insertText: "assertEquals($1, $2, $3);\n$0",
+                detail: MonacoProviderLanguage.assertEquals(),
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                kind: monaco.languages.CompletionItemKind.Method,
+                range: range,
+                command: {
+                    id: "editor.action.triggerParameterHints",
+                    title: '123',
+                    arguments: []
+                }
+            },
+            {
+                label: "assertCodeReached(message)",
+                insertText: "assertCodeReached($1);\n$0",
+                detail: MonacoProviderLanguage.assertCodeReached(),
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                kind: monaco.languages.CompletionItemKind.Method,
+                range: range,
+                command: {
+                    id: "editor.action.triggerParameterHints",
+                    title: '123',
+                    arguments: []
+                }
+            },
+            {
+                label: "assertTrue(value, message)",
+                insertText: "assertTrue($1, $2);\n$0",
+                detail: MonacoProviderLanguage.assertTrue(),
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                kind: monaco.languages.CompletionItemKind.Method,
+                range: range,
+                command: {
+                    id: "editor.action.triggerParameterHints",
+                    title: '123',
+                    arguments: []
+                }
+            },
+            {
+                label: "assertFalse(value, message)",
+                insertText: "assertFalse($1, $2);\n$0",
+                detail: MonacoProviderLanguage.assertFalse(),
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                kind: monaco.languages.CompletionItemKind.Method,
+                range: range,
+                command: {
+                    id: "editor.action.triggerParameterHints",
+                    title: '123',
+                    arguments: []
+                }
+            },
+            {
+                label: "fail(message)",
+                insertText: "fail($1);\n$0",
+                detail: MonacoProviderLanguage.fail(),
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                kind: monaco.languages.CompletionItemKind.Method,
+                range: range,
+                command: {
+                    id: "editor.action.triggerParameterHints",
+                    title: '123',
+                    arguments: []
+                }
+            },
+        ]);
+
+        return keywordCompletionItems;
     }
 
     getKeywordCompletion(symbolTable: JavaSymbolTable, range: monaco.IRange): monaco.languages.CompletionItem[] {

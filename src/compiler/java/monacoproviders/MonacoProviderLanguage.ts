@@ -52,6 +52,31 @@ export class MonacoProviderLanguage {
     "en": `print statement (with color as optional second parameter) followed by line break`,
     })
 
+    static assertEquals = () => lm({
+    "de": `Gibt in automatisierten Tests den Fehler (message) aus, wenn expected != actual.`,
+    "en": `Used in automated tests. Prints error message if expected != actual.`,
+    })
+
+    static assertTrue = () => lm({
+    "de": `Gibt in automatisierten Tests den Fehler (message) aus, wenn condition != true.`,
+    "en": `Used in automated tests. Prints error message if condition != true.`,
+    })
+
+    static assertFalse = () => lm({
+    "de": `Gibt in automatisierten Tests den Fehler (message) aus, wenn condition != false.`,
+    "en": `Used in automated tests. Prints error message if condition != false.`,
+    })
+
+    static assertCodeReached = () => lm({
+    "de": `Gibt in automatisierten Tests den Fehler (message) aus, wenn die Codeausführung nach Programmende nie an diesem Punkt angelangt war.`,
+    "en": `Used in automated tests. Prints error message after program ended if program hadn't reach this point.`,
+    })
+
+    static fail = () => lm({
+    "de": `Gibt in automatisierten Tests den Fehler (message) aus. Stellen Sie diese Methode an eine Stelle des Programms, die nie erreicht werden darf.`,
+    "en": `Used in automated tests. Prints error message. Use this method in places that mustn't be reached.`,
+    })
+
     static identifier = () => lm({
     "de": `Bezeichner`,
     "en": `identifier`,
