@@ -120,7 +120,7 @@ export class Parser extends StatementParser {
          */
 
         this.isCodeOutsideClassdeclarations = true;
-        while (!this.isEnd() && Parser.visibilityModifiersOrTopLevelTypeDeclaration.indexOf(this.tt) < 0) {
+        while (!this.isEnd() && Parser.visibilityModifiersOrTopLevelTypeDeclaration.indexOf(this.tt) < 0 && this.tt != TokenType.at) {
             let pos = this.pos;
             let statement = this.parseStatementOrExpression();
 
@@ -130,6 +130,9 @@ export class Parser extends StatementParser {
 
             if (pos == this.pos) this.nextToken(); // prevent endless loop
         }
+        
+        this.maybeParseAndSkipAnnotation();
+
         this.isCodeOutsideClassdeclarations = false;
 
     }
