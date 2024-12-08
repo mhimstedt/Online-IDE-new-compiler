@@ -417,7 +417,7 @@ export class Interpreter {
 
             const mainModule = this.#findStartableModule()
             const mainModuleExists = mainModule != null
-            let mainModuleExistsOrTestIsRunning = mainModuleExists || (state == 2 && this.scheduler.state == 1);
+            let mainModuleExistsOrTestIsRunning = mainModuleExists || (state == 2 && this.scheduler.state <= 2);
 
             let buttonStartActive = this.#buttonActiveMatrix['start'][state];
             buttonStartActive = buttonStartActive && mainModuleExistsOrTestIsRunning;
