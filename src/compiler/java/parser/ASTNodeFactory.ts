@@ -2,7 +2,7 @@ import { EmptyRange, IRange, Range } from "../../common/range/Range";
 import { TokenType } from "../TokenType";
 import { Token } from "../lexer/Token.ts";
 import { JavaCompiledModule } from "../module/JavaCompiledModule.ts";
-import { ASTAnnotationNode, ASTFieldDeclarationNode, ASTAttributeDereferencingNode, ASTBlockNode, ASTBreakNode, ASTCaseNode, ASTCastNode, ASTCatchNode, ASTClassDefinitionNode, ASTLiteralNode, ASTContinueNode, ASTDoWhileNode, ASTEnumDefinitionNode, ASTEnumValueNode, ASTForLoopNode, ASTIfNode, ASTInterfaceDefinitionNode, ASTLambdaFunctionDeclarationNode, ASTLocalVariableDeclaration, ASTMethodCallNode, ASTMethodDeclarationNode, ASTNewObjectNode, ASTNodeWithModifiers, ASTParameterNode, ASTPlusPlusMinusMinusSuffixNode, ASTPrintStatementNode, ASTProgramNode, ASTReturnNode, ASTSelectArrayElementNode, ASTEnhancedForLoopNode, ASTStatementNode, ASTSuperNode, ASTSwitchCaseNode, ASTTermNode, ASTThisNode, ASTTryCatchNode, ASTTypeNode, ASTUnaryPrefixNode, ASTSymbolNode, ASTWhileNode, TypeScope as ASTTypeScope, ASTNewArrayNode, ASTInstanceInitializerNode, ASTStaticInitializerNode, ASTAnonymousClassNode, ASTWildcardTypeNode, ASTVoidTypeNode, ASTArrayTypeNode, ASTGenericTypeInstantiationNode, ASTBaseTypeNode, ASTArrayLiteralNode, TypeScope, ASTVarTypeNode, ASTSynchronizedBlockNode } from "./AST";
+import { ASTAnnotationNode, ASTFieldDeclarationNode, ASTAttributeDereferencingNode, ASTBlockNode, ASTBreakNode, ASTCaseNode, ASTCastNode, ASTCatchNode, ASTClassDefinitionNode, ASTLiteralNode, ASTContinueNode, ASTDoWhileNode, ASTEnumDefinitionNode, ASTEnumValueNode, ASTForLoopNode, ASTIfNode, ASTInterfaceDefinitionNode, ASTLambdaFunctionDeclarationNode, ASTLocalVariableDeclaration, ASTMethodCallNode, ASTMethodDeclarationNode, ASTNewObjectNode, ASTNodeWithModifiers, ASTParameterNode, ASTPlusPlusMinusMinusSuffixNode, ASTPrintStatementNode, ASTProgramNode, ASTReturnNode, ASTSelectArrayElementNode, ASTEnhancedForLoopNode, ASTStatementNode, ASTSuperNode, ASTSwitchCaseNode, ASTTermNode, ASTThisNode, ASTTryCatchNode, ASTTypeNode, ASTUnaryPrefixNode, ASTSymbolNode, ASTWhileNode, TypeScope as ASTTypeScope, ASTNewArrayNode, ASTInstanceInitializerNode, ASTStaticInitializerNode, ASTAnonymousClassNode, ASTWildcardTypeNode, ASTVoidTypeNode, ASTArrayTypeNode, ASTGenericTypeInstantiationNode, ASTBaseTypeNode, ASTArrayLiteralNode, TypeScope, ASTVarTypeNode, ASTSynchronizedBlockNode, ASTBracketNode } from "./AST";
 import { TermParser } from "./TermParser.ts";
 
 export class ASTNodeFactory {
@@ -18,6 +18,14 @@ export class ASTNodeFactory {
             kind: TokenType.arrayLiteral,
             elements: [],
             range: this.parser.cct.range
+        }
+    }
+
+    buildBracketNode(range: IRange, nodeInsideBrackets: ASTTermNode): ASTBracketNode {
+        return {
+            kind: TokenType.leftBracket,
+            range: range,
+            nodeInsideBrackets: nodeInsideBrackets
         }
     }
 

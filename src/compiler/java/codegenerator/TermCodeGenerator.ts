@@ -8,7 +8,7 @@ import { JCM } from "../language/JavaCompilerMessages.ts";
 import { JavaCompiledModule } from "../module/JavaCompiledModule";
 import { JavaTypeStore } from "../module/JavaTypeStore";
 import { JavaLibraryModule } from "../module/libraries/JavaLibraryModule.ts";
-import { ASTAnonymousClassNode, ASTArrayLiteralNode, ASTAttributeDereferencingNode, ASTBinaryNode, ASTCastNode, ASTEnumValueNode, ASTLambdaFunctionDeclarationNode, ASTLiteralNode, ASTMethodCallNode, ASTNewArrayNode, ASTNewObjectNode, ASTPlusPlusMinusMinusSuffixNode, ASTSelectArrayElementNode, ASTSuperNode, ASTSymbolNode, ASTTermNode, ASTThisNode, ASTUnaryPrefixNode } from "../parser/AST";
+import { ASTAnonymousClassNode, ASTArrayLiteralNode, ASTAttributeDereferencingNode, ASTBinaryNode, ASTBracketNode, ASTCastNode, ASTEnumValueNode, ASTLambdaFunctionDeclarationNode, ASTLiteralNode, ASTMethodCallNode, ASTNewArrayNode, ASTNewObjectNode, ASTPlusPlusMinusMinusSuffixNode, ASTSelectArrayElementNode, ASTSuperNode, ASTSymbolNode, ASTTermNode, ASTThisNode, ASTUnaryPrefixNode } from "../parser/AST";
 import { PrimitiveType } from "../runtime/system/primitiveTypes/PrimitiveType";
 import { JavaArrayType } from "../types/JavaArrayType";
 import { IJavaClass, JavaClass } from "../types/JavaClass.ts";
@@ -116,6 +116,9 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
                     this.pushError(JCM.arrayLiteralTypeUnknown(), "error", ast.range)
                 }
                 break;
+            case TokenType.leftBracket:
+                snippet = this.compileBrackets(<ASTBracketNode>ast);
+                break;
 
         }
 
@@ -124,6 +127,14 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
         }
 
         return snippet;
+    }
+
+    compileBrackets(node: ASTBracketNode): CodeSnippet {
+        let innerSnippet = this.compileTerm(node.nodeInsideBrackets);
+        if(innerSnippet?.type && !innerSnippet.type.isPrimitive){
+            this.addTypePositionByTypeAndRange(innerSnippet.type, node.range)
+        }
+        return innerSnippet;
     }
 
     addTypePosition(snippet: CodeSnippet | undefined) {
@@ -136,6 +147,17 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
         if (snippet.range) {
             this.module.addTypePosition(Range.getEndPosition(snippet.range), type);
         }
+    }
+
+    addTypePositionByTypeAndRange(type: JavaType, range: IRange){
+        if (!type) return;
+        if (type.identifier == "string") {
+            type = this.libraryTypestore.getType("String")!;
+        }
+        if (range) {
+            this.module.addTypePosition(Range.getEndPosition(range), type);
+        }
+
     }
 
     compileKeywordSuper(node: ASTSuperNode): CodeSnippet | undefined {

@@ -284,6 +284,10 @@ export interface ASTTermNode extends ASTStatementNode {
     parenthesisNeeded?: boolean;
 }
 
+export interface ASTBracketNode extends ASTTermNode {
+    nodeInsideBrackets: ASTTermNode;
+}
+
 export interface ASTCastNode extends ASTTermNode {
     kind: TokenType.castValue;
     castType: ASTTypeNode;

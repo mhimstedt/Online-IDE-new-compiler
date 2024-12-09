@@ -208,10 +208,20 @@ export abstract class TermParser extends TokenIterator {
                         node = this.parseCastedObject();
                         break;
                     default:
+                        let startPos = this.cct.range;
                         this.nextToken();
                         node = this.parseTerm();
-                        if (node) node.parenthesisNeeded = true;
-                        this.expect(TokenType.rightBracket, true);
+                        if (node){
+                            node.parenthesisNeeded = true;
+                            let range: IRange = {
+                                startColumn: startPos.startColumn,
+                                startLineNumber: startPos.startLineNumber,
+                                endColumn: this.cct.range.endColumn,
+                                endLineNumber: this.cct.range.endLineNumber
+                            }
+                            this.expect(TokenType.rightBracket, true);
+                            node = this.nodeFactory.buildBracketNode(range, node);
+                        } 
                 }
                 break;
             case TokenType.identifier:
