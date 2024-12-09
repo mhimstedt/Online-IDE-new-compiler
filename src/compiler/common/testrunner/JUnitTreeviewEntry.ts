@@ -191,7 +191,7 @@ export class JUnitTreeviewEntry {
             }
 
             if(this.method) this.testrunner.printExecutingTestCaption(this.method);
-            interpreter.scheduler.setState(SchedulerState.paused);
+            interpreter.setState(SchedulerState.paused);
             mainThread.state = ThreadState.runnable;
             interpreter.start();
 

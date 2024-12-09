@@ -598,11 +598,12 @@ export class Parser extends StatementParser {
     }
 
     maybeParseAndSkipAnnotation() {
-        this.nextToken(); // skip @
-        let identifier = this.expectAndSkipIdentifierAsToken();
-        if (identifier) {
-            this.collectedAnnotations.push(this.nodeFactory.buildAnnotationNode(identifier));
-            return identifier;
+        if(this.comesToken(TokenType.at, true)){
+            let identifier = this.expectAndSkipIdentifierAsToken();
+            if (identifier) {
+                this.collectedAnnotations.push(this.nodeFactory.buildAnnotationNode(identifier));
+                return identifier;
+            }
         }
     }
 
