@@ -117,7 +117,8 @@ export class Debugger {
             withDragAndDrop: false,
             buttonAddFolders: false,
             buttonAddElements: false,
-            withSelection: false
+            withSelection: false,
+            minHeight: 200
         });
 
     }

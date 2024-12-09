@@ -36,8 +36,24 @@ export class TreeviewSplitter {
                 tv.outerDiv.style.flex = "none";
             }
 
-            this.transparentOverlay = DOM.makeDiv(document.body, 'jo_treeview_splitter_overlay');
+            // .jo_treeview_splitter_overlay{
+            //     position: absolute;
+            //     left: 0;
+            //     top: 0;
+            //     bottom: 0;
+            //     right: 0;
+            //     z-index: 1000;
+            // }
+            
+
+            this.transparentOverlay = DOM.makeDiv(document.body);
             this.transparentOverlay.style.cursor = 'ns-resize';
+            this.transparentOverlay.style.position = 'absolute';
+            this.transparentOverlay.style.left = '0';
+            this.transparentOverlay.style.top = '0';
+            this.transparentOverlay.style.bottom = '0';
+            this.transparentOverlay.style.right = '0';
+            this.transparentOverlay.style.zIndex = '1000';
 
             this.transparentOverlay!.onpointermove = (ev) => {
                 this.onPointerMove(ev.pageY);
