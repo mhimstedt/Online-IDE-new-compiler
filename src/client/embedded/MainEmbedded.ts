@@ -784,7 +784,7 @@ export class MainEmbedded implements MainBase {
             $tabheadings.append($thPCode);
         }
 
-        let $thJunit = jQuery('<div class="jo_tabheading" data-target="jo_junitTab" style="line-height: 24px">Testrunner </div>');
+        let $thJunit = jQuery('<div class="jo_tabheading jo_testrunnerTabheading" data-target="jo_junitTab" style="line-height: 24px">Testrunner </div>');
         $tabheadings.append($thJunit);
 
 

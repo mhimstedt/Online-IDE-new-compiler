@@ -17,6 +17,8 @@ export class BottomDiv {
     homeworkManager: HomeworkManager;
     gradingManager: GradingManager;
 
+
+
     constructor(private main: MainBase, public $bottomDiv: JQuery<HTMLElement>, public $mainDiv: JQuery<HTMLElement>) {
 
         if (this.$bottomDiv.find('.jo_tabheadings>.jo_console-tab').length > 0) {
@@ -39,63 +41,43 @@ export class BottomDiv {
 
     initGUI() {
         makeTabs(this.$bottomDiv);
-        // if (this.programPrinter != null) this.programPrinter.initGUI();
         if (this.console != null) this.console.initGUI();
         if(this.homeworkManager != null) this.homeworkManager.initGUI();
 
         this.$bottomDiv.find('.jo_tabs').children().first().trigger("click");
-
-        let that = this;
-        jQuery(".jo_pcodeTab").on("myshow", () => {
-            // that.printCurrentlyExecutedModule();
-        });
-
     }
 
     getDisassemblerDiv(): HTMLElement {
         return this.$bottomDiv.find('.jo_tabs>.jo_pcodeTab')[0];
     }
 
-    // printCurrentlyExecutedModule() {
-    //     let interpreter = this.main.getInterpreter();
-    //     if (interpreter.state == InterpreterState.running || interpreter.state == InterpreterState.paused) {
-    //         let module = interpreter.currentProgram?.module;
-    //         this.printModuleToBottomDiv(null, module);
-    //     }
-    // }
-
-    // printModuleToBottomDiv(currentWorkspace: Workspace, module: Module) {
-    //     if (this.programPrinter != null) this.programPrinter.printModuleToBottomDiv(currentWorkspace, module);
-    // }
-
-
     showHomeworkTab() {
 
-        jQuery('.jo_homeworkTabheading').css('display', 'block');
+        this.$bottomDiv.find('.jo_homeworkTabheading').css('display', 'block');
         let mousePointer = window.PointerEvent ? "pointer" : "mouse";
-        jQuery('.jo_homeworkTabheading').trigger(mousePointer + "down");
+        this.$bottomDiv.find('.jo_homeworkTabheading').trigger(mousePointer + "down");
 
     }
 
     showJunitTab() {
 
-        jQuery('.jo_testrunnerTabheading').css('display', 'block');
+        this.$bottomDiv.find('.jo_testrunnerTabheading').css('display', 'block');
         let mousePointer = window.PointerEvent ? "pointer" : "mouse";
-        jQuery('.jo_testrunnerTabheading').trigger(mousePointer + "down");
+        this.$bottomDiv.find('.jo_testrunnerTabheading').trigger(mousePointer + "down");
 
     }
 
     hideHomeworkTab() {
 
-        jQuery('.jo_homeworkTabheading').css('display', 'none');
+        this.$bottomDiv.find('.jo_homeworkTabheading').css('display', 'none');
         let mousePointer = window.PointerEvent ? "pointer" : "mouse";
-        jQuery('.jo_tabheadings').children().first().trigger(mousePointer + "down");
+        this.$bottomDiv.find('.jo_tabheadings').children().first().trigger(mousePointer + "down");
 
     }
 
     showHideBusyIcon(visible: boolean){
         let displayValue: string = visible ? "block" : "none";
-        jQuery(".jo_db-busy").css("display", displayValue);
+        this.$bottomDiv.find(".jo_db-busy").css("display", displayValue);
     }
 
 }

@@ -256,6 +256,7 @@ export class JUnitTestrunner {
         await this.executeTests(treeviewEntry);
     }
 
+
     async executeAllTestsOfClass(klass: JavaClass) {
         let treeviewEntry = this.findTreeviewEntry(klass, undefined) || undefined;
         await this.executeTests(treeviewEntry);
@@ -267,6 +268,7 @@ export class JUnitTestrunner {
     }
 
     async executeTests(treeviewEntry: JUnitTreeviewEntry | undefined) {
+        this.main.getInterpreter().printManager.clear();
         this.main.showJUnitDiv();
         if (treeviewEntry) {
             treeviewEntry.treeviewNode.setSelected(true);
