@@ -57,7 +57,7 @@ export class JavaField extends BaseField {
             if(this.classEnum instanceof JavaClass){
                 let parent = this.classEnum.getExtends();
                 while(parent){
-                    if(parent.getFields().filter(f => f.identifier == this.identifier)){
+                    if(parent.getFields().find(f => f.identifier == this.identifier)){
                         this.internalName = "_" + this.internalName;
                     }
                     parent = parent.getExtends();
