@@ -218,7 +218,7 @@ export class TypeResolver {
         }
     }
 
-    resolveTypeNode(typeNode: ASTTypeNode, module: JavaBaseModule): JavaType | undefined {
+    resolveTypeNode(typeNode: ASTTypeNode, module: JavaBaseModule, isPartOfGenericType: boolean = false): JavaType | undefined {
 
         if (typeNode.resolvedType) return typeNode.resolvedType;
 
@@ -228,12 +228,15 @@ export class TypeResolver {
                 if (type) {
                     typeNode.resolvedType = type;
                     module.registerTypeUsage(type, typeNode.range);
+                    if(type.hasGenericParameters() && ! isPartOfGenericType){
+                        this.pushError(JCM.genericTypeWithNonGenericReference(type.toString()), typeNode.range, module, "warning" );
+                    }
                 }
                 return type;
             }
             case TokenType.genericTypeInstantiation:
                 let genericTypeNode = <ASTGenericTypeInstantiationNode>typeNode;
-                this.resolveTypeNode(genericTypeNode.baseType, module);
+                this.resolveTypeNode(genericTypeNode.baseType, module, true);
 
 
                 let baseType = genericTypeNode.baseType.resolvedType;

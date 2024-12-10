@@ -595,6 +595,11 @@ export class JCM {
         "en": `Type ${type} is not generic, therefore type parameters in <...> are not possible.`,
     })
 
+    static genericTypeWithNonGenericReference = (type: string) => le({
+        "de": `Der Datentyp ${type} ist generisch, wird hier aber in nicht-generischer Art gebraucht. Es sollten die Werte der generischen Typparameter in <...> angegeben werden.`,
+        "en": `Type ${type} is generic, but used in a non-generic way here. You should add type parameter values in <...>.`,
+    })
+
     static wrongNumberOfGenericParameters = (type: string, expected: number, actual: number) => le({
         "de": `Der Datentyp ${type} hat ${expected} generische Parameter, hier werden aber ${actual} konkrete Datentypen dafür angegeben.`,
         "en": `Type ${type} has ${expected} generic parameters. Found: ${actual} types.`,
