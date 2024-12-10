@@ -75,12 +75,12 @@ export class TypeResolver {
             let otherTypeDef = typeNames.get(tdn.identifier);
             if (!otherTypeDef) {
                 let otherType = this.moduleManager.typestore.getType(tdn.identifier);
-                if(otherType){
+                if (otherType) {
                     this.pushError(JCM.typenameAlreadyInUse(tdn.identifier, otherType.identifierRange, otherType.module.file.name), tdn.range, tdn.module, "error");
                     continue;
                 }
                 otherType = this.libraryModuleManager.typestore.getType(tdn.identifier);
-                if(otherType){
+                if (otherType) {
                     this.pushError(JCM.typenameUsedInLibrary(tdn.identifier), tdn.range, tdn.module, "error");
                     continue;
                 }
@@ -503,6 +503,8 @@ export class TypeResolver {
     }
 
     resolveGenericParameters(node: ASTTypeDefinitionWithGenerics, module: JavaBaseModule) {
+        let objectClass = <JavaClass>this.libraryModuleManager.typestore.getType("Object");
+
         for (let gpNode of node.genericParameterDeclarations) {
             let gpType = gpNode.resolvedType;
             if (!gpType) continue;
@@ -517,18 +519,21 @@ export class TypeResolver {
                         }
                     }
                 }
-                if (gpNode.super) {
-                    let superType = this.resolveTypeNode(gpNode.super, module);
-                    if (superType) {
-                        if (superType instanceof IJavaClass) {
-                            gpType.lowerBound = superType;
-                        } else {
-                            this.pushError(JCM.onlyClassesOrInterfacesAsLowerBounds(), gpNode.super.range, module);
-                        }
-
+            } else {
+                gpType.upperBounds.push(objectClass);
+            }
+            if (gpNode.super) {
+                let superType = this.resolveTypeNode(gpNode.super, module);
+                if (superType) {
+                    if (superType instanceof IJavaClass) {
+                        gpType.lowerBound = superType;
+                    } else {
+                        this.pushError(JCM.onlyClassesOrInterfacesAsLowerBounds(), gpNode.super.range, module);
                     }
+
                 }
             }
+
         }
     }
 
