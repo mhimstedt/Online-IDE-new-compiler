@@ -53,6 +53,7 @@ export class InputClass extends ObjectClass {
             this.taskMap.set(interpreter, list);
             interpreter.eventManager.once("stop", () => {
                 this.taskMap.delete(interpreter);
+                interpreter.storeObject("inputTaskRunning", false);
             })
         }
         list.push({
@@ -67,7 +68,7 @@ export class InputClass extends ObjectClass {
                 if (list.length > 0) {
                     interpreter.storeObject("inputTaskRunning", true);
                     let task = list.shift()!;
-                    this.readInput(task, f)
+                    InputClass.readInput(task, f)
                 } else {
                     interpreter.storeObject("inputTaskRunning", false);
                 }
