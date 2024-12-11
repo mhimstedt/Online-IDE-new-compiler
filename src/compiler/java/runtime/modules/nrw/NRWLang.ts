@@ -34,7 +34,41 @@ export class NRWLang {
         "en": "Makes 'current object' point to next object in list. If end of list is reached then there's no current object anymore.",
     })
 
+    static listClassToFirstComment = () => lm({
+    "de": `Falls die Liste nicht leer ist, wird das erste Objekt der Liste aktuelles Objekt. Ist die Liste leer, geschieht nichts.`,
+    "en": `If this list is not empty, then first object gets 'current object'. Otherwise nothing happens.`,
+    })
 
+    static listClassToLastComment = () => lm({
+    "de": `Falls die Liste nicht leer ist, wird das letzte Objekt der Liste aktuelles Objekt. Ist die Liste leer, geschieht nichts.`,
+    "en": `If this list is not empty, then last object gets 'current object'. Otherwise nothing happens.`,
+    })
+
+    static listClassGetContentComment = () => lm({
+    "de": `Falls es ein aktuelles Objekt gibt (hasAccess() == true), wird das aktuelle Objekt zurueckgegeben, andernfalls (hasAccess() == false) gibt die Anfrage den Wert null zurueck.`,
+    "en": `If there is a current object (that is: hasAccess() == true), then this object is returned, otherwise null is returned.`,
+})
+
+static listClassSetContentComment = () => lm({
+    "de": `Falls es ein aktuelles Objekt gibt (hasAccess() == true) und pContent ungleich null ist, wird das aktuelle Objekt durch pContent ersetzt. Sonst geschieht nichts.`,
+    "en": `If there is a current object (that is: hasAccess() == true) and pContent != null, then current object gets replaced by pContent.`,
+    })
+
+    static listClassInsertComment = () => lm({
+    "de": `Falls es ein aktuelles Objekt gibt (hasAccess() == true), und pContent != null ist, wird ein neues Objekt vor dem aktuellen Objekt in die Liste eingefuegt. Das aktuelle Objekt bleibt unveraendert. <br /> Wenn die Liste leer ist, wird pContent in die Liste eingefuegt und es gibt weiterhin kein aktuelles Objekt (hasAccess() == false). <br /> Falls es kein aktuelles Objekt gibt (hasAccess() == false) und die Liste nicht leer ist oder pContent gleich null ist, geschieht nichts.`,
+    "en": `If there is a current object (that is: hasAccess() == true) and pContent != null then given pContent is inserted before current objecte.`,
+    })
+
+    static listClassAppendComment = () => lm({
+    "de": `Falls pContent gleich null ist, geschieht nichts.<br /> Ansonsten wird ein neues Objekt pContent am Ende der Liste eingefuegt. Das aktuelle Objekt bleibt unveraendert. <br /> Wenn die Liste leer ist, wird das Objekt pContent in die Liste eingefuegt und es gibt weiterhin kein aktuelles Objekt (hasAccess() == false).`,
+    "en": `If pContent == null then nothing happens. Otherwise pContent is added at the end of the list. Current object is not changed.`,
+    })
+    
+    static listClassConcatComment = () => lm({
+    "de": `Falls es sich bei der Liste und pList um dasselbe Objekt handelt, pList null oder eine leere Liste ist, geschieht nichts.<br /> Ansonsten wird die Liste pList an die aktuelle Liste angehaengt. Anschliessend wird pList eine leere Liste. Das aktuelle Objekt bleibt unveraendert. Insbesondere bleibt hasAccess identisch.`,
+    "en": `If pList == this list, pList == null or pList is empty then nothing happens. Otherwise pList is concatenated to this list and then emptied.`,
+    })
 
     
+
 }
