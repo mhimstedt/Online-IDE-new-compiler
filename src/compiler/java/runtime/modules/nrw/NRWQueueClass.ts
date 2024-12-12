@@ -1,15 +1,15 @@
 import { BaseListType } from "../../../../common/BaseType.ts";
 import { CallbackFunction } from "../../../../common/interpreter/StepFunction.ts";
 import { Thread } from "../../../../common/interpreter/Thread.ts";
-import { JRC } from "../../../language/JavaRuntimeLibraryComments";
+import { JRC } from "../../../language/JavaRuntimeLibraryComments.ts";
 import { LibraryDeclarations } from "../../../module/libraries/DeclareType.ts";
 import { NonPrimitiveType } from "../../../types/NonPrimitiveType.ts";
 import { SystemCollection } from "../../system/collections/SystemCollection.ts";
 import { ObjectClassOrNull, StringClass } from "../../system/javalang/ObjectClassStringClass.ts";
 import { NRWLang } from "./NRWLang.ts";
 
-class ListNode {
-    next: ListNode | undefined;
+class QueueNode {
+    next: QueueNode | undefined;
 
     constructor(public contentObject: ObjectClassOrNull) {
 
@@ -17,34 +17,23 @@ class ListNode {
 }
 
 
-export class NRWListClass extends SystemCollection implements BaseListType {
+export class NRWQueueClass extends SystemCollection implements BaseListType {
     static __javaDeclarations: LibraryDeclarations = [
-        { type: "declaration", signature: "class List<ContentType>", comment: NRWLang.listClassComment },
+        { type: "declaration", signature: "class Queue<ContentType>", comment: NRWLang.queueClassComment },
 
-        { type: "method", signature: "List()", native: NRWListClass.prototype._constructor, comment: NRWLang.listClassConstructorComment },
+        { type: "method", signature: "Queue()", native: NRWQueueClass.prototype._constructor, comment: NRWLang.queueClassConstructorComment },
 
-        { type: "method", signature: "boolean isEmpty()", native: NRWListClass.prototype._isEmpty, comment: NRWLang.listClassIsEmptyComment },
-        { type: "method", signature: "boolean hasAccess()", native: NRWListClass.prototype._hasAccess, comment: NRWLang.listClassHasAccessComment },
-        { type: "method", signature: "void next()", native: NRWListClass.prototype._next, comment: NRWLang.listClassNextComment },
-        { type: "method", signature: "void toFirst()", native: NRWListClass.prototype._toFirst, comment: NRWLang.listClassToFirstComment },
-        { type: "method", signature: "void toLast()", native: NRWListClass.prototype._toLast, comment: NRWLang.listClassToLastComment },
-        { type: "method", signature: "ContentType getContent()", native: NRWListClass.prototype._getContent, comment: NRWLang.listClassGetContentComment },
-        { type: "method", signature: "void setContent(ContentType pContent)", native: NRWListClass.prototype._setContent, comment: NRWLang.listClassSetContentComment },
-        { type: "method", signature: "void insert(ContentType pContent)", native: NRWListClass.prototype._insert, comment: NRWLang.listClassInsertComment },
-        { type: "method", signature: "void append(ContentType pContent)", native: NRWListClass.prototype._append, comment: NRWLang.listClassAppendComment },
-        { type: "method", signature: "void concat(List<ContentType> pList)", native: NRWListClass.prototype._concat, comment: NRWLang.listClassConcatComment },
-        { type: "method", signature: "void remove()", native: NRWListClass.prototype._remove, comment: NRWLang.listClassRemoveComment },
-        { type: "method", signature: "ContentType getPrevious()", native: NRWListClass.prototype._getPrevious, comment: NRWLang.listClassGetPreviousComment },
+        { type: "method", signature: "boolean isEmpty()", native: NRWQueueClass.prototype._isEmpty, comment: NRWLang.queueClassIsEmptyComment },
 
-        { type: "method", signature: "String toString()", java: NRWListClass.prototype._mj$toString$String$, comment: JRC.objectToStringComment },
+        { type: "method", signature: "String toString()", java: NRWQueueClass.prototype._mj$toString$String$, comment: JRC.objectToStringComment },
         //
     ]
 
     static type: NonPrimitiveType;
 
-    first: ListNode = null;
-    last: ListNode = null;
-    current: ListNode = null;
+    first: QueueNode = null;
+    last: QueueNode = null;
+    current: QueueNode = null;
 
 
     constructor() {
@@ -98,7 +87,7 @@ export class NRWListClass extends SystemCollection implements BaseListType {
     _insert(pContent: ObjectClassOrNull) {
         if (pContent != null) {
             if (this._hasAccess()) {
-                const newNode = new ListNode(pContent);
+                const newNode = new QueueNode(pContent);
                 if (this.current != this.first) { // Fall: Nicht an erster Stelle einfuegen.
                     const previous = this._getPrevious(this.current);
                     newNode.next = previous.next;
@@ -108,10 +97,10 @@ export class NRWListClass extends SystemCollection implements BaseListType {
                     this.first = newNode;
                 }
             } else {
-                if (this._isEmpty()) { // Fall: In leere Liste einfuegen.
+                if (this._isEmpty()) { // Fall: In leere Queuee einfuegen.
 
                     // Neuen Knoten erstellen.
-                    const newNode = new ListNode(pContent);
+                    const newNode = new QueueNode(pContent);
 
                     this.first = newNode;
                     this.last = newNode;
@@ -123,12 +112,12 @@ export class NRWListClass extends SystemCollection implements BaseListType {
 
     _append(pContent: ObjectClassOrNull) {
         if (pContent != null) {
-            if (this._isEmpty()) { // Fall: An leere Liste anfuegen.
+            if (this._isEmpty()) { // Fall: An leere Queuee anfuegen.
                 this._insert(pContent);
-            } else { // Fall: An nicht-leere Liste anfuegen.
+            } else { // Fall: An nicht-leere Queuee anfuegen.
 
                 // Neuen Knoten erstellen.
-                const newNode = new ListNode(pContent);
+                const newNode = new QueueNode(pContent);
 
                 this.last.next = newNode;
                 this.last = newNode; // Letzten Knoten aktualisieren.
@@ -136,27 +125,27 @@ export class NRWListClass extends SystemCollection implements BaseListType {
         }
     }
 
-    _concat(pList: NRWListClass) {
-        if (pList != this && pList != null && !pList._isEmpty()) { // Nichts tun,
-            // wenn pList und this identisch, pList leer oder nicht existent.
+    _concat(pQueue: NRWQueueClass) {
+        if (pQueue != this && pQueue != null && !pQueue._isEmpty()) { // Nichts tun,
+            // wenn pQueue und this identisch, pQueue leer oder nicht existent.
 
-            if (this._isEmpty()) { // Fall: An leere Liste anfuegen.
-                this.first = pList.first;
-                this.last = pList.last;
-            } else { // Fall: An nicht-leere Liste anfuegen.
-                this.last.next = pList.first;
-                this.last = pList.last;
+            if (this._isEmpty()) { // Fall: An leere Queuee anfuegen.
+                this.first = pQueue.first;
+                this.last = pQueue.last;
+            } else { // Fall: An nicht-leere Queuee anfuegen.
+                this.last.next = pQueue.first;
+                this.last = pQueue.last;
             }
 
-            // Liste pList loeschen.
-            pList.first = null;
-            pList.last = null;
-            pList.current = null;
+            // Queuee pQueue loeschen.
+            pQueue.first = null;
+            pQueue.last = null;
+            pQueue.current = null;
         }
     }
 
     _remove() {
-        // Nichts tun, wenn es kein aktuelle Element gibt oder die Liste leer ist.
+        // Nichts tun, wenn es kein aktuelle Element gibt oder die Queuee leer ist.
         if (this._hasAccess() && !this._isEmpty()) {
 
             if (this.current == this.first) {
@@ -182,7 +171,7 @@ export class NRWListClass extends SystemCollection implements BaseListType {
 
     }
 
-    _getPrevious(pNode: ListNode) {
+    _getPrevious(pNode: QueueNode) {
         if (pNode != null && pNode != this.first && !this._isEmpty()) {
             let temp = this.first;
             while (temp != null && temp.next != pNode) {

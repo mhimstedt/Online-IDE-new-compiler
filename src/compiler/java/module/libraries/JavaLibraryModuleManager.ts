@@ -22,6 +22,10 @@ export class JavaLibraryModuleManager {
             this.libraryModules.push(...additionalModules);
         }
 
+        for(let additionalModule of additionalModules){
+            additionalModule.prepareSystemModule(this.systemModule);
+        }
+
         this.typestore = new JavaTypeStore();
         this.compileClassesToTypes();
 
@@ -42,7 +46,7 @@ export class JavaLibraryModuleManager {
         ldp.currentTypeStore = this.typestore;
 
         for(let module of this.libraryModules){
-            for (let klass of module.classes) {
+            for (let klass of module.classesInterfacesEnums) {
                 let npt = ldp.parseClassOrEnumOrInterfaceDeclarationWithoutGenerics(klass, module);
                 this.typestore.addType(npt);
                 this.javaTypes.push(npt);
@@ -58,7 +62,7 @@ export class JavaLibraryModuleManager {
         let classToGenericTypeParameterMap: Map<Klass, Record<string, GenericTypeParameter>> = new Map();
 
         for(let module of this.libraryModules){
-            for(let klass of module.classes){
+            for(let klass of module.classesInterfacesEnums){
                 let genericTypeParameterMap: Record<string, GenericTypeParameter> = {};
                 classToGenericTypeParameterMap.set(klass, genericTypeParameterMap);
                 ldp.genericParameterMapStack.push(genericTypeParameterMap);
@@ -68,7 +72,7 @@ export class JavaLibraryModuleManager {
         }
 
         for(let module of this.libraryModules){
-            for(let klass of module.classes){
+            for(let klass of module.classesInterfacesEnums){
                 ldp.genericParameterMapStack.push(classToGenericTypeParameterMap.get(klass)!);
                 ldp.parseFieldsAndMethods(klass, this.typestore, module);
                 ldp.genericParameterMapStack.pop();

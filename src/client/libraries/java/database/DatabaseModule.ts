@@ -11,7 +11,7 @@ export class DatabaseModule extends JavaLibraryModule {
 
     constructor(){
         super();
-        this.classes.push(
+        this.classesInterfacesEnums.push(
             DatabaseManagerClass, ConnectionClass, StatementClass, PreparedStatementClass, ResultSetClass
         )
     }

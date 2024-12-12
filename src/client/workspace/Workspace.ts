@@ -12,6 +12,7 @@ import { JavaLibraryModule } from '../../compiler/java/module/libraries/JavaLibr
 import { DatabaseModule } from '../libraries/java/database/DatabaseModule.js';
 import { GNGModule } from '../../compiler/java/runtime/graphics/gng/GNGModule.js';
 import { Compiler } from '../../compiler/common/Compiler.js';
+import { NRWModule } from '../../compiler/java/runtime/modules/nrw/NRWModule.js';
 
 export class Workspace extends CompilerWorkspace {
 
@@ -64,7 +65,8 @@ export class Workspace extends CompilerWorkspace {
 
         for(let lib of this.settings.libraries){
             switch(lib){
-                case "gng": additionalModules.push(new GNGModule())
+                case "gng": additionalModules.push(new GNGModule());
+                case "nrw": additionalModules.push(new NRWModule());
             }
         }
 

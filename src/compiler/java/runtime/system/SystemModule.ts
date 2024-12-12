@@ -161,7 +161,7 @@ export class SystemModule extends JavaLibraryModule {
 
         ColorClass._initPredefinedColors();
 
-        this.classes.push(
+        this.classesInterfacesEnums.push(
             ComparableInterface, ComparatorInterface,
 
             ObjectClass, StringClass, EnumClass,                  // These two MUST come first!
