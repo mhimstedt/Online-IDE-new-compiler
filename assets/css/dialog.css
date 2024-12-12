@@ -17,6 +17,7 @@
         width: 80%;
         border: 1px solid gray;
         display: flex;
+        flex: 1;
         padding: 10px; 
         flex-direction: column;
     }
@@ -77,6 +78,7 @@
 
     .dialog-main .dialog-wait {
         display: flex;
+        height: 15px;
         visibility: hidden;
         flex-direction: row;
     }
