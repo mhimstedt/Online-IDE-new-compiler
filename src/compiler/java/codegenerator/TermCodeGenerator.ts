@@ -1179,6 +1179,11 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
                 }
             }
         }
+
+        if(method instanceof GenericMethod){
+            method.checkCatches(node.range);
+        }
+
         // if(node.identifier == "addBlockSquareWithTiles") debugger;
         // cast parameter values
         parameterValueSnippet = this.castParameterValuesAndPackEllipsis(parameterValueSnippet, method);
@@ -1305,7 +1310,7 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
         let codeReachedAssertion = new CodeReacedAssertion(message, this.module, node.range);
         this.module.codeReachedAssertions.registerAssertion(codeReachedAssertion);
 
-        return new StringCodeSnippet(`${Helpers.registerCodeReached}("${codeReachedAssertion.key}")`);
+        return new StringCodeSnippet(`${Helpers.registerCodeReached}("${codeReachedAssertion.key}")`, node.range);
     }
 
     searchMethod(identifier: string, objectType: JavaType, parameterTypes: (JavaType | undefined)[],
@@ -1408,7 +1413,15 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
                 return { best: bestMethodSoFar, possible: possibleMethods };
             }
 
-            let errors = bestMethodSoFar.checkCatches(methodCallPosition);
+            // The next line is commented out because it's possible that there are catches that are not catched yet,
+            // for example public <U> Optional<U> map(Function<T,U> f)
+            // When f is a lambda function then U is return parameter of it and therefore
+            // only catched after lambda function has been compiled.
+            // let errors = bestMethodSoFar.checkCatches(methodCallPosition);
+
+
+
+
             // TODO!
 
             // if (errors.length > 0) {
@@ -1416,7 +1429,7 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
             //     return { best: undefined, possible: possibleMethods };
             // }
 
-            return { best: bestMethodSoFar.getCopyWithConcreteTypes(), possible: possibleMethods };
+            return { best: bestMethodSoFar.getNonGenericCopyWithConcreteTypes(), possible: possibleMethods };
 
         }
 

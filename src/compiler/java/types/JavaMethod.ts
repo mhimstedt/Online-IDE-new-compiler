@@ -48,8 +48,8 @@ export class JavaMethod extends BaseSymbol {
 
     declare module: JavaCompiledModule;
 
-    private signatureCache: { [callingConvention: string]: string } = {}
-    private signatureCacheWithGenericParameterIdentifiers: { [callingConvention: string]: string } = {}
+    protected signatureCache: { [callingConvention: string]: string } = {}
+    protected signatureCacheWithGenericParameterIdentifiers: { [callingConvention: string]: string } = {}
 
     public hasImplementationWithNativeCallingConvention: boolean = false;
 
@@ -293,15 +293,74 @@ export class GenericMethod extends JavaMethod {
         return errors;
     }
 
-    getCopyWithConcreteTypes(): JavaMethod {
+    getNonGenericCopyWithConcreteTypes(): JavaMethod {
 
         let typeMap: Map<GenericTypeParameter, NonPrimitiveType> = new Map();
 
+        let theresAtLeastOneUncatchedTypeParameter: boolean = false;
+
         for (let gp of this.genericTypeParameters) {
-            typeMap.set(gp, gp.catches![0]);
+            let catchedParameterType = gp.catches![0];
+            if(!catchedParameterType){
+                theresAtLeastOneUncatchedTypeParameter = true;
+            } else {
+                typeMap.set(gp, gp.catches![0]);
+            }
         }
 
-        return this.getCopyWithConcreteType(typeMap, this.classEnumInterface);
+        if(theresAtLeastOneUncatchedTypeParameter){
+            return this.getCopyWithConcreteType(typeMap, this.classEnumInterface);
+        } else {
+            return super.getCopyWithConcreteType(typeMap, this.classEnumInterface);
+        }
+
+    }
+
+    getCopyWithConcreteType(typeMap: Map<GenericTypeParameter, NonPrimitiveType>, genericClassOrInterfaceOrEnum: IJavaClass | JavaEnum | IJavaInterface): GenericMethod {
+
+        let newGenericTypeParameters = [];
+        for (let gp of this.genericTypeParameters) {
+            let newGenericTypeParameter = <GenericTypeParameter>gp.getCopyWithConcreteType(typeMap);
+            newGenericTypeParameters.push(newGenericTypeParameter);
+            typeMap.set(gp, newGenericTypeParameter);
+        }
+
+        let copyNeeded: boolean = false;
+        let newParameters: JavaParameter[] = [];
+        for (let p of this.parameters) {
+            let copy = p.getCopyWithConcreteType(typeMap);
+            newParameters.push(copy);
+            if (copy != p) copyNeeded = true;
+        }
+
+        let newReturnParameter = this.returnParameterType;
+        if (this.returnParameterType && !this.returnParameterType.isPrimitive) {
+            newReturnParameter = (<NonPrimitiveType>this.returnParameterType).getCopyWithConcreteType(typeMap);
+        }
+
+        if (newReturnParameter != this.returnParameterType) copyNeeded = true;
+
+        if (!copyNeeded) return this;
+
+        let newMethod = new GenericMethod(this.identifier, this.identifierRange, this.module, this.visibility, newGenericTypeParameters);
+        newMethod.isConstructor = this.isConstructor;
+        newMethod.isFinal = this.isFinal;
+        newMethod.isAbstract = this.isAbstract;
+        newMethod.isDefault = this.isDefault;
+        newMethod.hasOuterClassParameter = this.hasOuterClassParameter;
+        newMethod.parameters = newParameters;
+        newMethod.returnParameterType = newReturnParameter;
+        newMethod.hasImplementationWithNativeCallingConvention = this.hasImplementationWithNativeCallingConvention;
+        newMethod.template = this.template;
+        newMethod.classEnumInterface = genericClassOrInterfaceOrEnum;
+        newMethod.isCopyOf = this;
+        newMethod.documentation = this.documentation;
+
+        this.getInternalName("java");
+        this.getInternalName("native");
+        newMethod.signatureCacheWithGenericParameterIdentifiers = this.signatureCache;
+
+        return newMethod;
 
     }
 

@@ -49,6 +49,8 @@ export class TypeResolver {
 
         this.resolveGenericParameterTypesAndExtendsImplements();
 
+        this.checkGenericTypeInstantiationNodes();
+
         if (CycleFinder.findCycle(this.moduleManager)) return false;
 
         this.buildAllMethods();
@@ -218,6 +220,17 @@ export class TypeResolver {
         }
     }
 
+    checkGenericTypeInstantiationNodes() {
+        for (let module of this.dirtyModules) {
+            if (module.ast) {
+                for (let typeNode of module.ast.collectedTypeNodes.filter(tn => tn.kind == TokenType.genericTypeInstantiation)) {
+                    this.checkGenericTypeInstantiation(<ASTGenericTypeInstantiationNode>typeNode, module);
+                }
+            }
+        }
+    }
+
+
     resolveTypeNode(typeNode: ASTTypeNode, module: JavaBaseModule, isPartOfGenericType: boolean = false): JavaType | undefined {
 
         if (typeNode.resolvedType) return typeNode.resolvedType;
@@ -228,8 +241,8 @@ export class TypeResolver {
                 if (type) {
                     typeNode.resolvedType = type;
                     module.registerTypeUsage(type, typeNode.range);
-                    if(type.hasGenericParameters() && ! isPartOfGenericType){
-                        this.pushError(JCM.genericTypeWithNonGenericReference(type.toString()), typeNode.range, module, "warning" );
+                    if (type.hasGenericParameters() && !isPartOfGenericType) {
+                        this.pushError(JCM.genericTypeWithNonGenericReference(type.toString()), typeNode.range, module, "warning");
                     }
                 }
                 return type;
@@ -263,9 +276,6 @@ export class TypeResolver {
                         if (gpType.isPrimitive) {
                             this.pushError(JCM.noPrimitiveTypeForGenericParameter(baseType.identifier), typeNode.range, module);
                         } else {
-                            if (!gp.canBeReplacedByConcreteType(gpType)) {
-                                this.pushError(JCM.cantReplaceGenericParamterBy(gp.getDeclaration(), gpType.toString()), typeNode.range, module);
-                            }
                             typeMap.set(gp, <NonPrimitiveType>gpType);
                         }
                     }
@@ -341,6 +351,24 @@ export class TypeResolver {
 
                 return wildcardTypeNode.resolvedType = type;
         }
+
+    }
+
+    checkGenericTypeInstantiation(typeNode: ASTGenericTypeInstantiationNode, module: JavaBaseModule, isPartOfGenericType: boolean = false) {
+        let baseType = typeNode.baseType.resolvedType;
+
+        for (let i = 0; i < typeNode.actualTypeArguments.length; i++) {
+            let gp = baseType.genericTypeParameters![i];
+            let gpNode = typeNode.actualTypeArguments[i];
+            let gpType = this.resolveTypeNode(gpNode, module);
+            // TODO: Check upper/lower bounds of gp against gpType!
+            if (gpType) {
+                if (!gpType.isPrimitive && !gp.canBeReplacedByConcreteType(gpType)) {
+                    this.pushError(JCM.cantReplaceGenericParamterBy(gp.getDeclaration(), gpType.toString()), typeNode.range, module);
+                }
+            }
+        }
+
 
     }
 
@@ -508,20 +536,29 @@ export class TypeResolver {
         for (let gpNode of node.genericParameterDeclarations) {
             let gpType = gpNode.resolvedType;
             if (!gpType) continue;
+
+            let extendsNoClass: boolean = true;
+            
             if (gpNode.extends) {
                 for (let extNode of gpNode.extends) {
                     let extType = this.resolveTypeNode(extNode, module);
                     if (extType) {
                         if (extType instanceof IJavaClass || extType instanceof IJavaInterface) {
                             gpType.upperBounds.push(extType);
+                            if(extType instanceof IJavaClass){
+                                extendsNoClass = false;
+                            }
                         } else {
                             this.pushError(JCM.onlyClassesOrInterfacesAsUpperBounds(), extNode.range, module);
                         }
                     }
                 }
-            } else {
+            }
+
+            if(extendsNoClass){
                 gpType.upperBounds.push(objectClass);
             }
+
             if (gpNode.super) {
                 let superType = this.resolveTypeNode(gpNode.super, module);
                 if (superType) {

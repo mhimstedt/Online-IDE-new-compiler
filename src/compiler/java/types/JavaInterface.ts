@@ -474,4 +474,7 @@ export class GenericVariantOfJavaInterface extends IJavaInterface {
         return null;
     }
 
+    public registerExtendsImplementsOnAncestors(type?: NonPrimitiveType) {
+        this.isGenericVariantOf.registerExtendsImplementsOnAncestors(type);
+    }
 }

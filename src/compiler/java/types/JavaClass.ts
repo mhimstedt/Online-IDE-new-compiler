@@ -457,15 +457,23 @@ export class JavaClass extends IJavaClass {
         if (bType == this) return true;                   // A can cast to A.
 
         if (bType instanceof GenericTypeParameter) {
-            // for (let ext of bType.upperBounds) {
-            //     if (!this.canImplicitlyCastTo(ext)) return false;
-            // }
+            
+            if(bType.isWildcard){
+                for (let ext of bType.upperBounds) {
+                    if (!this.canImplicitlyCastTo(ext)) return false;
+                }
+    
+                if (bType.lowerBound) {
+                    return this.canImplicitlyCastTo(bType.lowerBound);
+                }
+                return true;
+            }
 
-            // if (bType.lowerBound) {
-            //     return this.canImplicitlyCastTo(bType.lowerBound);
-            // }
 
-            if (bType.catches) bType.catches.push(this);
+            if (bType.catches){
+                bType.catches.push(this);
+                return true;
+            } 
 
             return false;
         }

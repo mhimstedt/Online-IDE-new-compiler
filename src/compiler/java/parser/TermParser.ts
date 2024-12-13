@@ -211,7 +211,7 @@ export abstract class TermParser extends TokenIterator {
                         let startPos = this.cct.range;
                         this.nextToken();
                         node = this.parseTerm();
-                        if (node){
+                        if (node) {
                             node.parenthesisNeeded = true;
                             let range: IRange = {
                                 startColumn: startPos.startColumn,
@@ -221,7 +221,7 @@ export abstract class TermParser extends TokenIterator {
                             }
                             this.expect(TokenType.rightBracket, true);
                             node = this.nodeFactory.buildBracketNode(range, node);
-                        } 
+                        }
                 }
                 break;
             case TokenType.identifier:
@@ -439,7 +439,7 @@ export abstract class TermParser extends TokenIterator {
                 let range: IRange = this.cct.range;
                 let identifier = this.expectAndSkipIdentifierAsString();
 
-                if(replaceStringByPrimitiveString && identifier == "String"){
+                if (replaceStringByPrimitiveString && identifier == "String") {
                     identifier = "string";
                 }
 
@@ -465,6 +465,11 @@ export abstract class TermParser extends TokenIterator {
                         let actualTypeArgument = this.parseType(false);
                         if (actualTypeArgument) (<ASTGenericTypeInstantiationNode>type).actualTypeArguments.push(actualTypeArgument);
                     } while (this.comesToken(TokenType.comma, true))
+
+                        if (this.comesToken(TokenType.shiftRight, false)) {
+                        this.exchangeShiftRightForTwoClosingGreater();
+                    }
+
                     this.expect(TokenType.greater, true);
                     this.setEndOfRange(type);
                 }

@@ -36,14 +36,14 @@ export class ViteTestAssertions implements DummyAssertionObserver {
 
     notifyOnAssertEqualsString(thread: Thread, step: Step, expected: string, actual: string, message: string): void {
         if (expected != actual) {
-            this.logFailedTest(thread, step, message, "Expected: " + chalk.green(expected) + ", actual: " + chalk.yellow(actual));
+            this.logFailedTest(thread, step, message, "Expected1 " + chalk.green(expected) + ", actual: " + chalk.yellow(actual));
         }
         // expect(actual).to.equal(expected, message);
         // assert.equal(actual, expected, message);
     }
 
     notifyOnAssertEqualsObject(thread: Thread, step: Step, expected: string, actual: string, message: string): void {
-        this.logFailedTest(thread, step, message, "Expected: " + chalk.green(expected) + ", actual: " + chalk.yellow(actual));
+        this.logFailedTest(thread, step, message, "assertEquals (Object) not implemented: " + chalk.green(expected) + ", actual: " + chalk.yellow(actual));
         // expect(actual).to.equal(expected, message);
         // assert.equal(actual, expected, message);
     }

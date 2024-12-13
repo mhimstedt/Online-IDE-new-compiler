@@ -71,7 +71,6 @@ export class TokenIterator {
         if(tokenList.length > 0) this.nextToken(); // fetch first non-space token
     }
 
-
     getAndSkipToken(): Token {
         this.nextToken();
         return this.lastToken;
@@ -123,6 +122,23 @@ export class TokenIterator {
         this.cct = token;
         this.tt = this.cct.tt;
 
+    }
+
+    exchangeShiftRightForTwoClosingGreater(){
+        this.cct.tt = TokenType.greater;
+        this.tt = TokenType.greater;
+        this.cct.value = '>';
+        let newToken: Token = {
+            tt: TokenType.greater,
+            value: '>',
+            range: {
+                startLineNumber: this.cct.range.startLineNumber,
+                startColumn: this.cct.range.startColumn + 1,
+                endLineNumber: this.cct.range.endLineNumber,
+                endColumn: this.cct.range.endColumn + 1
+            }
+        }
+        this.tokenList.splice(this.pos + 1, 0, newToken);
     }
 
     /**

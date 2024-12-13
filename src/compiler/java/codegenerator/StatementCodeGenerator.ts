@@ -9,6 +9,7 @@ import { ASTArrayLiteralNode, ASTAttributeDereferencingNode, ASTBinaryNode, ASTB
 import { SystemCollection } from "../runtime/system/collections/SystemCollection.ts";
 import { ObjectClass } from "../runtime/system/javalang/ObjectClassStringClass.ts";
 import { PrimitiveType } from "../runtime/system/primitiveTypes/PrimitiveType";
+import { GenericTypeParameter } from "../types/GenericTypeParameter.ts";
 import { JavaArrayType } from "../types/JavaArrayType.ts";
 import { GenericVariantOfJavaClass, IJavaClass } from "../types/JavaClass.ts";
 import { JavaEnum } from "../types/JavaEnum.ts";
@@ -153,12 +154,19 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
             let termSnippet = this.compileTerm(node.term);
             if (!termSnippet) return undefined;
 
-            if (!this.canCastTo(termSnippet.type, method.returnParameterType, "implicit")) {
-                this.pushError(JCM.wrongReturnValueType(method.returnParameterType.identifier, termSnippet.type?.identifier || "(---)"), "error", node.keywordReturnRange);
-                return undefined;
-            }
+            if(method.returnParameterType instanceof GenericTypeParameter && method.returnParameterType.catches){
+                if(termSnippet.type.isPrimitive) termSnippet = this.box(termSnippet);
+                method.returnParameterType.catches.push(<NonPrimitiveType>termSnippet.type);
+            } else {
+                if (!this.canCastTo(termSnippet.type, method.returnParameterType, "implicit")) {
+                    this.pushError(JCM.wrongReturnValueType(method.returnParameterType.identifier, termSnippet.type?.identifier || "(---)"), "error", node.keywordReturnRange);
+                    return undefined;
+                }
 
-            termSnippet = this.compileCast(termSnippet, method.returnParameterType, "implicit");
+                termSnippet = this.compileCast(termSnippet, method.returnParameterType, "implicit");
+
+            }    
+
 
             snippet.addParts(new OneParameterTemplate(`${Helpers.return}(§1);\n`).applyToSnippet(this.voidType, node.range, termSnippet));
 

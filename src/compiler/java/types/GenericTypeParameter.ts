@@ -106,6 +106,9 @@ export class GenericTypeParameter extends NonPrimitiveType {
         if(ownMappedType) return ownMappedType;
 
         let copy = new GenericTypeParameter(this.identifier, this.module, this.identifierRange);
+        
+        copy.catches = this.catches;
+
         if(this.lowerBound){
             copy.lowerBound = this.lowerBound.getCopyWithConcreteType(typeMap) as IJavaClass;
         }

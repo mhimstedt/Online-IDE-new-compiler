@@ -338,15 +338,17 @@ export class LibraryDeclarationParser extends LibraryDeclarationLexer {
 
     findType(id: string): JavaType {
 
-        let type = this.currentTypeStore.getType(id);
-        if (type) return type;
+        let type: JavaType = undefined;
 
-        for (let gpm of this.genericParameterMapStack) {
+        for(let i = this.genericParameterMapStack.length - 1; i >= 0; i--){
+            const gpm = this.genericParameterMapStack[i];
             type = gpm[id];
-            if (type) break;
+            if (type) return type;
         }
 
+        type = this.currentTypeStore.getType(id);
         if (type) return type;
+
 
         this.pushError("Konnte den Typ " + id + " nicht finden.");
 

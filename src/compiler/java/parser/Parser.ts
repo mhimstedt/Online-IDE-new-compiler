@@ -591,6 +591,10 @@ export class Parser extends StatementParser {
 
             } while (this.comesToken(TokenType.comma, true));
 
+            if(this.comesToken(TokenType.shiftRight, false)){
+                this.exchangeShiftRightForTwoClosingGreater();
+            }
+
             this.expect(TokenType.greater, true);
         }
 

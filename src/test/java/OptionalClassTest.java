@@ -21,8 +21,8 @@ assertEquals("Just ABCD", o2.toString(), "Optional.(\"ABCD\") should have string
 
 
 Optional<String> o3 = o2.map((e) -> {return e.toLowerCase();});
-assertEquals(Optional.of("abcd"),o3, "Function maps content of Optional.");
+assertEquals("Just abcd",o3.toString(), "Function maps content of Optional.");
 assertEquals(Optional.empty(),o1.map((e) -> {return e.toLowerCase();}), "Function maps empty optional to empty optional.");
 
-assertEquals(Optional.of("ABCDABCD"),o2.flatMap((e) -> {return Optional.of(e+e);}), "Function maps empty optional to empty optional.");
+assertEquals("Just ABCDABCD",o2.flatMap((e) -> {return Optional.of(e+e);}).toString(), "Function maps empty optional to empty optional.");
 

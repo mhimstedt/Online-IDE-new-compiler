@@ -31,6 +31,7 @@ export class OneParameterTemplate extends CodeTemplate {
         if (snippets[0].isPureTerm()) {
             let newSnippet = new StringCodeSnippet(this.templateString.replace(new RegExp('\\§1', 'g'), () => snippets[0].getPureTerm()), range, resultType);
             newSnippet.takeEmitToStepListenersFrom(snippets);
+            return newSnippet;
         }
 
         let snippetContainer = new CodeSnippetContainer(snippets[0].allButLastPart(), range);
