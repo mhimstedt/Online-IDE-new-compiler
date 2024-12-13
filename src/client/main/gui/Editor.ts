@@ -77,6 +77,8 @@ export class Editor {
                 insertMode: "replace"
                 // snippetsPreventQuickSuggestions: false
             },
+            autoClosingDelete: "auto",
+            autoClosingOvertype: "auto",
             parameterHints: { enabled: true, cycle: true },
             // //@ts-ignore
             // contribInfo: {

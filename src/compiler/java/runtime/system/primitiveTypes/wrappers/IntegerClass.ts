@@ -24,7 +24,7 @@ export class IntegerClass extends NumberClass {
         {type: "method", signature: "public final float floatValue()", native: IntegerClass.prototype.floatValue, template: "§1.value"},
         {type: "method", signature: "public final int intValue()", native: IntegerClass.prototype.intValue, template: "§1.value"},
         {type: "method", signature: "public final long longValue()", native: IntegerClass.prototype.longValue, template: "§1.value"},
-        {type: "method", signature: "public int compareTo(Integer anotherInteger)", native: IntegerClass.prototype._compareTo},
+        {type: "method", signature: "public int compareTo(Integer anotherInteger)", java: IntegerClass.prototype._mj$compareTo$int$T},
         {type: "method", signature: "public static int parseInt(String s)", native: IntegerClass.parseInt},
         {type: "method", signature: "public static int parseInt(String sr, int radix)", native: IntegerClass.parseInt},
         {type: "method", signature: "public static Integer valueOf(int i)", native: IntegerClass.valueOf},
@@ -52,8 +52,10 @@ export class IntegerClass extends NumberClass {
         }
     }
 
-    _compareTo(otherValue: IntegerClass){
-        return this.value - otherValue.value;
+    _mj$compareTo$int$T(t: Thread, callback: CallableFunction, otherValue: IntegerClass){
+        t.s.push(this.value - otherValue.value);
+        if(callback) callback();
+        return;
     }
 
     static parseInt(s: StringClass, radix: number = 10){

@@ -23,7 +23,7 @@ export class ByteClass extends NumberClass {
         {type: "method", signature: "public final float floatValue()", native: ByteClass.prototype.floatValue, template: "§1.value"},
         {type: "method", signature: "public final int intValue()", native: ByteClass.prototype.intValue, template: "§1.value"},
         {type: "method", signature: "public final long longValue()", native: ByteClass.prototype.longValue, template: "§1.value"},
-        {type: "method", signature: "public int compareTo(Short otherShort)", native: ByteClass.prototype._compareTo},
+        {type: "method", signature: "public int compareTo(Short otherShort)", java: ByteClass.prototype._mj$compareTo$int$T},
         {type: "method", signature: "public static byte parseByte(String s)", native: ByteClass.parseByte},
         {type: "method", signature: "public static byte parseByte(String sr, int radix)", native: ByteClass.parseByte},
         {type: "method", signature: "public static Byte valueOf(byte i)", native: ByteClass.valueOf},
@@ -37,8 +37,10 @@ export class ByteClass extends NumberClass {
         super(i);
     }
 
-    _compareTo(otherValue: ByteClass){
-        return this.value - otherValue.value;
+    _mj$compareTo$int$T(t: Thread, callback: CallableFunction, otherValue: ByteClass){
+        t.s.push(this.value - otherValue.value);
+        if(callback) callback();
+        return;
     }
 
     _constructorByte(d: number) {

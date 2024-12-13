@@ -23,7 +23,7 @@ export class LongClass extends NumberClass {
         {type: "method", signature: "public final float floatValue()", native: LongClass.prototype.floatValue, template: "§1.value"},
         {type: "method", signature: "public final int intValue()", native: LongClass.prototype.intValue, template: "(§1.value % 0x100000000 - 0x80000000)"},
         {type: "method", signature: "public final long longValue()", native: LongClass.prototype.longValue, template: "§1.value"},
-        {type: "method", signature: "public int compareTo(Long anotherLong)", native: LongClass.prototype._compareTo},
+        {type: "method", signature: "public int compareTo(Long anotherLong)", java: LongClass.prototype._mj$compareTo$int$T},
         {type: "method", signature: "public long parseLong(String s)", native: LongClass.parseLong},
         {type: "method", signature: "public long parseLong(String sr, int radix)", native: LongClass.parseLong},
         {type: "method", signature: "public static Long valueOf(long i)", native: LongClass.valueOf},
@@ -42,8 +42,10 @@ export class LongClass extends NumberClass {
         return this;
     }
 
-    _compareTo(otherValue: LongClass){
-        return this.value - otherValue.value;
+    _mj$compareTo$int$T(t: Thread, callback: CallableFunction, otherValue: LongClass){
+        t.s.push(this.value - otherValue.value);
+        if(callback) callback();
+        return;
     }
 
     static parseLong(s: StringClass, radix: number = 10){

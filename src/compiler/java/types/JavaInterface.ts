@@ -263,6 +263,25 @@ export class JavaInterface extends IJavaInterface {
 
     }
 
+    getCompletionItems(visibilityUpTo: Visibility, leftBracketAlreadyThere: boolean, identifierAndBracketAfterCursor: string,
+        rangeToReplace: monaco.IRange, methodContext: JavaMethod | undefined, onlyStatic?: false): monaco.languages.CompletionItem[] {
+            const items = super.getCompletionItems(visibilityUpTo, leftBracketAlreadyThere, identifierAndBracketAfterCursor, rangeToReplace,
+                methodContext, onlyStatic);
+
+            for(let gp of this.genericTypeParameters){
+                items.push({
+                    label: gp.identifier,
+                    detail: gp.getDeclaration(),
+                    kind: monaco.languages.CompletionItemKind.TypeParameter,
+                    range: rangeToReplace,
+                    insertText: gp.identifier 
+                })
+            }
+
+            return items;
+    }
+
+
 
 }
 

@@ -190,9 +190,9 @@ export class JavaMethod extends BaseSymbol {
 
         let label = "";
 
-        if (this.returnParameterType != null && this.returnParameterType.identifier != "void") {
-            label += this.returnParameterType.toString() + " ";
-        }
+        // if (this.returnParameterType != null && this.returnParameterType.identifier != "void") {
+        //     label += this.returnParameterType.toString() + " ";
+        // }
 
         label += this.identifier + "(";
 

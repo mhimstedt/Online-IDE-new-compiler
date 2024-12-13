@@ -214,7 +214,11 @@ export class GenericTypeParameter extends NonPrimitiveType {
     }
 
     getCompletionItems(visibilityUpTo: Visibility, leftBracketAlreadyThere: boolean, identifierAndBracketAfterCursor: string, rangeToReplace: monaco.IRange, methodContext: JavaMethod | undefined, onlyStatic?: boolean | undefined): monaco.languages.CompletionItem[] {
-        return [];
+        let items = [];
+        for(let ub of this.upperBounds){
+            items = items.concat(ub.getCompletionItems(visibilityUpTo, leftBracketAlreadyThere, identifierAndBracketAfterCursor, rangeToReplace, methodContext, false));
+        }
+        return items;
     }
 
     getCompletionItemDetail(): string {

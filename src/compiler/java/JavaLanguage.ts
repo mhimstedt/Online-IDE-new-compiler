@@ -132,7 +132,8 @@ export class JavaLanguage extends Language {
             },
 
         };
-        let language = {
+        let language: monaco.languages.IMonarchLanguage = {
+            ignoreCase: false,
             defaultToken: '',
             tokenPostfix: '.java',
             keywords: [

@@ -140,8 +140,9 @@ export class JavaSymbolTable extends BaseSymbolTable {
         let items: monaco.languages.CompletionItem[] = [];
         this.identifierToSymbolMap.forEach((symbol, identifier) => {
             items.push({
-                label: symbol.getDeclaration(),
+                label: symbol.identifier,
                 kind: monaco.languages.CompletionItemKind.Variable,
+                detail: symbol.getDeclaration(),
                 insertText: symbol.identifier,
                 filterText: symbol.identifier,
                 range: rangeToReplace

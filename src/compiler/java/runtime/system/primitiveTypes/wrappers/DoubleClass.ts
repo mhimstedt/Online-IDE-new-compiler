@@ -24,7 +24,7 @@ export class DoubleClass extends NumberClass {
         {type: "method", signature: "public final float floatValue()", native: DoubleClass.prototype.floatValue, template: "Math.fround(§1.value)"},
         {type: "method", signature: "public final int intValue()", native: DoubleClass.prototype.intValue, template: "(Math.trunc(§1.value) % 0x100000000 - 0x80000000)"},
         {type: "method", signature: "public final long longValue()", native: DoubleClass.prototype.longValue, template: "Math.trunc(§1.value)"},
-        {type: "method", signature: "public int compareTo(Double otherValue)", native: DoubleClass.prototype._compareTo},
+        {type: "method", signature: "public int compareTo(Double otherValue)", java: DoubleClass.prototype._mj$compareTo$int$T},
         {type: "method", signature: "public static double parseDouble(String s)", native: DoubleClass.parseDouble},
         {type: "method", signature: "public static Double valueOf(double f)", native: DoubleClass.valueOf},
         {type: "method", signature: "public static Double valueOf(String s)", native: DoubleClass.valueOfString},
@@ -41,8 +41,10 @@ export class DoubleClass extends NumberClass {
         return this;
     }
 
-    _compareTo(otherValue: DoubleClass){
-        return this.value - otherValue.value;
+    _mj$compareTo$int$T(t: Thread, callback: CallableFunction, otherValue: DoubleClass){
+        t.s.push(this.value - otherValue.value);
+        if(callback) callback();
+        return;
     }
 
     static parseDouble(s: StringClass){

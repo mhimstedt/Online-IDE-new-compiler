@@ -86,9 +86,11 @@ export class DebuggerSymbolEntry {
 
         let cssClass = this.isLocalVariable ? "jo_debugger_localVariableIdentifier" : "jo_debugger_fieldIdentifier";
 
-        if ((typeof this.oldValue !== 'undefined') && value != this.oldValue && pulseIfValueChanged) {
-            valuecss += " jo_debugger_pulse";
-        }
+        try {
+            if ((typeof this.oldValue !== 'undefined') && value != this.oldValue && pulseIfValueChanged) {
+                valuecss += " jo_debugger_pulse";
+            }
+        } catch(ex){}
 
         this.oldValue = value;
 

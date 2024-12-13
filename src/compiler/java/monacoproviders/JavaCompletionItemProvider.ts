@@ -4,6 +4,7 @@ import { JavaCompiler } from "../JavaCompiler.ts";
 import { TokenType, TokenTypeReadable } from "../TokenType";
 import { JavaSymbolTable } from "../codegenerator/JavaSymbolTable";
 import { JavaCompiledModule } from "../module/JavaCompiledModule";
+import { GenericTypeParameter } from "../types/GenericTypeParameter.ts";
 import { JavaArrayType } from "../types/JavaArrayType";
 import { IJavaClass } from "../types/JavaClass";
 import { JavaEnum } from "../types/JavaEnum.ts";
@@ -321,28 +322,29 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
                     )
                 }
             }
-
-
-
         } else {
-            // Use filename to generate completion-item for class ... ?
-            let name = module.file?.name;
-            if (name != null) {
-                if (name.endsWith(".java")) name = name.substring(0, name.indexOf(".java"));
-                let m = name.match(/([\wöäüÖÄÜß]*)$/);
-                if (module.types.find(t => t.identifier == name) == null && m != null && m.length > 0 && m[0] == name && name.length > 0) {
-                    name = name.charAt(0).toUpperCase() + name.substring(1);
-                    completionItems.push({
-                        label: "class " + name,
-                        filterText: "class",
-                        insertText: "class ${1:" + name + "} {\n\t$0\n}\n",
-                        detail: MonacoProviderLanguage.definitionOfClass(name),
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        range: rangeToReplace
-                    },
-                    )
+            if(classContext == null){
+                // Use filename to generate completion-item for class ... ?
+                let name = module.file?.name;
+                if (name != null) {
+                    if (name.endsWith(".java")) name = name.substring(0, name.indexOf(".java"));
+                    let m = name.match(/([\wöäüÖÄÜß]*)$/);
+                    if (module.types.find(t => t.identifier == name) == null && m != null && m.length > 0 && m[0] == name && name.length > 0) {
+                        name = name.charAt(0).toUpperCase() + name.substring(1);
+                        completionItems.push({
+                            label: "class " + name,
+                            filterText: "class",
+                            insertText: "class ${1:" + name + "} {\n\t$0\n}\n",
+                            detail: MonacoProviderLanguage.definitionOfClass(name),
+                            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                            kind: monaco.languages.CompletionItemKind.Snippet,
+                            range: rangeToReplace
+                        },
+                        )
+                    }
                 }
+            } else {
+                completionItems = completionItems.concat(classContext.getCompletionItems(TokenType.keywordPrivate, leftBracketAlreadyThere, identifierAndBracketAfterCursor, rangeToReplace, undefined, false));
             }
         }
 
@@ -386,7 +388,7 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
             });
         }
 
-        if (type instanceof IJavaInterface) {
+        if (type instanceof IJavaInterface || type instanceof GenericTypeParameter) {
             return Promise.resolve({
                 suggestions: type.getCompletionItems(TokenType.keywordPublic, leftBracketAlreadyThere,
                     identifierAndBracketAfterCursor, rangeToReplace, undefined)

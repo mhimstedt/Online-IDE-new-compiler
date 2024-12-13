@@ -23,7 +23,7 @@ export class ShortClass extends NumberClass {
         {type: "method", signature: "public final float floatValue()", native: ShortClass.prototype.floatValue, template: "§1.value"},
         {type: "method", signature: "public final int intValue()", native: ShortClass.prototype.intValue, template: "§1.value"},
         {type: "method", signature: "public final long longValue()", native: ShortClass.prototype.longValue, template: "§1.value"},
-        {type: "method", signature: "public int compareTo(Short otherShort)", native: ShortClass.prototype._compareTo},
+        {type: "method", signature: "public int compareTo(Short otherShort)", java: ShortClass.prototype._mj$compareTo$int$T},
         {type: "method", signature: "public static short parseShort(String s)", native: ShortClass.parseShort},
         {type: "method", signature: "public static short parseShort(String sr, int radix)", native: ShortClass.parseShort},
         {type: "method", signature: "public static Short valueOf(short i)", native: ShortClass.valueOf},
@@ -42,8 +42,10 @@ export class ShortClass extends NumberClass {
         return this;
     }
 
-    _compareTo(otherValue: ShortClass){
-        return this.value - otherValue.value;
+    _mj$compareTo$int$T(t: Thread, callback: CallableFunction, otherValue: ShortClass){
+        t.s.push(this.value - otherValue.value);
+        if(callback) callback();
+        return;
     }
 
     static parseShort(s: StringClass, radix: number = 10){

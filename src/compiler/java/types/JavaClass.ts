@@ -50,7 +50,7 @@ export abstract class IJavaClass extends JavaTypeWithInstanceInitializer {
     getCompletionItems(visibilityUpTo: Visibility, leftBracketAlreadyThere: boolean, identifierAndBracketAfterCursor: string,
         rangeToReplace: monaco.IRange, methodContext: JavaMethod | undefined, onlyStatic?: false): monaco.languages.CompletionItem[] {
 
-        if(this.isMainClass) return [];
+        if (this.isMainClass) return [];
 
         let itemList: monaco.languages.CompletionItem[] = [];
 
@@ -58,9 +58,9 @@ export abstract class IJavaClass extends JavaTypeWithInstanceInitializer {
             let isColor = this.identifier == 'Color' && field._isStatic;
 
             itemList.push({
-                label: field.toString(),
+                label: field.identifier, // field.toString(),
                 kind: isColor ? monaco.languages.CompletionItemKind.Color : monaco.languages.CompletionItemKind.Field,
-                detail: isColor ? ColorHelper.intColorToHexRGB(ColorHelper.predefinedColors[field.identifier]) : "",
+                detail: field.type ? field.type.toString() : "", // isColor ? ColorHelper.intColorToHexRGB(ColorHelper.predefinedColors[field.identifier]) : "",
                 insertText: field.identifier,
                 range: rangeToReplace,
                 documentation: field.documentation == null ? undefined : {
@@ -113,13 +113,13 @@ export abstract class IJavaClass extends JavaTypeWithInstanceInitializer {
 
     }
 
-    deleteDoublesWithIdenticalSignature(itemList: monaco.languages.CompletionItem[]):monaco.languages.CompletionItem[] {
+    deleteDoublesWithIdenticalSignature(itemList: monaco.languages.CompletionItem[]): monaco.languages.CompletionItem[] {
         let signatureList: Set<string> = new Set();
 
         itemList = itemList.filter(item => {
             //@ts-ignore
             let signature: string = item.signature;
-            if(signatureList.has(signature)) return false;
+            if (signatureList.has(signature)) return false;
             signatureList.add(signature);
             return true;
         })
@@ -402,14 +402,14 @@ export class JavaClass extends IJavaClass {
     cachedAllImplementedInterfaces?: IJavaInterface[];
     getAllImplementedInterfaces(): IJavaInterface[] {
 
-        if(!this.cachedAllImplementedInterfaces){
+        if (!this.cachedAllImplementedInterfaces) {
             this.cachedAllImplementedInterfaces = [];
-            for(let intf of this.getImplements()){
+            for (let intf of this.getImplements()) {
                 this.cachedAllImplementedInterfaces.push(intf);
                 this.cachedAllImplementedInterfaces = this.cachedAllImplementedInterfaces.concat(intf.getAllImplementedInterfaces());
             }
             let baseClass = this.getExtends();
-            if(baseClass){
+            if (baseClass) {
                 this.cachedAllImplementedInterfaces = this.cachedAllImplementedInterfaces.concat(baseClass.getAllImplementedInterfaces());
             }
         }
@@ -457,12 +457,12 @@ export class JavaClass extends IJavaClass {
         if (bType == this) return true;                   // A can cast to A.
 
         if (bType instanceof GenericTypeParameter) {
-            
-            if(bType.isWildcard){
+
+            if (bType.isWildcard) {
                 for (let ext of bType.upperBounds) {
                     if (!this.canImplicitlyCastTo(ext)) return false;
                 }
-    
+
                 if (bType.lowerBound) {
                     return this.canImplicitlyCastTo(bType.lowerBound);
                 }
@@ -470,10 +470,10 @@ export class JavaClass extends IJavaClass {
             }
 
 
-            if (bType.catches){
+            if (bType.catches) {
                 bType.catches.push(this);
                 return true;
-            } 
+            }
 
             return false;
         }
@@ -494,7 +494,7 @@ export class JavaClass extends IJavaClass {
             return this.extends.canImplicitlyCastTo(bType); // A extends C; if C can cast to B, then also A can
         }
 
-        if(bType instanceof GenericVariantOfJavaClass){
+        if (bType instanceof GenericVariantOfJavaClass) {
             // TODO: Group<T extends Shape> can't cast to Group<Rectangle>...
 
             return this.canImplicitlyCastTo(bType.isGenericVariantOf);
@@ -544,11 +544,11 @@ export class JavaClass extends IJavaClass {
         return decl;
     }
 
-    getMinimumConcreteGenericType(libraryTypeStore: JavaTypeStore){
+    getMinimumConcreteGenericType(libraryTypeStore: JavaTypeStore) {
         let typeMap: Map<GenericTypeParameter, NonPrimitiveType> = new Map();
-        if(!(this.genericTypeParameters?.length > 0)) return this;
-        for(let gp of this.genericTypeParameters){
-            if(gp.upperBounds.length > 0){
+        if (!(this.genericTypeParameters?.length > 0)) return this;
+        for (let gp of this.genericTypeParameters) {
+            if (gp.upperBounds.length > 0) {
                 typeMap.set(gp, gp.upperBounds[0]);
             } else {
                 typeMap.set(gp, <NonPrimitiveType>libraryTypeStore.getType("Object"))
@@ -560,10 +560,27 @@ export class JavaClass extends IJavaClass {
 
     getMainMethod(): JavaMethod | undefined {
         let method: JavaMethod | undefined = this.methods.find(m => m.identifier == JavaCompilerStringConstants.mainMethodIdentifier);
-        if(method) return method;
+        if (method) return method;
         return this.methods.find(m => m.isStatic && m.identifier == 'main' && m.getSignature().toLocaleLowerCase() == 'void main(string[])')
     }
 
+    getCompletionItems(visibilityUpTo: Visibility, leftBracketAlreadyThere: boolean, identifierAndBracketAfterCursor: string,
+        rangeToReplace: monaco.IRange, methodContext: JavaMethod | undefined, onlyStatic?: false): monaco.languages.CompletionItem[] {
+            const items = super.getCompletionItems(visibilityUpTo, leftBracketAlreadyThere, identifierAndBracketAfterCursor, rangeToReplace,
+                methodContext, onlyStatic);
+
+            for(let gp of this.genericTypeParameters){
+                items.push({
+                    label: gp.identifier,
+                    detail: gp.getDeclaration(),
+                    kind: monaco.languages.CompletionItemKind.TypeParameter,
+                    range: rangeToReplace,
+                    insertText: gp.identifier 
+                })
+            }
+
+            return items;
+    }
 
 }
 
@@ -719,7 +736,7 @@ export class GenericVariantOfJavaClass extends IJavaClass {
 
     cachedAllImplementedInterfaces?: IJavaInterface[];
     getAllImplementedInterfaces(): IJavaInterface[] {
-        if(!this.cachedAllImplementedInterfaces){
+        if (!this.cachedAllImplementedInterfaces) {
             this.cachedAllImplementedInterfaces = this.isGenericVariantOf.getAllImplementedInterfaces().map(impl => <IJavaInterface>impl.getCopyWithConcreteType(this.typeMap));
         }
         return this.cachedAllImplementedInterfaces!;
@@ -742,7 +759,7 @@ export class GenericVariantOfJavaClass extends IJavaClass {
 
         // ArrayList<Integer> can cast to List or to raw type ArrayList or to raw type List
         if (otherType instanceof JavaInterface || otherType instanceof JavaClass) {
-            if(otherType.toString() == "Object") return true;
+            if (otherType.toString() == "Object") return true;
             if (this.isGenericVariantOf.canExplicitlyCastTo(otherType)) return true;
             return false;
         }
