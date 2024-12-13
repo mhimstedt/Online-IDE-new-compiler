@@ -41,15 +41,19 @@ export class GenericTypeParameter extends NonPrimitiveType {
     }
 
     getDeclaration(): string {
-        return this.toString();
+        return this.getDefinition();
     }
 
-    toString(): string {
+    getDefinition(): string {
         return this.identifier +
         (this.lowerBound ? " super " + this.lowerBound?.identifier : "") +
         // (this.lowerBound ? " super " + this.lowerBound?.toString() : "") +
         // (this.upperBounds.length > 0 ? " extends " + this.upperBounds.map(ub => ub.toString()).join(" & ") : "");
-        (this.upperBounds.length > 0 ? " extends " + this.upperBounds.map(ub => ub.identifier).join(" & ") : "");
+        (this.upperBounds.length > 0 ? " extends " + this.upperBounds.filter(ub => ub.identifier != 'Object').map(ub => ub.toString()).join(" & ") : "");
+    }
+
+    toString(): string {
+        return this.identifier;
     }
 
     getAbsoluteName(): string {
@@ -106,6 +110,7 @@ export class GenericTypeParameter extends NonPrimitiveType {
         if(ownMappedType) return ownMappedType;
 
         let copy = new GenericTypeParameter(this.identifier, this.module, this.identifierRange);
+        typeMap.set(this, copy);
         
         copy.catches = this.catches;
 

@@ -537,7 +537,7 @@ export class JavaClass extends IJavaClass {
         if (this.genericTypeParameters && this.genericTypeParameters.length > 0) {
             decl += "<" + this.genericTypeParameters.map(gp => gp.getDeclaration()) + ">";
         }
-        if (this.extends) decl += " extends " + this.extends.toString();
+        if (this.extends && this.extends.identifier != 'Object') decl += " extends " + this.extends.toString();
         if (this.implements.length > 0) {
             decl += " implements " + this.implements.map(impl => impl.toString()).join(", ");
         }
