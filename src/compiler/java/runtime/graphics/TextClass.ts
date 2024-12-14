@@ -24,8 +24,8 @@ export class TextClass extends FilledShapeClass {
 
         { type: "method", signature: "double getFontsize()", template: `§1.fontsize` , comment: JRC.TextGetFontsizeComment },
         { type: "method", signature: "string getText()", template: `§1.text`, comment: JRC.TextGetTextComment },
-        { type: "method", signature: "void getWidth()", native: TextClass.prototype._getWidth, comment: JRC.TextGetWidthComment },
-        { type: "method", signature: "void getHeight()", native: TextClass.prototype._getHeight, comment: JRC.TextGetHeightComment },
+        { type: "method", signature: "double getWidth()", native: TextClass.prototype._getWidth, comment: JRC.TextGetWidthComment },
+        { type: "method", signature: "double getHeight()", native: TextClass.prototype._getHeight, comment: JRC.TextGetHeightComment },
 
         { type: "method", signature: "final void moveTo(double x, double y)", native: TextClass.prototype._moveTo, comment: JRC.TextMoveToComment },
 
