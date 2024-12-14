@@ -13,9 +13,9 @@ import { PrimitiveType } from "../runtime/system/primitiveTypes/PrimitiveType.ts
 import { JavaArrayType } from "../types/JavaArrayType";
 import { JavaField } from "../types/JavaField";
 import { GenericTypeParameter } from "../types/GenericTypeParameter";
-import { IJavaClass, JavaClass } from "../types/JavaClass";
+import { GenericVariantOfJavaClass, IJavaClass, JavaClass } from "../types/JavaClass";
 import { JavaEnum } from "../types/JavaEnum";
-import { IJavaInterface, JavaInterface } from "../types/JavaInterface";
+import { GenericVariantOfJavaInterface, IJavaInterface, JavaInterface } from "../types/JavaInterface";
 import { JavaType } from "../types/JavaType";
 import { GenericMethod, JavaMethod } from "../types/JavaMethod";
 import { NonPrimitiveType } from "../types/NonPrimitiveType";
@@ -240,10 +240,22 @@ export class TypeResolver {
                 let type = this.findPrimaryTypeByIdentifier(<ASTBaseTypeNode>typeNode, module);
                 if (type) {
                     typeNode.resolvedType = type;
-                    module.registerTypeUsage(type, typeNode.range);
                     if (type.hasGenericParameters() && !isPartOfGenericType) {
-                        this.pushError(JCM.genericTypeWithNonGenericReference(type.toString()), typeNode.range, module, "warning");
+                        if(type.identifier != 'Group') this.pushError(JCM.genericTypeWithNonGenericReference(type.toString()), typeNode.range, module, "warning");
+                        let baseType: ASTTypeNode = Object.assign({}, typeNode);
+
+                        let genericTypeNode: ASTGenericTypeInstantiationNode = <any>typeNode;
+                        genericTypeNode.kind = TokenType.genericTypeInstantiation;
+                        genericTypeNode.actualTypeArguments = [];
+                        genericTypeNode.baseType = baseType;
+                        genericTypeNode.resolvedType = undefined;
+
+                        type = this.resolveTypeNode(genericTypeNode, module, true);
+
                     }
+
+                    module.registerTypeUsage(type, typeNode.range);
+
                 }
                 return type;
             }
@@ -257,10 +269,6 @@ export class TypeResolver {
                 if (!baseType.hasGenericParameters()) {
                     this.pushError(JCM.typeIsNotGeneric(baseType.toString()), typeNode.range, module);
                     return undefined;
-                }
-                // ArrayList<> -> ArrayList
-                if (genericTypeNode.actualTypeArguments.length == 0) {
-
                 }
                 if (genericTypeNode.actualTypeArguments.length > baseType.genericTypeParameters!.length) {
                     this.pushError(JCM.wrongNumberOfGenericParameters(baseType.toString(), baseType.genericTypeParameters!.length, genericTypeNode.actualTypeArguments.length), genericTypeNode.range, module);
@@ -284,11 +292,7 @@ export class TypeResolver {
                 // remaining generic parameters:
                 for (let i = genericTypeNode.actualTypeArguments.length; i < baseType.genericTypeParameters!.length; i++) {
                     let gp = baseType.genericTypeParameters![i];
-                    if (gp.upperBounds.length > 0) {
-                        typeMap.set(gp, gp.upperBounds[0]);
-                    } else {
-                        typeMap.set(gp, <NonPrimitiveType>this.libraryModuleManager.typestore.getType("Object"))
-                    }
+                    typeMap.set(gp, <NonPrimitiveType>this.libraryModuleManager.typestore.getType("Object"))
                 }
 
 
@@ -356,18 +360,39 @@ export class TypeResolver {
 
     checkGenericTypeInstantiation(typeNode: ASTGenericTypeInstantiationNode, module: JavaBaseModule, isPartOfGenericType: boolean = false) {
         let baseType = typeNode.baseType.resolvedType;
+        let genericVariant = typeNode.resolvedType;
+        let typeMap: Map<GenericTypeParameter, NonPrimitiveType>;
+        if (genericVariant instanceof GenericVariantOfJavaClass || genericVariant instanceof GenericVariantOfJavaInterface) {
+            typeMap = genericVariant.typeMap;
+        }
+        if (!typeMap) return;
 
         for (let i = 0; i < typeNode.actualTypeArguments.length; i++) {
             let gp = baseType.genericTypeParameters![i];
-            let gpNode = typeNode.actualTypeArguments[i];
-            let gpType = this.resolveTypeNode(gpNode, module);
-            // TODO: Check upper/lower bounds of gp against gpType!
+            let gpType = typeMap.get(gp);
             if (gpType) {
                 if (!gpType.isPrimitive && !gp.canBeReplacedByConcreteType(gpType)) {
                     this.pushError(JCM.cantReplaceGenericParamterBy(gp.getDeclaration(), gpType.toString()), typeNode.range, module);
                 }
             }
         }
+
+        // remaining generic parameters:
+        for (let i = typeNode.actualTypeArguments.length; i < baseType.genericTypeParameters!.length; i++) {
+            let gp = baseType.genericTypeParameters![i];
+            switch (gp.upperBounds.length) {
+                case 0:
+                    typeMap.set(gp, <NonPrimitiveType>this.libraryModuleManager.typestore.getType("Object"))
+                    break;
+                case 1:  // Object
+                case 2:  // user specified and Object, e.g. class Test<T extends Comparable<T>>
+                    typeMap.set(gp, gp.upperBounds[0]);
+                    break;
+                default:
+                    this.pushError(JCM.actualGenericParameterNotSpecified(baseType.identifier, gp.identifier), typeNode.range, module);
+            }
+        }
+
 
 
     }
@@ -538,14 +563,14 @@ export class TypeResolver {
             if (!gpType) continue;
 
             let extendsNoClass: boolean = true;
-            
+
             if (gpNode.extends) {
                 for (let extNode of gpNode.extends) {
                     let extType = this.resolveTypeNode(extNode, module);
                     if (extType) {
                         if (extType instanceof IJavaClass || extType instanceof IJavaInterface) {
                             gpType.upperBounds.push(extType);
-                            if(extType instanceof IJavaClass){
+                            if (extType instanceof IJavaClass) {
                                 extendsNoClass = false;
                             }
                         } else {
@@ -555,7 +580,7 @@ export class TypeResolver {
                 }
             }
 
-            if(extendsNoClass){
+            if (extendsNoClass) {
                 gpType.upperBounds.push(objectClass);
             }
 

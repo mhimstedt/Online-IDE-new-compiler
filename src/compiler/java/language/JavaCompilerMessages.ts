@@ -610,6 +610,11 @@ export class JCM {
         "en": `Can't use primitive Type ${type} for generic parameter.`,
     })
 
+    static actualGenericParameterNotSpecified = (typeIdentifier: string, genericParameterIdentifier: string) => le({
+        "de": `Für den generischen Parameter ${genericParameterIdentifier} der Klasse/des Interfaces ${typeIdentifier} muss ein konkreter Typ angegeben werden.`,
+        "en": `Actual Type missing for generic Parameter ${genericParameterIdentifier} of class/interface ${typeIdentifier}.`,
+    })
+
     static cantReplaceGenericParamterBy = (genericParameter: string, replacedBy: string) => le({
         "de": `Der generische Typparameter ${genericParameter} kann nicht durch den Typ ${replacedBy} ersetzt werden.`,
         "en": `Can't replace generic typeparameter ${genericParameter} with type ${replacedBy}.`,
