@@ -1,4 +1,4 @@
-export var currentLanguage: string = "en";
+export var currentLanguage: string = "de";
 export var fallbackLanguages: string[] = ["en", "de", "id"];
 
 export type ErrormessageWithId = {

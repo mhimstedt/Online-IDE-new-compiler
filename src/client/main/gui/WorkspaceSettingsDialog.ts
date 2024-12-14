@@ -13,7 +13,8 @@ type Library = {
 export class WorkspaceSettingsDialog{
 
     libraries: Library[] = [
-        {identifier: "gng", description: "Graphics'n Games-Bibliothek zu den Informatikbüchern des Cornelsen-Verlages für das Land Bayern (Bemerkung: Die Klassen Turtle und Text heißen hier GTurtle und GText)"}
+        {identifier: "gng", description: "Graphics'n Games-Bibliothek zu den Informatikbüchern des Cornelsen-Verlages für das Land Bayern (Bemerkung: Die Klassen Turtle und Text heißen hier GTurtle und GText)"},
+        {identifier: "nrw", description: "Abiturklassenbibliothek für das Land Nordrhein-Westfalen"}
     ]
 
     constructor(private workspace: Workspace, private main: Main){

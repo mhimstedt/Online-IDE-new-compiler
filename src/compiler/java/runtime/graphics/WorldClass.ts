@@ -28,7 +28,7 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
         { type: "declaration", signature: "class World" },
 
         { type: "method", signature: "World()", java: WorldClass.prototype._cj$_constructor_$World$ },
-        { type: "method", signature: "World(int width, int height)", java: WorldClass.prototype.cj$_constructor_$World$int$int },
+        { type: "method", signature: "World(int width, int height)", java: WorldClass.prototype._cj$_constructor_$World$int$int },
 
         { type: "method", signature: "void setBackgroundColor(Color colorAsObject)", native: WorldClass.prototype._setBackgroundColorColor, comment: JRC.worldSetBackgroundColorColorComment },
         { type: "method", signature: "void setBackgroundColor(int colorAsRGBInt)", native: WorldClass.prototype._setBackgroundColor, comment: JRC.worldSetBackgroundColorIntComment },
@@ -92,10 +92,10 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
 
     _cj$_constructor_$World$(t: Thread, callback: CallbackParameter) {
         this.interpreter = t.scheduler.interpreter;
-        this.cj$_constructor_$World$int$int(t, callback, 800, 600);
+        this._cj$_constructor_$World$int$int(t, callback, 800, 600);
     }
 
-    cj$_constructor_$World$int$int(t: Thread, callback: CallbackParameter, width: number, height: number) {
+    _cj$_constructor_$World$int$int(t: Thread, callback: CallbackParameter, width: number, height: number) {
 
         this.interpreter = t.scheduler.interpreter;
         let interpreter = this.interpreter;

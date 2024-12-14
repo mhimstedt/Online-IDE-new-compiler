@@ -8,34 +8,33 @@ import { SystemCollection } from "../../system/collections/SystemCollection.ts";
 import { ObjectClassOrNull, StringClass } from "../../system/javalang/ObjectClassStringClass.ts";
 import { NRWLang } from "./NRWLang.ts";
 
-class QueueNode {
-    next: QueueNode | null = null;
+class StackNode {
+    next: StackNode | null = null;
 
-    constructor(public contentObject: ObjectClassOrNull) {
+    constructor(public content: ObjectClassOrNull) {
 
     }
 }
 
 
-export class NRWQueueClass extends SystemCollection implements BaseListType {
+export class NRWStackClass extends SystemCollection implements BaseListType {
     static __javaDeclarations: LibraryDeclarations = [
-        { type: "declaration", signature: "class Queue<ContentType>", comment: NRWLang.queueClassComment },
+        { type: "declaration", signature: "class Stack<ContentType>", comment: NRWLang.stackClassComment },
 
-        { type: "method", signature: "Queue()", native: NRWQueueClass.prototype._constructor, comment: NRWLang.queueClassConstructorComment },
+        { type: "method", signature: "Stack()", native: NRWStackClass.prototype._constructor, comment: NRWLang.stackClassConstructorComment },
 
-        { type: "method", signature: "boolean isEmpty()", native: NRWQueueClass.prototype._isEmpty, comment: NRWLang.queueClassIsEmptyComment },
-        { type: "method", signature: "void enqueue(ContentType pContent)", native: NRWQueueClass.prototype._enqueue, comment: NRWLang.queueClassEnqueueComment },
-        { type: "method", signature: "void dequeue()", native: NRWQueueClass.prototype._dequeue, comment: NRWLang.queueClassDequeueComment },
-        { type: "method", signature: "ContentType front()", native: NRWQueueClass.prototype._front, comment: NRWLang.queueClassFrontComment },
+        { type: "method", signature: "boolean isEmpty()", native: NRWStackClass.prototype._isEmpty, comment: NRWLang.stackClassIsEmptyComment },
+        { type: "method", signature: "void push(ContentType pContent)", native: NRWStackClass.prototype._push, comment: NRWLang.stackClassPushComment },
+        { type: "method", signature: "void pop()", native: NRWStackClass.prototype._pop, comment: NRWLang.stackClassPopComment },
+        { type: "method", signature: "ContentType top()", native: NRWStackClass.prototype._top, comment: NRWLang.stackClassTopComment },
 
-        { type: "method", signature: "String toString()", java: NRWQueueClass.prototype._mj$toString$String$, comment: JRC.objectToStringComment },
+        { type: "method", signature: "String toString()", java: NRWStackClass.prototype._mj$toString$String$, comment: JRC.objectToStringComment },
         //
     ]
 
     static type: NonPrimitiveType;
 
-    head: QueueNode = null;
-    tail: QueueNode = null;
+    head: StackNode = null;
 
 
     constructor() {
@@ -50,35 +49,26 @@ export class NRWQueueClass extends SystemCollection implements BaseListType {
         return this.head == null;
     }
 
-    _enqueue(pContent: ObjectClassOrNull) {
+    _push(pContent: ObjectClassOrNull) {
         if (pContent != null) {
-            const newNode: QueueNode = new QueueNode(pContent);
-            if (this._isEmpty()) {
-                this.head = newNode;
-                this.tail = newNode;
-            } else {
-                this.tail.next = newNode;
-                this.tail = newNode;
-            }
+            const newNode: StackNode = new StackNode(pContent);
+            newNode.next = this.head;
+            this.head = newNode;
         }
     }
 
-    _dequeue() {
+    _pop() {
         if (!this._isEmpty()) {
             this.head = this.head.next;
-            if (this._isEmpty()) {
-                this.head = null;
-                this.tail = null;
-            }
         }
     }
 
-    _front(): ObjectClassOrNull {
+    _top(): ObjectClassOrNull {
         if (this._isEmpty()) {
-			return null;
-		} else {
-			return this.head.contentObject;
-		}
+            return null;
+        } else {
+            return this.head.content;
+        }
 
     }
 
@@ -91,7 +81,7 @@ export class NRWQueueClass extends SystemCollection implements BaseListType {
             if (callback) callback();
             return;
         }
-        let element = this.head.contentObject;
+        let element = this.head.content;
         if (typeof element == "object" || Array.isArray(element) || element == null) {
             t._arrayOfObjectsToString(this.getAllElements(), () => {
                 t.s.push(new StringClass(t.s.pop()));
@@ -110,7 +100,7 @@ export class NRWQueueClass extends SystemCollection implements BaseListType {
         const elements: ObjectClassOrNull[] = [];
         let node = this.head;
         while (node != null) {
-            elements.push(node.contentObject);
+            elements.push(node.content);
             node = node.next;
         }
         return elements;
