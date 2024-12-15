@@ -1,21 +1,13 @@
+import { JavaLibraryManager, LibraryData } from "../../../compiler/java/runtime/JavaLibraryManager.js";
 import { Workspace } from "../../workspace/Workspace.js";
 import { Main } from "../Main.js";
-import { MainBase } from "../MainBase.js";
-import { CheckboxState, Dialog } from "./Dialog.js";
+import { Dialog } from "./Dialog.js";
 
 
-type Library = {
-    identifier: string,
-    description: string,
-    checkboxState?: CheckboxState
-}
 
 export class WorkspaceSettingsDialog{
 
-    libraries: Library[] = [
-        {identifier: "gng", description: "Graphics'n Games-Bibliothek zu den Informatikbüchern des Cornelsen-Verlages für das Land Bayern (Bemerkung: Die Klassen Turtle und Text heißen hier GTurtle und GText)"},
-        {identifier: "nrw", description: "Abiturklassenbibliothek für das Land Nordrhein-Westfalen"}
-    ]
+    libraries: LibraryData[] = new JavaLibraryManager().libraries;
 
     constructor(private workspace: Workspace, private main: Main){
 
@@ -30,7 +22,7 @@ export class WorkspaceSettingsDialog{
         let currentLibraries = this.workspace.settings.libraries;
 
         for(let library of this.libraries){
-            let cbs = dialog.addCheckbox(library.description, currentLibraries.indexOf(library.identifier) >= 0, library.identifier);
+            let cbs = dialog.addCheckbox(library.identifier + " (" + library.description + ")", currentLibraries.indexOf(library.id) >= 0, library.id);
             library.checkboxState = cbs;
         }
 
@@ -48,8 +40,8 @@ export class WorkspaceSettingsDialog{
                     let newLibs: string[] = [];
                     for(let lib of this.libraries){
                         let used = lib.checkboxState();
-                        changed = changed || (used != (currentLibraries.indexOf(lib.identifier) >= 0));
-                        if(used) newLibs.push(lib.identifier);
+                        changed = changed || (used != (currentLibraries.indexOf(lib.id) >= 0));
+                        if(used) newLibs.push(lib.id);
                     }
 
                     if(changed){

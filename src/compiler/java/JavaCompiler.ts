@@ -56,7 +56,7 @@ export class JavaCompiler implements Compiler {
         this.moduleManager = new JavaModuleManager();
     }
 
-    setAdditionalModules(...modules: JavaLibraryModule[]){
+    setAdditionalModules(...modules: JavaLibraryModule[]) {
         this.libraryModuleManager = new JavaLibraryModuleManager(...modules);
     }
 
@@ -68,7 +68,7 @@ export class JavaCompiler implements Compiler {
         this.#files = files;
     }
 
-    async compileIfDirty(): Promise<Executable | undefined> {
+    async compileIfDirty(onlyForCodeCompletion: boolean = false): Promise<Executable | undefined> {
         // if we're not in test mode:
         if (this.main) {
             if (this.main.getInterpreter().isRunningOrPaused()) return;
@@ -87,19 +87,19 @@ export class JavaCompiler implements Compiler {
         /**
          * if no module has changed, return as fast as possible
         */
-       if (newOrDirtyModules.length == 0) return this.#lastCompiledExecutable;
+        if (newOrDirtyModules.length == 0) return this.#lastCompiledExecutable;
 
-       // now we extend set of dirty modules to
-       //  - modules which had errors in last compilation run
-       //  - modules that are (indirectly) dependent on other dirty modules
-       this.moduleManager.iterativelySetDirtyFlags();
+        // now we extend set of dirty modules to
+        //  - modules which had errors in last compilation run
+        //  - modules that are (indirectly) dependent on other dirty modules
+        this.moduleManager.iterativelySetDirtyFlags();
 
 
-       newOrDirtyModules = this.moduleManager.getNewOrDirtyModules();
+        newOrDirtyModules = this.moduleManager.getNewOrDirtyModules();
 
-       this.#progressManager.setNewOrDirtyModules(newOrDirtyModules.map(m => m.file.name).join(", "));  // only for console.log later
+        this.#progressManager.setNewOrDirtyModules(newOrDirtyModules.map(m => m.file.name).join(", "));  // only for console.log later
 
-       if (newOrDirtyModules.length == 0) return this.#lastCompiledExecutable;
+        if (newOrDirtyModules.length == 0) return this.#lastCompiledExecutable;
 
         this.#errors = [];
 
@@ -136,13 +136,17 @@ export class JavaCompiler implements Compiler {
                 const codegenerator = new CodeGenerator(module, this.libraryModuleManager.typestore,
                     this.moduleManager.typestore, exceptionTree, this.#progressManager);
                 await codegenerator.start();
-                module.setDirty(false);
                 await this.#progressManager.interruptIfNeeded();
             }
+            
+            if(onlyForCodeCompletion) return;
+            
+            for (const module of newOrDirtyModules) {
+                module.setDirty(false);
+            }
+            
         }
 
-
-        this.eventManager.fire("typesReadyForCodeCompletion");
 
         await this.#progressManager.interruptIfNeeded();
 
@@ -229,8 +233,8 @@ export class JavaCompiler implements Compiler {
 
         // ensure that there's at least compileTimeout ms between two compilation runs
         let timeout: number = compileTimeout - (performance.now() - this.lastTimeCompilationStarted);
-        if(timeout < 0) timeout = 0;
-        
+        if (timeout < 0) timeout = 0;
+
 
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         this.#compileTimer = setTimeout(async () => {
@@ -297,17 +301,14 @@ export class JavaCompiler implements Compiler {
         return 1;
     }
 
-    async interruptAndStartOverAgain(): Promise<void> {
+    async interruptAndStartOverAgain(onlyForCodeCompletion: boolean): Promise<void> {
         if (this.#progressManager.isInsideCompilationRun) {
             this.#progressManager.interruptCompilerIfRunning(false);
         } else {
             this.#progressManager.initBeforeCompiling();
-            await this.compileIfDirty();
+            await this.compileIfDirty(onlyForCodeCompletion);
             this.#progressManager.afterCompiling();
         }
 
-        return new Promise(resolve => {
-            this.eventManager.once("typesReadyForCodeCompletion", resolve);
-        })
     }
 }

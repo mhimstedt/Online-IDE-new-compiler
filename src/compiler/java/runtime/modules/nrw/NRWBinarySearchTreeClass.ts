@@ -25,8 +25,8 @@ export class NRWBinarySearchTreeClass extends ObjectClass {
 
         { type: "method", signature: "ContentType getContent()", native: NRWBinarySearchTreeClass.prototype._getContent, comment: NRWLang.binarySearchTreeGetContentComment },
 
-        { type: "method", signature: "insert(ContentType pContent)", java: NRWBinarySearchTreeClass.prototype._mj$insert$void$ContentType, comment: NRWLang.binarySearchTreeInsertComment },
-        { type: "method", signature: "remove(ContentType pContent)", java: NRWBinarySearchTreeClass.prototype._mj$remove$void$ContentType, comment: NRWLang.binarySearchTreeRemoveComment },
+        { type: "method", signature: "void insert(ContentType pContent)", java: NRWBinarySearchTreeClass.prototype._mj$insert$void$ContentType, comment: NRWLang.binarySearchTreeInsertComment },
+        { type: "method", signature: "void remove(ContentType pContent)", java: NRWBinarySearchTreeClass.prototype._mj$remove$void$ContentType, comment: NRWLang.binarySearchTreeRemoveComment },
         { type: "method", signature: "ContentType search(ContentType pContent)", java: NRWBinarySearchTreeClass.prototype._mj$search$ContentType$ContentType, comment: NRWLang.binarySearchTreeSearchComment },
 
         { type: "method", signature: "BinarySearchTree<ContentType> getLeftTree()", native: NRWBinarySearchTreeClass.prototype._getLeftTree, comment: NRWLang.binarySearchTreeGetLeftTreeComment },

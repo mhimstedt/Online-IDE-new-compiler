@@ -37,7 +37,7 @@ export class NRWModule extends JavaLibraryModule {
     }
 
     prepareSystemModule(systemModule: SystemModule): void {
-        let classesToRemove: string[] = ['List', 'ArrayList', 'LinkedList', 'Vector', 'Stack'];
+        let classesToRemove: string[] = ['List', 'ArrayList', 'LinkedList', 'Vector', 'Stack', 'Queue', 'Deque'];
         systemModule.classesInterfacesEnums = systemModule.classesInterfacesEnums.filter(c => classesToRemove.indexOf(this.getName(c)) < 0);
     }
 

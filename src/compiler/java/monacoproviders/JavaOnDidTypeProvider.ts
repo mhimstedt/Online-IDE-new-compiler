@@ -42,49 +42,50 @@ export class JavaOnDidTypeProvider {
                         }
                     }
                 }
-            } else if(text == '"'){    // && this.currentlyEditedModuleIsJava()) {
-                //a: x| -> x"|"
-                //d: "|x -> ""|x
-                //c: "|" -> """\n|\n"""
-                const model = editor.getModel()!;
-                const position = editor.getPosition()!;
-                const selection = editor.getSelection()!;
+            } 
+            // else if(text == '"'){    // && this.currentlyEditedModuleIsJava()) {
+            //     //a: x| -> x"|"
+            //     //d: "|x -> ""|x
+            //     //c: "|" -> """\n|\n"""
+            //     const model = editor.getModel()!;
+            //     const position = editor.getPosition()!;
+            //     const selection = editor.getSelection()!;
 
-                const isSelected = selection.startColumn != selection.endColumn || selection.startLineNumber != selection.endLineNumber;
+            //     const isSelected = selection.startColumn != selection.endColumn || selection.startLineNumber != selection.endLineNumber;
 
-                const line = model.getLineContent(position.lineNumber);
-                let doInsert: boolean = true;
-                let charBefore1: string = "x";
-                if (position.column > 3) {
-                    charBefore1 = line.charAt(position.column - 3);
-                }
-                let charAfter: string = "x";
-                if (position.column - 1 < line.length) {
-                    charAfter = line.charAt(position.column - 1);
-                }
+            //     const line = model.getLineContent(position.lineNumber);
+            //     let doInsert: boolean = true;
+            //     let charBefore1: string = "x";
+            //     if (position.column > 3) {
+            //         charBefore1 = line.charAt(position.column - 3);
+            //     }
+            //     let charAfter: string = "x";
+            //     if (position.column - 1 < line.length) {
+            //         charAfter = line.charAt(position.column - 1);
+            //     }
 
-                if (!isSelected) {
-                    if (charBefore1 != '"' && charAfter != '"') {
-                        insertTextAndSetCursor(position, '"', position.lineNumber, position.column);
-                    }
-                    else if (charAfter == '"') {
-                        let pos1 = { ...position, column: position.column + 1 };
-                        // insertTextAndSetCursor(pos1, '', position.lineNumber, position.column + 1);
-                        const range = new monaco.Range(
-                            pos1.lineNumber,
-                            pos1.column - 1,
-                            pos1.lineNumber,
-                            pos1.column + 2
-                        );
-                        editor.executeEdits("new-bullets", [
-                            { range, text: '' }
-                        ]);
+            //     if (!isSelected) {
+            //         if (charBefore1 != '"' && charAfter != '"') {
+            //             insertTextAndSetCursor(position, '"', position.lineNumber, position.column);
+            //         }
+            //         else if (charAfter == '"') {
+            //             let pos1 = { ...position, column: position.column + 1 };
+            //             // insertTextAndSetCursor(pos1, '', position.lineNumber, position.column + 1);
+            //             const range = new monaco.Range(
+            //                 pos1.lineNumber,
+            //                 pos1.column - 1,
+            //                 pos1.lineNumber,
+            //                 pos1.column + 2
+            //             );
+            //             editor.executeEdits("new-bullets", [
+            //                 { range, text: '' }
+            //             ]);
 
-                    }
-                }
+            //         }
+            //     }
 
 
-            }
+            // }
 
          });
     }

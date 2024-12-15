@@ -16,7 +16,7 @@ export interface Compiler {
     getSortedAndFilteredErrors(file: CompilerFile): Error[];
     getType(identifier: string): BaseType | undefined;
     triggerCompile(): void;
-    interruptAndStartOverAgain(): Promise<void>;
+    interruptAndStartOverAgain(onlyForCodeCompletion: boolean): Promise<void>;
 
     setAdditionalModules(...modules: JavaLibraryModule[]): void;
 

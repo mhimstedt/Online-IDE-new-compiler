@@ -9,9 +9,9 @@ export class NRWQueryResultClass extends ObjectClass {
 
         { type: "method", signature: "private QueryResult(string[][] pData, string[] pColumnNames, string[] pColumnTypes)", native: NRWQueryResultClass.prototype._constructor1 },
 
-        { type: "method", signature: "String[][] getData()", native: NRWQueryResultClass.prototype._getData, comment: NRWLang.queryResultGetDataComment },
-        { type: "method", signature: "String[] getColumnNames()", native: NRWQueryResultClass.prototype._getColumnNames, comment: NRWLang.queryResultGetColumnNamesComment },
-        { type: "method", signature: "String[] getColumnTypes()", native: NRWQueryResultClass.prototype._getColumnTypes, comment: NRWLang.queryResultGetColumnTypesComment },
+        { type: "method", signature: "string[][] getData()", native: NRWQueryResultClass.prototype._getData, comment: NRWLang.queryResultGetDataComment },
+        { type: "method", signature: "string[] getColumnNames()", native: NRWQueryResultClass.prototype._getColumnNames, comment: NRWLang.queryResultGetColumnNamesComment },
+        { type: "method", signature: "string[] getColumnTypes()", native: NRWQueryResultClass.prototype._getColumnTypes, comment: NRWLang.queryResultGetColumnTypesComment },
         { type: "method", signature: "int getColumnCount()", native: NRWQueryResultClass.prototype._getColumnCount, comment: NRWLang.queryResultGetColumnCountComment },
 
     ]
@@ -33,31 +33,31 @@ export class NRWQueryResultClass extends ObjectClass {
         this.columnTypes = columnTypes;
     }
 
-    _getData(): StringClass[][] {
-        let dest: StringClass[][] = [];
+    _getData(): string[][] {
+        let dest: string[][] = [];
         for(let srcArray of this.data){
-            let dstArray: StringClass[] = [];
+            let dstArray: string[] = [];
             dest.push(dstArray);
             for(let src of srcArray){
                 if(src == null) dstArray.push(null);
-                dstArray.push(new StringClass(src));
+                dstArray.push(src);
             }
         }
 
         return dest;
     }
 
-    _getColumnNames(): StringClass[] {
+    _getColumnNames(): string[] {
         return this.columnNames.map(cn => {
             if(cn == null) return null;
-            return new StringClass(cn);
+            return cn;
         })
     }
 
-    _getColumnTypes(): StringClass[] {
+    _getColumnTypes(): string[] {
         return this.columnTypes.map(cn => {
             if(cn == null) return null;
-            return new StringClass(cn);
+            return cn;
         })
     }
 

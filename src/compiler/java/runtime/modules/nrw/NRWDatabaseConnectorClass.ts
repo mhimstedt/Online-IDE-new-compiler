@@ -11,6 +11,15 @@ import { ObjectClass, StringClass } from "../../system/javalang/ObjectClassStrin
 import { NRWLang } from "./NRWLang";
 import { NRWQueryResultClass } from "./NRWQueryResultClass";
 
+/*
+  Usage:
+  DatabaseConnector c = new DatabaseConnector("239348H2NcLAvd");
+  c.executeStatement("select * from fluss");
+  var result = c.getCurrentQueryResult();
+  String[][] data = result.getData();
+  println(data[0]);
+*/
+
 export class NRWDatabaseConnectorClass extends ObjectClass {
     static __javaDeclarations: LibraryDeclarations = [
         { type: "declaration", signature: "class DatabaseConnector", comment: NRWLang.databaseConnectorClassComment },
@@ -90,7 +99,22 @@ export class NRWDatabaseConnectorClass extends ObjectClass {
                 }
 
                 this.currentQueryResult = new NRWQueryResultClass();
-                this.currentQueryResult._constructor1(data.values, data.columns, data.columns);
+
+                const values: string[][] = data.values.map(line => line.map(s => "" + s));
+                const types = data.columns.map( c => "String");
+                for(let line of data.values){
+                    for(let c = 0; c < line.length; c++){
+                        let d = line[c];
+                        if(typeof d == "number"){
+                            types[c] = "Number";
+                        } else if(typeof d == "boolean"){
+                            types[c] = "Boolean";
+                        }
+                    }
+                }
+
+
+                this.currentQueryResult._constructor1(values, data.columns, types);
 
                 if(callback) callback();
             });

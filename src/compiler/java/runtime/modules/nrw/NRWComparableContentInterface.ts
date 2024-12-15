@@ -13,7 +13,7 @@ export class NRWComparableContentInterface extends InterfaceClass {
 
         { type: "method", signature: "boolean isGreater(ContentType pContent)", java: NRWComparableContentInterface.prototype._mj$isGreater$boolean$ContentType, comment: NRWLang.comparableContentIsGreaterComment },
         { type: "method", signature: "boolean isLess(ContentType pContent)", java: NRWComparableContentInterface.prototype._mj$isLess$boolean$ContentType, comment: NRWLang.comparableContentIsLessComment },
-        { type: "method", signature: "boolean isequal(ContentType pContent)", java: NRWComparableContentInterface.prototype._mj$isEqual$boolean$ContentType, comment: NRWLang.comparableContentIsEqualComment },
+        { type: "method", signature: "boolean isEqual(ContentType pContent)", java: NRWComparableContentInterface.prototype._mj$isEqual$boolean$ContentType, comment: NRWLang.comparableContentIsEqualComment },
         //
     ]
 

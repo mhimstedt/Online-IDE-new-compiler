@@ -7,6 +7,7 @@ import { getLine, getLineNumber, threeDez } from "../tools/StringTools";
 import { IPrintManager } from "../compiler/common/interpreter/IPrintManager";
 import { ViteTestAssertions } from "./ViteTestAssertions";
 import { CompilerFileMockup } from "./CompilerFileMockup";
+import { JavaLibraryManager } from "../compiler/java/runtime/JavaLibraryManager";
 
 class StoreOutputPrintManager implements IPrintManager {
 
@@ -40,14 +41,14 @@ try {
     let javaDir: string = __dirname + "/java";
 
     let files = fs.readdirSync(javaDir);
-    for(let i = 0; i < files.length; i++){
+    for (let i = 0; i < files.length; i++) {
         let file = files[i];
         if (file && file.endsWith(".java")) {
             let data = fs.readFileSync(javaDir + '/' + file, 'utf8');
             test1(data, file);
         }
     }
-} catch (ex){
+} catch (ex) {
     console.error(ex);
 }
 
@@ -57,7 +58,8 @@ type ExpectedError = { id: string, line?: number, found?: boolean }
 type TestInfo = {
     expectedOutput?: string,
     expectedCompilationError?: ExpectedError,
-    expectedCompilationErrors?: ExpectedError[]
+    expectedCompilationErrors?: ExpectedError[],
+    libraries?: string[]
 }
 
 function test1(sourcecode: string, file: string) {
@@ -84,6 +86,7 @@ function test1(sourcecode: string, file: string) {
 
         let expectedOutput: string | undefined;
         let expectedErrors: ExpectedError[] = [];
+        let libraries: string[] = [];
 
         let leftCurlyBraceIndex = sourcecode.indexOf("{", testBegin);
         if (leftCurlyBraceIndex >= 0 && leftCurlyBraceIndex < headerEnd) {
@@ -95,10 +98,11 @@ function test1(sourcecode: string, file: string) {
                 expectedOutput = testInfo.expectedOutput;
                 if (testInfo.expectedCompilationError) expectedErrors.push(testInfo.expectedCompilationError);
                 if (testInfo.expectedCompilationErrors) expectedErrors = expectedErrors.concat(testInfo.expectedCompilationErrors);
+                if (testInfo.libraries) libraries = testInfo.libraries;
             }
         }
 
-        compileAndTest(title, code, lineOffset, expectedOutput, expectedErrors);
+        compileAndTest(title, code, lineOffset, expectedOutput, expectedErrors, libraries);
 
         testBegin = sourcecode.indexOf("/**::", testBegin + 1);
     }
@@ -107,7 +111,9 @@ function test1(sourcecode: string, file: string) {
 
 }
 
-function compileAndTest(name: string, program: string, lineOffset: number, expectedOutput: string | undefined, expectedCompiliationErrors: ExpectedError[]) {
+function compileAndTest(name: string, program: string, lineOffset: number,
+    expectedOutput: string | undefined, expectedCompiliationErrors: ExpectedError[],
+    libraries: string[]) {
 
     test(name, async (context) => {
         let file = new CompilerFileMockup();
@@ -115,9 +121,14 @@ function compileAndTest(name: string, program: string, lineOffset: number, expec
         file.setText(program);
 
         let compiler = new JavaCompiler();
+
+        let libManager = new JavaLibraryManager();
+        libManager.addLibraries(...libraries);
+        libManager.addLibrariesToCompiler(compiler);
+
         compiler.setFiles([<any>file]);
         let executable = await compiler.compileIfDirty();
-        if (!executable){
+        if (!executable) {
             return;
         }
 

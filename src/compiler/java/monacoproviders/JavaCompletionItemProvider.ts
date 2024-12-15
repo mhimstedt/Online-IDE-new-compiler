@@ -27,7 +27,9 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
     }
 
     first: boolean = true;
-    async provideCompletionItems(model: monaco.editor.ITextModel, position: monaco.Position, context: monaco.languages.CompletionContext, token: monaco.CancellationToken): Promise<monaco.languages.CompletionList> {
+    async provideCompletionItems(model: monaco.editor.ITextModel, position: monaco.Position, 
+        context: monaco.languages.CompletionContext, 
+        token: monaco.CancellationToken): Promise<monaco.languages.CompletionList> {
 
         if (model.getLanguageId() != 'myJava') return;
 
@@ -40,7 +42,7 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
         } else {
             module = <JavaCompiledModule>this.main.getCurrentWorkspace()?.getModuleForMonacoModel(model);
             if(module && module.getLastCompiledMonacoVersion() < module.file.getMonacoVersion() - 1){
-                await this.main.getCompiler().interruptAndStartOverAgain();
+                await this.main.getCompiler().interruptAndStartOverAgain(true);
                 module = <JavaCompiledModule>this.main.getCurrentWorkspace()?.getModuleForMonacoModel(model);
             }
         }
@@ -96,20 +98,15 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
 
         // First guess:  dot followed by part of Identifier?
         let dotMatch = textUntilPosition.match(/.*(\.)([\wöäüÖÄÜß]*)$/);
+        
+        // let symbolTable = this.isConsole ? this.main.getDebugger().lastSymboltable : module.findSymbolTableAtPosition(position.lineNumber, position.column);
+        
         if (dotMatch != null) {
-            // if (this.isConsole) {
-            //     this.main.getBottomDiv()?.console?.compileIfDirty();
-            // } else {
-            //     this.main.compileIfDirty();
-            // }
+            
+            await this.main.getCompiler().interruptAndStartOverAgain(true);
 
             symbolTable = module.findSymbolTableAtPosition(position);
             classContext = symbolTable == null ? undefined : symbolTable.classContext;
-        }
-
-        // let symbolTable = this.isConsole ? this.main.getDebugger().lastSymboltable : module.findSymbolTableAtPosition(position.lineNumber, position.column);
-
-        if (dotMatch != null) {
             return this.getCompletionItemsAfterDot(dotMatch, position, module,
                 identifierAndBracketAfterCursor, classContext, leftBracketAlreadyThere);
         }

@@ -34,7 +34,7 @@ export class NRWListClass extends SystemCollection implements BaseListType {
         { type: "method", signature: "void append(ContentType pContent)", native: NRWListClass.prototype._append, comment: NRWLang.listClassAppendComment },
         { type: "method", signature: "void concat(List<ContentType> pList)", native: NRWListClass.prototype._concat, comment: NRWLang.listClassConcatComment },
         { type: "method", signature: "void remove()", native: NRWListClass.prototype._remove, comment: NRWLang.listClassRemoveComment },
-        { type: "method", signature: "ContentType getPrevious()", native: NRWListClass.prototype._getPrevious, comment: NRWLang.listClassGetPreviousComment },
+        // { type: "method", signature: "ContentType getPrevious()", native: NRWListClass.prototype._getPrevious, comment: NRWLang.listClassGetPreviousComment },
 
         { type: "method", signature: "String toString()", java: NRWListClass.prototype._mj$toString$String$, comment: JRC.objectToStringComment },
         //

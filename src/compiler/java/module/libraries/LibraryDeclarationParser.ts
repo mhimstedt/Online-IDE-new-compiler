@@ -42,6 +42,7 @@ export class LibraryDeclarationParser extends LibraryDeclarationLexer {
     cct: LdToken = LibraryDeclarationParser.endOfSourcecodeToken;
     tt: TokenType = TokenType.endofSourcecode;
     currentDeclaration: string = "";
+    currentClassIdentifier: string = "";
 
     currentTypeStore: JavaTypeStore = new JavaTypeStore();
     genericParameterMapStack: Record<string, GenericTypeParameter>[] = [];
@@ -76,6 +77,7 @@ export class LibraryDeclarationParser extends LibraryDeclarationLexer {
 
         let pathAndIdentifier = path.join(".");
         let identifier: string = path.pop()!;
+        this.currentClassIdentifier = identifier;
 
         let parentPath = path.length > 0 ? path.join(".") : undefined;
 
@@ -125,6 +127,8 @@ export class LibraryDeclarationParser extends LibraryDeclarationLexer {
     }
 
     parseClassOrInterfaceDeclarationGenericsAndExtendsImplements(klass: Klass & LibraryKlassType, typestore: JavaTypeStore, module: JavaBaseModule) {
+
+        this.currentClassIdentifier = klass.name;
 
         this.currentTypeStore = typestore;
 
@@ -461,8 +465,8 @@ export class LibraryDeclarationParser extends LibraryDeclarationLexer {
     }
 
     pushError(error: string) {
-         console.log("Error parsing library declaration (" + error + "): " + this.currentDeclaration);
-    }
+         console.log("Error parsing library declaration for class " + this.currentClassIdentifier + " (" + error + "): " + this.currentDeclaration); 
+    } 
 
     expect(tt: TokenType, skip: boolean): boolean {
         if (tt == this.tt) {
@@ -488,6 +492,8 @@ export class LibraryDeclarationParser extends LibraryDeclarationLexer {
             return;
         }
 
+        this.currentClassIdentifier = klass.name;
+
         for (let decl of javaClassDeclaration.filter(cd => cd.type == "field" || cd.type == "method")) {
             this.initTokens(decl.signature);
             this.parseFieldOrMethod(klass, module, decl);
@@ -497,7 +503,7 @@ export class LibraryDeclarationParser extends LibraryDeclarationLexer {
 
     parseFieldOrMethod(klass: Klass & LibraryKlassType, module: JavaBaseModule, decl: LibraryMethodOrAttributeDeclaration) {
 
-        this.genericParameterMapStack.push({});
+        this.genericParameterMapStack.push({}); 
 
         let klassType = <JavaClass | JavaInterface | JavaEnum>klass.type;
 
