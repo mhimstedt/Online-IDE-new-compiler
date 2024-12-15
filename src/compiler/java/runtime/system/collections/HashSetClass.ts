@@ -35,9 +35,8 @@ export class HashSetClass extends ObjectClass {
         { type: "method", signature: "<T> T[] toArray(T[] a)", java: HashSetClass.prototype._mj$toArray$T_I$T_I, comment: JRC.collectionToArrayComment2 },
 
         // from Set
-        { type: "declaration", signature: "interface Set<E> extends Collection<E>", comment: JRC.setInterfaceComment },
-        { type: "method", signature: "boolean contains(E element)", java: HashSetClass.prototype._mj$contains$boolean$E, comment: JRC.setContainsComment },
-        { type: "method", signature: "boolean containsAll(Collection c)", java: HashSetClass.prototype._mj$containsAll$boolean$Collection, comment: JRC.setContainsAllComment },
+        // { type: "method", signature: "boolean contains(E element)", java: HashSetClass.prototype._mj$contains$boolean$E, comment: JRC.setContainsComment },
+        // { type: "method", signature: "boolean containsAll(Collection c)", java: HashSetClass.prototype._mj$containsAll$boolean$Collection, comment: JRC.setContainsAllComment },
 
         // override toString-method
         { type: "method", signature: "String toString()", java: HashSetClass.prototype._mj$toString$String$, comment: JRC.objectToStringComment },
