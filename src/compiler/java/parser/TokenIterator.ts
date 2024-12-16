@@ -223,9 +223,9 @@ export class TokenIterator {
             return true;
         }
         else {
-            if (this.tt == TokenType.endofSourcecode) {
-                return true;
-            }
+            // if (this.tt == TokenType.endofSourcecode) {
+            //     return true;
+            // }
 
             let quickFix: QuickFix | undefined = undefined;
             let range: IRange = this.cct.range;

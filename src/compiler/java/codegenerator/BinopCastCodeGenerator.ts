@@ -403,7 +403,7 @@ export abstract class BinopCastCodeGenerator {
 
         if (operator == TokenType.assignment) {
             if(this.canCastTo(rightSnippet.type, leftSnippet.type, "implicit")){
-                rightSnippet = this.compileCast(rightSnippet, leftSnippet.type!, "implicit");
+                rightSnippet = this.compileCast(rightSnippet, leftSnippet.type!, "implicitWithBitTruncation");
             } else {
                 this.pushError(JCM.cantCastType(rightSnippet.type!.identifier, leftSnippet.type!.identifier), "error", rightSnippet.range!);
             }
@@ -462,11 +462,15 @@ export abstract class BinopCastCodeGenerator {
 
     }
 
-    compileCast(snippet: CodeSnippet, castTo: JavaType, castType: "explicit" | "implicit") {
+    compileCast(snippet: CodeSnippet, castTo: JavaType, castType: "explicit" | "implicit" | "implicitWithBitTruncation"): CodeSnippet {
         if (!snippet || !snippet.type || !castTo) return snippet;
         let type: JavaType = snippet.type;
 
-        if (snippet.type == castTo) return snippet;
+        if(castType == "implicitWithBitTruncation"){
+            if(!castTo.isPrimitive) castType = "implicit";
+        } else {
+            if (snippet.type == castTo) return snippet;
+        }
 
         if (!type.isPrimitive) {
             if (castTo.identifier == "string" || castTo.identifier == "String") {
@@ -492,7 +496,7 @@ export abstract class BinopCastCodeGenerator {
             } else {
                 // cast object to object
                 if (castType == "explicit" && this.canCastTo(snippet.type, castTo, "explicit")
-                    || castType == "implicit" && this.canCastTo(snippet.type, castTo, "implicit")) {
+                    || (castType == "implicit" && this.canCastTo(snippet.type, castTo, "implicit"))) {
                     return snippet;
                 }
                 this.pushError(JCM.cantCastType(type.identifier, castTo.identifier), "error", snippet.range!);
@@ -536,7 +540,7 @@ export abstract class BinopCastCodeGenerator {
         // nVoid = 1, nBoolean = 2, nChar = 3, nByte = 4, nShort = 5, nInteger = 6, nLong = 7, nFloat = 8, nDouble = 9, nString = 10
         let snippetTypeIndex = primitiveTypeMap[snippet.type!.identifier]!;
         let castToTypeIndex = primitiveTypeMap[castTo.identifier]!;
-        if (snippetTypeIndex == castToTypeIndex) {
+        if (snippetTypeIndex == castToTypeIndex && castType != "implicitWithBitTruncation") {
             if (castType == "explicit") this.pushError(JCM.unneccessaryCast(), "info", snippet.range!);
             return snippet;
         }
@@ -571,7 +575,7 @@ export abstract class BinopCastCodeGenerator {
 
 
         // now both types are in nByte = 5, nShort = 6, nInteger = 7, nLong = 8, nFloat = 9, nDouble = 10
-        if (snippetTypeIndex <= castToTypeIndex)
+        if (snippetTypeIndex <= castToTypeIndex && castType != "implicitWithBitTruncation")
         {
             snippet.type = castTo;
             return snippet;
@@ -592,7 +596,8 @@ export abstract class BinopCastCodeGenerator {
                     break;
                 case nShort: result = snippetTypeIndex <= nLong ? ((value + 0x8000) % 0x10000 - 0x8000) : ((Math.trunc(value) + 0x8000) % 0x10000 - 0x8000);
                     break;
-                case nInteger: result = snippetTypeIndex <= nLong ? ((value + 0x80000000) % 0x100000000 - 0x80000000) : ((Math.trunc(value) + 0x80000000) % 0x100000000 - 0x80000000);
+                // case nInteger: result = snippetTypeIndex <= nLong ? ((value + 0x80000000) % 0x100000000 - 0x80000000) : ((Math.trunc(value) + 0x80000000) % 0x100000000 - 0x80000000);
+                case nInteger: result = snippetTypeIndex <= nLong ? value | 0 : Math.trunc(value) | 0;
                     break;
                 case nLong: result = Math.trunc(value);
                     break;
@@ -610,7 +615,8 @@ export abstract class BinopCastCodeGenerator {
                     break;
                 case nShort: template = snippetTypeIndex <= nLong ? new OneParameterTemplate('((§1 + 0x8000) % 0x10000 - 0x8000)') : new OneParameterTemplate('((Math.trunc(§1) + 0x80000000) % 0x100000000 - 0x80000000)');
                     break;
-                case nInteger: template = snippetTypeIndex <= nLong ? new OneParameterTemplate('((§1 + 0x80000000) % 0x100000000 - 0x80000000)') : new OneParameterTemplate('((Math.trunc(§1) + 0x80000000) % 0x100000000 - 0x80000000)');
+                // case nInteger: template = snippetTypeIndex <= nLong ? new OneParameterTemplate('((§1 + 0x80000000) % 0x100000000 - 0x80000000)') : new OneParameterTemplate('((Math.trunc(§1) + 0x80000000) % 0x100000000 - 0x80000000)');
+                case nInteger: template = snippetTypeIndex <= nLong ? new OneParameterTemplate('((§1) | 0)') : new OneParameterTemplate('(Math.trunc(§1) | 0)');
                     break;
                 case nLong: template = new OneParameterTemplate('Math.trunc(§1)');
                     break;

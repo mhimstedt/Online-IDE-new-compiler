@@ -19,4 +19,4 @@ class StringComparator implements Comparator<String> {
 
 list.sort(new StringComparator());
 
-list.forEach((s) -> {print(s);})
+list.forEach((s) -> {print(s);});

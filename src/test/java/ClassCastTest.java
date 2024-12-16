@@ -18,7 +18,7 @@ A a = c;
 
 C c2 = (C)a;
 
-assertCodeReached("Test explicit und implicit casts: Program should reach this statement without errors.")
+assertCodeReached("Test explicit und implicit casts: Program should reach this statement without errors.");
 
 /**::
  * Test compile error on implicit cast

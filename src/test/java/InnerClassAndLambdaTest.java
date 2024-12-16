@@ -13,7 +13,7 @@ Runnable r = new Runnable(){
 
 r.run();
 
-assertEquals(10, v.n, "Access to local variable outside inner class")
+assertEquals(10, v.n, "Access to local variable outside inner class");
 
 
 /**::

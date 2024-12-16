@@ -288,4 +288,4 @@ for(int i = 0; i < max - 2; i++) {
    }
 }
 
-assertEquals(207, k, "Suche nach Primzahlzwillingen gescheitert")
+assertEquals(207, k, "Suche nach Primzahlzwillingen gescheitert");

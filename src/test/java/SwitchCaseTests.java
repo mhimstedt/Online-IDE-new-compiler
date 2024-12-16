@@ -12,7 +12,7 @@
     }
     assertCodeReached("Code after switch...case-block not reached.");
 
-    print("Here!")
+    print("Here!");
 
 /**::
  * Test switch case with constant
