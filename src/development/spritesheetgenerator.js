@@ -9,7 +9,7 @@ import * as marginExtruder from './marginExtruder.js';
 // var SpriteLibrary = require('../client/runtimelibrary/graphics/SpriteLibrary.js');
 // var marginExtruder = require('./marginExtruder.js');
 
-let dir = "./material/spritesheet-files/"
+let dir = "./assets/graphics/spritesheet-files/"
 let output_dir = "./assets/graphics/"
 let cssGraphicURL = "../graphics/spritesheet.png"
 let cssFilename = "./assets/css/imagesprites.css"
