@@ -24,17 +24,17 @@ import { LabelCodeSnippet } from "./LabelManager";
 var nOtherClass = 0, nVoid = 1, nBoolean = 2, nChar = 3, nByte = 4, nShort = 5, nInteger = 6, nLong = 7, nFloat = 8, nDouble = 9, nString = 10;
 
 var canCastImplicit: boolean[][] = [
-    /*otherClass to ...*/ [false, false, false /* boolean */, false, false /* byte */, false, false, false, false, false, false],
-    /*void to ...      */ [false, true, false /* boolean */, false, false /* byte */, false, false, false, false, false, false],
-    /*boolean to ...   */ [false, false, true /* boolean */, false, false /* byte */, false, false, false, false, false, false],
-    /*char to ...      */ [false, false, false /* boolean */, true, true /* byte */, true, true, true, true, true, true],
-    /*byte to ...      */ [false, false, false /* boolean */, false, true /* byte */, true, true, true, true, true, false],
-    /*short to ...     */ [false, false, false /* boolean */, false, false /* byte */, true, true, true, true, true, false],
-    /*int to ...       */ [false, false, false /* boolean */, false, false /* byte */, false, true, true, true, true, false],
-    /*long to ...      */ [false, false, false /* boolean */, false, false /* byte */, false, false, true, true, true, false],
-    /*float to ...     */ [false, false, false /* boolean */, false, false /* byte */, false, false, false, true, true, false],
-    /*double to ...     */ [false, false, false /* boolean */, false, false /* byte */, false, false, false, false, true, false],
-    /*string to ...     */ [false, false, false /* boolean */, false, false /* byte */, false, false, false, false, false, true]
+    /*otherClass to ...*/[false, false, false /* boolean */, false, false /* byte */, false, false, false, false, false, false],
+    /*void to ...      */[false, true, false /* boolean */, false, false /* byte */, false, false, false, false, false, false],
+    /*boolean to ...   */[false, false, true /* boolean */, false, false /* byte */, false, false, false, false, false, false],
+    /*char to ...      */[false, false, false /* boolean */, true, true /* byte */, true, true, true, true, true, true],
+    /*byte to ...      */[false, false, false /* boolean */, false, true /* byte */, true, true, true, true, true, false],
+    /*short to ...     */[false, false, false /* boolean */, false, false /* byte */, true, true, true, true, true, false],
+    /*int to ...       */[false, false, false /* boolean */, false, false /* byte */, false, true, true, true, true, false],
+    /*long to ...      */[false, false, false /* boolean */, false, false /* byte */, false, false, true, true, true, false],
+    /*float to ...     */[false, false, false /* boolean */, false, false /* byte */, false, false, false, true, true, false],
+    /*double to ...     */[false, false, false /* boolean */, false, false /* byte */, false, false, false, false, true, false],
+    /*string to ...     */[false, false, false /* boolean */, false, false /* byte */, false, false, false, false, false, true]
 ];
 
 var primitiveTypeIdentifiers: string[] = ["", "void", "boolean", "char", "byte", "short", "int", "long", "float", "double", "string"];
@@ -172,7 +172,7 @@ export abstract class BinopCastCodeGenerator {
         if (rWrapperIndex && leftSnippet.getConstantValue() !== null) rightSnippet = this.unbox(rightSnippet);
 
         if (operator == TokenType.equal || operator == TokenType.notEqual) {
-            if(lTypeIndex == 0 && rTypeIndex != 0 || lTypeIndex != 0 && rTypeIndex == 0){
+            if (lTypeIndex == 0 && rTypeIndex != 0 || lTypeIndex != 0 && rTypeIndex == 0) {
                 this.pushError(JCM.badOperandTypesForBinaryOperator(TokenTypeReadable[operator], leftType.toString(), rightType.toString()), "error", operatorRange);
                 return undefined;
             }
@@ -402,8 +402,8 @@ export abstract class BinopCastCodeGenerator {
         let operatorAsString = TokenTypeReadable[operator];
 
         if (operator == TokenType.assignment) {
-            if(this.canCastTo(rightSnippet.type, leftSnippet.type, "implicit")){
-                rightSnippet = this.compileCast(rightSnippet, leftSnippet.type!, "implicitWithBitTruncation");
+            if (this.canCastTo(rightSnippet.type, leftSnippet.type, "implicit")) {
+                rightSnippet = this.compileCast(rightSnippet, leftSnippet.type!, "implicit");
             } else {
                 this.pushError(JCM.cantCastType(rightSnippet.type!.identifier, leftSnippet.type!.identifier), "error", rightSnippet.range!);
             }
@@ -453,7 +453,7 @@ export abstract class BinopCastCodeGenerator {
             return leftSnippet;
         }
 
-        if(operator == TokenType.divisionAssignment && leftTypeIndex >= nByte && leftTypeIndex <= nLong){
+        if (operator == TokenType.divisionAssignment && leftTypeIndex >= nByte && leftTypeIndex <= nLong) {
             return new TwoParameterTemplate(`§1 = Math.trunc(§1/(§2 || ${Helpers.throwArithmeticException}("${JCM.divideByZero()}", ${wholeRange.startLineNumber}, ${wholeRange.startColumn}, ${wholeRange.endLineNumber}, ${wholeRange.endColumn})))`)
                 .applyToSnippet(leftSnippet.type!, wholeRange, leftSnippet, rightSnippet);
         }
@@ -462,15 +462,11 @@ export abstract class BinopCastCodeGenerator {
 
     }
 
-    compileCast(snippet: CodeSnippet, castTo: JavaType, castType: "explicit" | "implicit" | "implicitWithBitTruncation"): CodeSnippet {
+    compileCast(snippet: CodeSnippet, castTo: JavaType, castType: "explicit" | "implicit"): CodeSnippet {
         if (!snippet || !snippet.type || !castTo) return snippet;
         let type: JavaType = snippet.type;
 
-        if(castType == "implicitWithBitTruncation"){
-            if(!castTo.isPrimitive) castType = "implicit";
-        } else {
-            if (snippet.type == castTo) return snippet;
-        }
+        if (snippet.type == castTo) return snippet;
 
         if (!type.isPrimitive) {
             if (castTo.identifier == "string" || castTo.identifier == "String") {
@@ -513,7 +509,7 @@ export abstract class BinopCastCodeGenerator {
                 return this.box(snippet);
             }
 
-            if(fromIndex >= nByte && fromIndex <= nDouble && toIndex >= nByte && toIndex <= nDouble && fromIndex <= toIndex){
+            if (fromIndex >= nByte && fromIndex <= nDouble && toIndex >= nByte && toIndex <= nDouble && fromIndex <= toIndex) {
                 snippet.type = this.primitiveTypes[boxedTypeIndex];
                 return this.box(snippet);
             }
@@ -540,7 +536,7 @@ export abstract class BinopCastCodeGenerator {
         // nVoid = 1, nBoolean = 2, nChar = 3, nByte = 4, nShort = 5, nInteger = 6, nLong = 7, nFloat = 8, nDouble = 9, nString = 10
         let snippetTypeIndex = primitiveTypeMap[snippet.type!.identifier]!;
         let castToTypeIndex = primitiveTypeMap[castTo.identifier]!;
-        if (snippetTypeIndex == castToTypeIndex && castType != "implicitWithBitTruncation") {
+        if (snippetTypeIndex == castToTypeIndex) {
             if (castType == "explicit") this.pushError(JCM.unneccessaryCast(), "info", snippet.range!);
             return snippet;
         }
@@ -575,8 +571,7 @@ export abstract class BinopCastCodeGenerator {
 
 
         // now both types are in nByte = 5, nShort = 6, nInteger = 7, nLong = 8, nFloat = 9, nDouble = 10
-        if (snippetTypeIndex <= castToTypeIndex && castType != "implicitWithBitTruncation")
-        {
+        if (snippetTypeIndex <= castToTypeIndex ) {
             snippet.type = castTo;
             return snippet;
         }
@@ -640,8 +635,8 @@ export abstract class BinopCastCodeGenerator {
         let typeFromIndex = primitiveTypeMap[typeFrom.identifier] || boxedTypesMap[typeFrom.identifier];
         let typeToIndex = primitiveTypeMap[typeTo.identifier] || boxedTypesMap[typeTo.identifier];
 
-        if (typeToIndex == nString ){
-            if(castType == "explicit" || typeFromIndex == nString) return true;
+        if (typeToIndex == nString) {
+            if (castType == "explicit" || typeFromIndex == nString) return true;
         }
 
 
@@ -667,7 +662,7 @@ export abstract class BinopCastCodeGenerator {
         if (typeFromIndex == typeToIndex) return true;
 
 
-        if (castType == "explicit"){
+        if (castType == "explicit") {
             if (typeFromIndex == nBoolean) return false;
 
             if (typeFromIndex == nChar) {
@@ -745,7 +740,7 @@ export abstract class BinopCastCodeGenerator {
         let boxedType = this.libraryTypestore.getType(boxedIdentifier);
         let boxedSnippet = SnippetFramer.frame(snippet, `new ${Helpers.classes}["${boxedIdentifier}"](§1)`, boxedType);
 
-        if(snippet instanceof StringCodeSnippet) snippet.setConstantValue(constant || null);
+        if (snippet instanceof StringCodeSnippet) snippet.setConstantValue(constant || null);
 
         return boxedSnippet;
     }

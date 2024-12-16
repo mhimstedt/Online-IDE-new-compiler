@@ -309,7 +309,7 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
                 }
             }
 
-            castParameters.push(this.compileCast(parameterValues[i]!, destinationType, "implicitWithBitTruncation"));
+            castParameters.push(this.compileCast(parameterValues[i]!, destinationType, "implicit"));
         }
 
         if (!ellipsisType) return castParameters;
@@ -628,7 +628,7 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
                 let elementSnippet = this.compileTerm(elementNode);
                 if (elementSnippet && elementSnippet.type) {
                     if (this.canCastTo(elementSnippet.type, elementType, "implicit")) {
-                        elementSnippet = this.compileCast(elementSnippet, elementType, "implicitWithBitTruncation");
+                        elementSnippet = this.compileCast(elementSnippet, elementType, "implicit");
                         elementSnippets.push(elementSnippet);
                     } else {
                         this.pushError(JCM.cantCastTermTo(elementType.toString()), "error", elementNode.range);

@@ -163,7 +163,7 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
                     return undefined;
                 }
 
-                termSnippet = this.compileCast(termSnippet, method.returnParameterType, "implicitWithBitTruncation");
+                termSnippet = this.compileCast(termSnippet, method.returnParameterType, "implicit");
 
             }    
 
@@ -977,7 +977,7 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
                     return undefined;
                 }
 
-                initValueSnippet = this.compileCast(initValueSnippet, destinationType, "implicitWithBitTruncation");
+                initValueSnippet = this.compileCast(initValueSnippet, destinationType, "implicit");
             }
 
 
