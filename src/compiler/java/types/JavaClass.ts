@@ -652,6 +652,9 @@ export class GenericVariantOfJavaClass extends IJavaClass {
         return decl;
     }
 
+    public registerExtendsImplementsOnAncestors(type?: NonPrimitiveType) {
+        this.isGenericVariantOf.registerExtendsImplementsOnAncestors(type);
+    }
 
     getFirstTypeParametersType(): JavaType | undefined {
         let genericInformation = this.isGenericVariantOf.genericTypeParameters;
