@@ -13,7 +13,7 @@ import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { RobotDirection } from './RobotDirection';
 import { RuntimeExceptionClass } from '../../system/javalang/RuntimeException';
 import { ExceptionClass } from '../../system/javalang/ExceptionClass';
-import steveGltf from '/assets/graphics/robot/minecraft_steve/scene.gltf';
+import spritesheetpng from '/assets/graphics/spritesheet.png';
 
 
 
@@ -140,7 +140,14 @@ export class RobotClass extends ObjectClass {
     public async init(startX: number, startY: number) {
         const loader = new GLTFLoader();
 
-        this.steve = (await loader.loadAsync(steveGltf)).scene;
+        // vite doesn't support file ending gltf, therefore
+        // we have to hack a little bit to get correct URL for
+        // file scene.gltf:
+        let url = "" + spritesheetpng;
+        const lastSlashIndex = url.lastIndexOf('assets/');
+        url = url.substring(0, lastSlashIndex);
+
+        this.steve = (await loader.loadAsync(url + 'assets/graphics/robot/minecraft_steve/scene.gltf')).scene;
         this.steve.translateX(-this.robotWorld.maxX / 2 + startX - 1);
         this.steve.translateY(1.45);
         this.steve.translateZ(-this.robotWorld.maxY / 2 + startY - 1);

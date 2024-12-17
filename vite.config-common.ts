@@ -21,11 +21,11 @@ while(minute.length < 2) minute = "0" + minute;
 
 const buildDate = curr_date + "." + curr_month + "." + curr_year + ", " + hour + ":" + minute + " Uhr";
 
+
 import type { UserConfig } from 'vite'
 
 export default {
     appType: 'mpa', // to serve 404 on "not found" (instead of erroneously serving index.html)
-    assetsInclude: ['**/*.gltf'],
     esbuild: {
         logOverride: {
             'unsupported-css-nesting': 'silent',
@@ -36,7 +36,6 @@ export default {
         sourcemap: true,
         emptyOutDir: true,
         chunkSizeWarningLimit: 4912,
-        assetsInlineLimit: 1024*10,  // 10kB
     },
     define: {
         'APP_VERSION': JSON.stringify(pkg.version),
