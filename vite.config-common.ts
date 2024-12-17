@@ -36,6 +36,7 @@ export default {
         sourcemap: true,
         emptyOutDir: true,
         chunkSizeWarningLimit: 4912,
+        assetsInlineLimit: 10*1024
     },
     define: {
         'APP_VERSION': JSON.stringify(pkg.version),
