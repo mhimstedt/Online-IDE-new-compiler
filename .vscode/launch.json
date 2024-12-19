@@ -55,15 +55,6 @@
             "webRoot": "${workspaceFolder}"
         },
         {
-            "name": "Convert SVGs",
-            "type": "node",
-            "request": "launch",
-            "args": [
-                "${workspaceRoot}/src/development/svgencoder.js"
-            ],
-            "cwd": "${workspaceRoot}"
-        },
-        {
             "name": "Generate Spritesheet",
             "program": "${workspaceFolder}/src/development/spritesheetgenerator.js",
             "request": "launch",

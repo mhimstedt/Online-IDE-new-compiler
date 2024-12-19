@@ -391,7 +391,6 @@ export class GenericVariantOfJavaInterface extends IJavaInterface {
         return this.cachedMethods;
     }
 
-
     public getAllMethods(): JavaMethod[] {
         let methods: JavaMethod[] = this.getOwnMethods();
         for (let impl of this.getExtends()) {
