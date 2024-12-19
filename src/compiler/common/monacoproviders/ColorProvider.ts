@@ -1,14 +1,40 @@
 import { IMain } from "../IMain";
-import type * as monaco from 'monaco-editor'
+import * as monaco from 'monaco-editor'
+import { Module } from "../module/Module.ts";
 
 
 export class ColorProvider implements monaco.languages.DocumentColorProvider {
+    
+    private static mainList: IMain[] = [];
+    private static instance: ColorProvider = null;
 
-    constructor(private main: IMain) {
+    private isRegistered: boolean = false;
+    
+    
+    private constructor() {
+    }
+    
+    public static getInstance(main?: IMain){
+        if(main != null && ColorProvider.mainList.indexOf(main) < 0) ColorProvider.mainList.push(main);
+        if(ColorProvider.instance == null){
+            ColorProvider.instance = new ColorProvider();
+        }
+        return ColorProvider.instance;
+    }
+    
+    register(language: string) {
+        if(!this.isRegistered){
+            monaco.languages.registerColorProvider(language, this);
+            this.isRegistered = true;
+        }
     }
 
     provideDocumentColors(model: monaco.editor.ITextModel, token: monaco.CancellationToken): monaco.languages.ProviderResult<monaco.languages.IColorInformation[]> {
-        let module = this.main.getCurrentWorkspace()?.getCurrentlyEditedModule();
+        let module: Module;
+        for(let main of ColorProvider.mainList){
+            module = main.getCurrentWorkspace()?.getModuleForMonacoModel(model);
+            if(module) break;
+        } 
 
         if (module == null) {
             return null;

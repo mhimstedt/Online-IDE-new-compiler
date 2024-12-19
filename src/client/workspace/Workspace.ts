@@ -73,6 +73,9 @@ export class Workspace extends CompilerWorkspace {
     }
 
     removeAllFiles(){
+        for(let file of this.files.filter(f => f.hasMonacoModel())){
+            file.getMonacoModel().dispose();
+        }
         this.files = [];
     }
 

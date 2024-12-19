@@ -41,6 +41,7 @@ import { IPosition } from "../../compiler/common/range/Position.js";
 import { JUnitTestrunner } from "../../compiler/common/testrunner/JUnitTestrunner.js";
 import type * as monaco from 'monaco-editor'
 import { OnlineIDEAccessImpl } from "./EmbeddedInterface.js";
+import { Lexer } from "../../compiler/java/lexer/Lexer.js";
 
 
 type JavaOnlineConfig = {
@@ -183,7 +184,9 @@ export class MainEmbedded implements MainBase {
             this.indexedDB.open(() => {
 
                 if (this.config.id != null) {
-                    this.readScripts(() => { });
+                    this.readScripts(() => {
+                        this.getCompiler().setFiles(this.fileExplorer.getFiles());
+                     });
                 }
 
                 if(this.config.enableFileAccess){

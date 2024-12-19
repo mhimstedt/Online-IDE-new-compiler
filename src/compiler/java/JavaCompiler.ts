@@ -115,7 +115,7 @@ export class JavaCompiler implements Compiler {
             module.resetBeforeCompilation();
 
             const lexerOutput = new Lexer().lex(module.file.getText());
-            module.setLexerOutput(lexerOutput);
+            module.storeLexerOutput(lexerOutput);
             await this.#progressManager.interruptIfNeeded();
 
             const parser = new Parser(module);
@@ -193,7 +193,7 @@ export class JavaCompiler implements Compiler {
         module.resetBeforeCompilation();
 
         const lexerOutput = new Lexer().lex(module.file.getText());
-        module.setLexerOutput(lexerOutput);
+        module.storeLexerOutput(lexerOutput);
 
         const parser = new Parser(module);
         parser.parse();
@@ -311,4 +311,5 @@ export class JavaCompiler implements Compiler {
         }
 
     }
+
 }

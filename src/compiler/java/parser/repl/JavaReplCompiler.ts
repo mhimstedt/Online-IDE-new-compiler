@@ -13,7 +13,7 @@ export class JavaReplCompiler {
         let replCompiledModule: JavaReplCompiledModule = new JavaReplCompiledModule(code);
 
         let lexerOutput = new Lexer().lex(code);
-        replCompiledModule.setLexerOutput(lexerOutput);
+        replCompiledModule.storeLexerOutput(lexerOutput);
 
         let replParser = new JavaReplParser(replCompiledModule);
         replParser.parse();

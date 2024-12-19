@@ -44,7 +44,7 @@ export class JavaLanguage extends Language {
         monaco.languages.registerDefinitionProvider('myJava', new JavaDefinitionProvider(this.main));
         monaco.languages.registerReferenceProvider('myJava', new JavaReferenceProvider(this.main));
         monaco.languages.registerSignatureHelpProvider('myJava', new JavaSignatureHelpProvider(this.main));
-        monaco.languages.registerColorProvider('myJava', new ColorProvider(this.main));
+        ColorProvider.getInstance(this.main).register('myJava');
         new JavaSymbolAndMethodMarker(this.main);
 
         let formatter = new JavaFormatter();

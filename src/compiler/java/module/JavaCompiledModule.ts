@@ -101,7 +101,7 @@ export class JavaCompiledModule extends JavaBaseModule {
         return false;
     }
 
-    setLexerOutput(lexerOutput: LexerOutput) {
+    storeLexerOutput(lexerOutput: LexerOutput) {
         this.tokens = lexerOutput.tokens;
         this.errors = lexerOutput.errors;
         this.colorInformation = lexerOutput.colorInformation;
