@@ -29,15 +29,21 @@ export class ColorProvider implements monaco.languages.DocumentColorProvider {
         }
     }
 
-    provideDocumentColors(model: monaco.editor.ITextModel, token: monaco.CancellationToken): monaco.languages.ProviderResult<monaco.languages.IColorInformation[]> {
+    async provideDocumentColors(model: monaco.editor.ITextModel, token: monaco.CancellationToken): Promise<monaco.languages.IColorInformation[]> {
         let module: Module;
+        let main1: IMain;
         for(let main of ColorProvider.mainList){
             module = main.getCurrentWorkspace()?.getModuleForMonacoModel(model);
+            main1 = main;
             if(module) break;
         } 
 
         if (module == null) {
             return null;
+        }
+
+        if(module.isDirty()){
+            await main1.getCompiler().interruptAndStartOverAgain(false);
         }
 
         return module.colorInformation;

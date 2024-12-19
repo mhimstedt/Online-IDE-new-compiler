@@ -184,7 +184,7 @@ export class MainEmbedded implements MainBase {
             this.indexedDB.open(() => {
 
                 if (this.config.id != null) {
-                    this.readScripts(() => {
+                    this.readScripts(async () => {
                         this.getCompiler().setFiles(this.fileExplorer.getFiles());
                      });
                 }
