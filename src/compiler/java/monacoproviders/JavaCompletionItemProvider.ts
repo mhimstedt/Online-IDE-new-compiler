@@ -1,6 +1,8 @@
 import { IMain } from "../../common/IMain.ts";
+import { BaseMonacoProvider } from "../../common/monacoproviders/BaseMonacoProvider.ts";
 import { IRange, Range } from "../../common/range/Range";
 import { JavaCompiler } from "../JavaCompiler.ts";
+import { JavaLanguage } from "../JavaLanguage.ts";
 import { TokenType, TokenTypeReadable } from "../TokenType";
 import { JavaSymbolTable } from "../codegenerator/JavaSymbolTable";
 import { JavaCompiledModule } from "../module/JavaCompiledModule";
@@ -17,33 +19,36 @@ import { MonacoProviderLanguage } from "./MonacoProviderLanguage.ts";
 import * as monaco from 'monaco-editor'
 
 
-export class JavaCompletionItemProvider implements monaco.languages.CompletionItemProvider {
+export class JavaCompletionItemProvider extends BaseMonacoProvider implements monaco.languages.CompletionItemProvider {
 
     isConsole: boolean = false;
 
     public triggerCharacters: string[] = ['.', 'abcdefghijklmnopqrstuvwxyzäöüß_ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜ', ' '];
 
-    constructor(private main: IMain) {
+    constructor(public language: JavaLanguage) {
+        super(language);
+        monaco.languages.registerCompletionItemProvider(language.monacoLanguageSelector, this);
     }
 
     first: boolean = true;
-    async provideCompletionItems(model: monaco.editor.ITextModel, position: monaco.Position, 
-        context: monaco.languages.CompletionContext, 
+    async provideCompletionItems(model: monaco.editor.ITextModel, position: monaco.Position,
+        context: monaco.languages.CompletionContext,
         token: monaco.CancellationToken): Promise<monaco.languages.CompletionList> {
 
-        if (model.getLanguageId() != 'myJava') return;
+        let main = this.findMainForModel(model);
+        if (!main) return;
 
         let module: JavaCompiledModule;
 
-        let onlineIDEConsole = this.main.getBottomDiv()?.console;
-        if(onlineIDEConsole?.editor?.getModel() == model){
+        let onlineIDEConsole = main.getBottomDiv()?.console;
+        if (onlineIDEConsole?.editor?.getModel() == model) {
             onlineIDEConsole.compile();
-            module = this.main.getRepl().getCurrentModule();
+            module = main.getRepl().getCurrentModule();
         } else {
-            module = <JavaCompiledModule>this.main.getCurrentWorkspace()?.getModuleForMonacoModel(model);
-            if(module && module.getLastCompiledMonacoVersion() < module.file.getMonacoVersion() - 1){
-                await this.main.getCompiler().interruptAndStartOverAgain(true);
-                module = <JavaCompiledModule>this.main.getCurrentWorkspace()?.getModuleForMonacoModel(model);
+            module = <JavaCompiledModule>main.getCurrentWorkspace()?.getModuleForMonacoModel(model);
+            if (module && module.getLastCompiledMonacoVersion() < module.file.getMonacoVersion() - 1) {
+                await main.getCompiler().interruptAndStartOverAgain(true);
+                module = <JavaCompiledModule>main.getCurrentWorkspace()?.getModuleForMonacoModel(model);
             }
         }
 
@@ -66,7 +71,7 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
         if (context.triggerCharacter == " ") {
             let newMatch = textUntilPosition.match(/.*(new )$/);
             if (newMatch != null) {
-                return this.getCompletionItemsAfterNew(module, classContext instanceof NonPrimitiveType ? classContext : undefined, zeroLengthRange);
+                return this.getCompletionItemsAfterNew(main, classContext instanceof NonPrimitiveType ? classContext : undefined, zeroLengthRange);
             }
             let classMatch = textUntilPosition.match(/.*(class )[\wöäüÖÄÜß<> ,]*[\wöäüÖÄÜß<> ] $/);
             if (classMatch != null) {
@@ -98,12 +103,12 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
 
         // First guess:  dot followed by part of Identifier?
         let dotMatch = textUntilPosition.match(/.*(\.)([\wöäüÖÄÜß]*)$/);
-        
+
         // let symbolTable = this.isConsole ? this.main.getDebugger().lastSymboltable : module.findSymbolTableAtPosition(position.lineNumber, position.column);
-        
+
         if (dotMatch != null) {
-            
-            await this.main.getCompiler().interruptAndStartOverAgain(true);
+
+            await main.getCompiler().interruptAndStartOverAgain(true);
 
             symbolTable = module.findSymbolTableAtPosition(position);
             classContext = symbolTable == null ? undefined : symbolTable.classContext;
@@ -120,7 +125,7 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
 
         if (varOrClassMatch != null) {
 
-            return this.getCompletionItemsInsideIdentifier(varOrClassMatch, position, module,
+            return this.getCompletionItemsInsideIdentifier(main, varOrClassMatch, position, module,
                 identifierAndBracketAfterCursor, classContext, leftBracketAlreadyThere, symbolTable);
 
         }
@@ -167,10 +172,10 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
 
     }
 
-    getCompletionItemsAfterNew(module: JavaCompiledModule, classContext: NonPrimitiveType | undefined, range: IRange): monaco.languages.ProviderResult<monaco.languages.CompletionList> {
+    getCompletionItemsAfterNew(main: IMain, classContext: NonPrimitiveType | undefined, range: IRange): monaco.languages.ProviderResult<monaco.languages.CompletionList> {
         let completionItems: monaco.languages.CompletionItem[] = [];
 
-        let compiler = <JavaCompiler>this.main.getCompiler();
+        let compiler = <JavaCompiler>main.getCompiler();
 
         completionItems = completionItems.concat(compiler.libraryModuleManager.typestore.getTypeCompletionItems(classContext, range, true, false));
         completionItems = completionItems.concat(compiler.moduleManager.typestore.getTypeCompletionItems(classContext, range, true, false));
@@ -231,7 +236,7 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
         });
     }
 
-    getCompletionItemsInsideIdentifier(varOrClassMatch: RegExpMatchArray, position: monaco.Position, module: JavaCompiledModule, identifierAndBracketAfterCursor: string,
+    getCompletionItemsInsideIdentifier(main: IMain, varOrClassMatch: RegExpMatchArray, position: monaco.Position, module: JavaCompiledModule, identifierAndBracketAfterCursor: string,
         classContext: NonPrimitiveType | StaticNonPrimitiveType | undefined,
         leftBracketAlreadyThere: boolean, symbolTable: JavaSymbolTable | undefined): monaco.languages.ProviderResult<monaco.languages.CompletionList> {
 
@@ -262,7 +267,7 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
             }));
         }
 
-        let compiler = <JavaCompiler>this.main.getCompiler();
+        let compiler = <JavaCompiler>main.getCompiler();
 
         completionItems = completionItems.concat(compiler.libraryModuleManager.getTypeCompletionItems(rangeToReplace));
         completionItems = completionItems.concat(compiler.moduleManager.getTypeCompletionItems(module, rangeToReplace, classContext));
@@ -280,7 +285,7 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
                         ci.sortText = "aa" + ci.label;
                         return ci;
                     }).filter(newItem => completionItems.findIndex(oldItem => oldItem.insertText == newItem.insertText) < 0);
-                
+
                 completionItems = completionItems.concat(fieldsAndMethods);
 
                 completionItems.push(
@@ -320,7 +325,7 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
                 }
             }
         } else {
-            if(classContext == null){
+            if (classContext == null) {
                 // Use filename to generate completion-item for class ... ?
                 let name = module.file?.name;
                 if (name != null) {
@@ -353,7 +358,7 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
         this.upvoteItemsWithSameFirstCharacterCasing(completionItems, text);
 
         return Promise.resolve({
-            suggestions:  completionItems
+            suggestions: completionItems
         });
     }
 
@@ -414,7 +419,7 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
 
     getAssertMethods(methodContext: JavaMethod, range: monaco.IRange): monaco.languages.CompletionItem[] {
 
-        if(methodContext.annotations.find(annotation => annotation.identifier == "Test") == null) return [];
+        if (methodContext.annotations.find(annotation => annotation.identifier == "Test") == null) return [];
 
         let keywordCompletionItems: monaco.languages.CompletionItem[] = [];
         keywordCompletionItems = keywordCompletionItems.concat([
@@ -781,11 +786,11 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
 
     }
 
-    upvoteItemsWithSameFirstCharacterCasing(completionItems: monaco.languages.CompletionItem[], startOfUserInput: string){
-        if(!startOfUserInput || startOfUserInput.length < 1) return;
+    upvoteItemsWithSameFirstCharacterCasing(completionItems: monaco.languages.CompletionItem[], startOfUserInput: string) {
+        if (!startOfUserInput || startOfUserInput.length < 1) return;
         let userInputHasFirstCharacterUppercase = this.hasFirstCharacterUpperCase(startOfUserInput);
-        for(let ci of completionItems){
-            if(this.hasFirstCharacterUpperCase(ci.insertText) != userInputHasFirstCharacterUppercase){
+        for (let ci of completionItems) {
+            if (this.hasFirstCharacterUpperCase(ci.insertText) != userInputHasFirstCharacterUppercase) {
                 ci.sortText = "a_" + ci.sortText;
             } else {
                 ci.sortText = "b_" + ci.sortText;
@@ -793,13 +798,13 @@ export class JavaCompletionItemProvider implements monaco.languages.CompletionIt
         }
     }
 
-    hasFirstCharacterUpperCase(s: string){
-        if(!s || s.length < 0) return false;
+    hasFirstCharacterUpperCase(s: string) {
+        if (!s || s.length < 0) return false;
         return s[0] == s[0].toUpperCase();
     }
 
-    hasFirstCharacterLowerCase(s: string){
-        if(!s || s.length < 0) return false;
+    hasFirstCharacterLowerCase(s: string) {
+        if (!s || s.length < 0) return false;
         return s[0] == s[0].toUpperCase();
     }
 

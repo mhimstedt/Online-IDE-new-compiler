@@ -3,7 +3,9 @@ import { IMain } from "../../common/IMain.ts";
 import { ValueRenderer } from "../../common/debugger/ValueRenderer.ts";
 import { SchedulerState } from "../../common/interpreter/SchedulerState.ts";
 import { Module } from "../../common/module/Module.ts";
+import { BaseMonacoProvider } from "../../common/monacoproviders/BaseMonacoProvider.ts";
 import { Range } from "../../common/range/Range.ts";
+import { JavaLanguage } from "../JavaLanguage.ts";
 import { JavaLocalVariable } from "../codegenerator/JavaLocalVariable.ts";
 import { ReplReturnValue } from "../parser/repl/ReplReturnValue.ts";
 import { PrimitiveType } from "../runtime/system/primitiveTypes/PrimitiveType.ts";
@@ -14,7 +16,7 @@ import { NonPrimitiveType } from "../types/NonPrimitiveType.ts";
 import * as monaco from 'monaco-editor'
 
 
-export class JavaHoverProvider {
+export class JavaHoverProvider extends BaseMonacoProvider {
 
     private static keywordDescriptions: { [keyword: string]: string } = {
         "print": "Die Anweisung ```print``` gibt eine Zeichenkette aus.",
@@ -59,8 +61,9 @@ export class JavaHoverProvider {
         "var": "```\nvar\n```  \nWird einer Variable beim Deklarieren sofort ein Startwert zugewiesen (z.B. Circle c = new Circle(100, 100, 10)), so kann statt des Datentyps das Schlüsselwort ```var``` verwendet werden (also var c = new Circle(100, 100, 10)).",
     }
 
-    constructor(private main: IMain) {
-
+    constructor(public language: JavaLanguage) {
+        super(language);
+        monaco.languages.registerHoverProvider(language.monacoLanguageSelector, this);
     }
 
     replReturnValueToOutput(replReturnValue: ReplReturnValue, caption: string) {
@@ -97,9 +100,11 @@ export class JavaHoverProvider {
     provideHover(model: monaco.editor.ITextModel, position: monaco.Position, token: monaco.CancellationToken):
         monaco.languages.ProviderResult<monaco.languages.Hover> {
 
-        let editor = monaco.editor.getEditors().find(e => e.getModel() == model);
-        if (!editor) return;
-
+            let main = this.findMainForModel(model);
+            if (!main) return;
+            let module = main.getCurrentWorkspace()?.getModuleForMonacoModel(model);
+            if (!module) return;
+    
         // let selection: monaco.Selection | null = editor.getSelection();
 
         // if (selection != null) {
@@ -121,12 +126,6 @@ export class JavaHoverProvider {
         //         }
         //     }
         // }
-
-        let module: Module | undefined = this.main.getCurrentWorkspace()?.getModuleForMonacoModel(model);
-
-        if (!module) {
-            return null;
-        }
 
         for (let error of module.errors) {
             if (error.level == "error" && Range.containsPosition(error.range, position)) {
@@ -177,13 +176,13 @@ export class JavaHoverProvider {
             }
         }
 
-        let state = this.main.getInterpreter().scheduler.state;
+        let state = main.getInterpreter().scheduler.state;
 
         let value: string | undefined;
 
         if (state == SchedulerState.paused) {
 
-            let repl = this.main.getRepl();
+            let repl = main.getRepl();
 
             let identifier: string | undefined = this.widenDeclaration(model, position, symbol?.identifier);
 

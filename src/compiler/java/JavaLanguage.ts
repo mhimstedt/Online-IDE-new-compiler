@@ -1,7 +1,7 @@
 import { Compiler } from "../common/Compiler";
 import { IMain } from "../common/IMain";
 import { Language } from "../common/Language";
-import { ColorProvider } from "../common/monacoproviders/ColorProvider";
+import { ColorProvider as JavaColorProvider } from "../common/monacoproviders/ColorProvider";
 import { ErrorMarker } from "../common/monacoproviders/ErrorMarker";
 import { JavaCompiler } from "./JavaCompiler";
 import { JavaCompletionItemProvider } from "./monacoproviders/JavaCompletionItemProvider";
@@ -18,44 +18,56 @@ import * as monaco from 'monaco-editor'
 
 export class JavaLanguage extends Language {
 
-    providersRegistered: boolean = false;
-    compiler: JavaCompiler;
-    repl: JavaRepl;
+    private static instance: JavaLanguage;
 
-    constructor(private main: IMain, errorMarker: ErrorMarker) {
-        super("Java", ".java");
-        this.compiler = new JavaCompiler(main, errorMarker);
-        this.repl = new JavaRepl(main, this.compiler.libraryModuleManager);
-    }
 
-    registerLanguageAtMonacoEditor(): void {
-        JavaLanguage.registerLanguage();
+    private constructor() {
+        super("Java", ".java", "myJava");
+        this.registerLanguageAtMonacoEditor();
         this.registerProviders();
     }
 
-    private registerProviders(){
+    static getInstance(): JavaLanguage {
+        if (!JavaLanguage.instance) {
+            JavaLanguage.instance = new JavaLanguage();
+        }
 
-        if(this.providersRegistered) return;
-        this.providersRegistered = true;
+        return JavaLanguage.instance;
+    }
 
-        monaco.languages.registerHoverProvider('myJava', new JavaHoverProvider(this.main));
-        monaco.languages.registerCompletionItemProvider('myJava', new JavaCompletionItemProvider(this.main));
-        monaco.languages.registerRenameProvider('myJava', new JavaRenameProvider(this.main));
-        monaco.languages.registerDefinitionProvider('myJava', new JavaDefinitionProvider(this.main));
-        monaco.languages.registerReferenceProvider('myJava', new JavaReferenceProvider(this.main));
-        monaco.languages.registerSignatureHelpProvider('myJava', new JavaSignatureHelpProvider(this.main));
-        ColorProvider.getInstance(this.main).register('myJava');
-        new JavaSymbolAndMethodMarker(this.main);
+
+    public static registerMain(main: IMain, errorMarker: ErrorMarker): JavaLanguage {
+        let compiler = new JavaCompiler(main, errorMarker);
+        let repl = new JavaRepl(main, compiler.libraryModuleManager);
+        let instance = JavaLanguage.getInstance();
+        instance.registerCompiler(main, compiler);
+        instance.registerRepl(main, repl);
+        JavaOnDidTypeProvider.configureEditor(main.getMainEditor());
+        new JavaSymbolAndMethodMarker(main);
+        return instance;
+    }
+
+
+
+
+    private registerProviders() {
+
+        new JavaHoverProvider(this);
+        new JavaCompletionItemProvider(this);
+        new JavaRenameProvider(this);
+        new JavaDefinitionProvider(this);
+        new JavaReferenceProvider(this);
+        new JavaSignatureHelpProvider(this);
+
+        new JavaColorProvider(this);
 
         let formatter = new JavaFormatter();
-        monaco.languages.registerDocumentFormattingEditProvider('myJava', formatter);
-        monaco.languages.registerOnTypeFormattingEditProvider('myJava', formatter);
-
-        JavaOnDidTypeProvider.configureEditor(this.main.getMainEditor());
+        monaco.languages.registerDocumentFormattingEditProvider(this.monacoLanguageSelector, formatter);
+        monaco.languages.registerOnTypeFormattingEditProvider(this.monacoLanguageSelector, formatter);
 
     }
 
-    public static registerLanguage(): void {
+    private registerLanguageAtMonacoEditor(): void {
         monaco.languages.register({
             id: 'myJava',
             extensions: ['.learnJava'],
@@ -261,14 +273,6 @@ export class JavaLanguage extends Language {
         monaco.languages.setMonarchTokensProvider('myJava', language);
 
 
-    }
-
-    getCompiler(): Compiler {
-        return this.compiler;
-    }
-
-    getRepl(): JavaRepl {
-        return this.repl;
     }
 
 }

@@ -1,12 +1,16 @@
 import { IMain } from "../../common/IMain.ts";
+import { BaseMonacoProvider } from "../../common/monacoproviders/BaseMonacoProvider.ts";
 import { UsagePosition } from "../../common/UsagePosition.ts";
+import { JavaLanguage } from "../JavaLanguage.ts";
 import { JavaCompiledModule } from "../module/JavaCompiledModule.ts";
 import * as monaco from 'monaco-editor'
 
 
-export class JavaReferenceProvider implements monaco.languages.ReferenceProvider {
+export class JavaReferenceProvider extends BaseMonacoProvider implements monaco.languages.ReferenceProvider {
 
-    constructor(private main: IMain) {
+    constructor(language: JavaLanguage) {
+        super(language);
+        monaco.languages.registerReferenceProvider(language.monacoLanguageSelector, this);
     }
 
     provideReferences(model: monaco.editor.ITextModel, position: monaco.Position, context: monaco.languages.ReferenceContext, token: monaco.CancellationToken):
@@ -15,7 +19,10 @@ export class JavaReferenceProvider implements monaco.languages.ReferenceProvider
         let editor = monaco.editor.getEditors().find(e => e.getModel() == model);
         if(!editor) return;
 
-        let usagePosition = this.getUsagePosition(position, editor);
+        let main = this.findMainForModel(model);
+        if (!main) return;
+
+        let usagePosition = this.getUsagePosition(main, position, editor);
 
         if(!usagePosition){
             return;
@@ -23,7 +30,7 @@ export class JavaReferenceProvider implements monaco.languages.ReferenceProvider
 
         let locations: monaco.languages.Location[] = [];
 
-        for(let module of this.main.getCompiler().getAllModules()){
+        for(let module of main.getCompiler().getAllModules()){
 
             let allUsagePositions = (<JavaCompiledModule>module).getUsagePositionsForSymbol(usagePosition?.symbol);
 
@@ -43,10 +50,10 @@ export class JavaReferenceProvider implements monaco.languages.ReferenceProvider
 
     }
 
-    getUsagePosition(position: monaco.Position, editor: monaco.editor.ICodeEditor): UsagePosition | undefined {
+    getUsagePosition(main: IMain, position: monaco.Position, editor: monaco.editor.ICodeEditor): UsagePosition | undefined {
         if(editor.getModel()?.getLanguageId() != 'myJava') return undefined;
 
-        let module = <JavaCompiledModule>this.main.getCurrentWorkspace()?.getModuleForMonacoModel(editor.getModel());
+        let module = <JavaCompiledModule>main.getCurrentWorkspace()?.getModuleForMonacoModel(editor.getModel());
         if(!module) return;
 
         return module.compiledSymbolsUsageTracker.findSymbolAtPosition(position);

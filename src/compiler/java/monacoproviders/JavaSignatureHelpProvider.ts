@@ -1,13 +1,17 @@
 import { IMain } from "../../common/IMain.ts";
+import { BaseMonacoProvider } from "../../common/monacoproviders/BaseMonacoProvider.ts";
+import { JavaLanguage } from "../JavaLanguage.ts";
 import { JavaCompiledModule, JavaMethodCallPosition } from "../module/JavaCompiledModule.ts";
 import { JavaArrayType } from "../types/JavaArrayType.ts";
 import { JavaMethod } from "../types/JavaMethod.ts";
-import type * as monaco from 'monaco-editor'
+import * as monaco from 'monaco-editor'
 
 
-export class JavaSignatureHelpProvider implements monaco.languages.SignatureHelpProvider {
+export class JavaSignatureHelpProvider extends BaseMonacoProvider implements monaco.languages.SignatureHelpProvider {
 
-    constructor(private main: IMain) {
+    constructor(language: JavaLanguage) {
+        super(language);
+        monaco.languages.registerSignatureHelpProvider(language.monacoLanguageSelector, this);
     }
 
     signatureHelpTriggerCharacters?: readonly string[] = ['(', ',', ';', '<', '>', '=']; // semicolon, <, >, = for for-loop, if, while, ...
@@ -19,7 +23,11 @@ export class JavaSignatureHelpProvider implements monaco.languages.SignatureHelp
         let that = this;
         if (model.getLanguageId() != 'myJava') return undefined;
 
-        let module = <JavaCompiledModule>this.main.getCurrentWorkspace()?.getModuleForMonacoModel(model);
+        let main = this.findMainForModel(model);
+        if (!main) return;
+
+
+        let module = <JavaCompiledModule>main.getCurrentWorkspace()?.getModuleForMonacoModel(model);
         if (!module) return;
 
 
@@ -27,7 +35,7 @@ export class JavaSignatureHelpProvider implements monaco.languages.SignatureHelp
 
             setTimeout(() => {
 
-                this.main.getCurrentWorkspace()?.ensureModuleIsCompiled(module);
+                main.getCurrentWorkspace()?.ensureModuleIsCompiled(module);
 
                 resolve(that.provideSignatureHelpLater(module, model, position, token, context));
 

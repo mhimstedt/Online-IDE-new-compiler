@@ -108,7 +108,7 @@ export class MainEmbedded implements MainBase {
     isEmbedded(): boolean { return true; }
 
     getCompiler(): Compiler {
-        return this.language.getCompiler();
+        return this.language.getCompiler(this);
     }
     getInterpreter(): Interpreter {
         return this.interpreter;
@@ -144,7 +144,7 @@ export class MainEmbedded implements MainBase {
     }
 
     getRepl(): JavaRepl {
-        return this.language.getRepl();
+        return this.language.getRepl(this);
     }
 
     getMainEditor(): monaco.editor.IStandaloneCodeEditor {
@@ -585,8 +585,7 @@ export class MainEmbedded implements MainBase {
          * Compiler and Repl are fields of language!
         */
         let errorMarker = new ErrorMarker();
-        this.language = new JavaLanguage(this, errorMarker);
-        this.language.registerLanguageAtMonacoEditor(this);
+        this.language = JavaLanguage.registerMain(this, errorMarker);
 
         if(this.$junitDiv){
             new JUnitTestrunner(this,this.$junitDiv[0]);

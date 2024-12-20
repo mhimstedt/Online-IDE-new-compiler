@@ -4,14 +4,32 @@ import { IMain } from "./IMain";
 
 export abstract class Language {
 
-    constructor(public name: string, public fileEndingWithDot: string){
+    #compilers: Map<IMain, Compiler> = new Map();
+    #repls: Map<IMain, JavaRepl> = new Map();
+
+    mains: Set<IMain> = new Set();
+
+    constructor(public name: string, public fileEndingWithDot: string, public monacoLanguageSelector){
 
     }
 
-    abstract registerLanguageAtMonacoEditor(main: IMain):void;
+    getCompiler(main: IMain): Compiler {
+        return this.#compilers.get(main);
+    }
 
-    abstract getCompiler(): Compiler;
+    getRepl(main: IMain): JavaRepl {   // TODO: Base Repl class
+        return this.#repls.get(main);
+    } 
+    
 
-    abstract getRepl(): JavaRepl; // TODO: Base Repl class
+    protected registerCompiler(main: IMain, compiler: Compiler){
+        this.#compilers.set(main, compiler);
+        this.mains.add(main);
+    }
+    
+    protected registerRepl(main: IMain, repl: JavaRepl){
+        this.#repls.set(main, repl);
+        this.mains.add(main);
+    }
 
 }

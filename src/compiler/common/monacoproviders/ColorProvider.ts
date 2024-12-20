@@ -1,49 +1,25 @@
-import { IMain } from "../IMain";
 import * as monaco from 'monaco-editor'
-import { Module } from "../module/Module.ts";
+import { BaseMonacoProvider } from "./BaseMonacoProvider.ts";
+import { JavaLanguage } from "../../java/JavaLanguage.ts";
 
 
-export class ColorProvider implements monaco.languages.DocumentColorProvider {
-    
-    private static mainList: IMain[] = [];
-    private static instance: ColorProvider = null;
+export class ColorProvider extends BaseMonacoProvider implements monaco.languages.DocumentColorProvider {
 
-    private isRegistered: boolean = false;
-    
-    
-    private constructor() {
-    }
-    
-    public static getInstance(main?: IMain){
-        if(main != null && ColorProvider.mainList.indexOf(main) < 0) ColorProvider.mainList.push(main);
-        if(ColorProvider.instance == null){
-            ColorProvider.instance = new ColorProvider();
-        }
-        return ColorProvider.instance;
-    }
-    
-    register(language: string) {
-        if(!this.isRegistered){
-            monaco.languages.registerColorProvider(language, this);
-            this.isRegistered = true;
-        }
+
+    constructor(language: JavaLanguage) {
+        super(language);
+        monaco.languages.registerColorProvider(language.monacoLanguageSelector, this);
     }
 
     async provideDocumentColors(model: monaco.editor.ITextModel, token: monaco.CancellationToken): Promise<monaco.languages.IColorInformation[]> {
-        let module: Module;
-        let main1: IMain;
-        for(let main of ColorProvider.mainList){
-            module = main.getCurrentWorkspace()?.getModuleForMonacoModel(model);
-            main1 = main;
-            if(module) break;
-        } 
+        let main = this.findMainForModel(model);
+        if (!main) return;
+        let module = main.getCurrentWorkspace()?.getModuleForMonacoModel(model);
+        if (!module) return;
 
-        if (module == null) {
-            return null;
-        }
-
-        if(module.isDirty()){
-            await main1.getCompiler().interruptAndStartOverAgain(false);
+        if (module.isDirty()) {
+            main.getCompiler().eventManager.on
+            await main.getCompiler().interruptAndStartOverAgain(false);
         }
 
         return module.colorInformation;

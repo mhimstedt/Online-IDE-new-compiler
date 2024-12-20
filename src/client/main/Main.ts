@@ -127,11 +127,11 @@ export class Main implements MainBase {
     }
 
     getCompiler(): Compiler {
-        return this.language.getCompiler();
+        return this.language.getCompiler(this);
     }
 
     getRepl(): JavaRepl {
-        return this.language.getRepl();
+        return this.language.getRepl(this);
     }
 
     getMainEditor(): monaco.editor.IStandaloneCodeEditor {
@@ -248,8 +248,7 @@ export class Main implements MainBase {
         /**
          * Compiler and Repl are fields of language!
         */
-        this.language = new JavaLanguage(this, errorMarker);
-        this.language.registerLanguageAtMonacoEditor(this);
+        this.language = JavaLanguage.registerMain(this, errorMarker);
 
         new JUnitTestrunner(this, jQuery('.jo_testrunnerTab')[0]);
 
