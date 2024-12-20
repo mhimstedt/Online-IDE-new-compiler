@@ -172,11 +172,15 @@ export abstract class BinopCastCodeGenerator {
         if (rWrapperIndex && leftSnippet.getConstantValue() !== null) rightSnippet = this.unbox(rightSnippet);
 
         if (operator == TokenType.equal || operator == TokenType.notEqual) {
+            if(leftType == this.nullType && (!rightType.isPrimitive || rightType == this.stringType) 
+                || rightType == this.nullType && (!leftType.isPrimitive || leftType == this.stringType)){
+                return new BinaryOperatorTemplate(operatorIdentifier, true).applyToSnippet(this.booleanType, wholeRange, leftSnippet, rightSnippet);
+            } 
+
             if (lTypeIndex == 0 && rTypeIndex != 0 || lTypeIndex != 0 && rTypeIndex == 0) {
                 this.pushError(JCM.badOperandTypesForBinaryOperator(TokenTypeReadable[operator], leftType.toString(), rightType.toString()), "error", operatorRange);
                 return undefined;
             }
-
 
             return new BinaryOperatorTemplate(operatorIdentifier, true).applyToSnippet(this.booleanType, wholeRange, leftSnippet, rightSnippet);
         }
