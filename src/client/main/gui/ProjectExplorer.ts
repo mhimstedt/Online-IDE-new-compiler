@@ -736,6 +736,7 @@ export class ProjectExplorer {
         let editor = this.main.getMainEditor();
 
         this.lastOpenFile?.saveViewState(editor);
+        this.main.getCompiler().setFiles(this.main.getCurrentWorkspace().getFiles()); // we need this for ColorProvider to work 
 
         if (file == null) {
             editor.setModel(monaco.editor.createModel("Keine Datei vorhanden.", "text"));
