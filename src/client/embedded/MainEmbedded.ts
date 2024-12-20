@@ -186,6 +186,13 @@ export class MainEmbedded implements MainBase {
                 if (this.config.id != null) {
                     this.readScripts(async () => {
                         this.getCompiler().setFiles(this.fileExplorer.getFiles());
+
+                        this.fileExplorer?.setFirstFileActive();
+                        if (this.fileExplorer == null) {
+                            let files = this.currentWorkspace.getFiles();
+                            if (files.length > 0) this.setFileActive(files[0]);
+                        }
+
                      });
                 }
 
@@ -341,11 +348,6 @@ export class MainEmbedded implements MainBase {
                             setInterval(() => {
                                 that.saveScripts();
                             }, 1000);
-                            that.fileExplorer?.setFirstFileActive();
-                            if (that.fileExplorer == null) {
-                                let files = that.currentWorkspace.getFiles();
-                                if (files.length > 0) that.setFileActive(files[0]);
-                            }
                             callback();
                         }
                     })

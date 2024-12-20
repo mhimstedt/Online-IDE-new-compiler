@@ -66,6 +66,7 @@ export class JavaCompiler implements Compiler {
 
     setFiles(files: CompilerFile[]) {
         this.#files = files;
+        this.moduleManager.setupModulesBeforeCompiliation(this.#files);
     }
 
     async compileIfDirty(onlyForCodeCompletion: boolean = false): Promise<Executable | undefined> {
