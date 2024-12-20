@@ -170,8 +170,9 @@ export class TokenIterator {
 
     skipTokensTillEndOfLineOr(skippedTokens: TokenType | TokenType[], skipFoundToken: boolean = true) {
         if (!Array.isArray(skippedTokens)) skippedTokens = [skippedTokens];
-        skippedTokens.push(TokenType.linefeed, TokenType.newline);
-        while (this.pos < this.tokenList.length && skippedTokens.indexOf(this.tokenList[this.pos].tt) < 0) {
+        let line = this.cct.range.endLineNumber;
+
+        while (this.pos < this.tokenList.length && skippedTokens.indexOf(this.tokenList[this.pos].tt) < 0 && this.cct.range.startLineNumber <= line) {
             this.nextToken();
         }
         if (this.pos < this.tokenList.length && skipFoundToken) {
