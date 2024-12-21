@@ -121,6 +121,9 @@ export class ErrorManager {
             case "info": className = "jo_revealInfo"; break;
         }
 
+
+        this.hideAllErrorDecorations();
+
         let model = f.getMonacoModel();
         let oldDecorations: string[] = this.oldDecorations.get(model) || [];
 
