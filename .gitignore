@@ -17,8 +17,8 @@ dist-ssr
 !/.vscode/settings.json
 !/.vscode/launch.json
 
-/material/
-!/material/icons/
+/intern/
+
 
 upload*.cmd
 /package-lock.json
