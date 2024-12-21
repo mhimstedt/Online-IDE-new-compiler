@@ -42,6 +42,10 @@ export class Light3dClass extends Object3dClass {
     static type: NonPrimitiveType;
 
     light: THREE.Light;
+    
+    getObject3d(){
+        return this.light;
+    }
 
     get color(): number {
         let c = (<THREE.Color>this.light.color);

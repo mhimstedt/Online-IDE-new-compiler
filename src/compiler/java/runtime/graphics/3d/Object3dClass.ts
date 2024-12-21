@@ -36,6 +36,7 @@ export class Object3dClass extends ActorClass {
     static type: NonPrimitiveType;
     world3d!: World3dClass;
 
+    getObject3d(): Three.Object3D {return null};
 
     _cj$_constructor_$Object3d$(t: Thread, callback: CallbackParameter) {
 

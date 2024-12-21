@@ -3901,6 +3901,40 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
         "en": `The parameter ${direction} must not be null!`,
     })
 
+    static Group3dAddComment = () => lm({
+    "de": `Fügt der Gruppe ein 3d-Objekt hinzu.`,
+    "en": `Adds a 3d-object to this group.`,
+    })
+
+    static Group3dRemoveComment = () => lm({
+    "de": `Entfernt ein 3d-Objekt aus dieser Gruppe.`,
+    "en": `Removes a 3d-object from this group.`,
+    })
+
+    static Group3dSizeComment = () => lm({
+    "de": `Gibt die Anzahl der 3d-Objekte in dieser Gruppe zurück.`,
+    "en": `Returns the size of this group.`,
+    })
+
+    static Group3dGetComment = () => lm({
+    "de": `Gibt das Element mit dem gegebenen Index zurück. Das erste Element hat Index 0.`,
+    "en": `Returns element with given index. First element has index 0.`,
+    })
+
+    /**
+     * Group3d
+     */
+
+    static Group3dClassComment = () => lm({
+    "de": `Ein Group3d-Objekt gruppiert mehrere 3d-Objekte zusammen, so dass sie miteinander gedreht verschoben, ... werden können.`,
+    "en": `A Group of 3d objects.`,
+    })
+
+    static Comment = () => lm({
+    "de": ``,
+    "en": ``,
+    })
+
     /**
      * class MathTools
      */

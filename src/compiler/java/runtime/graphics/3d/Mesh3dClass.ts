@@ -27,8 +27,6 @@ export class Mesh3dClass extends Object3dClass {
         { type: "method", signature: "void rotateY(double angleDeg)", native: Mesh3dClass.prototype.rotateY },
         { type: "method", signature: "void rotateZ(double angleDeg)", native: Mesh3dClass.prototype.rotateZ },
         
-        { type: "method", signature: "void rotateOnWorldAxis(Vector3 axis, double angelDeg)", native: Mesh3dClass.prototype.rotateOnWorldAxis },
-
         { type: "method", signature: "final void scaleX(double angleDeg)", native: Mesh3dClass.prototype.scaleX },
         { type: "method", signature: "final void scaleY(double angleDeg)", native: Mesh3dClass.prototype.scaleY },
         { type: "method", signature: "final void scaleZ(double angleDeg)", native: Mesh3dClass.prototype.scaleZ },
@@ -65,6 +63,10 @@ export class Mesh3dClass extends Object3dClass {
         return this._material;
     }
 
+    getObject3d(){
+        return this.mesh;
+    }
+
     _cj$_constructor_$Mesh3d$(t: Thread, callback: CallbackParameter) {
         super._cj$_constructor_$Object3d$(t, callback);
     }
@@ -85,9 +87,6 @@ export class Mesh3dClass extends Object3dClass {
     }
     rotateZ(angleDeg: number): void {
         this.mesh.rotateZ(angleDeg / 180 * Math.PI);
-    }
-    rotateOnWorldAxis(axis: Vector3Class, angleDeg: number): void {
-        this.mesh.rotateOnWorldAxis(axis.v, angleDeg / 180 * Math.PI);
     }
 
 
