@@ -16,9 +16,13 @@ export class TextClass extends FilledShapeClass {
         { type: "method", signature: "Text()", java: TextClass.prototype._cj$_constructor_$Text$, comment: JRC.TextEmptyConstructorComment },
         { type: "method", signature: "Text(double x, double y, double fontSize, string text)", java: TextClass.prototype._cj$_constructor_$Text$double$double$double$string, comment: JRC.TextConstructorComment1 },
         { type: "method", signature: "Text(double x, double y, double fontSize, string text, string fontFamily)", java: TextClass.prototype._cj$_constructor_$Text$double$double$double$string, comment: JRC.TextConstructorComment1 },
+        { type: "method", signature: "Text(double x, double y, double fontSize, double text)", java: TextClass.prototype._cj$_constructor_$Text$double$double$double$string, comment: JRC.TextConstructorComment1 },
+        { type: "method", signature: "Text(double x, double y, double fontSize, double text, string fontFamily)", java: TextClass.prototype._cj$_constructor_$Text$double$double$double$string, comment: JRC.TextConstructorComment1 },
 
         { type: "method", signature: "void setFontsize(double fontsize)", native: TextClass.prototype._setFontsize, comment: JRC.TextSetFontsizeComment },
         { type: "method", signature: "void setText(string text)", native: TextClass.prototype._setText, comment: JRC.TextSetTextComment },
+        { type: "method", signature: "void setText(double text)", native: TextClass.prototype._setText, comment: JRC.TextSetTextComment },
+
         { type: "method", signature: "void setAlignment(Alignment alignment)", native: TextClass.prototype._setAlignment, comment: JRC.TextSetAlignmentComment },
         { type: "method", signature: "void setStyle(boolean bold, boolean italic)", native: TextClass.prototype._setStyle, comment: JRC.TextSetStyleComment },
 
@@ -68,13 +72,13 @@ export class TextClass extends FilledShapeClass {
     }
 
     _cj$_constructor_$Text$double$double$double$string(t: Thread, callback: CallbackFunction,
-        x: number, y: number, fontSize: number, text: string, fontFamily?: string
+        x: number, y: number, fontSize: number, text: string | number, fontFamily?: string
     ) {
         this._cj$_constructor_$FilledShape$(t, () => {
             this.x = x;
             this.y = y;
             this.fontsize = fontSize;
-            this.text = text;
+            this.text = text + "";
 
             this.centerXInitial = x;
             this.centerYInitial = y;
@@ -207,8 +211,8 @@ export class TextClass extends FilledShapeClass {
         this.render();
     }
 
-    _setText(text: string) {
-        this.text = text;
+    _setText(text: string | number) {
+        this.text = text + "";
         this.render();
     }
 
