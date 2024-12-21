@@ -10,6 +10,7 @@ import { LambertMaterial3dClass } from "../graphics/3d/materials/LambertMaterial
 import { Material3dClass } from "../graphics/3d/materials/Material3dClass.ts";
 import { PhongMaterial3dClass } from "../graphics/3d/materials/PhongMaterial3dClass.ts";
 import { PhysicallyBasedMaterial3dClass } from "../graphics/3d/materials/PhysicallyBasedMaterial3d.ts";
+import { Matrix4Class } from "../graphics/3d/Matrix4Class.ts";
 import { Mesh3dClass } from "../graphics/3d/Mesh3dClass.ts";
 import { Object3dClass } from "../graphics/3d/Object3dClass.ts";
 import { Sphere3dClass } from "../graphics/3d/Sphere3dClass.ts";
@@ -223,7 +224,8 @@ export class SystemModule extends JavaLibraryModule {
 
             // Graphics 3D
             Vector3Class, Material3dClass, BasicMaterial3dClass, LambertMaterial3dClass, PhongMaterial3dClass, PhysicallyBasedMaterial3dClass,
-            World3dClass, Object3dClass, Mesh3dClass, Box3dClass, Sphere3dClass, Light3dClass, PointLight3dClass,
+            World3dClass, Object3dClass, Mesh3dClass, Box3dClass, Sphere3dClass, Light3dClass, PointLight3dClass, 
+            Matrix4Class,
 
             // Processing
             PAppletClass,

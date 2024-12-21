@@ -8,6 +8,7 @@ import { Material3dClass } from './materials/Material3dClass';
 import { Object3dClass } from "./Object3dClass";
 import { Vector3Class } from './Vector3Class';
 import { PhongMaterial3dClass } from './materials/PhongMaterial3dClass';
+import { Matrix4Class } from './Matrix4Class';
 
 export class Mesh3dClass extends Object3dClass {
 
@@ -21,15 +22,20 @@ export class Mesh3dClass extends Object3dClass {
         { type: "method", signature: "final void move(Vector3 v)", native: Mesh3dClass.prototype.vmove },
         { type: "method", signature: "void moveTo(double x,double y,double z)" },
         { type: "method", signature: "final void moveTo(Vector3 p)", native: Mesh3dClass.prototype.vmoveTo },
+        
         { type: "method", signature: "void rotateX(double angleDeg)", native: Mesh3dClass.prototype.rotateX },
         { type: "method", signature: "void rotateY(double angleDeg)", native: Mesh3dClass.prototype.rotateY },
         { type: "method", signature: "void rotateZ(double angleDeg)", native: Mesh3dClass.prototype.rotateZ },
+        
+        { type: "method", signature: "void rotateOnWorldAxis(Vector3 axis, double angelDeg)", native: Mesh3dClass.prototype.rotateOnWorldAxis },
 
         { type: "method", signature: "final void scaleX(double angleDeg)", native: Mesh3dClass.prototype.scaleX },
         { type: "method", signature: "final void scaleY(double angleDeg)", native: Mesh3dClass.prototype.scaleY },
         { type: "method", signature: "final void scaleZ(double angleDeg)", native: Mesh3dClass.prototype.scaleZ },
         { type: "method", signature: "final void scale(Vector3 v)", native: Mesh3dClass.prototype.vscale },
         { type: "method", signature: "final void scale(double d)", native: Mesh3dClass.prototype.scaleDouble },
+
+        {type: "method", signature: "final void applyMatrix4(Matrix4 matrix)", native: Mesh3dClass.prototype.applyMatrix4 },
 
         { type: "method", signature: "final void enableFrontBackSide(boolean frontSideVisible, boolean backSideVisible)", native: Mesh3dClass.prototype.enableFrontBackSide },
         { type: "method", signature: "final void repeatTexture(int repeatX, int repeatY)", native: Mesh3dClass.prototype.repeatTexture },
@@ -48,7 +54,7 @@ export class Mesh3dClass extends Object3dClass {
     set material(newMaterial: Material3dClass) {
         if (this._material === newMaterial) return;
 
-        if (this._material) this.material.destroyIfNotUsedByOtherMesh();
+        this.material?.destroyIfNotUsedByOtherMesh();
 
         this._material = newMaterial;
         this.mesh.material = this._material.getMaterialAndIncreaseUsageCounter();
@@ -80,6 +86,10 @@ export class Mesh3dClass extends Object3dClass {
     rotateZ(angleDeg: number): void {
         this.mesh.rotateZ(angleDeg / 180 * Math.PI);
     }
+    rotateOnWorldAxis(axis: Vector3Class, angleDeg: number): void {
+        this.mesh.rotateOnWorldAxis(axis.v, angleDeg / 180 * Math.PI);
+    }
+
 
     scaleX(factor: number): void {
         this.mesh.scale.setX(this.mesh.scale.x * factor);
@@ -91,6 +101,25 @@ export class Mesh3dClass extends Object3dClass {
 
     scaleZ(factor: number): void {
         this.mesh.scale.setZ(this.mesh.scale.z * factor);
+    }
+
+    applyMatrix4(matrix4: Matrix4Class){
+
+        // a vector v local to this mesh is transformed via
+        // W * L * v to world coordinates. W is World matrix of parent, L is local matrix.
+        // We want to achieve an additional global transformation of v which corresponds to
+        // A * W * L * v, but we only can alter matrix L. As
+        // A * W * L * v = W * (W^-1 * A * W) * L * v, we have to premultiply L by W^-1 * A * W.
+
+        if(this.mesh.parent){
+            const helperMatrix = this.mesh.parent.matrixWorld.clone().invert();
+            helperMatrix.multiply(matrix4.m);
+            helperMatrix.multiply(this.mesh.parent.matrixWorld);
+            this.mesh.applyMatrix4(helperMatrix);
+        } else {
+            this.mesh.applyMatrix4(matrix4.m);
+        }
+
     }
 
     vscale(factor: Vector3Class) {
@@ -166,6 +195,6 @@ export class Mesh3dClass extends Object3dClass {
         super.destroy();
         this.world3d.scene.remove(this.mesh);
         this.mesh.geometry.dispose();
-        this._material.destroyIfNotUsedByOtherMesh();
+        this._material?.destroyIfNotUsedByOtherMesh();
     }
 }

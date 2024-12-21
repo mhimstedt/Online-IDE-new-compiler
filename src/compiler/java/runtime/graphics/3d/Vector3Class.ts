@@ -7,6 +7,7 @@ import { Vector2Class } from "../../system/additional/Vector2Class";
 import { NullPointerExceptionClass } from "../../system/javalang/NullPointerExceptionClass";
 import { ObjectClass, StringClass } from "../../system/javalang/ObjectClassStringClass";
 import * as THREE from 'three';
+import { Matrix4Class } from "./Matrix4Class";
 
 export class Vector3Class extends ObjectClass {
     static __javaDeclarations: LibraryDeclarations = [
@@ -35,7 +36,8 @@ export class Vector3Class extends ObjectClass {
         { type: "method", signature: "final double scalarProduct(Vector3 otherVector)", native: Vector3Class.prototype._scalarProduct, comment: JRC.Vector3ScalarProductComment },
         { type: "method", signature: "final double distanceTo(Vector3 otherVector)", native: Vector3Class.prototype._distanceTo, comment: JRC.Vector3DistanceToComment },
         { type: "method", signature: "final static double distance(double x1, double y1, double z1, double x2, double y2, double z2)", native: Vector3Class._distance, comment: JRC.Vector3DistanceComment },
-
+        { type: "method", signature: "final Vector3 applyMatrix4(Matrix4 m)", native: Vector3Class.prototype._applyMatrix4, comment: JRC.Vector3ApplyMatrix4Comment },
+        
         { type: "method", signature: "public boolean equals(Vector3 otherVector)", native: Vector3Class.prototype._equals, comment: JRC.objectEqualsComment },
         { type: "method", signature: "String toString()", java: Vector3Class.prototype._mj$toString$String$, comment: JRC.Vector3ToStringComment },
     ];
@@ -165,6 +167,10 @@ export class Vector3Class extends ObjectClass {
         return `{x = ${this.v.x}, y = ${this.v.y}, z = ${this.v.z}}`;
     }
 
+    _applyMatrix4(m: Matrix4Class): Vector3Class {
+        this.v.applyMatrix4(m.m);
+        return this;
+    }
 
 
 }

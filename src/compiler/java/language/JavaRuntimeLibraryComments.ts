@@ -3689,6 +3689,95 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
         "de": "Y-Komponente des Vektors",
         "en": "y-component",
     })
+
+    /**
+     * Matrix4
+     */
+    static Matrix4ClassComment = () => lm({
+    "de": `Eine 4x4-Matrix, die insbesondere verwendet werden kann, um eine affine Abbildung im R³ zu beschreiben und räumliche Körper zu transformieren.`,
+    "en": `Matrix4 represents a 4x4-Matrix. It may be used to describe affine mappings in R³ and to transform bodys in 3d.`,
+    })
+
+    static Matrix4ConstructorIdentityComment = () => lm({
+    "de": `Erstellt eine 4x4-Einheitsmatrix, d.h. eine Matrix mit 1-sen in der Diagonalen und ansonsten 0-en.`,
+    "en": `Creates a 4x4 identity matrix.`,
+    })
+
+    static Matrix4ConstructorTupleComment = () => lm({
+    "de": `Erstellt eine 4x4-Matrix mit den gegebenen Komponenten (zeilenweise).`,
+    "en": `Creates a 4x4 matrix with the given arguments in row-major order.`,
+    })
+
+    static Matrix4ConstructorOtherMatrixComment = () => lm({
+    "de": `Erstellt eine Kopie der übergebenen Matrix.`,
+    "en": `Creates a copy of given Matrix.`,
+    })
+
+    static Matrix4MakeRotationXComment = () => lm({
+    "de": `Ersetzt diese Matrix durch eine, die eine Rotation um die X-Achse mit gegebenem Winkel (in Grad) repräsentiert.`,
+    "en": `Sets this matrix as a rotational transformation around the X axis by angle degrees.`,
+    })
+
+    static Matrix4MakeRotationYComment = () => lm({
+    "de": `Ersetzt diese Matrix durch eine, die eine Rotation um die Y-Achse mit gegebenem Winkel (in Grad) repräsentiert.`,
+    "en": `Sets this matrix as a rotational transformation around the Y axis by angle degrees.`,
+    })
+
+    static Matrix4MakeRotationZComment = () => lm({
+    "de": `Ersetzt diese Matrix durch eine, die eine Rotation um die Z-Achse mit gegebenem Winkel (in Grad) repräsentiert.`,
+    "en": `Sets this matrix as a rotational transformation around the Z axis by angle degrees.`,
+    })
+
+    static Matrix4MakeRotationAxisComment = () => lm({
+    "de": `Ersetzt diese Matrix durch eine, die eine Rotation um die gegebene mit gegebenem Winkel (in Grad) repräsentiert.`,
+    "en": `Sets this matrix as a rotational transformation around the given axis by angle degrees.`,
+    })
+
+    static Matrix4MakeScaleComment = () => lm({
+    "de": `Ersetzt diese Matrix durch eine, die die Streckung um die gegebenen Faktoren in x-, y- und z-Richtung repräsentiert.`,
+    "en": `Sets this matrix as scale transform with given factors in x-, y- and z-diretion.`,
+    })
+
+    static Matrix4MakeTranslationComment = () => lm({
+    "de": `Ersetzt diese Matrix durch eine, die die Verschiebung um den gegebenen Vektor repräsentiert.`,
+    "en": `Sets this matrix as scale transform with given vector.`,
+    })
+
+    static Matrix4MultiplyScalarComment = () => lm({
+    "de": `Multipliziert die Matrix mit dem gegebenen Faktor (Skalarmultiplikation).`,
+    "en": `Multiplies every component of the matrix by given scalar value.`,
+    })
+
+    static Matrix4InvertComment = () => lm({
+    "de": `Invertiert diese Matrix. Is sie nicht invertierbar, so wird sie auf die Nullmatrix gesetzt.`,
+    "en": `Inverts this matrix, using the analytic method. You can not invert with a determinant of zero. If you attempt this, the method produces a zero matrix instead.`,
+    })
+
+    static Matrix4DeterminantComment = () => lm({
+    "de": `Berechnet die Determinante dieser Matrix.`,
+    "en": `Computes and returns the determinant of this matrix.`,
+    })
+
+    static Matrix4CloneComment = () => lm({
+    "de": `Erzeugt eine Kopie dieser Matrix.`,
+    "en": `Creates a clone of this matrix.`,
+    })
+
+    static Matrix4CopyFromComment = () => lm({
+    "de": `Kopiert die gegebene Matrix in diese hinein.`,
+    "en": `Copies the elements of matrix m into this matrix.`,
+    })
+
+    static Matrix4MultiplyComment = () => lm({
+    "de": `Multipliziert diese Matrix von rechts mit der gegebene Matrix und schreibt das Ergebnis in diese Matrix.`,
+    "en": `Post-multiplies this matrix by m.`,
+    })
+
+    static Matrix4preMultiplyComment = () => lm({
+    "de": `Multipliziert diese Matrix von links mit der gegebene Matrix und schreibt das Ergebnis in diese Matrix.`,
+    "en": `Pre-multiplies this matrix by m.`,
+    })
+
     /**
      * Vector3
      */
@@ -3800,6 +3889,11 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
     static Vector3YComment = () => lm({
         "de": "Y-Komponente des Vektors",
         "en": "y-component",
+    })
+
+    static Vector3ApplyMatrix4Comment = () => lm({
+    "de": `Multipliziert diesen Vektor (von links) mit der gegebenen Matrix (mit ergänzter 1 in der 4. Dimension) und teilt durch den perspektivischen Faktor.`,
+    "en": `Multiplies this vector (with an implicit 1 in the 4th dimension) by m, and divides by perspective.`,
     })
 
     static Vector3xyNullPointerComment = (direction: string) => lm({
