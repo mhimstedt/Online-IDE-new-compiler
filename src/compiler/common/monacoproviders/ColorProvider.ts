@@ -14,11 +14,19 @@ export class ColorProvider extends BaseMonacoProvider implements monaco.language
     async provideDocumentColors(model: monaco.editor.ITextModel, token: monaco.CancellationToken): Promise<monaco.languages.IColorInformation[]> {
         let main = this.findMainForModel(model);
         if (!main) return;
+
+        let file = main.getCurrentWorkspace()?.getFileForMonacoModel(model);
+        if(!file) return;
+
+        let compiler = main.getCompiler();
+        if(!compiler.findModuleByFile(file)){
+            await compiler.eventManager.waitFor('compilationFinished');
+        }
+
         let module = main.getCurrentWorkspace()?.getModuleForMonacoModel(model);
         if (!module) return;
 
         if (module.isDirty()) {
-            main.getCompiler().eventManager.on
             await main.getCompiler().interruptAndStartOverAgain(false);
         }
 

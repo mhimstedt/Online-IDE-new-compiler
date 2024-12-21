@@ -12,6 +12,17 @@ export class EventManager<EventType extends string> {
 
     private onceMap: Map<CallbackFunction, boolean> = new Map();
 
+    public async waitFor(eventType: EventType): Promise<void>{
+        let promise = new Promise<void>((resolve, reject) => {
+
+            this.on(eventType, () => {
+                resolve();
+            })
+
+        });
+        return promise;
+    }
+
 
     public on(eventType: EventType, callback: CallbackFunction, thisArg?: object) {
         let callbackList = this.eventTypeToCallbackMap.get(eventType);

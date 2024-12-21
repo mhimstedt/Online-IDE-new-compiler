@@ -139,13 +139,13 @@ export class JavaCompiler implements Compiler {
                 await codegenerator.start();
                 await this.#progressManager.interruptIfNeeded();
             }
-            
-            if(onlyForCodeCompletion) return;
-            
+
+            if (onlyForCodeCompletion) return;
+
             for (const module of newOrDirtyModules) {
                 module.setDirty(false);
             }
-            
+
         }
 
 
@@ -305,11 +305,10 @@ export class JavaCompiler implements Compiler {
     async interruptAndStartOverAgain(onlyForCodeCompletion: boolean): Promise<void> {
         if (this.#progressManager.isInsideCompilationRun) {
             this.#progressManager.interruptCompilerIfRunning(false);
-        } else {
-            this.#progressManager.initBeforeCompiling();
-            await this.compileIfDirty(onlyForCodeCompletion);
-            this.#progressManager.afterCompiling();
         }
+        this.#progressManager.initBeforeCompiling();
+        await this.compileIfDirty(onlyForCodeCompletion);
+        this.#progressManager.afterCompiling();
 
     }
 
