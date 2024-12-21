@@ -282,6 +282,9 @@ export class Interpreter {
 
     start() {
         // this.main.getBottomDiv()?.console?.clearErrors();
+
+        this.main.getBottomDiv()?.errorManager?.hideAllErrorDecorations();
+
         if (this.scheduler.state != SchedulerState.paused && this.executable) {
             this.printManager.clear();
             this.#init(this.executable);

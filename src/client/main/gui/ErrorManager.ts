@@ -5,11 +5,12 @@ import jQuery from 'jquery';
 import { File } from "../../workspace/File.js";
 import { Error } from "../../../compiler/common/Error.js";
 import { MainEmbedded } from "../../embedded/MainEmbedded.js";
+import type * as monaco from 'monaco-editor'
+import { Range } from "../../../compiler/common/range/Range.js";
 
 export class ErrorManager {
 
-    oldDecorations: string[] = [];
-    oldErrorDecorations: string[] = [];
+    oldDecorations: Map<monaco.editor.ITextModel, string[]> = new Map();
     $errorDiv: JQuery<HTMLElement>;
 
     minimapColor: {[key: string]:string } = {};
@@ -108,6 +109,10 @@ export class ErrorManager {
         }
 
         this.main.getMainEditor().revealRangeInCenter(error.range);
+        this.main.getMainEditor().setPosition(Range.getStartPosition(error.range));
+        setTimeout(() => {
+            this.main.getMainEditor().focus();
+        }, 10);
 
         let className: string = "";
         switch (error.level) {
@@ -116,15 +121,35 @@ export class ErrorManager {
             case "info": className = "jo_revealInfo"; break;
         }
 
-        // this.oldDecorations = f.getMonacoModel().deltaDecorations(this.oldDecorations, [
-        //     {
-        //         range: error.range,
-        //         options: { className: className }
+        let model = f.getMonacoModel();
+        let oldDecorations: string[] = this.oldDecorations.get(model) || [];
 
-        //     }
-        // ]);
+        oldDecorations = model.deltaDecorations(oldDecorations, [
+            {
+                range: error.range,
+                options: { className: className, isWholeLine: true },
 
+            }
+        ]);
 
+        this.oldDecorations.set(model, oldDecorations);
+
+    }
+
+    hideAllErrorDecorations(){
+
+        let files = this.main.getCurrentWorkspace()?.getFiles();
+
+        for(let file of files){
+            let model = file.getMonacoModel();
+            let oldDecorations: string[] = this.oldDecorations.get(model) || [];
+    
+            oldDecorations = model.deltaDecorations(oldDecorations, [
+            ]);
+    
+            this.oldDecorations.delete(model);
+        }
+        
     }
 
 }
