@@ -5632,6 +5632,26 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
     })
 
     /**
+     * SpriteMaterial3d
+     */
+    static spriteMaterial3dClassComment = () => lm({
+    "de": `Ein Material, das mit Hilfe eines Sprite dargestellt werden kann.`,
+    "en": `A material used for sprites.`,
+    })
+
+    static spriteMaterial3dConstructorSpriteLibraryComment = () => lm({
+    "de": `Erzeugt ein Sprite3dMaterial-Objekt mithilfe einer Grafik aus der Sprite Library, z.B. new SpriteMaterial3d(SpriteLibrary.plattforms, 20)`,
+    "en": `Creates a Sprite3dMaterial using a texture from sprite libary, e.g. new SpriteMaterial3d(SpriteLibrary.plattforms, 20)`,
+    })
+
+    static spriteMaterial3dConstructorTextureComment = () => lm({
+    "de": `Erzeugt ein Sprite3dMaterial-Objekt mithilfe einer Textur-Grafik, z.B. new SpriteMaterial3d(Texture.2kmoon)`,
+    "en": `Creates a Sprite3dMaterial using a texture, e.g. new SpriteMaterial3d(Texture.2kmoon)`,
+    })
+
+
+
+    /**
      * PhongMaterial
      */
     static phongMaterial3dClassComment = () => lm({
@@ -5716,6 +5736,21 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
     static TexturesEnumComment = () => lm({
     "de": `Texturen, die mit den 3d-Klassen (z.B. Sphere3d, Box3d) genutzt werden können, z.B. new Spere3d().setTexture(Textures.earth)`,
     "en": `You may use these textures with 3d classes (Sphere3d, Box3d, ...), e.g. new Spere3d().setTexture(Textures.earth)`,
+    })
+
+
+    /**
+     * Sprite3d
+     */
+
+    static Sprite3dClassComment = () => lm({
+    "de": `Ein 3d-Sprite ist ein Rechteck mit Textur, das immer automatisch zur Kamera hingewandt ist.`,
+    "en": `A sprite is a plane that always faces towards the camera, generally with a partially transparent texture applied.`,
+    })
+
+    static Sprite3dConstructorComment = () => lm({
+    "de": `Erzeugt ein neues 3d-Sprite am gegebenen Ort mit der gegebenen Textur.`,
+    "en": `Creates a new 3d sprite at given position with given texture.`,
     })
 
 }

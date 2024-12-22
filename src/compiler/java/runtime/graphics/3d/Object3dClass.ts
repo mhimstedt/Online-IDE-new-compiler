@@ -40,7 +40,6 @@ export class Object3dClass extends ActorClass {
 
     _cj$_constructor_$Object3d$(t: Thread, callback: CallbackParameter) {
 
-
         t.s.push(this);
         this.world3d = t.scheduler.interpreter.retrieveObject("World3dClass");
         if (!this.world3d) {

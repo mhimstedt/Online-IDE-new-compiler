@@ -11,7 +11,9 @@ import moon2k from "/assets/graphics/textures/celestial/2k_moon.jpg";
 import neptune2k from "/assets/graphics/textures/celestial/2k_neptune.jpg";
 import saturn2k from "/assets/graphics/textures/celestial/2k_saturn.jpg";
 import stars2k from "/assets/graphics/textures/celestial/2k_stars.jpg";
+import stars8k from "/assets/graphics/textures/celestial/8k_stars.jpg";
 import stars_milky_way2k from "/assets/graphics/textures/celestial/2k_stars_milky_way.jpg";
+import stars_milky_way8k from "/assets/graphics/textures/celestial/8k_stars_milky_way.jpg";
 import sun2k from "/assets/graphics/textures/celestial/2k_sun.jpg";
 import uranus2k from "/assets/graphics/textures/celestial/2k_uranus.jpg";
 import venus_atmosphere2k from "/assets/graphics/textures/celestial/2k_venus_atmosphere.jpg";
@@ -35,7 +37,9 @@ export class TextureEnum extends EnumClass {
         new TextureEnum("neptune2k", this.count++, neptune2k),
         new TextureEnum("saturn2k", this.count++, saturn2k),
         new TextureEnum("stars2k", this.count++, stars2k),
+        new TextureEnum("stars8k", this.count++, stars8k),
         new TextureEnum("stars_milky_way2k", this.count++, stars_milky_way2k),
+        new TextureEnum("stars_milky_way8k", this.count++, stars_milky_way8k),
         new TextureEnum("sun2k", this.count++, sun2k),
         new TextureEnum("uranus2k", this.count++, uranus2k),
         new TextureEnum("venus_atmosphere2k", this.count++, venus_atmosphere2k),

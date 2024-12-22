@@ -92,7 +92,6 @@ export class PhongMaterial3dClass extends Material3dClass {
         let world3d: World3dClass = t.scheduler.interpreter.retrieveObject("World3dClass");
         if (!world3d) {
             world3d = new World3dClass();
-            t.scheduler.interpreter.storeObject("World3dClass", world3d);
             world3d._cj$_constructor_$World$(t, () => {
                 t.s.pop(); // constructor of world3d pushed it's this-object
 
