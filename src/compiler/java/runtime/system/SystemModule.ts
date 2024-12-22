@@ -3,6 +3,8 @@ import { Program } from "../../../common/interpreter/Program";
 import { Klass } from "../../../common/interpreter/StepFunction.ts";
 import { JavaLibraryModule, LibraryKlassType } from "../../module/libraries/JavaLibraryModule";
 import { Box3dClass } from "../graphics/3d/Box3dClass.ts";
+import { Cone3dClass } from "../graphics/3d/Cone3dClass.ts";
+import { Cylinder3dClass } from "../graphics/3d/Cylinder3dClass.ts";
 import { Group3dClass } from "../graphics/3d/Group3dClass.ts";
 import { Light3dClass } from "../graphics/3d/lights/Light3dClass.ts";
 import { PointLight3dClass } from "../graphics/3d/lights/PointLight3dClass.ts";
@@ -229,7 +231,7 @@ export class SystemModule extends JavaLibraryModule {
             // Graphics 3D
             Vector3Class, Material3dClass, BasicMaterial3dClass, LambertMaterial3dClass, PhongMaterial3dClass, PhysicallyBasedMaterial3dClass,
             World3dClass, Object3dClass, Group3dClass, Mesh3dClass, Box3dClass, Sphere3dClass, Light3dClass, PointLight3dClass, Sprite3dClass,
-            Matrix4Class, TextureEnum, SpriteMaterial3dClass,
+            Matrix4Class, TextureEnum, SpriteMaterial3dClass, Cone3dClass, Cylinder3dClass,
 
             // Processing
             PAppletClass,
