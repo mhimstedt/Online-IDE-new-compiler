@@ -15,8 +15,11 @@ export class Mesh3dClass extends Object3dClass {
     static __javaDeclarations: LibraryDeclarations = [
         { type: "declaration", signature: "class Mesh3d extends Object3d", comment: JRC.Mesh3dClassComment },
         { type: "method", signature: "Mesh3d()", java: Mesh3dClass.prototype._cj$_constructor_$Mesh3d$ },
-        { type: "field", signature: "public Material3d material" },
+        { type: "field", signature: "private Material3d material" },
 
+
+        { type: "method", signature: "Material3d getMaterial()", native: Mesh3dClass.prototype._getMaterial },
+        { type: "method", signature: "void setMaterial(Material3d material)", native: Mesh3dClass.prototype._setMaterial },
 
         { type: "method", signature: "void move(double x,double y,double z)" },
         { type: "method", signature: "final void move(Vector3 v)", native: Mesh3dClass.prototype.vmove },
@@ -61,6 +64,14 @@ export class Mesh3dClass extends Object3dClass {
 
     get material(): Material3dClass {
         return this._material;
+    }
+
+    _getMaterial(){
+        return this._material;
+    }
+
+    _setMaterial(material: Material3dClass){
+        this.material = material;
     }
 
     getObject3d(){

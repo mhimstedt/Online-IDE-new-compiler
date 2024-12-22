@@ -5596,6 +5596,36 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
     "en": `Creates a BasicMaterial object. Wireframe == true leads to surfaces not being filled.`,
     })
 
+    static basicMaterial3dConstructorTextureComment = () => lm({
+    "de": `Erzeugt ein BasicMaterial-Objekt mit einer Textur, z.B. new BasicMaterial(Texture.earth2k).`,
+    "en": `Creates a BasicMaterial object with a texture, e.g. new BasicMaterial(Texture.earth2k).`,
+    })
+
+    static basicMaterial3dConstructorSpriteLibraryComment = () => lm({
+    "de": `Erzeugt ein BasicMaterial-Objekt mit einer Textur, z.B. new BasicMaterial(SpriteLibrary.plattforms, 20).`,
+    "en": `Creates a BasicMaterial object with a texture, e.g. new BasicMaterial(SpriteLibrary.plattforms, 20).`,
+    })
+
+    static lambertMaterial3dConstructorTextureComment = () => lm({
+    "de": `Erzeugt ein LambertMaterial-Objekt mit einer Textur, z.B. new LambertMaterial(Texture.earth2k).`,
+    "en": `Creates a LambertMaterial object with a texture, e.g. new LambertMaterial(Texture.earth2k).`,
+    })
+
+    static lambertMaterial3dConstructorSpriteLibraryComment = () => lm({
+    "de": `Erzeugt ein LambertMaterial-Objekt mit einer Textur, z.B. new LambertMaterial(SpriteLibrary.plattforms, 20).`,
+    "en": `Creates a LambertMaterial object with a texture, e.g. new LambertMaterial(SpriteLibrary.plattforms, 20).`,
+    })
+
+    static phongMaterial3dConstructorTextureComment = () => lm({
+    "de": `Erzeugt ein PhongMaterial-Objekt mit einer Textur, z.B. new PhongMaterial(Texture.earth2k).`,
+    "en": `Creates a PhongMaterial object with a texture, e.g. new PhongMaterial(Texture.earth2k).`,
+    })
+
+    static phongMaterial3dConstructorSpriteLibraryComment = () => lm({
+    "de": `Erzeugt ein PhongMaterial-Objekt mit einer Textur, z.B. new PhongMaterial(SpriteLibrary.plattforms, 20).`,
+    "en": `Creates a PhongMaterial object with a texture, e.g. new PhongMaterial(SpriteLibrary.plattforms, 20).`,
+    })
+
     static colorMustNotBeNull = () => lm({
     "de": `Der Wert null ist als Farbe hier nicht möglich.`,
     "en": `color must not be null.`,
@@ -5680,6 +5710,13 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
     "en": `Metalness value between 0 and 1`,
     })
 
+    /**
+     * TexturesEnum
+     */
+    static TexturesEnumComment = () => lm({
+    "de": `Texturen, die mit den 3d-Klassen (z.B. Sphere3d, Box3d) genutzt werden können, z.B. new Spere3d().setTexture(Textures.earth)`,
+    "en": `You may use these textures with 3d classes (Sphere3d, Box3d, ...), e.g. new Spere3d().setTexture(Textures.earth)`,
+    })
 
 }
 

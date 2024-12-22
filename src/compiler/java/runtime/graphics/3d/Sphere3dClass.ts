@@ -3,6 +3,7 @@ import { CallbackParameter } from "../../../../common/interpreter/CallbackParame
 import { Thread } from "../../../../common/interpreter/Thread";
 import { LibraryDeclarations } from "../../../module/libraries/DeclareType";
 import { Mesh3dClass } from "./Mesh3dClass";
+import earthDayMap from "/assets/graphics/textures/2k_earth_daymap.jpg";
 
 export class Sphere3dClass extends Mesh3dClass {
     static __javaDeclarations: LibraryDeclarations = [
