@@ -5626,6 +5626,16 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
     "en": `Creates a PhongMaterial object with a texture, e.g. new PhongMaterial(SpriteLibrary.plattforms, 20).`,
     })
 
+    static physicallyBasedMaterial3dConstructorTextureComment = () => lm({
+    "de": `Erzeugt ein PhysicallyBasedMaterial-Objekt mit einer Textur, z.B. new PhysicallyBasedMaterial(Texture.earth2k).`,
+    "en": `Creates a PhysicallyBasedMaterial object with a texture, e.g. new PhysicallyBasedMaterial(Texture.earth2k).`,
+    })
+
+    static physicallyBasedMaterial3dConstructorSpriteLibraryComment = () => lm({
+    "de": `Erzeugt ein PhysicallyBasedMaterial-Objekt mit einer Textur, z.B. new PhysicallyBasedMaterial(SpriteLibrary.plattforms, 20).`,
+    "en": `Creates a PhysicallyBasedMaterial object with a texture, e.g. new PhysicallyBasedMaterial(SpriteLibrary.plattforms, 20).`,
+    })
+
     static colorMustNotBeNull = () => lm({
     "de": `Der Wert null ist als Farbe hier nicht möglich.`,
     "en": `color must not be null.`,
