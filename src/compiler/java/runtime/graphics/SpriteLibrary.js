@@ -70,6 +70,20 @@ export var SpriteLibrary = [
     { filename: "classics/missile_12.png", name: "Space_Shooter_2", index: 20 },
     { filename: "classics/satellite_1.png", name: "Space_Shooter_2", index: 21 },
     { filename: "classics/satellite_2.png", name: "Space_Shooter_2", index: 22 },
+    
+    // Particles
+    { filename: "particles/Flare_1.png", name: "Particles", index: 0 },
+    { filename: "particles/orb.png", name: "Particles", index: 1 },
+    { filename: "particles/white.png", name: "Particles", index: 2 },
+    { filename: "particles/ring.png", name: "Particles", index: 3 },
+    { filename: "particles/soft5.png", name: "Particles", index: 4 },
+    { filename: "particles/soft9.png", name: "Particles", index: 5 },
+    { filename: "particles/smoke0.png", name: "Particles", index: 6 },
+    { filename: "particles/soft1.png", name: "Particles", index: 7 },
+    { filename: "particles/soft7.png", name: "Particles", index: 8 },
+    { filename: "particles/soft2.png", name: "Particles", index: 9 },
+    { filename: "particles/smoke-puff.png", name: "Particles", index: 10 },
+    { filename: "particles/white-smoke.png", name: "Particles", index: 11 },
 
     // Soko
     {filename: "classics/sokoban_man_horizontal.png", name: "Soko", tilesX: 3, tilesY: 1, spacingX: 2, spacingY: 0, scale: 1.0, index: 0, extrudeMarginWidth: 1},
@@ -218,7 +232,7 @@ export var SpriteLibrary = [
     // Java Hamster
     {filename: "javahamster/hamster_bottom.png", name: "Hamster", index: 0},
     {filename: "javahamster/grain.png", name: "Hamster", index: 1},
-    {filename: "javahamster/wall.png", name: "Hamster", index: 2},
+    {filename: "javahamster/wall.png", name: "Hamster", index: 2}
 ]
 
 function expandDigits(n, digits){
