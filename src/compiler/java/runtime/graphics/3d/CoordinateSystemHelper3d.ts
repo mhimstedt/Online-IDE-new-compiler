@@ -1,8 +1,5 @@
 import * as THREE from 'three';
 import { World3dClass } from "./World3dClass";
-// import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
-// import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
-// import helvetiker_regular from 'assets/graphics/helvetiker_regular.typeface.json.txt';
 
 type Axis = {
     vector: THREE.Vector3,

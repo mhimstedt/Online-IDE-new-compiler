@@ -204,6 +204,8 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
         this.app = undefined;
         this.resizeObserver?.disconnect();
         this.graphicsDiv?.remove();
+        interpreter.deleteObject("WorldClass");
+
     }
 
     changeResolution(interpreter: Interpreter, width: number, height: number) {
