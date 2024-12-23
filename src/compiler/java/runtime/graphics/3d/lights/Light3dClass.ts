@@ -58,8 +58,10 @@ export class Light3dClass extends Object3dClass {
     }
 
     _cj$_constructor_$Light3d$(t: Thread, callback: CallbackParameter){
-        super._cj$_constructor_$Object3d$(t, callback);
-        this.world3d.scene.add(this.light);
+        super._cj$_constructor_$Object3d$(t, () => {
+            callback();
+            this.world3d.addLight(this);
+        });
     }
 
     move(x:number,y:number,z:number):void{
@@ -103,7 +105,7 @@ export class Light3dClass extends Object3dClass {
 
     destroy(){
         super.destroy();
-        this.world3d.scene.remove(this.light);
+        this.world3d.removeLight(this);
         this.light.dispose();
     }
 }

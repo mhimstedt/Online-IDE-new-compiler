@@ -31,8 +31,8 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
         { type: "method", signature: "World(int width, int height)", java: WorldClass.prototype._cj$_constructor_$World$int$int },
 
         { type: "method", signature: "void setBackgroundColor(Color colorAsObject)", native: WorldClass.prototype._setBackgroundColorColor, comment: JRC.worldSetBackgroundColorColorComment },
-        { type: "method", signature: "void setBackgroundColor(int colorAsRGBInt)", native: WorldClass.prototype._setBackgroundColor, comment: JRC.worldSetBackgroundColorIntComment },
-        { type: "method", signature: "void setBackgroundColor(string colorAsString)", native: WorldClass.prototype._setBackgroundColor, comment: JRC.worldSetBackgroundColorStringComment },
+        { type: "method", signature: "void setBackgroundColor(int colorAsRGBInt)", native: WorldClass.prototype._setBackgroundColor, comment: JRC.world3dSetBackgroundColorIntComment },
+        { type: "method", signature: "void setBackgroundColor(string colorAsString)", native: WorldClass.prototype._setBackgroundColor, comment: JRC.world3dSetBackgroundColorStringComment },
 
         { type: "method", signature: "void move(double dx, double dy)", native: WorldClass.prototype._translate, comment: JRC.worldMoveComment },
         { type: "method", signature: "void rotate(double angleInDeg, double centerX, double centerY)", native: WorldClass.prototype._rotate, comment: JRC.worldRotateComment },
@@ -40,8 +40,8 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
 
 
         { type: "method", signature: "void setCoordinateSystem(double left, double top, double width, double height)", native: WorldClass.prototype._setCoordinateSystem, comment: JRC.worldSetCoordinateSystemComment },
-        { type: "method", signature: "void setCursor(string cursor)", native: WorldClass.prototype._setCursor, comment: JRC.worldSetCursorComment },
-        { type: "method", signature: "void clear()", native: WorldClass.prototype._clear, comment: JRC.worldClearComment },
+        { type: "method", signature: "void setCursor(string cursor)", native: WorldClass.prototype._setCursor, comment: JRC.world3dSetCursorComment },
+        { type: "method", signature: "void clear()", native: WorldClass.prototype._clear, comment: JRC.world3dClearComment },
 
         { type: "method", signature: "double getWidth()", template: `Math.round(§1.currentWidth)`, comment: JRC.worldGetWidthComment },
         { type: "method", signature: "double getHeight()", template: `Math.round(§1.currentHeight)`, comment: JRC.worldGetHeightComment },
@@ -53,7 +53,7 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
 
         { type: "method", signature: "void follow(Shape shape, double margin, double xMin, double xMax, double yMin, double yMax)", native: WorldClass.prototype._follow, comment: JRC.worldFollowComment },
 
-        { type: "method", signature: "void addMouseListener(MouseListener mouseListener)", template: `§1.mouseManager.${MouseManager.prototype.addJavaMouseListener.name}(§2);`, comment: JRC.worldAddMouseListenerComment },
+        { type: "method", signature: "void addMouseListener(MouseListener mouseListener)", template: `§1.mouseManager.${MouseManager.prototype.addJavaMouseListener.name}(§2);`, comment: JRC.world3dAddMouseListenerComment },
 
 
 

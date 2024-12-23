@@ -20,8 +20,11 @@ import { ColorHelper } from '../../../lexer/ColorHelper';
 import { ColorClass } from '../ColorClass';
 import { NullPointerExceptionClass } from '../../system/javalang/NullPointerExceptionClass';
 import { TextureManager3d } from './TextureManager3d';
-import { Object3dClass } from './Object3dClass';
+import type { Object3dClass } from './Object3dClass';
 import { CoordinateSystemHelper3d } from './CoordinateSystemHelper3d';
+import type { Light3dClass } from './lights/Light3dClass';
+// import { DirectionalLight3dClass } from './lights/DirectionalLight3dClass';
+// import { AmbientLight3dClass } from './lights/AmbientLight3dClass';
 
 
 export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem {
@@ -30,14 +33,18 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
         { type: "method", signature: "World3d()", java: World3dClass.prototype._cj$_constructor_$World$ },
 
-        { type: "method", signature: "void setBackgroundColor(int colorAsRGBInt)", native: World3dClass.prototype._setBackgroundColor, comment: JRC.worldSetBackgroundColorIntComment },
-        { type: "method", signature: "void setBackgroundColor(String colorAsString)", native: World3dClass.prototype._setBackgroundColor, comment: JRC.worldSetBackgroundColorStringComment },
-        { type: "method", signature: "void setBackgroundColor(Color colorObject)", native: World3dClass.prototype._setBackgroundColor, comment: JRC.worldSetBackgroundColorStringComment },
+        { type: "method", signature: "void setBackgroundColor(int colorAsRGBInt)", native: World3dClass.prototype._setBackgroundColor, comment: JRC.world3dSetBackgroundColorIntComment },
+        { type: "method", signature: "void setBackgroundColor(String colorAsString)", native: World3dClass.prototype._setBackgroundColor, comment: JRC.world3dSetBackgroundColorStringComment },
+        { type: "method", signature: "void setBackgroundColor(Color colorObject)", native: World3dClass.prototype._setBackgroundColor, comment: JRC.world3dSetBackgroundColorStringComment },
 
-        { type: "method", signature: "void setCursor(string cursor)", native: World3dClass.prototype._setCursor, comment: JRC.worldSetCursorComment },
-        { type: "method", signature: "void clear()", native: World3dClass.prototype._clear, comment: JRC.worldClearComment },
+        { type: "method", signature: "void setCursor(string cursor)", native: World3dClass.prototype._setCursor, comment: JRC.world3dSetCursorComment },
+        { type: "method", signature: "void clear()", native: World3dClass.prototype._clear, comment: JRC.world3dClearComment },
 
-        { type: "method", signature: "void addMouseListener(MouseListener mouseListener)", template: `§1.mouseListener.addMouseListener(§2);`, comment: JRC.worldAddMouseListenerComment },
+        { type: "method", signature: "void addMouseListener(MouseListener mouseListener)", template: `§1.mouseListener.addMouseListener(§2);`, comment: JRC.world3dAddMouseListenerComment },
+        
+        { type: "method", signature: "Light3d[] getLights()", template: `§1.lights.slice()`, comment: JRC.worldGetLightsComment },
+        { type: "method", signature: "void destroyAllLights()", native: World3dClass.prototype._destroyAllLights, comment: JRC.worldDestroyAllLightsComment },
+
 
     ]
 
@@ -45,8 +52,8 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
     interpreter!: Interpreter;
 
-    width: number = 800;
-    height: number = 600;
+    width: number = 1920;
+    height: number = 1080;
 
     graphicsDiv?: HTMLDivElement;
     resizeObserver?: ResizeObserver;
@@ -61,6 +68,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
     orbitControls: OrbitControls;
 
     objects:Object3dClass[]=[];
+    lights: Light3dClass[] = [];
 
     textureManager3d: TextureManager3d;
 
@@ -124,12 +132,16 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
         this.orbitControls = new OrbitControls(this.camera, this.renderer.domElement);
 
-
-        const light = new THREE.DirectionalLight(0xffffff, 1.5);
-        light.position.set(10, 5, 3);
-        this.scene.add(light);
-        const light2 = new THREE.AmbientLight(0xffffff, 0.5);
-        this.scene.add(light2);
+        const light1 = new t.classes["DirectionalLight3d"]();
+        light1.light.position.set(10, 5, 3);
+        light1.light.intensity = 1.5;
+        this.scene.add(light1.light);
+        this.lights.push(light1);
+        
+        const light2 = new t.classes["AmbientLight3d"]();
+        light2.light.intensity = 0.5;
+        this.scene.add(light2.light);
+        this.lights.push(light2);
 
         this.scene.background = new THREE.Color(0, 0, 0);
 
@@ -275,6 +287,21 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
     getIdentifier(): string {
         return "World3d";
+    }
+
+    addLight(light: Light3dClass){
+        this.lights.push(light);
+        this.scene.add(light.light);
+    }
+
+    removeLight(light: Light3dClass){
+        this.scene.remove(light.light);
+        let index = this.lights.indexOf(light);
+        if(index >= 0) this.lights.splice(index, 1);
+    }
+
+    _destroyAllLights(){
+        while(this.lights.length > 0) this.scene.remove(this.lights.pop().light)
     }
 
 }

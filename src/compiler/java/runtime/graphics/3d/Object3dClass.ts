@@ -3,7 +3,6 @@ import { Thread } from "../../../../common/interpreter/Thread";
 import { JRC } from "../../../language/JavaRuntimeLibraryComments";
 import { LibraryDeclarations } from "../../../module/libraries/DeclareType";
 import { NonPrimitiveType } from "../../../types/NonPrimitiveType";
-import { ObjectClass } from "../../system/javalang/ObjectClassStringClass";
 import { ActorClass } from "../ActorClass";
 import { Vector3Class } from "./Vector3Class";
 import { World3dClass } from "./World3dClass";

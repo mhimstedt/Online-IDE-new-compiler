@@ -58,6 +58,9 @@ export class Sprite3dClass extends Object3dClass {
         this.spriteMaterial.destroyIfNotUsedByOtherMesh();
     }
 
+    getObject3d(): THREE.Object3D {return this.sprite};
+
+
     move(x: number, y: number, z: number): void {
         // this.mesh.position.add(new THREE.Vector3(x,y,z));
         this.sprite.position.set(this.sprite.position.x + x, this.sprite.position.y + y, this.sprite.position.z + z)

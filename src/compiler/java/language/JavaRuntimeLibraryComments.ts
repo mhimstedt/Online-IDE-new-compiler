@@ -217,7 +217,7 @@ export class JRC {
      * Class World
      */
 
-    static worldSetBackgroundColorIntComment = () => lm({
+    static world3dSetBackgroundColorIntComment = () => lm({
         "de": "Setzt die Hintergrundfarbe. Die Farbe wird als integer-Zahl erwartet. Am besten schreibt man sie als Hexadezimalzahl, also z.B. setBackgroundColor(0xff8080).",
         "en": "Sets world's background color. Color is coded as integer number, e.g. in hexadecimal writing (setBackgroundColor(0xff8080)).",
     })
@@ -227,14 +227,24 @@ export class JRC {
         "en": "Sets world's background color. Color is coded as color object.",
     })
 
-    static worldSetBackgroundColorStringComment = () => lm({
+    static world3dSetBackgroundColorStringComment = () => lm({
         "de": 'Setzt die Hintergrundfarbe. Die Farbe ist entweder eine vordefinierte Farbe ("schwarz", "rot", ...) oder eine css-Farbe der Art "#ffa7b3" (ohne alpha), "#ffa7b380" (mit alpha), "rgb(172, 22, 18)" oder "rgba(123, 22,18, 0.3)',
         "en": 'Sets world\'s background color. Color is coded as predefined color ("black", "red", ...) or css color like "#ffa7b3" (ohne alpha), "#ffa7b380" (mit alpha), "rgb(172, 22, 18)" oder "rgba(123, 22,18, 0.3).',
     })
 
-    static worldAddMouseListenerComment = () => lm({
+    static world3dAddMouseListenerComment = () => lm({
         "de": "Fügt einen neuen MouseListener hinzu, dessen Methoden bei Mausereignissen aufgerufen werden.",
         "en": "Adds a MouseLister object. It's methods are called every time a mouse event occurs.",
+    })
+
+    static worldGetLightsComment = () => lm({
+    "de": `Gibt ein Array mit allen Light3d-Objekten zurück.`,
+    "en": `Returns an array containing all Light3d objects`,
+    })
+
+    static worldDestroyAllLightsComment = () => lm({
+    "de": `Zerstört alle Light3d-Objekte.`,
+    "en": `Destroys all Light3d objects.`,
     })
 
     static worldMoveComment = () => lm({
@@ -257,12 +267,12 @@ export class JRC {
         "en": "Sets coordinate system of world in a way so that (left, top) is top-left corner of visible view, width is it's width and height it's height.",
     })
 
-    static worldSetCursorComment = () => lm({
+    static world3dSetCursorComment = () => lm({
         "de": "Ändert die Form des Mauscursors im gesamten Grafikbereich. Mögliche Werte: siehe https://developer.mozilla.org/en-US/docs/Web/CSS/cursor.",
         "en": "Sets mouse cursor image inside graphic window. For valid values see: https://developer.mozilla.org/en-US/docs/Web/CSS/cursor",
     })
 
-    static worldClearComment = () => lm({
+    static world3dClearComment = () => lm({
         "de": "Löscht alle Grafikobjekte in der Welt, indem es ihre destroy()-Methode aufruft.",
         "en": "Clears all graphic objects inside this world by calling it's destroy() method.",
     })
