@@ -1,8 +1,7 @@
 import * as PIXI from 'pixi.js';
-import { JRC } from '../../java/language/JavaRuntimeLibraryComments';
-import { RuntimeExceptionClass } from '../../java/runtime/system/javalang/RuntimeException';
 import { Interpreter } from './Interpreter';
 import { PixiSpritesheetData } from '../../../client/spritemanager/PixiSpritesheetData';
+import type { WorldClass } from '../../java/runtime/graphics/WorldClass';
 
 export interface GraphicSystem {
     getIdentifier(): string;
@@ -20,7 +19,7 @@ export class GraphicsManager {
     // if 3d world is used then this is defined:
 
 
-    currentGraphicSystem?: GraphicSystem;
+    graphicSystems: GraphicSystem[] = [];
 
     interpreter?: Interpreter;
 
@@ -29,17 +28,16 @@ export class GraphicsManager {
     }
 
     registerGraphicSystem(graphicSystem: GraphicSystem) {
-        if (this.currentGraphicSystem) {
-            throw new RuntimeExceptionClass(JRC.GraphicSystemNotAvailableError(this.currentGraphicSystem.getIdentifier(), graphicSystem.getIdentifier()));
-        }
-
-        this.currentGraphicSystem = graphicSystem;
+        // if (this.currentGraphicSystem) {
+        //     throw new RuntimeExceptionClass(JRC.GraphicSystemNotAvailableError(this.currentGraphicSystem.getIdentifier(), graphicSystem.getIdentifier()));
+        // }
+        this.graphicSystems.push(graphicSystem);
     }
 
     setInterpreter(interpreter: Interpreter) {
         this.interpreter = interpreter;
         interpreter.eventManager.on("resetRuntime", () => {
-            this.currentGraphicSystem = undefined;
+            this.graphicSystems = [];
         });
     }
 
@@ -71,6 +69,18 @@ export class GraphicsManager {
 
     }
 
+    resizeGraphicsDivHeight(){
 
+        let canvases = this.graphicsDiv.getElementsByTagName('canvas');
+        let height = 0;
+
+        for(let i = 0; i < canvases.length; i++){
+            let canvas = canvases[i];
+            let cheight = canvas.getBoundingClientRect().height;
+            if(cheight > height) height = cheight;
+        }
+
+        this.graphicsDiv.style.height = height + "px";
+    }
 
 }

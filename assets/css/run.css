@@ -196,13 +196,14 @@
 
     .jo_graphics>div {
 
-        width: 100%;
-        height: 100%;
-        position: relative;
-
+        /* width: 100%;
+        height: 100%; */
+        position: absolute;
+        width: fit-content;
+        height: fit-content;
     }
 
-    .jo_graphics>div>div {
+    /* .jo_graphics>div>div {
         position: absolute;
         top: 0; bottom: 0; left: 0; right: 0;
     }
@@ -210,7 +211,7 @@
     .jo_graphics>div>div>canvas {
         width: 100%;
         height: 100%;
-    }
+    } */
 
     /* Zoomcontrol */
 

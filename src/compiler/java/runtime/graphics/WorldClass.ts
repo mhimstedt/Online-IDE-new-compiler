@@ -21,6 +21,7 @@ import { GraphicSystem } from '../../../common/interpreter/GraphicsManager.ts';
 import { ColorClass } from './ColorClass.ts';
 import { NullPointerExceptionClass } from '../system/javalang/NullPointerExceptionClass.ts';
 import { RuntimeExceptionClass } from '../system/javalang/RuntimeException.ts';
+import { DOM } from '../../../../tools/DOM.ts';
 
 
 export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
@@ -105,30 +106,41 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
         let existingWorld = <WorldClass>interpreter.retrieveObject("WorldClass");
         if (existingWorld) {
             t.s.push(existingWorld);
-            existingWorld.changeResolution(width, height);
+            existingWorld.changeResolution(interpreter, width, height);
             return existingWorld;
         }
 
         interpreter.storeObject("WorldClass", this);
 
-        this.graphicsDiv = <HTMLDivElement>interpreter.graphicsManager?.graphicsDiv;
+        let graphicsDivParent = <HTMLDivElement>interpreter.graphicsManager?.graphicsDiv;
+
+        let oldGraphicsDivs = graphicsDivParent.getElementsByClassName('pixiWorld');
+        for(let i = 0; i < oldGraphicsDivs.length; i++){
+            oldGraphicsDivs[i].remove();
+        }
+
+        this.graphicsDiv = DOM.makeDiv(graphicsDivParent, 'pixiWorld');
         this.graphicsDiv.style.overflow = "hidden";
-        this.graphicsDiv.innerHTML = "";
+
+        let hasWorld3D = graphicsDivParent.getElementsByClassName('world3d').length > 0;
+        if(hasWorld3D) this.graphicsDiv.style.pointerEvents = "none";
+
 
         t.state = ThreadState.waiting;
         this.app = new PIXI.Application();
-        this.app.init({ background: '#000000', width: width, height: height, resizeTo: undefined, antialias: true }).then( async () => {
+
+        this.app.init({backgroundAlpha: hasWorld3D ? 0 : 1, background: '#000000', width: width, height: height, resizeTo: undefined, antialias: true}).then( async () => {
 
             this.app!.canvas.style.width = "10px";
             this.app!.canvas.style.height = "10px";
             this.graphicsDiv?.appendChild(this.app!.canvas);
 
-            this.resizeObserver = new ResizeObserver(() => { this.changeResolution(this.width, this.height); });
-            this.resizeObserver.observe(this.graphicsDiv!);
+            this.resizeObserver = new ResizeObserver(() => { this.changeResolution(interpreter, this.width, this.height); });
+            this.resizeObserver.observe(this.graphicsDiv!.parentElement!.parentElement!);
 
             this.app!.stage.setFromMatrix(new PIXI.Matrix(1, 0, 0, 1, 0, 0));
 
-            this.changeResolution(width, height);
+            this.changeResolution(interpreter, width, height);
 
             this.addCallbacks(interpreter);
 
@@ -191,9 +203,10 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
         //@ts-ignore
         this.app = undefined;
         this.resizeObserver?.disconnect();
+        this.graphicsDiv?.remove();
     }
 
-    changeResolution(width: number, height: number) {
+    changeResolution(interpreter: Interpreter, width: number, height: number) {
         this.width = width;
         this.height = height;
 
@@ -207,7 +220,7 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
 
         this.app?.renderer.resize(width, height, 1);
 
-        let rect = this.graphicsDiv!.parentElement!.getBoundingClientRect();
+        let rect = this.graphicsDiv!.parentElement!.parentElement!.getBoundingClientRect();
         if (rect.width == 0 || rect.height == 0) rect = this.graphicsDiv!.parentElement!.getBoundingClientRect();
 
         let newCanvasWidth: number;
@@ -226,6 +239,8 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
 
         this.app!.canvas.style.width = newCanvasWidth + "px";
         this.app!.canvas.style.height = newCanvasHeight + "px";
+
+        interpreter.graphicsManager?.resizeGraphicsDivHeight();
 
     }
 
@@ -462,5 +477,6 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
         }
 
     }
+
 }
 

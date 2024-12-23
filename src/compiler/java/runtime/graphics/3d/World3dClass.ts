@@ -50,10 +50,8 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
     static type: NonPrimitiveType;
 
-    interpreter!: Interpreter;
-
-    width: number = 1920;
-    height: number = 1080;
+    width: number = 800;
+    height: number = 600;
 
     graphicsDiv?: HTMLDivElement;
     resizeObserver?: ResizeObserver;
@@ -96,22 +94,30 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
 
         let graphicsDivParent = <HTMLDivElement>interpreter.graphicsManager?.graphicsDiv;
-        graphicsDivParent.innerHTML = "";
 
-        this.graphicsDiv = DOM.makeDiv(graphicsDivParent, 'world3d');
+        let oldGraphicsDivs = graphicsDivParent.getElementsByClassName('world3d');
+        for(let i = 0; i < oldGraphicsDivs.length; i++){
+            oldGraphicsDivs[i].remove();
+        }
+
+        this.graphicsDiv = DOM.makeDiv(undefined, 'world3d');
+        graphicsDivParent.prepend(this.graphicsDiv);
+
+        let pixiDiv = graphicsDivParent.getElementsByClassName('pixiWorld');
+        if(pixiDiv.length > 0) (<HTMLDivElement>pixiDiv[0]).style.pointerEvents = "none";
 
         this.graphicsDiv.style.overflow = "hidden";
         this.graphicsDiv.innerHTML = "";
-        this.changeResolution(this.width, this.height);
-
+        this.changeResolution(interpreter, this.width, this.height);
+        
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(75, this.width / this.height, 0.1, 1000);
         // size of 1 pixel: see https://discourse.threejs.org/t/solved-how-do-we-size-something-using-screen-pixels/1177
-
+        
         this.renderer = new THREE.WebGLRenderer({antialias:true});
         this.renderer.setSize(this.width, this.height);
         this.graphicsDiv.appendChild(this.renderer.domElement);
-
+        
         this.renderer.domElement.style.width = "100%";
         this.renderer.domElement.style.height = "100%";
 
@@ -125,7 +131,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         this.renderer.setAnimationLoop(animate);
 
         this.resizeObserver = new ResizeObserver(() => {
-            this.changeResolution(this.width, this.height);
+            this.changeResolution(interpreter, this.width, this.height);
         });
 
         this.resizeObserver.observe(this.graphicsDiv!.parentElement!.parentElement!);
@@ -190,9 +196,11 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
     destroyWorld(interpreter: Interpreter) {
         this.objects.forEach(obj => obj.destroy());
         this.resizeObserver?.disconnect();
+        this.renderer.dispose();
+        this.graphicsDiv?.remove();
     }
 
-    changeResolution(width: number, height: number) {
+    changeResolution(interpreter: Interpreter, width: number, height: number) {
         this.width = width;
         this.height = height;
 
@@ -223,6 +231,8 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
         this.camera?.updateProjectionMatrix();
         this.renderer?.setSize(newCanvasWidth, newCanvasHeight);
+
+        interpreter.graphicsManager?.resizeGraphicsDivHeight();
 
         // this.app!.canvas.style.width = newCanvasWidth + "px";
         // this.app!.canvas.style.height = newCanvasHeight + "px";
@@ -303,6 +313,6 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
     _destroyAllLights(){
         while(this.lights.length > 0) this.scene.remove(this.lights.pop().light)
     }
-
+ 
 }
 

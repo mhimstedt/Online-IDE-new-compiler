@@ -287,6 +287,7 @@ export class PAppletClass extends ObjectClass implements GraphicSystem {
             this.p5o.remove();
             interpreter.deleteObject("PAppletClass");
             this.canvasCreated = false;
+            this.graphicsDiv?.remove();
         })
 
         interpreter.storeObject("PAppletClass", this);
@@ -309,6 +310,8 @@ export class PAppletClass extends ObjectClass implements GraphicSystem {
                 graphicsDiv.style.width = maxWidth + "px";
                 graphicsDiv.style.height = this.height / this.width * maxWidth + "px";
             }
+
+            interpreter.graphicsManager?.resizeGraphicsDivHeight();
 
         };
 
@@ -479,5 +482,6 @@ export class PAppletClass extends ObjectClass implements GraphicSystem {
     getIdentifier(): string {
         return "Processing";
     }
+
 
 }

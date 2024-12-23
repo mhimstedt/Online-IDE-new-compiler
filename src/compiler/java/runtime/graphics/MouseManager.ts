@@ -49,7 +49,7 @@ export class MouseManager {
             if (window.PointerEvent) {
                 eventType = eventType.replace('mouse', 'pointer');
             }
-
+            
             let listener: any;
             //@ts-ignore
             canvas.addEventListener(mouseEventKind,  listener = (e: MouseEvent) => {
@@ -90,7 +90,6 @@ export class MouseManager {
                 //         gngEreignisbehandlung.handleMouseClickedEvent(x, y);
                 //     }
                 // }
-
             });
 
             this.listeners.set(mouseEventKind, listener);
