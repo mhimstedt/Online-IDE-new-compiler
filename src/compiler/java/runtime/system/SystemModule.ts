@@ -2,7 +2,9 @@ import { CodeFragment } from "../../../common/disassembler/CodeFragment.ts";
 import { Program } from "../../../common/interpreter/Program";
 import { Klass } from "../../../common/interpreter/StepFunction.ts";
 import { JavaLibraryModule, LibraryKlassType } from "../../module/libraries/JavaLibraryModule";
+import { ArrayCamera3dClass } from "../graphics/3d/ArrayCamera3dClass.ts";
 import { Box3dClass } from "../graphics/3d/Box3dClass.ts";
+import { Camera3dClass } from "../graphics/3d/Camera3dClass.ts";
 import { Cone3dClass } from "../graphics/3d/Cone3dClass.ts";
 import { Cylinder3dClass } from "../graphics/3d/Cylinder3dClass.ts";
 import { Group3dClass } from "../graphics/3d/Group3dClass.ts";
@@ -20,6 +22,8 @@ import { TextureEnum } from "../graphics/3d/materials/TextureEnum.ts";
 import { Matrix4Class } from "../graphics/3d/Matrix4Class.ts";
 import { Mesh3dClass } from "../graphics/3d/Mesh3dClass.ts";
 import { Object3dClass } from "../graphics/3d/Object3dClass.ts";
+import { OrthographicCamera3dClass } from "../graphics/3d/OrthographicCamera3dClass.ts";
+import { PerspectiveCamera3dClass } from "../graphics/3d/PerspectiveCamera3dClass.ts";
 import { Sphere3dClass } from "../graphics/3d/Sphere3dClass.ts";
 import { Sprite3dClass } from "../graphics/3d/Sprite3dClass.ts";
 import { Vector3Class } from "../graphics/3d/Vector3Class.ts";
@@ -235,7 +239,8 @@ export class SystemModule extends JavaLibraryModule {
             World3dClass, Object3dClass, Group3dClass, Mesh3dClass, Box3dClass, Sphere3dClass, 
             Light3dClass, PointLight3dClass, DirectionalLight3dClass, AmbientLight3dClass,
             Sprite3dClass, Matrix4Class, TextureEnum, SpriteMaterial3dClass, Cone3dClass, Cylinder3dClass,
-
+            Camera3dClass, PerspectiveCamera3dClass, OrthographicCamera3dClass, ArrayCamera3dClass,
+            
             // Processing
             PAppletClass,
 

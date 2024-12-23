@@ -23,6 +23,7 @@ import { TextureManager3d } from './TextureManager3d';
 import type { Object3dClass } from './Object3dClass';
 import { CoordinateSystemHelper3d } from './CoordinateSystemHelper3d';
 import type { Light3dClass } from './lights/Light3dClass';
+import type { Camera3dClass } from './Camera3dClass';
 // import { DirectionalLight3dClass } from './lights/DirectionalLight3dClass';
 // import { AmbientLight3dClass } from './lights/AmbientLight3dClass';
 
@@ -45,6 +46,10 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         { type: "method", signature: "Light3d[] getLights()", template: `§1.lights.slice()`, comment: JRC.worldGetLightsComment },
         { type: "method", signature: "void destroyAllLights()", native: World3dClass.prototype._destroyAllLights, comment: JRC.worldDestroyAllLightsComment },
 
+        { type: "method", signature: "void setCurrentCamera(Camera3d camera)", native: World3dClass.prototype._setCurrentCamera },
+        { type: "method", signature: "void removeCoordinateAxes()", native: World3dClass.prototype._removeCoordinateAxes },
+        { type: "method", signature: "void removeOrbitControls()", native: World3dClass.prototype._removeOrbitControls },
+
 
     ]
 
@@ -62,7 +67,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
     scene: THREE.Scene;
     renderer: THREE.WebGLRenderer;
-    camera: THREE.PerspectiveCamera;
+    currentCamera: Camera3dClass;
     orbitControls: OrbitControls;
 
     objects:Object3dClass[]=[];
@@ -108,10 +113,13 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
         this.graphicsDiv.style.overflow = "hidden";
         this.graphicsDiv.innerHTML = "";
-        this.changeResolution(interpreter, this.width, this.height);
         
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(75, this.width / this.height, 0.1, 1000);
+        let cameraThree = new THREE.PerspectiveCamera(75, this.width / this.height, 0.1, 1000);
+        this.currentCamera = new t.classes["PerspectiveCamera3d"]();
+        this.currentCamera.camera3d = cameraThree;
+
+        this.changeResolution(interpreter, this.width, this.height);
         // size of 1 pixel: see https://discourse.threejs.org/t/solved-how-do-we-size-something-using-screen-pixels/1177
         
         this.renderer = new THREE.WebGLRenderer({antialias:true});
@@ -121,12 +129,12 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         this.renderer.domElement.style.width = "100%";
         this.renderer.domElement.style.height = "100%";
 
-        this.camera.position.set(2,2,2);
-        this.camera.lookAt(new THREE.Vector3(0,0,0));
+        cameraThree.position.set(2,2,2);
+        cameraThree.lookAt(new THREE.Vector3(0,0,0));
 
 
         let animate = () => {
-            this.renderer.render(this.scene, this.camera);
+            this.renderer.render(this.scene, this.currentCamera.camera3d);
         }
         this.renderer.setAnimationLoop(animate);
 
@@ -136,7 +144,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
         this.resizeObserver.observe(this.graphicsDiv!.parentElement!.parentElement!);
 
-        this.orbitControls = new OrbitControls(this.camera, this.renderer.domElement);
+        this.orbitControls = new OrbitControls(this.currentCamera.camera3d, this.renderer.domElement);
 
         const light1 = new t.classes["DirectionalLight3d"]();
         light1.light.position.set(10, 5, 3);
@@ -229,7 +237,13 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         // this.graphicsDiv.style.width = newCanvasWidth + "px";
         // this.graphicsDiv.style.height = newCanvasHeight + "px";
 
-        this.camera?.updateProjectionMatrix();
+        if(this.currentCamera?.camera3d instanceof THREE.PerspectiveCamera){
+            this.currentCamera.camera3d.aspect = newCanvasWidth/newCanvasHeight;
+            this.currentCamera.camera3d.updateProjectionMatrix();
+        }
+
+        this.currentCamera.updateViewport();
+
         this.renderer?.setSize(newCanvasWidth, newCanvasHeight);
 
         interpreter.graphicsManager?.resizeGraphicsDivHeight();
@@ -314,5 +328,16 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         while(this.lights.length > 0) this.scene.remove(this.lights.pop().light)
     }
  
+    _setCurrentCamera(camera: Camera3dClass){
+        this.currentCamera = camera;
+    }
+
+    _removeCoordinateAxes(){
+        this.coordinateSystemHelper.hide();
+    }
+
+    _removeOrbitControls(){
+        this.orbitControls.dispose();
+    }
 }
 

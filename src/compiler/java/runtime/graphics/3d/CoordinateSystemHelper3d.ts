@@ -71,6 +71,11 @@ export class CoordinateSystemHelper3d {
         return this;
     }
 
+    hide(){
+        for(let axis of this.axes){
+            this.world3d.scene.remove(axis.sprite, axis.arrowHelper);
+        }
+    }
 
 
 }
