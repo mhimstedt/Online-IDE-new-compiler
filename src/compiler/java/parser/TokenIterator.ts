@@ -436,7 +436,7 @@ export class TokenIterator {
             let tt = token.tt;
             if (tt == TokenType.semicolon || tt == TokenType.assignment) break;
             if(tt == TokenType.newline){
-                if(nonSpaceTokenTypesFound.length == 1){
+                if(nonSpaceTokenTypesFound.length == 1 || nonSpaceTokenTypesFound.length == 2 && nonSpaceTokenTypesFound[1] == TokenType.dot){
                     return "statement";
                 }
             }

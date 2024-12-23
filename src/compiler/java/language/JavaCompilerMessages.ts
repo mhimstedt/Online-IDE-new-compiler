@@ -647,7 +647,7 @@ export class JCM {
     })
 
     static typeNotDefined = (type: string) => le({
-        "de": `Der Datentyp ${type}) ist hier nicht definiert.`,
+        "de": `Der Datentyp ${type} ist hier nicht definiert.`,
         "en": `Type ${type} is not defined here.`,
     })
 
