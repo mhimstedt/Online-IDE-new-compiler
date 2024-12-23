@@ -21,6 +21,7 @@ export class Object3dClass extends ActorClass {
         { type: "method", signature: "final void moveTo(Vector3 p)", native: Object3dClass.prototype.vmoveTo },
 
         { type: "method", signature: "void lookAt(double x,double y,double z)", native: Object3dClass.prototype.lookAt},
+        { type: "method", signature: "void lookAt(Object3d target)", native: Object3dClass.prototype.lookAtTarget},
 
         { type: "method", signature: "abstract void rotateX(double angleDeg)",native: Object3dClass.prototype.rotateX },
         { type: "method", signature: "abstract void rotateY(double angleDeg)",native: Object3dClass.prototype.rotateY },
@@ -81,6 +82,10 @@ export class Object3dClass extends ActorClass {
 
     lookAt(x: number, y: number, z: number): void{
         this.getObject3d().lookAt(new Three.Vector3(x, y, z));
+    }
+
+    lookAtTarget(target: Object3dClass): void{
+        this.getObject3d().lookAt(target.getObject3d().position);
     }
 
     moveTo(x: number, y: number, z: number): void {}

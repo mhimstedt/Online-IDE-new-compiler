@@ -42,7 +42,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         { type: "method", signature: "void clear()", native: World3dClass.prototype._clear, comment: JRC.world3dClearComment },
 
         { type: "method", signature: "void addMouseListener(MouseListener mouseListener)", template: `§1.mouseListener.addMouseListener(§2);`, comment: JRC.world3dAddMouseListenerComment },
-        
+
         { type: "method", signature: "Light3d[] getLights()", template: `§1.lights.slice()`, comment: JRC.worldGetLightsComment },
         { type: "method", signature: "void destroyAllLights()", native: World3dClass.prototype._destroyAllLights, comment: JRC.worldDestroyAllLightsComment },
 
@@ -70,7 +70,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
     currentCamera: Camera3dClass;
     orbitControls: OrbitControls;
 
-    objects:Object3dClass[]=[];
+    objects: Object3dClass[] = [];
     lights: Light3dClass[] = [];
 
     textureManager3d: TextureManager3d;
@@ -101,7 +101,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         let graphicsDivParent = <HTMLDivElement>interpreter.graphicsManager?.graphicsDiv;
 
         let oldGraphicsDivs = graphicsDivParent.getElementsByClassName('world3d');
-        for(let i = 0; i < oldGraphicsDivs.length; i++){
+        for (let i = 0; i < oldGraphicsDivs.length; i++) {
             oldGraphicsDivs[i].remove();
         }
 
@@ -109,11 +109,11 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         graphicsDivParent.prepend(this.graphicsDiv);
 
         let pixiDiv = graphicsDivParent.getElementsByClassName('pixiWorld');
-        if(pixiDiv.length > 0) (<HTMLDivElement>pixiDiv[0]).style.pointerEvents = "none";
+        if (pixiDiv.length > 0) (<HTMLDivElement>pixiDiv[0]).style.pointerEvents = "none";
 
         this.graphicsDiv.style.overflow = "hidden";
         this.graphicsDiv.innerHTML = "";
-        
+
         this.scene = new THREE.Scene();
         let cameraThree = new THREE.PerspectiveCamera(75, this.width / this.height, 0.1, 1000);
         this.currentCamera = new t.classes["PerspectiveCamera3d"]();
@@ -121,22 +121,19 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
         this.changeResolution(interpreter, this.width, this.height);
         // size of 1 pixel: see https://discourse.threejs.org/t/solved-how-do-we-size-something-using-screen-pixels/1177
-        
-        this.renderer = new THREE.WebGLRenderer({antialias:true});
+
+        this.renderer = new THREE.WebGLRenderer({ antialias: true });
         this.renderer.setSize(this.width, this.height);
         this.graphicsDiv.appendChild(this.renderer.domElement);
-        
+
         this.renderer.domElement.style.width = "100%";
         this.renderer.domElement.style.height = "100%";
 
-        cameraThree.position.set(2,2,2);
-        cameraThree.lookAt(new THREE.Vector3(0,0,0));
+        cameraThree.position.set(2, 2, 2);
+        cameraThree.lookAt(new THREE.Vector3(0, 0, 0));
 
-
-        let animate = () => {
-            this.renderer.render(this.scene, this.currentCamera.camera3d);
-        }
-        this.renderer.setAnimationLoop(animate);
+        this.startAnimationLoop(interpreter);
+        // this.renderer.setAnimationLoop(animate);
 
         this.resizeObserver = new ResizeObserver(() => {
             this.changeResolution(interpreter, this.width, this.height);
@@ -147,12 +144,14 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         this.orbitControls = new OrbitControls(this.currentCamera.camera3d, this.renderer.domElement);
 
         const light1 = new t.classes["DirectionalLight3d"]();
+        light1.world3d = this;
         light1.light.position.set(10, 5, 3);
         light1.light.intensity = 1.5;
         this.scene.add(light1.light);
         this.lights.push(light1);
         
         const light2 = new t.classes["AmbientLight3d"]();
+        light2.world3d = this;
         light2.light.intensity = 0.5;
         this.scene.add(light2.light);
         this.lights.push(light2);
@@ -177,9 +176,32 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
     }
 
-    tick(elapsedMS: number, interpreter: Interpreter) {
+    startAnimationLoop(interpreter: Interpreter) {
+        interpreter.isExternalTimer = true;
+
+        var frameLengthMS = 1000 / 30;//30 fps
+        var previousTime = performance.now() - frameLengthMS;
+
+        let render = () => {
+            let time = performance.now();
+            if (time - previousTime >= frameLengthMS) {
+                previousTime = time;
+                if(!this.renderer) return;
+                this.renderer.render(this.scene, this.currentCamera.camera3d);
+                time = performance.now();
+                let timeLeft = frameLengthMS - (time - previousTime);
+                this.tick(timeLeft * 0.8, interpreter);
+            }
+            requestAnimationFrame(render);
+        }
+
+        render();
+    }
+
+
+    tick(msLeft: number, interpreter: Interpreter) {
         this.actorManager.callActMethods(33);
-        interpreter.timerFunction(33);
+        interpreter.timerFunction(msLeft);
     }
 
     addCallbacks(interpreter: Interpreter) {
@@ -205,6 +227,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         this.objects.forEach(obj => obj.destroy());
         this.resizeObserver?.disconnect();
         this.renderer.dispose();
+        this.renderer = undefined;
         this.graphicsDiv?.remove();
     }
 
@@ -237,8 +260,8 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         // this.graphicsDiv.style.width = newCanvasWidth + "px";
         // this.graphicsDiv.style.height = newCanvasHeight + "px";
 
-        if(this.currentCamera?.camera3d instanceof THREE.PerspectiveCamera){
-            this.currentCamera.camera3d.aspect = newCanvasWidth/newCanvasHeight;
+        if (this.currentCamera?.camera3d instanceof THREE.PerspectiveCamera) {
+            this.currentCamera.camera3d.aspect = newCanvasWidth / newCanvasHeight;
             this.currentCamera.camera3d.updateProjectionMatrix();
         }
 
@@ -281,18 +304,18 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         // } else {
         //     renderer.background.color.setValue(color);
         // }
-        if(color===null){
+        if (color === null) {
             throw new NullPointerExceptionClass(JRC.world3dColorNull())
         }
-        if(typeof color==="number"){
-            this.scene.background=new THREE.Color(color);
+        if (typeof color === "number") {
+            this.scene.background = new THREE.Color(color);
         }
-        if(typeof color==="string"){
+        if (typeof color === "string") {
             let c = ColorHelper.parseColorToOpenGL(color);
-            this.scene.background=new THREE.Color(c.color);
+            this.scene.background = new THREE.Color(c.color);
         }
-        if(typeof color==="object"){
-            this.scene.background=new THREE.Color(color.red,color.green,color.blue);
+        if (typeof color === "object") {
+            this.scene.background = new THREE.Color(color.red, color.green, color.blue);
         }
     }
 
@@ -302,7 +325,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
     }
 
     _clear() {
-        this.objects.forEach((o)=>{
+        this.objects.forEach((o) => {
             o.destroy();
         })
         this.scene.clear();
@@ -313,30 +336,30 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         return "World3d";
     }
 
-    addLight(light: Light3dClass){
+    addLight(light: Light3dClass) {
         this.lights.push(light);
         this.scene.add(light.light);
     }
 
-    removeLight(light: Light3dClass){
+    removeLight(light: Light3dClass) {
         this.scene.remove(light.light);
         let index = this.lights.indexOf(light);
-        if(index >= 0) this.lights.splice(index, 1);
+        if (index >= 0) this.lights.splice(index, 1);
     }
 
-    _destroyAllLights(){
-        while(this.lights.length > 0) this.scene.remove(this.lights.pop().light)
+    _destroyAllLights() {
+        while (this.lights.length > 0) this.scene.remove(this.lights.pop().light)
     }
- 
-    _setCurrentCamera(camera: Camera3dClass){
+
+    _setCurrentCamera(camera: Camera3dClass) {
         this.currentCamera = camera;
     }
 
-    _removeCoordinateAxes(){
+    _removeCoordinateAxes() {
         this.coordinateSystemHelper.hide();
     }
 
-    _removeOrbitControls(){
+    _removeOrbitControls() {
         this.orbitControls.dispose();
     }
 }
