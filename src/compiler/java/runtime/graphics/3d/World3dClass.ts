@@ -93,6 +93,9 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
             return existingWorld;
         }
 
+        t.state = ThreadState.waiting;
+        t.scheduler.suspendThread(t);
+
         interpreter.storeObject("World3dClass", this);
 
         this.actorManager = new ActorManager(interpreter);
@@ -166,10 +169,9 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
         this.textureManager3d = new TextureManager3d();
 
-        t.state = ThreadState.waiting;
         this.textureManager3d.init(interpreter).then(() => {
             this.coordinateSystemHelper = new CoordinateSystemHelper3d(this).show();
-            t.state = ThreadState.runnable;
+            t.scheduler.restoreThread(t);
             t.s.push(this);
             if (callback) callback();
         })
@@ -224,7 +226,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
     }
 
     destroyWorld(interpreter: Interpreter) {
-        this.objects.forEach(obj => obj.destroy());
+        while(this.objects.length > 0) this.objects.pop().destroy();
         this.resizeObserver?.disconnect();
         this.renderer?.dispose();
         this.renderer = undefined;

@@ -32,6 +32,14 @@ export class Object3dClass extends ActorClass {
         { type: "method", signature: "abstract void scaleZ(double angleDeg)",native: Object3dClass.prototype.scaleZ },
         { type: "method", signature: "abstract void scale(Vector3 v)", native: Object3dClass.prototype.vscale },
         { type: "method", signature: "abstract void scale(double d)", native: Object3dClass.prototype.scaleDouble },
+        
+        { type: "method", signature: "double getX()", template: `§1.getObject3d().position.x` },
+        { type: "method", signature: "double getY()", template: `§1.getObject3d().position.y` },
+        { type: "method", signature: "double getZ()", template: `§1.getObject3d().position.z` },
+
+
+
+
         { type: "method", signature: "abstract void destroy()", native: Object3dClass.prototype.destroy },
     ];
 
@@ -41,7 +49,6 @@ export class Object3dClass extends ActorClass {
     getObject3d(): Three.Object3D {return null};
 
     _cj$_constructor_$Object3d$(t: Thread, callback: CallbackParameter) {
-
         t.s.push(this);
         this.world3d = t.scheduler.interpreter.retrieveObject("World3dClass");
         if (!this.world3d) {

@@ -149,8 +149,10 @@ export class Mesh3dClass extends Object3dClass {
 
     getInitialMaterial(): Material3dClass {
 
-        return new PhongMaterial3dClass()._phongMaterialConstructor(0x00ff00, 100);
-
+        let m = new PhongMaterial3dClass()._phongMaterialConstructor(0x00ff00, 100);
+        m.getMaterialAndIncreaseUsageCounter();
+        this._material = m;
+        return m;
     }
 
     enableFrontBackSide(frontSideVisible: boolean, backSideVisible: boolean) {

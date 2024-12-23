@@ -55,7 +55,7 @@ export class RobotWorldClass extends ObjectClass {
 
             this.world3d.scene.background = new THREE.Color(0.5, 0.5, 1);
 
-            this.world3d.currentCamera.position.z = 10;
+            this.world3d.currentCamera.camera3d.position.z = 10;
 
             this.robotCubeFactory = new RobotCubeFactory(this);
             t.state = ThreadState.waiting;
@@ -75,8 +75,8 @@ export class RobotWorldClass extends ObjectClass {
             }
 
             this.world3d.orbitControls.dispose();
-            this.world3d.currentCamera.position.set(this.maxX, Math.max(this.maxX, this.maxY), this.maxY);
-            this.world3d.orbitControls = new OrbitControls(this.world3d.currentCamera, this.world3d.renderer.domElement);
+            this.world3d.currentCamera.camera3d.position.set(this.maxX, Math.max(this.maxX, this.maxY), this.maxY);
+            this.world3d.orbitControls = new OrbitControls(this.world3d.currentCamera.camera3d, this.world3d.renderer.domElement);
 
             this.initWorldArrays(this.maxX, this.maxY);
 
