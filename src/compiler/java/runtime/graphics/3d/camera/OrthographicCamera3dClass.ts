@@ -1,8 +1,8 @@
 import * as THREE from 'three';
-import { CallbackParameter } from "../../../../common/interpreter/CallbackParameter";
-import { Thread } from "../../../../common/interpreter/Thread";
-import { LibraryDeclarations } from "../../../module/libraries/DeclareType";
-import { NonPrimitiveType } from "../../../types/NonPrimitiveType";
+import { CallbackParameter } from "../../../../../common/interpreter/CallbackParameter";
+import { Thread } from "../../../../../common/interpreter/Thread";
+import { LibraryDeclarations } from "../../../../module/libraries/DeclareType";
+import { NonPrimitiveType } from "../../../../types/NonPrimitiveType";
 import { Camera3dClass } from './Camera3dClass';
 
 export class OrthographicCamera3dClass extends Camera3dClass {

@@ -3,8 +3,8 @@ import { CallbackParameter } from "../../../../common/interpreter/CallbackParame
 import { Thread } from "../../../../common/interpreter/Thread";
 import { LibraryDeclarations } from "../../../module/libraries/DeclareType";
 import { NonPrimitiveType } from "../../../types/NonPrimitiveType";
-import { Camera3dClass } from './Camera3dClass';
-import { PerspectiveCamera3dClass } from './PerspectiveCamera3dClass';
+import { Camera3dClass } from './camera/Camera3dClass';
+import { PerspectiveCamera3dClass } from './camera/PerspectiveCamera3dClass';
 
 export class ArrayCamera3dClass extends Camera3dClass {
 
