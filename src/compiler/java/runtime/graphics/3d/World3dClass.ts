@@ -23,7 +23,7 @@ import { TextureManager3d } from './TextureManager3d';
 import type { Object3dClass } from './Object3dClass';
 import { CoordinateSystemHelper3d } from './CoordinateSystemHelper3d';
 import type { Light3dClass } from './lights/Light3dClass';
-import type { Camera3dClass } from './Camera3dClass';
+import type { Camera3dClass } from './camera/Camera3dClass';
 // import { DirectionalLight3dClass } from './lights/DirectionalLight3dClass';
 // import { AmbientLight3dClass } from './lights/AmbientLight3dClass';
 
@@ -136,7 +136,6 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         cameraThree.lookAt(new THREE.Vector3(0, 0, 0));
 
         this.startAnimationLoop(interpreter);
-        // this.renderer.setAnimationLoop(animate);
 
         this.resizeObserver = new ResizeObserver(() => {
             this.changeResolution(interpreter, this.width, this.height);
@@ -161,7 +160,6 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
         this.scene.background = new THREE.Color(0, 0, 0);
 
-        // interpreter.isExternalTimer = true;
         this.addCallbacks(interpreter);
 
         // this.mouseManager = new MouseManager(this);
@@ -179,25 +177,14 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
     }
 
     startAnimationLoop(interpreter: Interpreter) {
-        interpreter.isExternalTimer = true;
-
-        var frameLengthMS = 1000 / 30;//30 fps
-        var previousTime = performance.now() - frameLengthMS;
+        // interpreter.isExternalTimer = true;
 
         let render = () => {
-            let time = performance.now();
-            if (time - previousTime >= frameLengthMS) {
-                previousTime = time;
-                if(!this.renderer) return;
-                this.renderer.render(this.scene, this.currentCamera.camera3d);
-                time = performance.now();
-                let timeLeft = frameLengthMS - (time - previousTime);
-                this.tick(timeLeft * 0.8, interpreter);
-            }
-            requestAnimationFrame(render);
+            this.renderer.render(this.scene, this.currentCamera.camera3d);
         }
+        
+        this.renderer.setAnimationLoop(render);
 
-        render();
     }
 
 
