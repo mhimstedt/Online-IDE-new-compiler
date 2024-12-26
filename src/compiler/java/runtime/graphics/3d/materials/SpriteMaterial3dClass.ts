@@ -22,10 +22,10 @@ export class SpriteMaterial3dClass extends Material3dClass {
     _cj$_constructor_$SpriteMaterial3d$SpriteLibrary$int(t: Thread, callback: CallbackParameter, spriteLibrary: SpriteLibraryEnum, imageIndex: number) {
 
         t.s.push(this);
-        let world3d = t.scheduler.interpreter.retrieveObject("World3dClass");
+        let world3d = <World3dClass>t.scheduler.interpreter.retrieveObject("World3dClass");
         if (!world3d) {
             world3d = new World3dClass();
-            world3d._cj$_constructor_$World$(t, () => {
+            world3d._cj$_constructor_$World3d$(t, () => {
                 t.s.pop(); // constructor of world3d pushed it's this-object
                 this.createMaterial(world3d, spriteLibrary, imageIndex);
                 return;

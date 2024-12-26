@@ -24,6 +24,7 @@ import type { Object3dClass } from './Object3dClass';
 import { CoordinateSystemHelper3d } from './CoordinateSystemHelper3d';
 import type { Light3dClass } from './lights/Light3dClass';
 import type { Camera3dClass } from './camera/Camera3dClass';
+import { FastSpriteManager3d } from './FastSprite/FastSpriteManager3d';
 // import { DirectionalLight3dClass } from './lights/DirectionalLight3dClass';
 // import { AmbientLight3dClass } from './lights/AmbientLight3dClass';
 
@@ -32,7 +33,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
     static __javaDeclarations: LibraryDeclarations = [
         { type: "declaration", signature: "class World3d" },
 
-        { type: "method", signature: "World3d()", java: World3dClass.prototype._cj$_constructor_$World$ },
+        { type: "method", signature: "World3d()", java: World3dClass.prototype._cj$_constructor_$World3d$ },
 
         { type: "method", signature: "void setBackgroundColor(int colorAsRGBInt)", native: World3dClass.prototype._setBackgroundColor, comment: JRC.world3dSetBackgroundColorIntComment },
         { type: "method", signature: "void setBackgroundColor(String colorAsString)", native: World3dClass.prototype._setBackgroundColor, comment: JRC.world3dSetBackgroundColorStringComment },
@@ -77,7 +78,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
     coordinateSystemHelper: CoordinateSystemHelper3d;
 
-    _cj$_constructor_$World$(t: Thread, callback: CallbackParameter) {
+    _cj$_constructor_$World3d$(t: Thread, callback: CallbackParameter) {
 
         let interpreter = t.scheduler.interpreter;
 
@@ -160,15 +161,17 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
         this.scene.background = new THREE.Color(0, 0, 0);
 
+        
         this.addCallbacks(interpreter);
-
+        
         // this.mouseManager = new MouseManager(this);
-
-
+        
+        
         this.textureManager3d = new TextureManager3d();
-
+        
         this.textureManager3d.init(interpreter).then(() => {
             this.coordinateSystemHelper = new CoordinateSystemHelper3d(this).show();
+            // new FastSpriteManager3d(this);
             t.scheduler.restoreThread(t);
             t.s.push(this);
             if (callback) callback();
@@ -261,6 +264,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         this.renderer?.setSize(newCanvasWidth, newCanvasHeight);
 
         interpreter.graphicsManager?.resizeGraphicsDivHeight();
+
 
         // this.app!.canvas.style.width = newCanvasWidth + "px";
         // this.app!.canvas.style.height = newCanvasHeight + "px";

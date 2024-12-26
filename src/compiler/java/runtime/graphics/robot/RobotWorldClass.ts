@@ -48,7 +48,7 @@ export class RobotWorldClass extends ObjectClass {
         t.s.push(this);
         t.scheduler.interpreter.storeObject("robotWorldClass", this);
 
-        new World3dClass()._cj$_constructor_$World$(t, async () => {
+        new World3dClass()._cj$_constructor_$World3d$(t, async () => {
 
             this.world3d = t.s.pop();
             this.world3d.scene.clear();

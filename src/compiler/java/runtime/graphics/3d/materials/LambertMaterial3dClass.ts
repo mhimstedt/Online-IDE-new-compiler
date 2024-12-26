@@ -59,7 +59,7 @@ export class LambertMaterial3dClass extends Material3dClass {
         let world3d: World3dClass = t.scheduler.interpreter.retrieveObject("World3dClass");
         if (!world3d) {
             world3d = new World3dClass();
-            world3d._cj$_constructor_$World$(t, () => {
+            world3d._cj$_constructor_$World3d$(t, () => {
                 t.s.pop(); // constructor of world3d pushed it's this-object
 
                 this.createMaterialWithTexture(world3d, library.name, index);
