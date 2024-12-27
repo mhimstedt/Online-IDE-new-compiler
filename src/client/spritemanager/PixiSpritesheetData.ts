@@ -6,7 +6,8 @@ export type PixiSpritesheetData = {
             trimmed: boolean,
             spriteSourceSize: { x: number, y: number, w: number, h: number },
             sourceSize: { w: number, h: number },
-            pivot: { x: number, y: number }
+            pivot: { x: number, y: number },
+            isSystemSpritesheet?: boolean
         }
     },
     meta: {

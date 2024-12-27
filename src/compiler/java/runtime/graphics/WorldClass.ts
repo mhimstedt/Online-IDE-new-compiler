@@ -107,8 +107,12 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
         if (existingWorld) {
             t.s.push(existingWorld);
             existingWorld.changeResolution(interpreter, width, height);
+            if(callback) callback();
             return existingWorld;
         }
+
+        let oldstate = t.state;
+        t.state = ThreadState.waiting;
 
         interpreter.storeObject("WorldClass", this);
 
@@ -126,7 +130,6 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
         if(hasWorld3D) this.graphicsDiv.style.pointerEvents = "none";
 
 
-        t.state = ThreadState.waiting;
         this.app = new PIXI.Application();
 
         this.app.init({backgroundAlpha: hasWorld3D ? 0 : 1, background: '#000000', width: width, height: height, resizeTo: undefined, antialias: true}).then( async () => {
@@ -161,7 +164,7 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
 
             await interpreter.graphicsManager?.initPixiUserSpritesheet();
 
-            t.state = ThreadState.runnable;
+            t.state = oldstate;
 
             t.s.push(this);
 

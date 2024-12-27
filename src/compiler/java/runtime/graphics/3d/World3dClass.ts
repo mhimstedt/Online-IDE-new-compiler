@@ -78,6 +78,8 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
     coordinateSystemHelper: CoordinateSystemHelper3d;
 
+    fastSpriteManager: FastSpriteManager3d;
+
     _cj$_constructor_$World3d$(t: Thread, callback: CallbackParameter) {
 
         let interpreter = t.scheduler.interpreter;
@@ -91,11 +93,13 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         let existingWorld = <World3dClass>interpreter.retrieveObject("World3dClass");
         if (existingWorld) {
             t.s.push(existingWorld);
+            if(callback) callback();
             return existingWorld;
         }
 
+        let oldState = t.state;
+        // t.scheduler.suspendThread(t);
         t.state = ThreadState.waiting;
-        t.scheduler.suspendThread(t);
 
         interpreter.storeObject("World3dClass", this);
 
@@ -171,8 +175,10 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         
         this.textureManager3d.init(interpreter).then(() => {
             this.coordinateSystemHelper = new CoordinateSystemHelper3d(this).show();
-            // new FastSpriteManager3d(this);
-            t.scheduler.restoreThread(t);
+            this.fastSpriteManager = new FastSpriteManager3d(this);
+            t.state = oldState;
+            // t.scheduler.restoreThread(t);
+            t.state = oldState;
             t.s.push(this);
             if (callback) callback();
         })

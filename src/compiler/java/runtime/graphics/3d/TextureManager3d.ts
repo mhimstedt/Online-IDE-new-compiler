@@ -47,6 +47,17 @@ export class TextureManager3d {
 
     }
 
+    getFrame(spritesheet: string, index: number){
+        let key: string = spritesheet + "#" + index;
+        let frame = this.systemSpritesheetData.frames[key];
+        if(frame){
+            frame.isSystemSpritesheet = true;
+            return frame;
+        }
+
+        return undefined;
+    }
+
     getSpritesheetBasedTexture(spritesheet: string, index: number) {
         let key: string = spritesheet + "#" + index;
         let frame = this.systemSpritesheetData.frames[key];

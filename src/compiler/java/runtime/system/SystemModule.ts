@@ -155,6 +155,7 @@ import { IntegerClass } from "./primitiveTypes/wrappers/IntegerClass";
 import { LongClass } from "./primitiveTypes/wrappers/LongClass.ts";
 import { NumberClass } from "./primitiveTypes/wrappers/NumberClass";
 import { ShortClass } from "./primitiveTypes/wrappers/ShortClass.ts";
+import { FastSprite3dClass } from "../graphics/3d/FastSprite/FastSprite3d.ts";
 
 export class SystemModule extends JavaLibraryModule {
 
@@ -245,7 +246,8 @@ export class SystemModule extends JavaLibraryModule {
             Sprite3dClass, Matrix4Class, TextureEnum, SpriteMaterial3dClass, Cone3dClass, Cylinder3dClass,
             Circle3dClass, Plane3dClass, Ring3dClass, Torus3dClass,
             Camera3dClass, PerspectiveCamera3dClass, OrthographicCamera3dClass, ArrayCamera3dClass,
-            
+            FastSprite3dClass,
+
             // Processing
             PAppletClass,
 
