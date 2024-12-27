@@ -18,7 +18,7 @@ import { LambertMaterial3dClass } from "../graphics/3d/materials/LambertMaterial
 import { Material3dClass } from "../graphics/3d/materials/Material3dClass.ts";
 import { PhongMaterial3dClass } from "../graphics/3d/materials/PhongMaterial3dClass.ts";
 import { PhysicallyBasedMaterial3dClass } from "../graphics/3d/materials/PhysicallyBasedMaterial3d.ts";
-import { SpriteMaterial3dClass } from "../graphics/3d/materials/SpriteMaterial3dClass.ts";
+import { UnusedSpriteMaterial3dClass } from "../graphics/3d/materials/UnusedSpriteMaterial3dClass.ts";
 import { TextureEnum } from "../graphics/3d/materials/TextureEnum.ts";
 import { Matrix4Class } from "../graphics/3d/Matrix4Class.ts";
 import { Mesh3dClass } from "../graphics/3d/Mesh3dClass.ts";
@@ -28,7 +28,7 @@ import { PerspectiveCamera3dClass } from "../graphics/3d/camera/PerspectiveCamer
 import { Plane3dClass } from "../graphics/3d/Plane3dClass.ts";
 import { Ring3dClass } from "../graphics/3d/Ring3dClass.ts";
 import { Sphere3dClass } from "../graphics/3d/Sphere3dClass.ts";
-import { Sprite3dClass } from "../graphics/3d/Sprite3dClass.ts";
+import { UnusedSprite3dClass } from "../graphics/3d/UnusedSprite3dClass.ts";
 import { Torus3dClass } from "../graphics/3d/Torus3dClass.ts";
 import { Vector3Class } from "../graphics/3d/Vector3Class.ts";
 import { World3dClass } from "../graphics/3d/World3dClass.ts";
@@ -155,7 +155,7 @@ import { IntegerClass } from "./primitiveTypes/wrappers/IntegerClass";
 import { LongClass } from "./primitiveTypes/wrappers/LongClass.ts";
 import { NumberClass } from "./primitiveTypes/wrappers/NumberClass";
 import { ShortClass } from "./primitiveTypes/wrappers/ShortClass.ts";
-import { FastSprite3dClass } from "../graphics/3d/FastSprite/FastSprite3d.ts";
+import { Sprite3dClass } from "../graphics/3d/FastSprite/Sprite3dClass.ts";
 
 export class SystemModule extends JavaLibraryModule {
 
@@ -243,10 +243,10 @@ export class SystemModule extends JavaLibraryModule {
             Vector3Class, Material3dClass, BasicMaterial3dClass, LambertMaterial3dClass, PhongMaterial3dClass, PhysicallyBasedMaterial3dClass,
             World3dClass, Object3dClass, Group3dClass, Mesh3dClass, Box3dClass, Sphere3dClass, 
             Light3dClass, PointLight3dClass, DirectionalLight3dClass, AmbientLight3dClass,
-            Sprite3dClass, Matrix4Class, TextureEnum, SpriteMaterial3dClass, Cone3dClass, Cylinder3dClass,
+            Matrix4Class, TextureEnum, Cone3dClass, Cylinder3dClass,
             Circle3dClass, Plane3dClass, Ring3dClass, Torus3dClass,
             Camera3dClass, PerspectiveCamera3dClass, OrthographicCamera3dClass, ArrayCamera3dClass,
-            FastSprite3dClass,
+            Sprite3dClass,
 
             // Processing
             PAppletClass,

@@ -18,30 +18,37 @@ export class FastSpriteManager3d {
 
     maxCount: number = 200;
 
-    offsets: Float32Array = new Float32Array(this.maxCount * 3);
-    sizes: Float32Array = new Float32Array(this.maxCount * 2);          // width, height in pixels
-    uvBoxes: Float32Array = new Float32Array(this.maxCount * 4);   // left, bottom, widht, height
-    rotations: Float32Array = new Float32Array(this.maxCount * 1);   // rotation in radians
-    colors: Float32Array = new Float32Array(this.maxCount * 3);   // rotation in radians
-    alphas: Float32Array = new Float32Array(this.maxCount * 1);   // rotation in radians
+    iOffset = 0;
+    iSize = this.iOffset + 3;
+    iUvBox = this.iSize + 2;
+    iRotation = this.iUvBox + 4;
+    iColor = this.iRotation + 1;
+    iAlpha = this.iColor + 3;
 
-    offsetAttribute: THREE.InstancedBufferAttribute;
-    sizeAttribute: THREE.InstancedBufferAttribute;
-    uvBoxAttribute: THREE.InstancedBufferAttribute;
-    rotationAttribute: THREE.InstancedBufferAttribute;
-    colorAttribute: THREE.InstancedBufferAttribute;
-    alphaAttribute: THREE.InstancedBufferAttribute;
+    bufferElementSize = this.iAlpha + 1;
+
+    interleavedBuffer: Float32Array = new Float32Array(this.maxCount * this.bufferElementSize);
+    instanceInterleavedBuffer: THREE.InstancedInterleavedBuffer;
 
     fastsprites: FastSprite[] = [];
 
+    dirty: boolean = false;
+    oldCameraPos: THREE.Vector3 = new THREE.Vector3();
+    intervalID: any;
+
+    indicesToRemove: number[] = [];
+
     constructor(private world3d: World3dClass) {
 
-        this.texture = world3d.textureManager3d.getSpritesheetBasedTexture("Plattforms", 1);
         this.initMesh();
+
+        this.intervalID = setInterval(() => {
+            this.sortByDistanceToCamera();
+        }, 10);
 
     }
 
-    initMesh(oldInstanceCount: number = 0){
+    initMesh(oldInstanceCount: number = 0) {
         this.geometry = new THREE.InstancedBufferGeometry();
         //cubeGeo.maxInstancedCount = 8;
         const positions = [0.5, 0.5, 0, -0.5, 0.5, 0, -0.5, -0.5, 0, 0.5, 0.5, 0, -0.5, -0.5, 0, 0.5, -0.5, 0];
@@ -50,18 +57,23 @@ export class FastSpriteManager3d {
         this.geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
         this.geometry.setAttribute('rawUV', new THREE.Float32BufferAttribute(rawUVs, 2));
 
-        this.geometry.setAttribute('offset', this.offsetAttribute = new THREE.InstancedBufferAttribute(this.offsets, 3));
-        this.geometry.setAttribute('size', this.sizeAttribute = new THREE.InstancedBufferAttribute(this.sizes, 2));
-        this.geometry.setAttribute('uvBox', this.uvBoxAttribute = new THREE.InstancedBufferAttribute(this.uvBoxes, 4));
-        this.geometry.setAttribute('rotation', this.rotationAttribute = new THREE.InstancedBufferAttribute(this.rotations, 4));
-        this.geometry.setAttribute('color', this.colorAttribute = new THREE.InstancedBufferAttribute(this.colors, 4));
-        this.geometry.setAttribute('alpha', this.alphaAttribute = new THREE.InstancedBufferAttribute(this.alphas, 4));
+        this.instanceInterleavedBuffer = new THREE.InstancedInterleavedBuffer(this.interleavedBuffer, this.bufferElementSize, 1);
+
+        this.geometry.setAttribute('offset', new THREE.InterleavedBufferAttribute(this.instanceInterleavedBuffer, 3, this.iOffset));
+        this.geometry.setAttribute('size', new THREE.InterleavedBufferAttribute(this.instanceInterleavedBuffer, 2, this.iSize));
+        this.geometry.setAttribute('uvBox', new THREE.InterleavedBufferAttribute(this.instanceInterleavedBuffer, 4, this.iUvBox));
+        this.geometry.setAttribute('rotation', new THREE.InterleavedBufferAttribute(this.instanceInterleavedBuffer, 1, this.iRotation));
+        this.geometry.setAttribute('color', new THREE.InterleavedBufferAttribute(this.instanceInterleavedBuffer, 3, this.iColor));
+        this.geometry.setAttribute('alpha', new THREE.InterleavedBufferAttribute(this.instanceInterleavedBuffer, 1, this.iAlpha));
 
         this.geometry.instanceCount = oldInstanceCount;
 
 
         var mat = new THREE.RawShaderMaterial({
-            uniforms: { mtexture: { value: this.texture } },
+            uniforms: {
+                systemTexture: { value: this.world3d.textureManager3d.systemTexture },
+                userTexture: { value: this.world3d.textureManager3d.userTexture },
+            },
             vertexShader: this.getVertexShader(),
             fragmentShader: this.getFragmentShader(),
             side: THREE.FrontSide,
@@ -84,10 +96,24 @@ export class FastSpriteManager3d {
         attribute vec2 size;
         attribute vec4 uvBox;
         attribute float rotation;
+        attribute vec3 color;
+        attribute float alpha;
 
         varying vec2 vUV;
+        varying vec3 vColor;
+        varying float vAlpha;
+        varying float vIsUserTexture;
         
         void main() {
+         vColor = color;
+         vAlpha = alpha;
+
+        if(size.x < 0.0){
+            vIsUserTexture = 1.0;
+        } else {
+            vIsUserTexture = 0.0; 
+        }
+
          vUV = uvBox.xy + rawUV * vec2(uvBox.z, uvBox.w); // uvBox.zw;
 
          vec4 mvPosition = modelViewMatrix[ 3 ];
@@ -96,7 +122,7 @@ export class FastSpriteManager3d {
           rotatedPosition.x = cos( rotation ) * position.x - sin( rotation ) * position.y;
           rotatedPosition.y = sin( rotation ) * position.x + cos( rotation ) * position.y;
 
-         mvPosition.xy = mvPosition.xy + rotatedPosition.xy * size;
+         mvPosition.xy = mvPosition.xy + rotatedPosition.xy * vec2(abs(size.x), size.y);
 
          gl_Position = projectionMatrix * (mvPosition + modelViewMatrix * vec4(offset, 0.0));
 
@@ -112,15 +138,22 @@ export class FastSpriteManager3d {
     getFragmentShader(): string {
         return `
         precision mediump float;
-        uniform sampler2D mtexture;
+        uniform sampler2D systemTexture;
+        uniform sampler2D userTexture;
         //attribute vec3 color;
         //attribute float alpha;
 
         varying vec2 vUV;
-        
+        varying vec3 vColor;
+        varying float vAlpha;
+        varying float vIsUserTexture;
+
         void main() {
-         vec4 col = texture2D(mtexture, vUV); // * vec4(color, alpha);
-         gl_FragColor = col;
+         if(vIsUserTexture > 0.5){
+            gl_FragColor = texture2D(userTexture, vUV) * vec4(vColor, vAlpha);
+         } else {
+            gl_FragColor = texture2D(systemTexture, vUV) * vec4(vColor, vAlpha);
+        }
         
         }
     `;
@@ -137,10 +170,11 @@ export class FastSpriteManager3d {
 
         let W: number = 1024;
         let H: number = 1024;
-        if (textureFrame.isSystemSpritesheet) {
-            W = this.texture.image.width;
-            H = this.texture.image.height;
-        }
+
+        let texture = textureFrame.isSystemSpritesheet ? this.world3d.textureManager3d.systemTexture : this.world3d.textureManager3d.userTexture;
+        W = texture.image.width;
+        H = texture.image.height;
+
         let wFraction = frame.w / W;
         let hFraction = frame.h / H;
         let xStart = frame.x / W;
@@ -148,6 +182,7 @@ export class FastSpriteManager3d {
 
         if (this.geometry.instanceCount >= this.maxCount) {
             this.resizeBuffers();
+            this.sortByDistanceToCamera();
         }
 
         let nfi = this.geometry.instanceCount;
@@ -156,33 +191,32 @@ export class FastSpriteManager3d {
         }
 
         this.geometry.instanceCount++;
+        let base = nfi * this.bufferElementSize;
+        this.interleavedBuffer[base + 0] = 0;   // offset
+        this.interleavedBuffer[base + 1] = 0;
+        this.interleavedBuffer[base + 2] = 0;
 
-        this.offsets[nfi * 3] = 0;
-        this.offsets[nfi * 3 + 1] = 0;
-        this.offsets[nfi * 3 + 2] = 0;
+        this.interleavedBuffer[base + 3] = textureFrame.isSystemSpritesheet ? width : - width;   // size
+        this.interleavedBuffer[base + 4] = frame.h / frame.w * width;
 
-        this.sizes[nfi * 2] = width;
-        this.sizes[nfi * 2 + 1] = frame.h / frame.w * width;
+        this.interleavedBuffer[base + 5] = xStart;   // uvs
+        this.interleavedBuffer[base + 6] = yStart;
+        this.interleavedBuffer[base + 7] = wFraction;
+        this.interleavedBuffer[base + 8] = hFraction;
 
-        this.uvBoxes[nfi * 4] = xStart;
-        this.uvBoxes[nfi * 4 + 1] = yStart;
-        this.uvBoxes[nfi * 4 + 2] = wFraction;
-        this.uvBoxes[nfi * 4 + 3] = hFraction;
+        this.interleavedBuffer[base + 9] = 0;    // rotation
 
-        this.rotations[nfi] = 0;
+        this.interleavedBuffer[base + 10] = 1;    // color
+        this.interleavedBuffer[base + 11] = 1;
+        this.interleavedBuffer[base + 12] = 1;
 
-        this.colors[nfi * 3] = 1;
-        this.colors[nfi * 3 + 1] = 1;
-        this.colors[nfi * 3 + 2] = 1;
+        this.interleavedBuffer[base + 13] = 1;    // alpha
 
-        this.alphas[nfi * 3 + 2] = 1;
-
-
-        this.offsetAttribute.needsUpdate = true;
-        this.sizeAttribute.needsUpdate = true;
-        this.uvBoxAttribute.needsUpdate = true;
+        // this.instanceInterleavedBuffer.needsUpdate = true;
 
         this.fastsprites.push(fs);
+
+        this.dirty = true;
 
         return fs;
 
@@ -191,28 +225,12 @@ export class FastSpriteManager3d {
 
     resizeBuffers() {
         this.maxCount *= 3;
-        const newOffsets = new Float32Array(this.maxCount * 3);
-        newOffsets.set(this.offsets);
-        this.offsets = newOffsets;
-        const newSizes = new Float32Array(this.maxCount * 2);
-        newSizes.set(this.sizes);
-        this.sizes = newSizes;
-        const newUvBoxes = new Float32Array(this.maxCount * 4);
-        newUvBoxes.set(this.uvBoxes);
-        this.uvBoxes = newUvBoxes;
-        const newRotations = new Float32Array(this.maxCount * 1);
-        newRotations.set(this.rotations);
-        this.rotations = newRotations;
-        const newColors = new Float32Array(this.maxCount * 3);
-        newColors.set(this.colors);
-        this.colors = newColors;
-        const newAlphas = new Float32Array(this.maxCount * 1);
-        newAlphas.set(this.alphas);
-        this.alphas = newAlphas;
-
+        const newInterleavedBuffer = new Float32Array(this.maxCount * this.bufferElementSize);
+        newInterleavedBuffer.set(this.interleavedBuffer);
+        this.interleavedBuffer = newInterleavedBuffer;
 
         let oldInstanceCount: number = 0;
-        if(this.mesh){
+        if (this.mesh) {
             oldInstanceCount = this.geometry.instanceCount;
             this.world3d.scene.remove(this.mesh);
             (<THREE.Material>this.mesh.material).dispose();
@@ -223,56 +241,156 @@ export class FastSpriteManager3d {
 
     }
 
+    destroy(){
+        if(!this.mesh) return;
+        this.world3d.scene.remove(this.mesh);
+        (<THREE.Material>this.mesh.material).dispose();
+        (<THREE.InstancedBufferGeometry>this.mesh.geometry).dispose();
+    }
 
-    removeSprite(fastSprite: FastSprite){
-        
-        if(fastSprite.index < this.geometry.instanceCount - 1){
+    removeSprite(fastSprite: FastSprite) {
+
+        this.indicesToRemove.push(fastSprite.index);
+        this.dirty = true;
+
+    }
+
+    removeIntern() {
+        while (this.indicesToRemove.length > 0) {
+            let index = this.indicesToRemove.pop();
             const lastFastSprite = this.fastsprites.pop();
-            const lastIndex = this.geometry.instanceCount - 1;
-            lastFastSprite.index = fastSprite.index;
-            this.fastsprites[fastSprite.index] = lastFastSprite;
-    
-            this.offsets.copyWithin(fastSprite.index * 3, lastIndex * 3, lastIndex * 3 + 3);
-            this.sizes.copyWithin(fastSprite.index * 2, lastIndex * 2, lastIndex * 2 + 2);
-            this.uvBoxes.copyWithin(fastSprite.index * 4, lastIndex * 4, lastIndex * 4 + 4);
-            this.rotations.copyWithin(fastSprite.index * 1, lastIndex * 1, lastIndex * 1 + 1);
-            this.alphas.copyWithin(fastSprite.index * 1, lastIndex * 1, lastIndex * 1 + 1);
-            this.colors.copyWithin(fastSprite.index * 3, lastIndex * 3, lastIndex * 3 + 3);
+            if (index < this.geometry.instanceCount - 1) {
+                const lastIndex = this.geometry.instanceCount - 1;
+                lastFastSprite.index = index;
+                this.fastsprites[index] = lastFastSprite;
+
+                this.interleavedBuffer.copyWithin(index * this.bufferElementSize, lastIndex * this.bufferElementSize, (lastIndex + 1) * this.bufferElementSize);
+            }
+
+            this.geometry.instanceCount--;
         }
 
-        this.geometry.instanceCount--;
     }
 
-    moveSprite(fastSprite: FastSprite, x: number, y: number, z: number){
-        let baseIndex = fastSprite.index * 3;
-        this.offsets[baseIndex] = this.offsets[baseIndex] + x;
-        this.offsets[baseIndex + 1] = this.offsets[baseIndex + 1] + y;
-        this.offsets[baseIndex + 2] = this.offsets[baseIndex + 2] + z;
-        this.offsetAttribute.needsUpdate = true;
+
+    moveSprite(fastSprite: FastSprite, x: number, y: number, z: number) {
+        let baseIndex = fastSprite.index * this.bufferElementSize + this.iOffset;
+        this.interleavedBuffer[baseIndex] = this.interleavedBuffer[baseIndex] + x;
+        this.interleavedBuffer[baseIndex + 1] = this.interleavedBuffer[baseIndex + 1] + y;
+        this.interleavedBuffer[baseIndex + 2] = this.interleavedBuffer[baseIndex + 2] + z;
+        this.dirty = true;
     }
 
-    moveSpriteTo(fastSprite: FastSprite, x: number, y: number, z: number){
-        let baseIndex = fastSprite.index * 3;
-        this.offsets[baseIndex] = x;
-        this.offsets[baseIndex + 1] = y;
-        this.offsets[baseIndex + 2] = z;
-        this.offsetAttribute.needsUpdate = true;
+    setColor(fastSprite: FastSprite, color: number) {
+        let r = ((color & 0xff0000) >> 16) / 0xff;
+        let g = ((color & 0xff00) >> 8) / 0xff;
+        let b = (color & 0xff) / 0xff;
+        let baseIndex = fastSprite.index * this.bufferElementSize + this.iColor;
+        this.interleavedBuffer[baseIndex] = r;
+        this.interleavedBuffer[baseIndex + 1] = g;
+        this.interleavedBuffer[baseIndex + 2] = b;
+        this.dirty = true;
     }
 
-    getX(fastSprite: FastSprite){
-        return this.offsets[fastSprite.index * 3];
+    setAlpha(fastSprite: FastSprite, alpha: number) {
+        let baseIndex = fastSprite.index * this.bufferElementSize + this.iAlpha;
+        this.interleavedBuffer[baseIndex] = alpha;
     }
 
-    getY(fastSprite: FastSprite){
-        return this.offsets[fastSprite.index * 3 + 1];
+    moveSpriteTo(fastSprite: FastSprite, x: number, y: number, z: number) {
+        let baseIndex = fastSprite.index * this.bufferElementSize + this.iOffset;
+        this.interleavedBuffer[baseIndex] = x;
+        this.interleavedBuffer[baseIndex + 1] = y;
+        this.interleavedBuffer[baseIndex + 2] = z;
+        this.dirty = true;
     }
 
-    getZ(fastSprite: FastSprite){
-        return this.offsets[fastSprite.index * 3 + 2];
+    getX(fastSprite: FastSprite) {
+        return this.interleavedBuffer[fastSprite.index * this.bufferElementSize + this.iOffset];
     }
 
-    sort(){
+    getY(fastSprite: FastSprite) {
+        return this.interleavedBuffer[fastSprite.index * this.bufferElementSize + this.iOffset + 1];
+    }
+
+    getZ(fastSprite: FastSprite) {
+        return this.interleavedBuffer[fastSprite.index * this.bufferElementSize + this.iOffset + 2];
+    }
+
+    sortByDistanceToCamera() {
+        if (this.geometry.instanceCount < 2) return;
         let cameraPosition = this.world3d.currentCamera.camera3d.position;
+
+        if (!this.dirty) {
+            if (cameraPosition.distanceTo(this.oldCameraPos) < 1e-2) return;
+        }
+
+        this.removeIntern();
+        let count = this.geometry.instanceCount;
+
+        this.oldCameraPos = cameraPosition.clone();
+        this.dirty = false;
+
+        let distanceToCamera = new Float32Array(count);
+        for (let i = 0; i < count; i++) {
+            let base = i * this.bufferElementSize + this.iOffset;
+            let pos: THREE.Vector3 = new THREE.Vector3(this.interleavedBuffer[base], this.interleavedBuffer[base + 1], this.interleavedBuffer[base + 2]);
+            distanceToCamera[i] = -cameraPosition.distanceTo(pos);
+        }
+        this.quickSort(distanceToCamera, this.interleavedBuffer, 0, count - 1);
+        this.instanceInterleavedBuffer.needsUpdate = true;
     }
+
+    quickSort(distances: Float32Array, items: Float32Array, left: number, right: number) {
+        let index: number = this.partition(distances, items, left, right); //index returned from partition
+        if (left < index - 1) { //more elements on the left side of the pivot
+            this.quickSort(distances, items, left, index - 1);
+        }
+        if (index < right) { //more elements on the right side of the pivot
+            this.quickSort(distances, items, index, right);
+        }
+        return items;
+    }
+
+    partition(distances: Float32Array, items: Float32Array, left: number, right: number): number {
+        var pivot = distances[Math.floor((right + left) / 2)], //middle element
+            i = left, //left pointer
+            j = right; //right pointer
+        while (i <= j) {
+            while (distances[i] < pivot) {
+                i++;
+            }
+            while (distances[j] > pivot) {
+                j--;
+            }
+            if (i <= j) {
+                // swap sprites i and j
+                let d = distances[i];
+                distances[i] = distances[j];
+                distances[j] = d;
+
+                let basei = i * this.bufferElementSize;
+                let basej = j * this.bufferElementSize;
+                for (let t = 0; t < this.bufferElementSize; t++) {
+                    let d = items[basei + t];
+                    items[basei + t] = items[basej + t];
+                    items[basej + t] = d;
+                }
+
+                let fs = this.fastsprites[i];
+                this.fastsprites[i] = this.fastsprites[j];
+                this.fastsprites[j] = fs;
+
+                this.fastsprites[i].index = i;
+                this.fastsprites[j].index = j;
+
+                i++;
+                j--;
+            }
+        }
+        return i;
+    }
+
+
 
 }

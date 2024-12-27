@@ -4,7 +4,7 @@ import { CallbackParameter } from "../../../../../common/interpreter/CallbackPar
 import { Thread } from "../../../../../common/interpreter/Thread";
 import { JRC } from "../../../../language/JavaRuntimeLibraryComments";
 import { LibraryDeclarations } from "../../../../module/libraries/DeclareType";
-import { SpriteMaterial3dClass } from "../materials/SpriteMaterial3dClass";
+import { UnusedSpriteMaterial3dClass } from "../materials/UnusedSpriteMaterial3dClass";
 import { Matrix4Class } from "../Matrix4Class";
 import { Object3dClass } from "../Object3dClass";
 import { SpriteLibraryEnum } from '../../SpriteLibraryEnum';
@@ -12,28 +12,31 @@ import { FastSprite } from './FastSpriteManager3d';
 import { ActorClass } from '../../ActorClass';
 import { World3dClass } from '../World3dClass';
 
-export class FastSprite3dClass extends ActorClass {
+export class Sprite3dClass extends ActorClass {
     static __javaDeclarations: LibraryDeclarations = [
-        { type: "declaration", signature: "class FastSprite3d extends Actor"},
-        { type: "method", signature: "FastSprite3d(double width, SpriteLibrary spriteLibrary, int index)", java: FastSprite3dClass.prototype._cj$_constructor_$FastSprite3d$double$SpriteLibrary$int,  },
+        { type: "declaration", signature: "class Sprite3d extends Actor"},
+        { type: "method", signature: "Sprite3d(double width, SpriteLibrary spriteLibrary, int index)", java: Sprite3dClass.prototype._cj$_constructor_$Sprite3d$double$SpriteLibrary$int,  },
 
-        { type: "method", signature: "void move(double x,double y,double z)", native: FastSprite3dClass.prototype.move },
-        { type: "method", signature: "double getX()", native: FastSprite3dClass.prototype.getX },
-        { type: "method", signature: "double getY()", native: FastSprite3dClass.prototype.getY },
-        { type: "method", signature: "double getZ()", native: FastSprite3dClass.prototype.getZ },
+        { type: "method", signature: "void move(double x,double y,double z)", native: Sprite3dClass.prototype.move },
+        { type: "method", signature: "double getX()", native: Sprite3dClass.prototype.getX },
+        { type: "method", signature: "double getY()", native: Sprite3dClass.prototype.getY },
+        { type: "method", signature: "double getZ()", native: Sprite3dClass.prototype.getZ },
+        
+        { type: "method", signature: "void setColor(int color)", native: Sprite3dClass.prototype.setColorInt },
+        { type: "method", signature: "void setAlpha(float alpha)", native: Sprite3dClass.prototype.setAlpha },
 
 
 
 
-        // { type: "method", signature: "final void move(Vector3 v)", native: FastSprite3dClass.prototype.vmove },
-        // { type: "method", signature: "void moveTo(double x,double y,double z)", native: FastSprite3dClass.prototype.moveTo },
-        // { type: "method", signature: "final void moveTo(Vector3 p)", native: FastSprite3dClass.prototype.vmoveTo },
+        // { type: "method", signature: "final void move(Vector3 v)", native: Sprite3dClass.prototype.vmove },
+        // { type: "method", signature: "void moveTo(double x,double y,double z)", native: Sprite3dClass.prototype.moveTo },
+        // { type: "method", signature: "final void moveTo(Vector3 p)", native: Sprite3dClass.prototype.vmoveTo },
 
-        // { type: "method", signature: "final void scale(double d)", native: FastSprite3dClass.prototype.scaleDouble },
+        // { type: "method", signature: "final void scale(double d)", native: Sprite3dClass.prototype.scaleDouble },
 
-        // { type: "method", signature: "final void applyMatrix4(Matrix4 matrix)", native: FastSprite3dClass.prototype.applyMatrix4 },
+        // { type: "method", signature: "final void applyMatrix4(Matrix4 matrix)", native: Sprite3dClass.prototype.applyMatrix4 },
 
-        // { type: "method", signature: "void destroy()", java: FastSprite3dClass.prototype.destroy },
+        // { type: "method", signature: "void destroy()", java: Sprite3dClass.prototype.destroy },
 
 
     ];
@@ -41,7 +44,7 @@ export class FastSprite3dClass extends ActorClass {
     fastSprite: FastSprite;
     world3d!: World3dClass;
 
-    _cj$_constructor_$FastSprite3d$double$SpriteLibrary$int(t: Thread, callback: CallbackParameter, width: number, library: SpriteLibraryEnum, index: number) {
+    _cj$_constructor_$Sprite3d$double$SpriteLibrary$int(t: Thread, callback: CallbackParameter, width: number, library: SpriteLibraryEnum, index: number) {
 
         t.s.push(this);
         this.world3d = t.scheduler.interpreter.retrieveObject("World3dClass");
@@ -87,6 +90,16 @@ export class FastSprite3dClass extends ActorClass {
     getZ(): number {
         return this.world3d.fastSpriteManager.getZ(this.fastSprite);
     }
+
+    setColorInt(color: number){
+        this.world3d.fastSpriteManager.setColor(this.fastSprite, color);
+    }
+
+    setAlpha(alpha: number){
+        this.world3d.fastSpriteManager.setAlpha(this.fastSprite, alpha);
+    }
+
+
 
     // applyMatrix4(matrix4: Matrix4Class) {
 

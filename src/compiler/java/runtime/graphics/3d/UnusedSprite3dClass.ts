@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { JRC } from "../../../language/JavaRuntimeLibraryComments";
 import { LibraryDeclarations } from "../../../module/libraries/DeclareType";
-import { SpriteMaterial3dClass } from './materials/SpriteMaterial3dClass';
+import { UnusedSpriteMaterial3dClass } from './materials/UnusedSpriteMaterial3dClass';
 import { Matrix4Class } from './Matrix4Class';
 import { Object3dClass } from './Object3dClass';
 import { CallbackParameter } from '../../../../common/interpreter/CallbackParameter';
@@ -9,32 +9,32 @@ import { Thread } from '../../../../common/interpreter/Thread';
 
 
 
-export class Sprite3dClass extends Object3dClass {
+export class UnusedSprite3dClass extends Object3dClass {
     static __javaDeclarations: LibraryDeclarations = [
         { type: "declaration", signature: "class Sprite3d extends Mesh3d", comment: JRC.Sprite3dClassComment },
-        { type: "method", signature: "Sprite3d(double x, double y, double z, double width, SpriteMaterial3d material)", java: Sprite3dClass.prototype._cj$_constructor_$Sprite3d$double$double$double$double$SpriteMaterial3d, comment: JRC.Sprite3dConstructorComment },
+        { type: "method", signature: "Sprite3d(double x, double y, double z, double width, SpriteMaterial3d material)", java: UnusedSprite3dClass.prototype._cj$_constructor_$Sprite3d$double$double$double$double$SpriteMaterial3d, comment: JRC.Sprite3dConstructorComment },
 
-        { type: "method", signature: "void move(double x,double y,double z)", native: Sprite3dClass.prototype.move },
-        { type: "method", signature: "final void move(Vector3 v)", native: Sprite3dClass.prototype.vmove },
-        { type: "method", signature: "void moveTo(double x,double y,double z)", native: Sprite3dClass.prototype.moveTo },
-        { type: "method", signature: "final void moveTo(Vector3 p)", native: Sprite3dClass.prototype.vmoveTo },
+        { type: "method", signature: "void move(double x,double y,double z)", native: UnusedSprite3dClass.prototype.move },
+        { type: "method", signature: "final void move(Vector3 v)", native: UnusedSprite3dClass.prototype.vmove },
+        { type: "method", signature: "void moveTo(double x,double y,double z)", native: UnusedSprite3dClass.prototype.moveTo },
+        { type: "method", signature: "final void moveTo(Vector3 p)", native: UnusedSprite3dClass.prototype.vmoveTo },
 
-        { type: "method", signature: "final void scale(double d)", native: Sprite3dClass.prototype.scaleDouble },
+        { type: "method", signature: "final void scale(double d)", native: UnusedSprite3dClass.prototype.scaleDouble },
 
-        { type: "method", signature: "final void applyMatrix4(Matrix4 matrix)", native: Sprite3dClass.prototype.applyMatrix4 },
+        { type: "method", signature: "final void applyMatrix4(Matrix4 matrix)", native: UnusedSprite3dClass.prototype.applyMatrix4 },
 
-        { type: "method", signature: "final SpriteMaterial3d getMaterial()", native: Sprite3dClass.prototype.getMaterial },
-        { type: "method", signature: "final void setMaterial(SpriteMaterial3d material)", native: Sprite3dClass.prototype.setMaterial },
+        { type: "method", signature: "final SpriteMaterial3d getMaterial()", native: UnusedSprite3dClass.prototype.getMaterial },
+        { type: "method", signature: "final void setMaterial(SpriteMaterial3d material)", native: UnusedSprite3dClass.prototype.setMaterial },
 
-        { type: "method", signature: "void destroy()", java: Sprite3dClass.prototype.destroy },
+        { type: "method", signature: "void destroy()", java: UnusedSprite3dClass.prototype.destroy },
 
 
     ];
 
     sprite: THREE.Sprite;
-    spriteMaterial: SpriteMaterial3dClass;
+    spriteMaterial: UnusedSpriteMaterial3dClass;
 
-    _cj$_constructor_$Sprite3d$double$double$double$double$SpriteMaterial3d(t: Thread, callback: CallbackParameter, x: number, y: number, z: number, width: number, material: SpriteMaterial3dClass) {
+    _cj$_constructor_$Sprite3d$double$double$double$double$SpriteMaterial3d(t: Thread, callback: CallbackParameter, x: number, y: number, z: number, width: number, material: UnusedSpriteMaterial3dClass) {
 
         super._cj$_constructor_$Object3d$(t, () => {
 
@@ -94,7 +94,7 @@ export class Sprite3dClass extends Object3dClass {
         scale.setZ(scale.z * factor);
     }
 
-    setMaterial(material: SpriteMaterial3dClass) {
+    setMaterial(material: UnusedSpriteMaterial3dClass) {
         this.spriteMaterial.destroyIfNotUsedByOtherMesh();
         this.spriteMaterial = material;
         this.sprite.material = <THREE.SpriteMaterial>material.getMaterialAndIncreaseUsageCounter();

@@ -9,12 +9,12 @@ import { CallbackParameter } from '../../../../../common/interpreter/CallbackPar
 import { TextureEnum } from './TextureEnum';
 
 
-export class SpriteMaterial3dClass extends Material3dClass {
+export class UnusedSpriteMaterial3dClass extends Material3dClass {
 
     static __javaDeclarations: LibraryDeclarations = [
         { type: "declaration", signature: "final class SpriteMaterial3d extends Material3d", comment: JRC.spriteMaterial3dClassComment },
-        { type: "method", signature: "SpriteMaterial3d(SpriteLibrary spriteLibrary, int imageIndex)", java: SpriteMaterial3dClass.prototype._cj$_constructor_$SpriteMaterial3d$SpriteLibrary$int, comment: JRC.spriteMaterial3dConstructorSpriteLibraryComment },
-        { type: "method", signature: "SpriteMaterial3d(Texture texture)", native: SpriteMaterial3dClass.prototype._spriteMaterialConstructorTexture, comment: JRC.spriteMaterial3dConstructorTextureComment },
+        { type: "method", signature: "SpriteMaterial3d(SpriteLibrary spriteLibrary, int imageIndex)", java: UnusedSpriteMaterial3dClass.prototype._cj$_constructor_$SpriteMaterial3d$SpriteLibrary$int, comment: JRC.spriteMaterial3dConstructorSpriteLibraryComment },
+        { type: "method", signature: "SpriteMaterial3d(Texture texture)", native: UnusedSpriteMaterial3dClass.prototype._spriteMaterialConstructorTexture, comment: JRC.spriteMaterial3dConstructorTextureComment },
 
     ]
 

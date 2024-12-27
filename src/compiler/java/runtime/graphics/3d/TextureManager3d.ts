@@ -47,15 +47,19 @@ export class TextureManager3d {
 
     }
 
-    getFrame(spritesheet: string, index: number){
+    getFrame(spritesheet: string, index: number) {
         let key: string = spritesheet + "#" + index;
         let frame = this.systemSpritesheetData.frames[key];
-        if(frame){
+        
+        if (frame) {
             frame.isSystemSpritesheet = true;
-            return frame;
+        } else {
+            frame = this.userSpritesheetData?.frames[key];
+            if(frame) frame.isSystemSpritesheet = false;
         }
+        
+        return frame;
 
-        return undefined;
     }
 
     getSpritesheetBasedTexture(spritesheet: string, index: number) {
@@ -89,7 +93,7 @@ export class TextureManager3d {
         return t;
     }
 
-    getTextureWithOwnData(key: string, renderer: THREE. WebGLRenderer){
+    getTextureWithOwnData(key: string, renderer: THREE.WebGLRenderer) {
         let frame = this.systemSpritesheetData.frames[key];
         let t: THREE.Texture;
         if (frame) {
@@ -111,9 +115,10 @@ export class TextureManager3d {
 
         // see https://github.com/mrdoob/three.js/issues/28282
         let renderTarget = new THREE.WebGLRenderTarget(data.w, data.h,
-            { minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, format: THREE.RGBAFormat,
+            {
+                minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, format: THREE.RGBAFormat,
                 colorSpace: THREE.SRGBColorSpace
-             }
+            }
         );
 
         let newTexture = renderTarget.texture;

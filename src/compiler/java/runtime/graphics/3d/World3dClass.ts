@@ -229,6 +229,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         this.graphicsDiv?.remove();
         interpreter.deleteObject("World3dClass");
         interpreter.isExternalTimer = false;
+        this.fastSpriteManager.destroy();
     }
 
     changeResolution(interpreter: Interpreter, width: number, height: number) {
