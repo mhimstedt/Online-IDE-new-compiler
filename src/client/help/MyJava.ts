@@ -2,9 +2,10 @@ import * as monaco from 'monaco-editor'
 
 
 export function defineMyJava() {
-    monaco.languages.register({ id: 'myJava',
-    extensions: ['.learnJava'],
-    //  mimetypes: ["text/x-java-source", "text/x-java"]
+    monaco.languages.register({
+        id: 'myJava',
+        extensions: ['.learnJava'],
+        //  mimetypes: ["text/x-java-source", "text/x-java"]
     });
 
     let conf: monaco.languages.LanguageConfiguration = {
@@ -92,7 +93,7 @@ export function defineMyJava() {
         print: ['print', 'println'],
         statements: ['for', 'while', 'if', 'then', 'else', 'do', 'break', 'continue'],
         types: ['int', 'boolean', 'char', 'float', 'double', 'long', 'void', 'byte', 'short',
-        'class', 'enum', 'interface', 'var'],
+            'class', 'enum', 'interface', 'var'],
         operators: [
             '=', '>', '<', '!', '~', '?', ':',
             '==', '<=', '>=', '!=', '&&', '||', '++', '--',
@@ -160,7 +161,7 @@ export function defineMyJava() {
                 [/[;,.]/, 'delimiter'],
                 // strings
                 [/"([^"\\]|\\.)*$/, 'string.invalid'],
-                [/"""/, 'string', '@string'],
+                [/"""/, 'string', '@multilineString'],
                 [/"/, 'string', '@string'],
                 // characters
                 [/'[^\\']'/, 'string'],
@@ -195,7 +196,13 @@ export function defineMyJava() {
                 [/"""/, 'string', '@pop'],
                 [/"/, 'string', '@pop']
             ],
-
+            multilineString: [
+                [/[^\\"]+/, 'string'],
+                [/@escapes/, 'string.escape'],
+                [/\\./, 'string.escape.invalid'],
+                [/"""/, 'string', '@pop'],
+                [/"/, 'string']
+            ],
         },
     };
 

@@ -222,7 +222,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
     }
 
     destroyWorld(interpreter: Interpreter) {
-        while(this.objects.length > 0) this.objects.pop().destroy();
+        while(this.objects.length > 0) this.objects.pop().destroy(); 
         this.resizeObserver?.disconnect();
         this.renderer?.dispose();
         this.renderer = undefined;
