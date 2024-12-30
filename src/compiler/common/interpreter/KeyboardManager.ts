@@ -16,7 +16,8 @@ export interface InternalKeyboardListener {
  */
 export class KeyboardManager {
 
-    private pressedKeys: { [key: string]: boolean } = {};
+    private pressedKeysLowerCase: Map<string, boolean> = new Map();
+    private pressedKeys: Map<string, boolean> = new Map();
 
     private keyPressedCallbacks: KeyPressedListener[] = [];
     private keyUpCallbacks: KeyUpListener[] = [];
@@ -34,6 +35,8 @@ export class KeyboardManager {
         this.element.off("keypressed");
     }
 
+
+
     private registerListeners(element: JQuery<any>) {
         this.element = element;
         let that = this;
@@ -43,7 +46,8 @@ export class KeyboardManager {
             // if(e.shiftKey) key = "shift+" + key;
             // if(e.ctrlKey) key = "ctrl+" + key;
             // if(e.altKey) key = "alt+" + key;
-            that.pressedKeys[key.toLowerCase()] = true;
+            that.pressedKeysLowerCase.set(key.toLowerCase(), true);
+            that.pressedKeys.set(key, true);
 
             for (let kpc of that.keyDownCallbacks) {
                 kpc(key, e.shiftKey, e.ctrlKey, e.altKey);
@@ -68,7 +72,8 @@ export class KeyboardManager {
             // if(e.shiftKey) key = "shift+" + key;
             // if(e.ctrlKey) key = "ctrl+" + key;
             // if(e.altKey) key = "alt+" + key;
-            that.pressedKeys[key.toLowerCase()] = false;
+            that.pressedKeysLowerCase.set(key.toLowerCase(), false);
+            that.pressedKeys.set(key, false);
 
             for (let kpc of that.keyUpCallbacks) {
                 kpc(key);
@@ -112,7 +117,21 @@ export class KeyboardManager {
 
     isPressed(key: string) {
         if (key == null) return null;
-        return this.pressedKeys[key.toLowerCase()] == true;
+        return this.pressedKeysLowerCase.get(key.toLowerCase()) == true;
+    }
+
+    isAnyKeyPressed(): boolean {
+        return this.pressedKeysLowerCase.size > 0;
+    }
+
+    clearPressedKeys(){
+        this.pressedKeysLowerCase.clear();
+        this.pressedKeys.clear();
+    }
+
+    getAnyPressedKey(): string {
+        if(this.pressedKeysLowerCase.size == 0) return "";
+        return this.pressedKeys.keys().next().value;
     }
 
     unsubscribeAllListeners() {

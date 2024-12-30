@@ -16,6 +16,20 @@ export class InputManager implements IInputManager {
         let keyboardManager = this.main.getInterpreter()?.keyboardManager;
         if(!keyboardManager) successCallback(undefined);
 
+        if(keys && keys.length > 0){
+            for(let key of keys){
+                if(keyboardManager.isPressed(key)){
+                    successCallback(key);
+                    return;
+                }
+            }
+        } else {
+            if(keyboardManager.isAnyKeyPressed()) {
+                successCallback(keyboardManager.getAnyPressedKey());
+                return;
+            }
+        }
+
         let keyboardListener: InternalKeyboardListener = 
         {
             onKeyDown:(key: string, isShift: boolean, isCtrl: boolean, isAlt: boolean) => {

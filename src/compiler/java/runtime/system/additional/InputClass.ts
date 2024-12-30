@@ -48,6 +48,8 @@ export class InputClass extends ObjectClass {
 
         { type: "method", signature: "static string waitForKey(string... possibleKeys)", java: InputClass._mj$waitForKey$string$stringII, comment: JRC.InputWaitForKeyComment },
         { type: "method", signature: "static string waitForKey()", java: InputClass._mj$waitForKey$string$, comment: JRC.InputWaitForAnyKeyComment },
+        
+        { type: "method", signature: "static boolean isKeyDown(string key)", java: InputClass._mj$isKeyDown$boolean$string, comment: JRC.InputIsKeyDownComment },
 
     ];
 
@@ -233,6 +235,15 @@ export class InputClass extends ObjectClass {
     
     static _mj$waitForKey$string$(t: Thread) { 
         InputClass.addTask(t, {type: "waitForKeys", thread: t, keys: undefined})
+    }
+
+    static _mj$isKeyDown$boolean$string(t: Thread, key: string){
+        let keyboardManager = t.scheduler.interpreter.keyboardManager;
+        if(!keyboardManager){
+            t.s.push(false);
+            return;
+        }
+        t.s.push(keyboardManager.isPressed(key) ?? false);
     }
 
 }

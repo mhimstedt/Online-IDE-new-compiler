@@ -4156,6 +4156,11 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
     "en": `Waits until the user presses any key.`,
     })
 
+    static InputIsKeyDownComment = () => lm({
+    "de": `Gibt genau dann true zurück, wenn die angegebene Taste gerade heruntergedrückt ist. N.B.: Für Sondertasten gibt es die vordefinierten statische Konstanten der Klasse Key, z.B. prüft Input.isKeyDown(Key.ArrowLeft), ob gerade die Pfeil-nach-links-Taste heruntergedrückt ist. `,
+    "en": `Returns true if and only if given key is pressed down currently. N.B.: There are predefined static constants in Klass Key for special key, e.g.  Input.isKeyDown(Key.ArrowLeft)`,
+    })
+
     static InputClassReadIntComment = () => lm({
         "de": "Erwartet vom Benutzer die Eingabe eines Wertes vom Datentyp int",
         "en": "Takes int-input from user.",
