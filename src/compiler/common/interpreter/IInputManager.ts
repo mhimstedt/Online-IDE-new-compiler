@@ -7,5 +7,7 @@ export type InputManagerCallback = (value: any) => void;
 
 export interface IInputManager {
     readInput(question: string, defaultValue: string | undefined, validator: InputManagerValidator, successCallback: InputManagerCallback): void;
+    waitForKey(keys: string[] | undefined, successCallback: InputManagerCallback);
+    hide(): void;
 }
 

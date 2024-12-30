@@ -7,11 +7,22 @@ import { LibraryDeclarations } from "../../../module/libraries/DeclareType.ts";
 import { NonPrimitiveType } from "../../../types/NonPrimitiveType.ts";
 import { ObjectClass, StringClass } from "../javalang/ObjectClassStringClass.ts";
 
-type InputTask = {
+type InputTaskType = "waitForInput" | "waitForKeys";
+
+type InputTask = InputTaskWaitForInput | InputTaskWaitForKeys;
+
+type InputTaskWaitForKeys = {
+    type: "waitForKeys",
+    thread: Thread,
+    keys: string[] | undefined
+}
+
+type InputTaskWaitForInput = {
+    type: "waitForInput",
     thread: Thread,
     message: string,
     defaultValue: string | undefined,
-    validator: InputManagerValidator
+    validator: InputManagerValidator,
 }
 
 export class InputClass extends ObjectClass {
@@ -35,6 +46,9 @@ export class InputClass extends ObjectClass {
         { type: "method", signature: "static char readChar(string message, char defaultValue)", java: InputClass._mj$readChar$char$string$char, comment: JRC.InputClassReadCharComment },
         { type: "method", signature: "static char readChar(string message)", java: InputClass._mj$readChar$char$string, comment: JRC.InputClassReadCharComment },
 
+        { type: "method", signature: "static string waitForKey(string... possibleKeys)", java: InputClass._mj$waitForKey$string$stringII, comment: JRC.InputWaitForKeyComment },
+        { type: "method", signature: "static string waitForKey()", java: InputClass._mj$waitForKey$string$, comment: JRC.InputWaitForAnyKeyComment },
+
     ];
 
     static type: NonPrimitiveType;
@@ -42,7 +56,7 @@ export class InputClass extends ObjectClass {
     static taskMap: Map<Interpreter, InputTask[]> = new Map();
 
 
-    static addTask(t: Thread, message: string, defaultValue: string | undefined, validator: InputManagerValidator) {
+    static addTask(t: Thread, inputTask: InputTask) {
         t.state = ThreadState.waiting;
 
         let interpreter = t.scheduler.interpreter;
@@ -56,12 +70,7 @@ export class InputClass extends ObjectClass {
                 interpreter.storeObject("inputTaskRunning", false);
             })
         }
-        list.push({
-            thread: t,
-            message: message,
-            defaultValue: defaultValue,
-            validator: validator
-        })
+        list.push(inputTask)
 
         if (!interpreter.retrieveObject("inputTaskRunning")) {
             let f = () => {
@@ -81,21 +90,36 @@ export class InputClass extends ObjectClass {
 
     static readInput(task: InputTask, callback: () => void) {
         task.thread.scheduler.interpreter.showProgramPointer(undefined, "InputClass");
-        task.thread.scheduler.interpreter.inputManager?.readInput(task.message, task.defaultValue, task.validator, (value: string) => {
-            task.thread.s.push(value);
-            task.thread.state = ThreadState.runnable;
-            task.thread.scheduler.interpreter.hideProgrampointerPosition("InputClass");
-            callback();
-            return;
-        })
+        switch(task.type){
+            case "waitForInput": 
+            task.thread.scheduler.interpreter.inputManager?.readInput(task.message, task.defaultValue, task.validator, (value: string) => {
+                task.thread.s.push(value);
+                task.thread.state = ThreadState.runnable;
+                task.thread.scheduler.interpreter.hideProgrampointerPosition("InputClass");
+                callback();
+                return;
+            })
+            break;
+            case "waitForKeys": 
+            task.thread.scheduler.interpreter.inputManager?.waitForKey(task.keys, (value: string) => {
+                task.thread.s.push(value);
+                task.thread.state = ThreadState.runnable;
+                task.thread.scheduler.interpreter.hideProgrampointerPosition("InputClass");
+                callback();
+                return;
+            })
+            break;
+        }
 
     }
 
     static _mj$readString$string$string$string(t: Thread, message: string, defaultValue?: string) {
-        InputClass.addTask(t, message, defaultValue, (value: string) => {
-            return {
-                convertedValue: value,
-                errorMessage: undefined
+        InputClass.addTask(t, {
+            type: "waitForInput", thread: t, message: message, defaultValue: defaultValue, validator: (value: string) => {
+                return {
+                    convertedValue: value,
+                    errorMessage: undefined
+                }
             }
         })
     }
@@ -105,10 +129,12 @@ export class InputClass extends ObjectClass {
     }
 
     static _mj$readBoolean$boolean$string$boolean(t: Thread, message: string, defaultValue?: string) {
-        InputClass.addTask(t, message, defaultValue + "", (value: string) => {
-            return {
-                convertedValue: value == 'true',
-                errorMessage: ['true', 'false'].indexOf(value) < 0 ? JRC.InputClassBooleanError() : undefined
+        InputClass.addTask(t, {
+            type: "waitForInput", thread: t, message: message, defaultValue: defaultValue + "", validator: (value: string) => {
+                return {
+                    convertedValue: value == 'true',
+                    errorMessage: ['true', 'false'].indexOf(value) < 0 ? JRC.InputClassBooleanError() : undefined
+                }
             }
         })
     }
@@ -118,16 +144,18 @@ export class InputClass extends ObjectClass {
     }
 
     static _mj$readInt$int$string$int(t: Thread, message: string, defaultValue?: string) {
-        InputClass.addTask(t, message, defaultValue, (value: string) => {
-            let error: string | undefined;
-            let n: number = Number.parseInt(value);
-            if(Number.isNaN(n)){
-                error = JRC.InputClassIntError();
-            }
+        InputClass.addTask(t, {
+            type: "waitForInput", thread: t, message: message, defaultValue: defaultValue, validator: (value: string) => {
+                let error: string | undefined;
+                let n: number = Number.parseInt(value);
+                if (Number.isNaN(n)) {
+                    error = JRC.InputClassIntError();
+                }
 
-            return {
-                convertedValue: n,
-                errorMessage: error
+                return {
+                    convertedValue: n,
+                    errorMessage: error
+                }
             }
         })
     }
@@ -137,16 +165,18 @@ export class InputClass extends ObjectClass {
     }
 
     static _mj$readFloat$float$string$float(t: Thread, message: string, defaultValue?: string) {
-        InputClass.addTask(t, message, defaultValue, (value: string) => {
-            let error: string | undefined;
-            let n: number = Number.parseFloat(value);
-            if(Number.isNaN(n)){
-                error = JRC.InputClassFloatError();
-            }
+        InputClass.addTask(t, {
+            type: "waitForInput", thread: t, message: message, defaultValue: defaultValue, validator: (value: string) => {
+                let error: string | undefined;
+                let n: number = Number.parseFloat(value);
+                if (Number.isNaN(n)) {
+                    error = JRC.InputClassFloatError();
+                }
 
-            return {
-                convertedValue: n,
-                errorMessage: error
+                return {
+                    convertedValue: n,
+                    errorMessage: error
+                }
             }
         })
     }
@@ -156,16 +186,18 @@ export class InputClass extends ObjectClass {
     }
 
     static _mj$readDouble$double$string$double(t: Thread, message: string, defaultValue?: string) {
-        InputClass.addTask(t, message, defaultValue, (value: string) => {
-            let error: string | undefined;
-            let n: number = Number.parseFloat(value);
-            if(Number.isNaN(n)){
-                error = JRC.InputClassFloatError();
-            }
+        InputClass.addTask(t, {
+            type: "waitForInput", thread: t, message: message, defaultValue: defaultValue, validator: (value: string) => {
+                let error: string | undefined;
+                let n: number = Number.parseFloat(value);
+                if (Number.isNaN(n)) {
+                    error = JRC.InputClassFloatError();
+                }
 
-            return {
-                convertedValue: n,
-                errorMessage: error
+                return {
+                    convertedValue: n,
+                    errorMessage: error
+                }
             }
         })
     }
@@ -176,15 +208,17 @@ export class InputClass extends ObjectClass {
 
 
     static _mj$readChar$char$string$char(t: Thread, message: string, defaultValue?: string) {
-        InputClass.addTask(t, message, defaultValue, (value: string) => {
-            let error: string | undefined;
-            if(value.length != 1){
-                error = JRC.InputClassCharError();
-            }
+        InputClass.addTask(t, {
+            type: "waitForInput", thread: t, message: message, defaultValue: defaultValue, validator: (value: string) => {
+                let error: string | undefined;
+                if (value.length != 1) {
+                    error = JRC.InputClassCharError();
+                }
 
-            return {
-                convertedValue: value,
-                errorMessage: error
+                return {
+                    convertedValue: value,
+                    errorMessage: error
+                }
             }
         })
     }
@@ -193,6 +227,12 @@ export class InputClass extends ObjectClass {
         InputClass._mj$readChar$char$string$char(t, message, undefined);
     }
 
-
+    static _mj$waitForKey$string$stringII(t: Thread, keys: string[]) {
+        InputClass.addTask(t, {type: "waitForKeys", thread: t, keys: keys})
+    }
+    
+    static _mj$waitForKey$string$(t: Thread) { 
+        InputClass.addTask(t, {type: "waitForKeys", thread: t, keys: undefined})
+    }
 
 }

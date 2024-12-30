@@ -258,6 +258,7 @@ export class Interpreter {
     stop(restart: boolean) {
 
         this.hideProgrampointerPosition();
+        this.inputManager?.hide();
 
         // this.inputManager.hide();
         this.setState(SchedulerState.stopped);

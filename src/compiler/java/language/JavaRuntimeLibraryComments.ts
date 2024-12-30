@@ -4146,6 +4146,16 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
         "en": "Takes char-input from user.",
     })
 
+    static InputWaitForKeyComment = () => lm({
+    "de": `Wartet, bis die Benutzerin/der Benutzer eine der angegebenen Tasten gedrückt hat.`,
+    "en": `Waits until the user presses one of given keys.`,
+    })
+
+    static InputWaitForAnyKeyComment = () => lm({
+    "de": `Wartet, bis die Benutzerin/der Benutzer eine beliebige Taste gedrückt hat.`,
+    "en": `Waits until the user presses any key.`,
+    })
+
     static InputClassReadIntComment = () => lm({
         "de": "Erwartet vom Benutzer die Eingabe eines Wertes vom Datentyp int",
         "en": "Takes int-input from user.",

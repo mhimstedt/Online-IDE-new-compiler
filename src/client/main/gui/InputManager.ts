@@ -2,6 +2,7 @@ import jQuery from "jquery";
 import { IInputManager, InputManagerCallback, InputManagerValidator } from "../../../compiler/common/interpreter/IInputManager";
 import { MainBase } from "../MainBase";
 import { PrintManager } from "./PrintManager";
+import { InternalKeyboardListener } from "../../../compiler/common/interpreter/KeyboardManager";
 
 export class InputManager implements IInputManager {
 
@@ -9,6 +10,30 @@ export class InputManager implements IInputManager {
 
     constructor(private $runDiv: JQuery<HTMLElement>, private main: MainBase) {
 
+    }
+
+    waitForKey(keys: string[] | undefined, successCallback: InputManagerCallback) {
+        let keyboardManager = this.main.getInterpreter()?.keyboardManager;
+        if(!keyboardManager) successCallback(undefined);
+
+        let keyboardListener: InternalKeyboardListener = 
+        {
+            onKeyDown:(key: string, isShift: boolean, isCtrl: boolean, isAlt: boolean) => {
+                if(!keys || keys.length == 0){
+                    keyboardManager.removeInternalKeyboardListener(keyboardListener);
+                    successCallback(key);
+                    return;
+                } 
+                if(keys.indexOf(key) >= 0){
+                    keyboardManager.removeInternalKeyboardListener(keyboardListener);
+                    successCallback(key);
+                    return;
+                } 
+            },
+            looseKeyboardFocus:() => {}
+        }
+
+        keyboardManager.addInternalKeyboardListener(keyboardListener);
     }
 
 
