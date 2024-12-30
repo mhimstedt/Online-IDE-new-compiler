@@ -9,6 +9,7 @@ import { JavaCompiledModule } from "../module/JavaCompiledModule";
 import { JavaTypeStore } from "../module/JavaTypeStore";
 import { ASTAnonymousClassNode, ASTLambdaFunctionDeclarationNode, ASTNode, AssignmentOperator, BinaryOperator, ConstantType, LogicOperator } from "../parser/AST";
 import { PrimitiveStringClass } from "../runtime/system/javalang/PrimitiveStringClass";
+import { StringPrimitiveType } from "../runtime/system/primitiveTypes/StringPrimitiveType";
 import { JavaArrayType } from "../types/JavaArrayType";
 import { JavaClass } from "../types/JavaClass";
 import { JavaInterface } from "../types/JavaInterface";
@@ -50,18 +51,6 @@ var boxedTypesMap: { [identifier: string]: number | undefined } = {
     "Float": nFloat,
     "Double": nDouble,
     "String": nString,
-}
-
-var unboxedNullValuesMap: { [identifier: string]: string } = {
-    "Boolean": "false",
-    "Character": "'_'",
-    "Byte": "0",
-    "Short": "0",
-    "Integer": "0",
-    "Long": "0",
-    "Float": "0.0",
-    "Double": "0.0",
-    "String": "'null'",
 }
 
 var primitiveTypeMap: { [identifier: string]: number | undefined } = {
@@ -466,27 +455,38 @@ export abstract class BinopCastCodeGenerator {
 
     }
 
-    compileCast(snippet: CodeSnippet, castTo: JavaType, castType: "explicit" | "implicit"): CodeSnippet {
+    compileCast(snippet: CodeSnippet, castTo: JavaType, castType: "explicit" | "implicit", fromToStringMethod: boolean = false ): CodeSnippet {
         if (!snippet || !snippet.type || !castTo) return snippet;
         let type: JavaType = snippet.type;
 
         if (snippet.type == castTo) return snippet;
 
         if (!type.isPrimitive) {
-            if (castTo.identifier == "string" || castTo.identifier == "String") {
-                if (type instanceof JavaArrayType) {
-                    snippet = this.wrapWithArrayToString(snippet, castTo.identifier);
-                } else {
-                    snippet = this.wrapWithToStringCall(snippet, castTo.identifier);
-                }
-                return snippet;
+            if(type.identifier == "String" && castTo == this.stringType){
+                return new OneParameterTemplate('(§1?.value ?? null)').applyToSnippet(this.stringType, snippet.range, snippet);
             }
+            // if (castTo.identifier == "string" || castTo.identifier == "String") {
+            //     if (type instanceof JavaArrayType) {
+            //         snippet = this.wrapWithArrayToString(snippet, castTo.identifier);
+            //     } else {
+            //         snippet = this.wrapWithToStringCall(snippet, castTo.identifier);
+            //     }
+            //     return snippet;
+            // }
             if (type == this.nullType) {
                 return snippet;
             }
             if (castTo.isPrimitive) {
                 let boxedIndex = boxedTypesMap[type.identifier];
                 if (boxedIndex) {
+                    if(castTo == this.stringType){
+                        if(fromToStringMethod){
+                            return new OneParameterTemplate('((§1?.value ?? null) + "")').applyToSnippet(this.stringType, snippet.range, snippet);
+                        } else {
+                            this.pushError(JCM.cantCastType(type.identifier, castTo.identifier), "error", snippet.range!);
+                            return snippet;
+                        }
+                    }
                     snippet = this.unbox(snippet);
                     // continue below...
                 } else {
@@ -712,7 +712,10 @@ export abstract class BinopCastCodeGenerator {
 
         let unboxedType = this.primitiveTypes[boxedTypeIndex];
 
-        return SnippetFramer.frame(snippet, `(§1 || {value: ${unboxedNullValuesMap[snippet.type.identifier]}}).value`, unboxedType);
+        // return SnippetFramer.frame(snippet, `(§1 || {value: ${unboxedNullValuesMap[snippet.type.identifier]}}).value`, unboxedType);
+
+        // better variant:
+        return SnippetFramer.frame(snippet, `${Helpers.checkNPE('§1', snippet.range!)}.value`, unboxedType);
     }
 
     getUnboxedType(type: JavaType): JavaType {

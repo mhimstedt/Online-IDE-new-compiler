@@ -530,10 +530,12 @@ export class Thread {
 
 
     print(text: string | undefined, color: number | undefined) {
+        if(text == null) text = "null";
         this.scheduler.interpreter.printManager.print(text, false, color);
     }
-
+    
     println(text: string | undefined, color: number | undefined) {
+        if(text == null) text = "null";
         this.scheduler.interpreter.printManager.print(text, true, color);
     }
 
