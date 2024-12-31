@@ -190,7 +190,7 @@ export class JCM {
      */
 
     static variableNotInitialized = (identifier: string) => le({
-        "de": "Die Variable/der Parameter " + identifier + " is vor diesem lesenden Zugriff noch nicht initialisiet worden.",
+        "de": "Die Variable/der Parameter " + identifier + " is vor diesem lesenden Zugriff noch nicht initialisiert worden.",
         "en": `Variable/field ${identifier} had not been initialized before first read access.`,
     })
 

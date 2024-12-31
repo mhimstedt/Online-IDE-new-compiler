@@ -8,7 +8,7 @@ import { JavaSymbolTable } from "../codegenerator/JavaSymbolTable";
 import { JavaCompiledModule } from "../module/JavaCompiledModule";
 import { GenericTypeParameter } from "../types/GenericTypeParameter.ts";
 import { JavaArrayType } from "../types/JavaArrayType";
-import { IJavaClass } from "../types/JavaClass";
+import { IJavaClass, JavaClass } from "../types/JavaClass";
 import { JavaEnum } from "../types/JavaEnum.ts";
 import { IJavaInterface } from "../types/JavaInterface";
 import { JavaMethod } from "../types/JavaMethod";
@@ -112,7 +112,7 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
 
             symbolTable = module.findSymbolTableAtPosition(position);
             classContext = symbolTable == null ? undefined : symbolTable.classContext;
-            return this.getCompletionItemsAfterDot(dotMatch, position, module,
+            return this.getCompletionItemsAfterDot(dotMatch, position, module, main,
                 identifierAndBracketAfterCursor, classContext, leftBracketAlreadyThere);
         }
 
@@ -363,6 +363,7 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
     }
 
     getCompletionItemsAfterDot(dotMatch: RegExpMatchArray, position: monaco.Position, module: JavaCompiledModule,
+        main: IMain,
         identifierAndBracketAfterCursor: string, classContext: NonPrimitiveType | StaticNonPrimitiveType | undefined,
         leftBracketAlreadyThere: boolean): monaco.languages.ProviderResult<monaco.languages.CompletionList> {
 
@@ -391,9 +392,16 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
         }
 
         if (type instanceof IJavaInterface || type instanceof GenericTypeParameter) {
+            let items = type.getCompletionItems(TokenType.keywordPublic, leftBracketAlreadyThere,
+                identifierAndBracketAfterCursor, rangeToReplace, undefined);
+            
+            let objectClassType = <JavaClass>main.getInterpreter().scheduler.classObjectRegistry["Object"].type;   
+            
+            items = items.concat(objectClassType.getCompletionItems(TokenType.keywordPublic, leftBracketAlreadyThere,
+                identifierAndBracketAfterCursor, rangeToReplace, undefined))
+
             return Promise.resolve({
-                suggestions: type.getCompletionItems(TokenType.keywordPublic, leftBracketAlreadyThere,
-                    identifierAndBracketAfterCursor, rangeToReplace, undefined)
+                suggestions: items
             });
         }
 

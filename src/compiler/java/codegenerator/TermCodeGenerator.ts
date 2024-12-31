@@ -1325,6 +1325,9 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
             possibleMethods = objectType.getPossibleMethods(identifier, isConstructor, hasToBeStatic);
         } else if (objectType instanceof NonPrimitiveType) {
             possibleMethods = objectType.getPossibleMethods(identifier, isConstructor, hasToBeStatic);
+            if(objectType instanceof IJavaInterface || objectType instanceof GenericTypeParameter){
+                possibleMethods = possibleMethods.concat(this.objectType.getPossibleMethods(identifier, isConstructor, hasToBeStatic));
+            }
         } else {
             return { best: undefined, possible: [] };
         }
