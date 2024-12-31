@@ -60,7 +60,7 @@ export abstract class IJavaClass extends JavaTypeWithInstanceInitializer {
             itemList.push({
                 label: field.identifier, // field.toString(),
                 kind: isColor ? monaco.languages.CompletionItemKind.Color : monaco.languages.CompletionItemKind.Field,
-                detail: field.type ? field.type.toString() : "", // isColor ? ColorHelper.intColorToHexRGB(ColorHelper.predefinedColors[field.identifier]) : "",
+                detail: isColor ? ColorHelper.intColorToHexRGB(ColorHelper.predefinedColors[field.identifier]) : (field.type ? field.type.toString() : ""),
                 insertText: field.identifier,
                 range: rangeToReplace,
                 documentation: field.documentation == null ? undefined : {
