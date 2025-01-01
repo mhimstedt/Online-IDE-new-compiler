@@ -319,7 +319,8 @@ export class FastSpriteManager3d {
 
     sortByDistanceToCamera() {
         if (this.geometry.instanceCount < 2) return;
-        let cameraPosition = this.world3d.currentCamera.camera3d.position;
+        let camera = this.world3d.currentCamera.camera3d;
+        let cameraPosition = camera.position;
 
         if (!this.dirty) {
             if (cameraPosition.distanceTo(this.oldCameraPos) < 1e-2) return;
@@ -330,12 +331,14 @@ export class FastSpriteManager3d {
 
         this.oldCameraPos = cameraPosition.clone();
         this.dirty = false;
+        let cameraDirection = camera.getWorldDirection(new THREE.Vector3()).normalize();
 
         let distanceToCamera = new Float32Array(count);
         for (let i = 0; i < count; i++) {
             let base = i * this.bufferElementSize + this.iOffset;
             let pos: THREE.Vector3 = new THREE.Vector3(this.interleavedBuffer[base], this.interleavedBuffer[base + 1], this.interleavedBuffer[base + 2]);
-            distanceToCamera[i] = -cameraPosition.distanceTo(pos);
+            distanceToCamera[i] = -pos.sub(cameraPosition).dot(cameraDirection);            
+            // distanceToCamera[i] = -cameraPosition.distanceTo(pos);
         }
         this.quickSort(distanceToCamera, this.interleavedBuffer, 0, count - 1);
         this.instanceInterleavedBuffer.needsUpdate = true;
