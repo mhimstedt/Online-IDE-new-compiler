@@ -5,6 +5,7 @@ import { CodeFragment } from "../../common/disassembler/CodeFragment.ts";
 import { Step } from "../../common/interpreter/Step.ts";
 import { Thread } from "../../common/interpreter/Thread.ts";
 import { CompilerFile } from "../../common/module/CompilerFile";
+import { Module } from "../../common/module/Module.ts";
 import { Position } from "../../common/range/Position.ts";
 import { IRange } from "../../common/range/Range.ts";
 import { JavaCompilerStringConstants } from "../JavaCompilerStringConstants.ts";
@@ -244,6 +245,10 @@ export class JavaCompiledModule extends JavaBaseModule {
 
     dependsOnModuleWithErrors(): boolean {
         return this.compiledSymbolsUsageTracker.existsDependencyToOtherModuleWithErrors();
+    }
+
+    dependsOnModule(module: Module): boolean {
+        return this.compiledSymbolsUsageTracker.existsDependencyToModule(module);
     }
 
     findSymbolTableAtPosition(position: Position): JavaSymbolTable | undefined {

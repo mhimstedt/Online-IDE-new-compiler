@@ -439,6 +439,7 @@ export class MainEmbedded implements MainBase {
 
     removeFile(file: File) {
         this.currentWorkspace.removeFile(file);
+        this.getCompiler()?.triggerCompile();
     }
 
 

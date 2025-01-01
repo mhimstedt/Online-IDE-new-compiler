@@ -138,4 +138,8 @@ export class UsageTracker {
         return false;
     }
 
+    existsDependencyToModule(module: Module){
+        return this.dependsOnModules.get(module) == true;
+    }
+
 }

@@ -83,7 +83,7 @@ export class JavaCompiler implements Compiler {
 
         // we call moduleManager.getNewOrDirtyModules before iterativelySetDirtyFlags
         // to check if ANY file has changed/is new since last compilation run:
-        let newOrDirtyModules = this.moduleManager.getNewOrDirtyModules(true);
+        let newOrDirtyModules = this.moduleManager.getNewOrDirtyModules();
 
         /**
          * if no module has changed, return as fast as possible

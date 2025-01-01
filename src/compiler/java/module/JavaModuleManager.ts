@@ -39,7 +39,7 @@ export class JavaModuleManager {
     }
 
     setupModulesBeforeCompiliation(files: CompilerFile[]){
-        this.removeUnusedModules(files);
+        this.removeUnusedModulesAndMarkDependentModulesDirty(files);
         this.createNewModules(files);
     }
 
@@ -103,8 +103,17 @@ export class JavaModuleManager {
         }
     }
 
-    removeUnusedModules(files: CompilerFile[]){
+    removeUnusedModulesAndMarkDependentModulesDirty(files: CompilerFile[]){
+        let unusedModules = this.modules.filter(m => files.indexOf(m.file) < 0);
         this.modules = this.modules.filter(m => files.indexOf(m.file) >= 0);
+
+        for(let unusedModule of unusedModules){
+            for(let usedModule of this.modules){
+                if(usedModule.dependsOnModule(unusedModule)){
+                    usedModule.setDirty(true);
+                }
+            }
+        }
     }
 
     getNewOrDirtyModules(log: boolean = false): JavaCompiledModule[] {
