@@ -346,7 +346,8 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
                     }
                 }
             } else {
-                completionItems = completionItems.concat(classContext.getCompletionItems(TokenType.keywordPrivate, leftBracketAlreadyThere, identifierAndBracketAfterCursor, rangeToReplace, undefined, false));
+                // TODO: only if inside initial value of field definition...
+                // completionItems = completionItems.concat(classContext.getCompletionItems(TokenType.keywordPrivate, leftBracketAlreadyThere, identifierAndBracketAfterCursor, rangeToReplace, undefined, false));
             }
         }
 
@@ -759,6 +760,8 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
         }
 
         for (let m of methods) {
+
+            if(m.isConstructor) continue;
 
             let alreadyImplemented = false;
             for (let m1 of classContext.getOwnMethods()) {

@@ -99,8 +99,8 @@ export class MonacoProviderLanguage {
 
     //(m.isAbstract ? "Implementiere " : "Überschreibe ") + "die Methode " + label + " der Basisklasse."
     static implementOverrideMethod = (isAbstract: boolean, methodIdentifier: string) => lm({
-    "de": (isAbstract ? "Implementiere " : "Überschreibe ") + `die Methode ${methodIdentifier} der Oberklasse.`,
-    "en": (isAbstract ? "implement " : "override ") + `method ${methodIdentifier} of base class.`,
+    "de": (isAbstract ? "Implementiere " : "Überschreibe ") + `die Methode`, // ${methodIdentifier} der Oberklasse.`,
+    "en": (isAbstract ? "implement " : "override ") + `method` // ${methodIdentifier} of base class.`,
     })
 
 
