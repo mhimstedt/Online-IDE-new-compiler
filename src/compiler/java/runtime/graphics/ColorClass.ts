@@ -17,8 +17,8 @@ export class ColorClass extends ObjectClass {
         { type: "method", signature: "Color(int red, int green, int blue)", native: ColorClass.prototype._constructorColorClass },
         { type: "method", signature: "Color(int red, int green, int blue, double alpha)", native: ColorClass.prototype._constructorColorClass1 },
         { type: "method", signature: "static int randomColor()", native: ColorClass._randomColor },
-        { type: "method", signature: "static int randomColor(int minimumRGBValue)", native: ColorClass._randomColorMin },
-        { type: "method", signature: "static int randomColor(int minimumRGBValue, int maximumRGBValue)", native: ColorClass._randomColorMinMax },
+        { type: "method", signature: "static int randomColor(int minimumBrightness)", native: ColorClass._randomColorMin },
+        { type: "method", signature: "static int randomColor(int minimumBrightness, int maximumBrightness)", native: ColorClass._randomColorMinMax },
         { type: "method", signature: "final String toString()", native: ColorClass.prototype._toString },
         { type: "method", signature: "final int toInt()", native: ColorClass.prototype._toInt },
         { type: "method", signature: "final boolean equals(Color otherColor)", java: ColorClass.prototype._mj$equals$boolean$Object },
@@ -97,11 +97,24 @@ export class ColorClass extends ObjectClass {
 
     static _randomColorMinMax(min: number, max: number): number {
         if (min < 0) min = 0;
-        if (min > 255) min = 255;
+        if (max < 0) max = 0;
 
-        let r: number = Math.floor(Math.random() * (256 - min)) + min;
-        let g: number = Math.floor(Math.random() * (256 - min)) + min;
-        let b: number = Math.floor(Math.random() * (256 - min)) + min;
+        let brigthness = (Math.random() * (max - min) + min) * Math.sqrt(3);
+
+        let r: number = Math.random();
+        let g: number = Math.random();
+        let b: number = Math.random();
+
+        let d = Math.sqrt(r * r + g * g + b * b);
+        if(d < 1e-10) d = 1e-10;
+
+        r = Math.floor(r/d * brigthness);
+        g = Math.floor(g/d * brigthness);
+        b = Math.floor(b/d * brigthness);
+
+        if(r > 255) r = 255;
+        if(g > 255) g = 255;
+        if(b > 255) b = 255;
 
         return 0x10000 * r + 0x100 * g + b;
 

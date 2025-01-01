@@ -23,7 +23,7 @@ export class Sprite3dClass extends ActorClass {
         { type: "method", signature: "double getZ()", native: Sprite3dClass.prototype.getZ },
         
         { type: "method", signature: "void setColor(int color)", native: Sprite3dClass.prototype.setColorInt },
-        { type: "method", signature: "void setAlpha(float alpha)", native: Sprite3dClass.prototype.setAlpha },
+        { type: "method", signature: "void setAlpha(double alpha)", native: Sprite3dClass.prototype.setAlpha },
 
 
 
