@@ -674,17 +674,16 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
 
             if (symbolInformation.outerClassLevel > 0) this.outerClassFieldAccessTracker.onAccessHappened();
 
-            this.registerUsagePosition(symbol, node.range);
-
+            
             if (symbol.onStackframe()) {
+                this.registerUsagePosition(symbol, node.range);
                 if (symbolInformation.outerClassLevel == 0) {
                     this.missingStatementManager.onSymbolAccess(symbol, node.range, this.module.errors, isWriteAccess);
                     return this.compileSymbolOnStackframeAccess(symbol as SymbolOnStackframe, node.range);
                 } else {
                     return this.compileOuterClassLocalVariableAccess(symbol as JavaLocalVariable, node.range);
                 }
-            }
-            if (symbol instanceof JavaField) {
+            } else if (symbol instanceof JavaField) {
                 let field = <JavaField>symbol;
 
                 if (this.classOfCurrentlyCompiledStaticInitialization && !field._isStatic) {
