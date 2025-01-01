@@ -168,7 +168,7 @@ export class JavaCompiler implements Compiler {
 
         this.#lastCompiledExecutable = executable;
 
-        this.eventManager.fire("compilationFinished", this.#lastCompiledExecutable);
+        this.eventManager.fire("compilationFinishedWithNewExecutable", this.#lastCompiledExecutable);
 
         for (const module of this.#lastCompiledExecutable.moduleManager.modules) {
             this.errorMarker?.markErrorsOfModule(module);
@@ -245,6 +245,7 @@ export class JavaCompiler implements Compiler {
                     this.#progressManager.initBeforeCompiling();
                     await this.compileIfDirty();
                     this.#progressManager.afterCompiling();
+                    this.eventManager.fire("compilationFinished");
                 } catch (exception) {
                     this.#progressManager.afterCompiling(exception.toString());
                     if (!(exception instanceof CompilingProgressManagerException)) {

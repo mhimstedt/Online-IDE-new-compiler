@@ -20,7 +20,7 @@ export class ColorProvider extends BaseMonacoProvider implements monaco.language
 
         let compiler = main.getCompiler();
         if(!compiler.findModuleByFile(file)){
-            await compiler.eventManager.waitFor('compilationFinished');
+            await compiler.eventManager.waitFor('compilationFinishedWithNewExecutable');
         }
 
         let module = main.getCurrentWorkspace()?.getModuleForMonacoModel(model);

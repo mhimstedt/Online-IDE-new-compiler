@@ -5,7 +5,7 @@ import { EventManager } from "./interpreter/EventManager";
 import { CompilerFile } from "./module/CompilerFile";
 import { Module } from "./module/Module";
 
-export type CompilerEvents = "typesReadyForCodeCompletion" | "compilationFinished";
+export type CompilerEvents = "typesReadyForCodeCompletion" | "compilationFinishedWithNewExecutable" | "compilationFinished";
 
 export interface Compiler {
     setFiles(files: CompilerFile[]): void;

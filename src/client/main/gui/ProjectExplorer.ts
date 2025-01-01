@@ -751,6 +751,8 @@ export class ProjectExplorer {
             } else {
                 this.main.bottomDiv.homeworkManager.hideHomeworkRevisionButton();
             }
+
+            this.main.getInterpreter().onFileSelected();
         }
 
 

@@ -592,7 +592,7 @@ export class MainEmbedded implements MainBase {
             new JUnitTestrunner(this,this.$junitDiv[0]);
         }
 
-        this.getCompiler().eventManager.on("compilationFinished", this.onCompilationFinished, this);
+        this.getCompiler().eventManager.on("compilationFinishedWithNewExecutable", this.onCompilationFinished, this);
 
         // this.getCompiler().triggerCompile();
 

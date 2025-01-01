@@ -396,6 +396,10 @@ export class Interpreter {
         return this.executable?.findStartableModule(this.main?.getCurrentWorkspace()?.getCurrentlyEditedModule())
     }
 
+    onFileSelected(){
+        this.#enableButtonsAccordingToState(this.scheduler.state);
+    }
+
     setState(state: SchedulerState) {
         if (state == SchedulerState.running) {
             this.exceptionMarker?.removeExceptionMarker();
@@ -414,14 +418,37 @@ export class Interpreter {
             // this.closeAllWebsockets();
         }
 
+        this.#enableButtonsAccordingToState(state);
+
+        if (state == SchedulerState.stopped) {
+            this.eventManager.fire("done");
+
+        }
+
+        let runningStates: SchedulerState[] = [SchedulerState.paused, SchedulerState.running];
+        if (runningStates.indexOf(this.scheduler.state) >= 0 && runningStates.indexOf(state) < 0) {
+            this._debugger?.hide();
+            this.keyboardManager?.unsubscribeAllListeners();
+        }
+
+        if (runningStates.indexOf(this.scheduler.state) < 0 && runningStates.indexOf(state) >= 0) {
+            this._debugger?.show();
+        }
+
+        this.eventManager.fire("stateChanged", this.scheduler.state, state);
+
+        this.scheduler.setState(state);
+    }
+
+    #enableButtonsAccordingToState(state: SchedulerState) {
         if (this.actionManager) {
             for (let actionId of this.#actions) {
                 this.actionManager.setActive("interpreter." + actionId, this.#buttonActiveMatrix[actionId][state]);
             }
 
 
-            const mainModule = this.#findStartableModule()
-            const mainModuleExists = mainModule != null
+            const mainModule = this.#findStartableModule();
+            const mainModuleExists = mainModule != null;
             let mainModuleExistsOrTestIsRunning = mainModuleExists || (state == 2 && this.scheduler.state <= 2);
 
             let buttonStartActive = this.#buttonActiveMatrix['start'][state];
@@ -444,30 +471,11 @@ export class Interpreter {
             this.actionManager.setActive("interpreter.stepInto", buttonStepIntoActive);
             this.actionManager.setActive("interpreter.startTests", this.#executableHasTests() && state == SchedulerState.stopped);
 
-            Object.values(SchedulerState).filter(v => typeof v == 'string').forEach( (key) => {
+            Object.values(SchedulerState).filter(v => typeof v == 'string').forEach((key) => {
                 this.actionManager.setEditorContext("Scheduler_" + key, SchedulerState[key] == state);
-            })
+            });
 
         }
-
-        if (state == SchedulerState.stopped) {
-            this.eventManager.fire("done");
-
-        }
-
-        let runningStates: SchedulerState[] = [SchedulerState.paused, SchedulerState.running];
-        if (runningStates.indexOf(this.scheduler.state) >= 0 && runningStates.indexOf(state) < 0) {
-            this._debugger?.hide();
-            this.keyboardManager?.unsubscribeAllListeners();
-        }
-
-        if (runningStates.indexOf(this.scheduler.state) < 0 && runningStates.indexOf(state) >= 0) {
-            this._debugger?.show();
-        }
-
-        this.eventManager.fire("stateChanged", this.scheduler.state, state);
-
-        this.scheduler.setState(state);
     }
 
     #resetRuntime() {
