@@ -193,7 +193,7 @@ export class ThreadClass extends ObjectClass implements RunnableInterface {
         if(this.thread) this.thread.maxStepsPerSecond = this.maxStepsPerSecond;
     }
 
-    static _sleep(t: Thread, callback: CallbackFunction, milliseconds: number){
+    static _sleep(t: Thread, milliseconds: number){
         if(milliseconds < 0){
             throw new RuntimeExceptionClass(JRC.millisecondsNotPositiveError());
         }
@@ -205,14 +205,12 @@ export class ThreadClass extends ObjectClass implements RunnableInterface {
             t.scheduler.restoreThread(t);
         }, milliseconds);
 
-        if(callback) callback();
     }
 
-    static _currentThread(t: Thread, callback: CallbackFunction){
+    static _currentThread(t: Thread){
         if(!t.threadObject) t.threadObject = new ThreadClass();
         (<ThreadClass>t.threadObject).thread = t;
         t.s.push(t.threadObject);
-        if(callback) callback();
     }
 
 
