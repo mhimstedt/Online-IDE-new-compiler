@@ -61,7 +61,7 @@ export class ActorManager {
     runningactThread?: Thread;
     tickHappenedWhenThreadNotEmpty: boolean = false;
     callActMethods(dt: number) {
-        if (this.runningactThread && this.runningactThread.state == ThreadState.runnable) {
+        if (this.runningactThread && this.runningactThread.state == ThreadState.running) {
             this.tickHappenedWhenThreadNotEmpty = true;
             return;
         }
@@ -85,7 +85,7 @@ export class ActorManager {
         }
 
         if (this.runningactThread.programStack.length > 0) {
-            this.runningactThread.state = ThreadState.runnable;
+            this.runningactThread.state = ThreadState.running;
             this.runningactThread.callbackAfterTerminated = () => {
                 if(this.tickHappenedWhenThreadNotEmpty){
                     this.callActMethods(dt);
@@ -131,7 +131,7 @@ export class ActorManager {
         for (let actor of this.actors["keyPressed"]) {
             actor._mj$onKeyTyped$void$String(t, undefined, new StringClass(key));
         }
-        t.state = ThreadState.runnable;
+        t.state = ThreadState.running;
     }
 
     onKeyUp(key: string): void {
@@ -141,7 +141,7 @@ export class ActorManager {
         for (let actor of this.actors["keyUp"]) {
             actor._mj$onKeyUp$void$String(t, undefined, new StringClass(key));
         }
-        t.state = ThreadState.runnable;
+        t.state = ThreadState.running;
     }
 
     onKeyDown(key: string, isShift: boolean, isCtrl: boolean, isAlt: boolean): void {
@@ -151,7 +151,7 @@ export class ActorManager {
         for (let actor of this.actors["keyDown"]) {
             actor._mj$onKeyDown$void$String(t, undefined, new StringClass(key));
         }
-        t.state = ThreadState.runnable;
+        t.state = ThreadState.running;
 
     }
 }

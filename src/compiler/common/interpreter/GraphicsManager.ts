@@ -83,4 +83,8 @@ export class GraphicsManager {
         this.graphicsDiv.style.height = height + "px";
     }
 
+    shrinkGraphicsDiv(){
+        this.graphicsDiv.style.height = "0px";
+    }
+
 }

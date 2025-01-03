@@ -84,7 +84,7 @@ export class Scheduler {
         let lastStoredStepsInThisRun = -1;          // watchdog uses this to decide if there's any runnable thread left
 
         let threadState: ThreadStateInfoAfterRun = {
-            state: ThreadState.runnable,
+            state: ThreadState.running,
             stepsExecuted: 0
         };
 
@@ -144,7 +144,7 @@ export class Scheduler {
 
             numberOfStepsInThisRun += threadState.stepsExecuted;  // to avoid endless loop and to keep statistics
 
-            if (threadState.state != ThreadState.runnable) {
+            if (threadState.state != ThreadState.running) {
                 switch (threadState.state) {
                     case ThreadState.terminated:
                     case ThreadState.terminatedWithException:
@@ -178,7 +178,7 @@ export class Scheduler {
                         }
                         break;
                     case ThreadState.stoppedAtBreakpoint:
-                        currentThread.state = ThreadState.runnable;
+                        currentThread.state = ThreadState.running;
                         this.interpreter.pause();
                         break;
                     case ThreadState.immediatelyAfterReplStatement:
@@ -282,7 +282,7 @@ export class Scheduler {
                     this.run(1);
                     let step = this.getNextStep();
                     // skip steps for which position can't be shown to user:
-                    finished = !(step && !step.getValidRangeOrUndefined() && thread.state == ThreadState.runnable)
+                    finished = !(step && !step.getValidRangeOrUndefined() && thread.state == ThreadState.running)
                 } while (!finished)
 
                 this.setState(SchedulerState.paused);
@@ -345,7 +345,7 @@ export class Scheduler {
     }
 
     restoreThread(thread: Thread) {
-        thread.state = ThreadState.runnable;
+        thread.state = ThreadState.running;
         let index = this.#suspendedThreads.indexOf(thread);
         if (index >= 0) {
             this.#suspendedThreads.splice(index, 1);
@@ -500,7 +500,7 @@ export class Scheduler {
             this.runningThreads.push(standaloneThread);
             this.#currentThreadIndex = this.runningThreads.length - 1;
         }
-        standaloneThread.state = ThreadState.runnable;
+        standaloneThread.state = ThreadState.running;
     }
 
     saveAllThreadsBut(currentThread: Thread) {

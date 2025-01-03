@@ -286,6 +286,7 @@ export class Interpreter {
 
         this.main?.getBottomDiv()?.errorManager?.hideAllErrorDecorations();
         this.keyboardManager?.clearPressedKeys();
+        this.graphicsManager?.shrinkGraphicsDiv();
 
         if (this.scheduler.state != SchedulerState.paused && this.executable) {
             this.printManager.clear();
@@ -507,7 +508,7 @@ export class Interpreter {
         if (this.#mainThread) {
             this.codeReachedAssertions.init(executable.moduleManager);
             this.#mainThread.maxStepsPerSecond = this.stepsPerSecondGoal;
-            this.#mainThread.state = ThreadState.runnable; // this statement actually makes the program run
+            this.#mainThread.state = ThreadState.running; // this statement actually makes the program run
         }
     }
 

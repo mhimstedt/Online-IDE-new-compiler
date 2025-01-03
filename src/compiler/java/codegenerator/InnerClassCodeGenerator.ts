@@ -474,7 +474,7 @@ export class InnerClassCodeGenerator extends StatementCodeGenerator {
                 if (snippet.isConstant()) {
                     field.initialValue = snippet.getConstantValue();
                     field.initialValueIsConstant = field.isFinal();
-                    if ((<JavaType>field.getType()).isPrimitive) {
+                    if ((<JavaType>field.getType())?.isPrimitive) {
                         snippet = undefined;
                     }
                 }

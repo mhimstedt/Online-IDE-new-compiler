@@ -132,7 +132,7 @@ export class GuiComponentClass extends FilledShapeClass implements InternalMouse
                 cl._mj$onChange$void$Object$String(thread, undefined, this, new StringClass(newValue));
             }
 
-            thread.state = ThreadState.runnable;
+            thread.state = ThreadState.running;
         }
     }
 

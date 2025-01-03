@@ -39,7 +39,7 @@ export class SystemToolsClass extends ObjectClass {
         t.state = ThreadState.timedWaiting;
         setTimeout(() => {
             if(t.state == ThreadState.timedWaiting){
-                t.state = ThreadState.runnable;
+                t.state = ThreadState.running;
             }
         }, milliseconds);
     }

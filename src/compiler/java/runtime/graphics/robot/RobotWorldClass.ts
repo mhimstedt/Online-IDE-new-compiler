@@ -60,7 +60,7 @@ export class RobotWorldClass extends ObjectClass {
             this.robotCubeFactory = new RobotCubeFactory(this);
             t.state = ThreadState.waiting;
             await this.robotCubeFactory.init();
-            t.state = ThreadState.runnable;
+            t.state = ThreadState.running;
 
             const ambientLight = new THREE.AmbientLight(0xeeeeee, 3);
             this.world3d.scene.add(ambientLight);

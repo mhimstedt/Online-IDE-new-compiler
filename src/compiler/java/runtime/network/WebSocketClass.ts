@@ -109,7 +109,7 @@ export class WebSocketClass extends ObjectClass {
                 this.main.getBottomDiv().showHideBusyIcon(false);
                 this.sendIntern(JSON.stringify(request));
                 this.onOpen();
-                t.state = ThreadState.runnable;
+                t.state = ThreadState.running;
 
             }
 
@@ -180,7 +180,7 @@ export class WebSocketClass extends ObjectClass {
         this.isOpen = false;
         let thread = this.interpreter.scheduler.createThread("Websocket-onOpen");
         this._mj$onClose$void$(thread, undefined);
-        thread.state = ThreadState.runnable;
+        thread.state = ThreadState.running;
     }
 
     sendToClient(clientId: number, data: string, dataType: string) {
@@ -215,7 +215,7 @@ export class WebSocketClass extends ObjectClass {
 
                 let thread = this.interpreter.scheduler.createThread("Websocket-onClientConnected");
                 this._mj$onOtherClientConnected$void$WebSocketClient(thread, undefined, newClient);
-                thread.state = ThreadState.runnable;
+                thread.state = ThreadState.running;
 
                 break;
             case 2: // message
@@ -224,7 +224,7 @@ export class WebSocketClass extends ObjectClass {
 
                 let thread1 = this.interpreter.scheduler.createThread("Websocket-onMessage");
                 this._mj$onMessage$void$WebSocketClient$String$String(thread1, undefined, senderClient, new StringClass(response.data), new StringClass(response.dataType));
-                thread1.state = ThreadState.runnable;
+                thread1.state = ThreadState.running;
 
                 break;
             case 3: // other client disconnected
@@ -235,7 +235,7 @@ export class WebSocketClass extends ObjectClass {
 
                 let thread2 = this.interpreter.scheduler.createThread("Websocket-onClientDisconnected");
                 this._mj$onOtherClientDisconnected$void$WebSocketClient(thread2, undefined, disconnectedClient);
-                thread2.state = ThreadState.runnable;
+                thread2.state = ThreadState.running;
 
                 break;
             case 4: // time synchronization
@@ -268,7 +268,7 @@ export class WebSocketClass extends ObjectClass {
 
         let thread1 = this.interpreter.scheduler.createThread("Websocket-onClientsFound");
         this._mj$onClientsFound$void$WebSocketClient_I$int(thread1, undefined, otherClients, own_index);
-        thread1.state = ThreadState.runnable;
+        thread1.state = ThreadState.running;
 
     }
 
@@ -285,7 +285,7 @@ export class WebSocketClass extends ObjectClass {
 
         let thread = this.interpreter.scheduler.createThread("Websocket-onOpen");
         this._mj$onOpen$void$(thread, undefined);
-        thread.state = ThreadState.runnable;
+        thread.state = ThreadState.running;
     }
 
 

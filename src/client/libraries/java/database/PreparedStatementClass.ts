@@ -137,7 +137,7 @@ export class PreparedStatementClass extends ObjectClass {
             t.s.push(resultSet);
 
             this.connection.main.getBottomDiv().showHideBusyIcon(false);
-            t.state = ThreadState.runnable;
+            t.state = ThreadState.running;
 
         })
 
@@ -165,7 +165,7 @@ export class PreparedStatementClass extends ObjectClass {
             t.s.push(lastRowId);
 
             this.connection.main.getBottomDiv().showHideBusyIcon(false);
-            t.state = ThreadState.runnable;
+            t.state = ThreadState.running;
 
         })
 

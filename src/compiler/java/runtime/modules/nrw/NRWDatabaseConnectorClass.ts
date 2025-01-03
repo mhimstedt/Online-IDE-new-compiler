@@ -68,7 +68,7 @@ export class NRWDatabaseConnectorClass extends ObjectClass {
                 this.message = NRWLang.connectionError() + ": " + error;
             }
             t.s.push(this);
-            t.state = ThreadState.runnable;
+            t.state = ThreadState.running;
             if(callback) callback();
         })
 
@@ -90,7 +90,7 @@ export class NRWDatabaseConnectorClass extends ObjectClass {
             this.ch.executeQuery(statement, (error: string, data: QueryResult) => {
                 
                 this.ch.main.getBottomDiv().showHideBusyIcon(false);
-                t.state = ThreadState.runnable;
+                t.state = ThreadState.running;
     
                 if(error){
                     this.message = error;
@@ -124,7 +124,7 @@ export class NRWDatabaseConnectorClass extends ObjectClass {
             this.ch.executeWriteStatement(statement, (error: string) => {
                 
                 this.ch.main.getBottomDiv().showHideBusyIcon(false);
-                t.state = ThreadState.runnable;
+                t.state = ThreadState.running;
     
                 if(error){
                     this.message = error;

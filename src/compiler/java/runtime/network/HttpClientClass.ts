@@ -51,7 +51,7 @@ export class HttpClientClass extends ObjectClass {
                         t.s.push(responseObject);
                         t.scheduler.interpreter.hideProgrampointerPosition("HttpRequestClass");
                         if (t.state == ThreadState.waiting) {
-                            t.state = ThreadState.runnable;
+                            t.state = ThreadState.running;
                             if (callback) callback();
                         }
 

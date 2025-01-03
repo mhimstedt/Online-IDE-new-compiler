@@ -48,7 +48,7 @@ export class SemaphoreClass extends ObjectClass {
         if(this.permitsAvailable > 0){
             this.permitsAvailable--;
         } else {
-            t.state = ThreadState.blocked;
+            t.state = ThreadState.runnable;
             t.scheduler.suspendThread(t);
             this.waitingThreads1.push(t);
         }

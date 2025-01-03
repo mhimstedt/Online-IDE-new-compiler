@@ -17,9 +17,9 @@ export class ThreadStateClass extends EnumClass {
 
     static values: ThreadStateClass[] = [
     new ThreadStateClass("new", ThreadState.new),
-    new ThreadStateClass("runnable", ThreadState.runnable),
+    new ThreadStateClass("running", ThreadState.running),
     new ThreadStateClass("stopped_at_breakpoint", ThreadState.stoppedAtBreakpoint),
-    new ThreadStateClass("blocked", ThreadState.blocked),
+    new ThreadStateClass("runnable", ThreadState.runnable),
     new ThreadStateClass("waiting", ThreadState.waiting),
     new ThreadStateClass("timed_waiting", ThreadState.timedWaiting),
     new ThreadStateClass("terminated", ThreadState.terminated)];
@@ -37,9 +37,9 @@ export class ThreadStateClass extends EnumClass {
     /**
      * NEW
      * A thread that has not yet started is in this state.
-     * RUNNABLE
+     * RUNNING
      * A thread executing in the Java virtual machine is in this state.
-     * BLOCKED
+     * RUNNABLE
      * A thread that is blocked waiting for a monitor lock is in this state.
      * WAITING
      * A thread that is waiting indefinitely for another thread to perform a particular action is in this state.

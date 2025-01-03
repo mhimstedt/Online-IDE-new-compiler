@@ -39,7 +39,7 @@ export class DatabaseManagerClass extends ObjectClass {
             } else {
                 t.s.push(null);
             }
-            t.state = ThreadState.runnable;
+            t.state = ThreadState.running;
         })
 
     }

@@ -83,7 +83,7 @@ export class GNGEventlistenerManager implements InternalMouseListener {
             for (let actor of this.listeners["mausGeklickt"]) {
                 actor._mj$MausGeklickt$void$int$int$int(t, undefined, Math.round(x), Math.round(y), 1);
             }
-            t.state = ThreadState.runnable;
+            t.state = ThreadState.running;
         }
     }
 
@@ -109,7 +109,7 @@ export class GNGEventlistenerManager implements InternalMouseListener {
     runningactThread?: Thread;
     tickHappenedWhenThreadNotEmpty: boolean = false;
     aktionenAusfuehren(dt: number) {
-        if (this.runningactThread && this.runningactThread.state == ThreadState.runnable) {
+        if (this.runningactThread && this.runningactThread.state == ThreadState.running) {
             this.tickHappenedWhenThreadNotEmpty = true;
             return;
         }
@@ -132,7 +132,7 @@ export class GNGEventlistenerManager implements InternalMouseListener {
         }
 
         if (this.runningactThread.programStack.length > 0) {
-            this.runningactThread.state = ThreadState.runnable;
+            this.runningactThread.state = ThreadState.running;
             this.runningactThread.callbackAfterTerminated = () => {
                 if (this.tickHappenedWhenThreadNotEmpty) {
                     this.aktionenAusfuehren(dt);
@@ -182,7 +182,7 @@ export class GNGEventlistenerManager implements InternalMouseListener {
             for (let actor of this.listeners["taste"]) {
                 actor._mj$Taste$void$char(t, undefined, key);
             }
-            t.state = ThreadState.runnable;
+            t.state = ThreadState.running;
         }
 
         let keyCode = this.keyToKeyCodeMap[key];
@@ -196,7 +196,7 @@ export class GNGEventlistenerManager implements InternalMouseListener {
                 for (let actor of this.listeners["sondertaste"]) {
                     actor._mj$SonderTaste$void$int(t, undefined, keyCode);
                 }
-                t.state = ThreadState.runnable;
+                t.state = ThreadState.running;
 
             }
         }

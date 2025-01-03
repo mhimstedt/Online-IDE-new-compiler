@@ -122,14 +122,14 @@ export class RobotClass extends ObjectClass {
                 this.robotWorld = t.s.pop();
                 t.state = ThreadState.waiting;
                 await this.init(startX, startY);
-                t.state = ThreadState.runnable;
+                t.state = ThreadState.running;
                 if (callback) callback();
                 return;
             }, worldX, worldY);
         } else {
             t.state = ThreadState.waiting;
             this.init(startX, startY).then(() => {
-                t.state = ThreadState.runnable;
+                t.state = ThreadState.running;
                 if (callback) callback();
             })
             return;

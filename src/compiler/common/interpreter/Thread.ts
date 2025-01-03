@@ -97,7 +97,7 @@ export class Thread {
 
         try {
             //@ts-ignore
-            while (this.numberOfSteps < maxNumberOfSteps && this.state == ThreadState.runnable) {
+            while (this.numberOfSteps < maxNumberOfSteps && this.state == ThreadState.running) {
                 // For performance reasons: store all necessary data in local variables
                 currentProgramState = this.currentProgramState;
                 stepIndex = currentProgramState.stepIndex;
@@ -107,7 +107,7 @@ export class Thread {
                 if (this.#stepEndsWhenProgramstackLengthLowerOrEqual >= 0) {
                     // singlestep-mode (slower...)
                     while (this.numberOfSteps < maxNumberOfSteps &&
-                        this.state == ThreadState.runnable && !this.#isSingleStepCompleted()) {
+                        this.state == ThreadState.running && !this.#isSingleStepCompleted()) {
                         step = currentStepList[stepIndex];
 
                         /**
@@ -135,7 +135,7 @@ export class Thread {
 
                 } else {
                     // not in singlestep-mode (faster!)
-                    while (this.numberOfSteps < maxNumberOfSteps && this.state == ThreadState.runnable) {
+                    while (this.numberOfSteps < maxNumberOfSteps && this.state == ThreadState.running) {
                         step = currentStepList[stepIndex];
 
                         /**
@@ -256,8 +256,8 @@ export class Thread {
             this.scheduler.removeThread(this);
             this.return;
         }
-        if ([ThreadState.new, ThreadState.blocked].indexOf(this.state) >= 0) {
-            this.state = ThreadState.runnable;
+        if ([ThreadState.new, ThreadState.runnable].indexOf(this.state) >= 0) {
+            this.state = ThreadState.running;
         }
     }
 

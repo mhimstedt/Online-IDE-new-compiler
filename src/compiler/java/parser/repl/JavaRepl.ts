@@ -228,7 +228,7 @@ export class JavaRepl {
 
         scheduler.callbackAfterReplProgramFinished = () => {
             currentThread.maxStepsPerSecond = saveMaxStepsPerSecond;
-            currentThread.state = ThreadState.runnable;
+            currentThread.state = ThreadState.running;
             currentThread.lastTimeThreadWasRun = performance.now();
             interpreter.setState(oldState);
             scheduler.retrieveThreads();

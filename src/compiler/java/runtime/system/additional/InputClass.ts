@@ -96,7 +96,7 @@ export class InputClass extends ObjectClass {
             case "waitForInput": 
             task.thread.scheduler.interpreter.inputManager?.readInput(task.message, task.defaultValue, task.validator, (value: string) => {
                 task.thread.s.push(value);
-                task.thread.state = ThreadState.runnable;
+                task.thread.state = ThreadState.running;
                 task.thread.scheduler.interpreter.hideProgrampointerPosition("InputClass");
                 callback();
                 return;
@@ -105,7 +105,7 @@ export class InputClass extends ObjectClass {
             case "waitForKeys": 
             task.thread.scheduler.interpreter.inputManager?.waitForKey(task.keys, (value: string) => {
                 task.thread.s.push(value);
-                task.thread.state = ThreadState.runnable;
+                task.thread.state = ThreadState.running;
                 task.thread.scheduler.interpreter.hideProgrampointerPosition("InputClass");
                 callback();
                 return;
