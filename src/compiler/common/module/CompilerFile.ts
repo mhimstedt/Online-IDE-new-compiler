@@ -142,4 +142,7 @@ export class CompilerFile {
     hasMonacoModel(): boolean {
         return typeof this.monacoModel !== "undefined";
     }
+
+
+
 }

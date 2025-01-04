@@ -101,12 +101,16 @@ export abstract class Module {
         return this.file.getMonacoVersion() != this.lastCompiledMonacoVersion;
     }
 
+    isMoreThanOneVersionAheadOfLastCompilation(): boolean {
+        return this.file.getMonacoVersion() - this.lastCompiledMonacoVersion > 1;
+    }
+
     /**
      * Set this modules' dirty-status"
      */
     setDirty(dirty: boolean) {
         if(dirty){
-            this.lastCompiledMonacoVersion = -2;
+            this.lastCompiledMonacoVersion = this.file.getMonacoVersion() - 1;
         } else {
             this.lastCompiledMonacoVersion = this.file.getMonacoVersion();
         }

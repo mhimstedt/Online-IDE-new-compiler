@@ -46,7 +46,7 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
             module = main.getRepl().getCurrentModule();
         } else {
             module = <JavaCompiledModule>main.getCurrentWorkspace()?.getModuleForMonacoModel(model);
-            if (module && module.getLastCompiledMonacoVersion() < module.file.getMonacoVersion() - 1) {
+            if (module?.isMoreThanOneVersionAheadOfLastCompilation()) {
                 await main.getCompiler().interruptAndStartOverAgain(true);
                 module = <JavaCompiledModule>main.getCurrentWorkspace()?.getModuleForMonacoModel(model);
             }
@@ -107,9 +107,7 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
         // let symbolTable = this.isConsole ? this.main.getDebugger().lastSymboltable : module.findSymbolTableAtPosition(position.lineNumber, position.column);
 
         if (dotMatch != null) {
-
-            await main.getCompiler().interruptAndStartOverAgain(true);
-
+            
             symbolTable = module.findSymbolTableAtPosition(position);
             classContext = symbolTable == null ? undefined : symbolTable.classContext;
             return this.getCompletionItemsAfterDot(dotMatch, position, module, main,
