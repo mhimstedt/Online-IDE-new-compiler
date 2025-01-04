@@ -245,18 +245,18 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
             this.pushError(JCM.cantInstantiateFromAbstractClass(), "error", node.range);
         }
 
+
         /*
-          consider inner classes:
-          class A {
+        consider inner classes:
+        class A {
             class B {
                 class C {
-
+                    
                 }
-            }
-          }
-          We need a A-object to construct a new B-object. We need a B-Object to construct a new C-Object
+                }
+                }
+                We need a A-object to construct a new B-object. We need a B-Object to construct a new C-Object
         */
-
 
         let methods = this.searchMethod(klassType.identifier, klassType, parameterValues.map(p => p?.type), true, false, true, node.range);
         let method = methods.best;
@@ -355,15 +355,25 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
         // instantiation of non-static inner class-object?
         // we can't rely on method.hasOuterClassParameter because this object instantiation
         // could be before standard constructor methods have been built.
+
+
+        // In constructions like a.new A.B()
+        // a is the objectSnippet.
+        // We compile it even if B has no outer Type because in situations like
+        // r.
+        // new Circle()
+        // we want to get proper code completion if Curser is located just after the dot.
+        let objectSnippet: CodeSnippet | undefined;
+        let objectNode: ASTTermNode | undefined = (<ASTNewObjectNode>node).object;
+        if (objectNode) {
+            objectSnippet = this.compileTerm(objectNode);
+        }
+
         if (classHasOuterType) {
-            let objectNode: ASTTermNode | undefined = (<ASTNewObjectNode>node).object;
             let objectType: JavaType | undefined;
-            if (objectNode) {
-                let objectSnippet = this.compileTerm(objectNode);
-                if (objectSnippet) {
-                    parameterValues.unshift(objectSnippet);
-                    objectType = objectSnippet.type;
-                }
+            if (objectSnippet) {
+                parameterValues.unshift(objectSnippet);
+                objectType = objectSnippet.type;
             } else {
                 parameterValues.unshift(new StringCodeSnippet(`${Helpers.elementRelativeToStackbase(0)}`));
                 objectType = this.currentSymbolTable.classContext;
@@ -674,7 +684,7 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
 
             if (symbolInformation.outerClassLevel > 0) this.outerClassFieldAccessTracker.onAccessHappened();
 
-            
+
             if (symbol.onStackframe()) {
                 this.registerUsagePosition(symbol, node.range);
                 if (symbolInformation.outerClassLevel == 0) {
@@ -1179,7 +1189,7 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
             }
         }
 
-        if(method instanceof GenericMethod){
+        if (method instanceof GenericMethod) {
             method.checkCatches(node.range);
         }
 
@@ -1324,7 +1334,7 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
             possibleMethods = objectType.getPossibleMethods(identifier, isConstructor, hasToBeStatic);
         } else if (objectType instanceof NonPrimitiveType) {
             possibleMethods = objectType.getPossibleMethods(identifier, isConstructor, hasToBeStatic);
-            if(objectType instanceof IJavaInterface || objectType instanceof GenericTypeParameter){
+            if (objectType instanceof IJavaInterface || objectType instanceof GenericTypeParameter) {
                 possibleMethods = possibleMethods.concat(this.objectType.getPossibleMethods(identifier, isConstructor, hasToBeStatic));
             }
         } else {
