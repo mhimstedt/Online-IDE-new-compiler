@@ -646,6 +646,8 @@ export class TypeResolver {
         let type: JavaInterface | JavaClass | JavaEnum = <any>node.resolvedType;
         let module = type.module;
 
+        let signatures: Map<string, JavaMethod> = new Map();
+
         for (let methodNode of node.methods) {
 
             let method: JavaMethod;
@@ -688,6 +690,13 @@ export class TypeResolver {
             }
 
             type.methods.push(method);
+
+            let signature = method.getSignature();
+            if(signatures.get(signature)){
+                this.pushError(JCM.multipleMethodsWithSameSignature(signature, signatures.get(signature).identifierRange.startLineNumber), method.identifierRange, module, "error");
+            } else {
+                signatures.set(signature, method);
+            }
         }
     }
 

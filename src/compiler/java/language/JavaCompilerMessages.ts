@@ -580,6 +580,12 @@ export class JCM {
     /**
      * TypeResolver
     */
+
+    static multipleMethodsWithSameSignature = (signature: string, otherLineNumber: number) => le({
+        "de": `Es gibt in dieser Klasse/diesem Interface/diesem enum eine weitere Methode mit der Signatur ${signature} in Zeile ${otherLineNumber}.`,
+        "en": `There's another method for this class/interface/enum with signature ${signature} in line ${otherLineNumber}.`,
+    })
+
     static typenameAlreadyInUse = (name: string, otherPosition: IRange, otherFilename: string) => le({
         "de": `Es gibt einen weiteren Datentyp mit Bezeichner ${name}. Er findet sich in der Datei ${otherFilename} in Zeile ${otherPosition.startLineNumber}.`,
         "en": `Identifier ${name} for this type is already in use. See File ${otherFilename}, line ${otherPosition.startLineNumber}.`,

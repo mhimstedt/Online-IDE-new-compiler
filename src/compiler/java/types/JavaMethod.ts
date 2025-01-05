@@ -48,8 +48,8 @@ export class JavaMethod extends BaseSymbol {
 
     declare module: JavaCompiledModule;
 
-    protected signatureCache: { [callingConvention: string]: string } = {}
-    protected signatureCacheWithGenericParameterIdentifiers: { [callingConvention: string]: string } = {}
+    protected internalNameCache: { [callingConvention: string]: string } = {}
+    protected internalNameCacheWithGenericParameterIdentifiers: { [callingConvention: string]: string } = {}
 
     public hasImplementationWithNativeCallingConvention: boolean = false;
 
@@ -111,7 +111,7 @@ export class JavaMethod extends BaseSymbol {
 
         this.getInternalName("java");
         this.getInternalName("native");
-        newMethod.signatureCacheWithGenericParameterIdentifiers = this.signatureCache;
+        newMethod.internalNameCacheWithGenericParameterIdentifiers = this.internalNameCache;
 
         return newMethod;
 
@@ -135,26 +135,26 @@ export class JavaMethod extends BaseSymbol {
     }
 
     getInternalName(callingConvention: CallingConvention): string {
-        if (!this.signatureCache[callingConvention]) {
+        if (!this.internalNameCache[callingConvention]) {
             let cc = callingConvention == "java" ? "j" : "n";
 
             let shorthand = this.isConstructor ? 'c' : 'm';
             let s = `_${shorthand}${cc}$${this.isConstructor ? "_constructor_" : this.identifier.replace(/\./g, "_")}$${this.returnParameterType ? this.returnParameterType.getInternalName() : 'void'}$`;
             s += this.parameters.map(p => p.type.getInternalName()).join("$");
-            this.signatureCache[callingConvention] = s;
+            this.internalNameCache[callingConvention] = s;
         }
-        return this.signatureCache[callingConvention];
+        return this.internalNameCache[callingConvention];
     }
 
     getInternalNameWithGenericParameterIdentifiers(callingConvention: CallingConvention): string {
-        if (!this.signatureCacheWithGenericParameterIdentifiers[callingConvention]) {
-            this.signatureCacheWithGenericParameterIdentifiers[callingConvention] = this.getInternalName(callingConvention);
+        if (!this.internalNameCacheWithGenericParameterIdentifiers[callingConvention]) {
+            this.internalNameCacheWithGenericParameterIdentifiers[callingConvention] = this.getInternalName(callingConvention);
         }
-        return this.signatureCacheWithGenericParameterIdentifiers[callingConvention];
+        return this.internalNameCacheWithGenericParameterIdentifiers[callingConvention];
     }
 
     takeInternalJavaNameWithGenericParamterIdentifiersFrom(method: JavaMethod) {
-        this.signatureCacheWithGenericParameterIdentifiers["java"] = method.getInternalNameWithGenericParameterIdentifiers("java");
+        this.internalNameCacheWithGenericParameterIdentifiers["java"] = method.getInternalNameWithGenericParameterIdentifiers("java");
     }
 
 
@@ -358,7 +358,7 @@ export class GenericMethod extends JavaMethod {
 
         this.getInternalName("java");
         this.getInternalName("native");
-        newMethod.signatureCacheWithGenericParameterIdentifiers = this.signatureCache;
+        newMethod.internalNameCacheWithGenericParameterIdentifiers = this.internalNameCache;
 
         return newMethod;
 
