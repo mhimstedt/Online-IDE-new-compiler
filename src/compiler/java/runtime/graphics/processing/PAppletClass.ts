@@ -10,6 +10,8 @@ import { LibraryDeclarations } from "../../../module/libraries/DeclareType";
 import { NonPrimitiveType } from "../../../types/NonPrimitiveType";
 import { ObjectClass } from "../../system/javalang/ObjectClassStringClass";
 
+import "/assets/css/papplet.css";
+
 
 export class PAppletClass extends ObjectClass implements GraphicSystem {
     static __javaDeclarations: LibraryDeclarations = (<LibraryDeclarations>[
@@ -287,7 +289,7 @@ export class PAppletClass extends ObjectClass implements GraphicSystem {
             this.p5o.remove();
             interpreter.deleteObject("PAppletClass");
             this.canvasCreated = false;
-            this.graphicsDiv?.remove();
+            if(this.graphicsDiv) this.graphicsDiv.innerHTML = '';
         })
 
         interpreter.storeObject("PAppletClass", this);
@@ -298,10 +300,10 @@ export class PAppletClass extends ObjectClass implements GraphicSystem {
         this.containerOuter = DOM.makeDiv(undefined, 'jo_pAppletOuter');
 
         this.onSizeChanged = () => {
-            // let $jo_tabs = $graphicsDiv.parents(".jo_tabs");
-            let $jo_tabs = graphicsDiv.parentElement!;
-            let maxWidth: number = $jo_tabs.getBoundingClientRect().width;
-            let maxHeight: number = $jo_tabs.getBoundingClientRect().height;
+            let rect = graphicsDiv!.parentElement!.parentElement!.getBoundingClientRect();
+
+            let maxWidth: number = rect.width;
+            let maxHeight: number = rect.height;
 
             if (this.height / this.width > maxHeight / maxWidth) {
                 graphicsDiv.style.width = this.width / this.height * maxHeight + "px";
@@ -323,7 +325,7 @@ export class PAppletClass extends ObjectClass implements GraphicSystem {
             this.onSizeChanged();
         });
 
-        this.resizeObserver.observe(this.graphicsDiv!.parentElement!);
+        this.resizeObserver.observe(this.graphicsDiv!.parentElement!.parentElement!);
 
         this.onSizeChanged();
 
