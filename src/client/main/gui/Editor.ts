@@ -64,7 +64,7 @@ export class Editor {
             // selectionHighlight: false,
             automaticLayout: true,
             scrollBeyondLastLine: false,
-            occurrencesHighlight: "multiFile",
+            occurrencesHighlight: "off",
             autoIndent: "advanced",
             // renderWhitespace: "boundary",
             dragAndDrop: true,
