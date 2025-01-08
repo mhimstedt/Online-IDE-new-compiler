@@ -37,7 +37,9 @@ export class JavaLibraryManager {
         for(let lib of this.libraryIds){
             switch(lib){
                 case "gng": additionalModules.push(new GNGModule());
+                break;
                 case "nrw": additionalModules.push(new NRWModule());
+                break;
             }
         }
 
