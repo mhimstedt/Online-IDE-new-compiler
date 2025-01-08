@@ -23,6 +23,7 @@ export type LibraryAttributeDeclaration = {
     template?: string;
     constantValue: any;
     comment?: string | (() => string);
+    hiddenWhenDebugging?: boolean
 }
 
 export type LibraryMethodOrAttributeDeclaration = LibraryClassDeclaration | LibraryMethodDeclaration | LibraryAttributeDeclaration;

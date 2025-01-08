@@ -240,7 +240,7 @@ export class DebuggerSymbolEntry {
 
         if (typesDiffer || this.children.length == 0) {
             this.removeChildren();
-            let fields: BaseField[] = type.getOwnAndInheritedFields();
+            let fields: BaseField[] = type.getOwnAndInheritedFields().filter(f => !f.hiddenWhenDebugging);
             this.treeViewNode.isFolder = fields.length > 0;
 
             this.treeViewNode.removeAllExpandListeners();

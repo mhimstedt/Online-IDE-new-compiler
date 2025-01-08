@@ -23,45 +23,45 @@ export class PAppletClass extends ObjectClass implements GraphicSystem {
         { type: "field", signature: "int pMouseY", template: "§1.p5o.pMouseY", comment: JRC.PAppletPMouseYComment },
         { type: "field", signature: "int mouseButton", template: "§1.p5o.mouseButton", comment: JRC.PAppletMouseButtonComment },
 
-        { type: "field", signature: "int key", template: "§1.p5o.key", comment: JRC.PAppletKeyComment },
+        { type: "field", signature: "string key", template: "§1.p5o.key", comment: JRC.PAppletKeyComment },
 
-        { type: "field", signature: "int LEFT", template: "§1.p5o.LEFT", comment: JRC.PAppletLEFTComment },
-        { type: "field", signature: "int CENTER", template: "§1.p5o.CENTER", comment: JRC.PAppletCENTERComment },
-        { type: "field", signature: "int RIGHT", template: "§1.p5o.RIGHT", comment: JRC.PAppletRIGHTComment },
-        { type: "field", signature: "int TOP", template: "§1.p5o.TOP", comment: JRC.PAppletTOPComment },
-        { type: "field", signature: "int BASELINE", template: "§1.p5o.BASELINE", comment: JRC.PAppletBASELINEComment },
-        { type: "field", signature: "int BOTTOM", template: "§1.p5o.BOTTOM", comment: JRC.PAppletBOTTOMComment },
+        { hiddenWhenDebugging: true, type: "field", signature: "int LEFT", template: "§1.p5o.LEFT", comment: JRC.PAppletLEFTComment },
+        { hiddenWhenDebugging: true, type: "field", signature: "int CENTER", template: "§1.p5o.CENTER", comment: JRC.PAppletCENTERComment },
+        { hiddenWhenDebugging: true, type: "field", signature: "int RIGHT", template: "§1.p5o.RIGHT", comment: JRC.PAppletRIGHTComment },
+        { hiddenWhenDebugging: true, type: "field", signature: "int TOP", template: "§1.p5o.TOP", comment: JRC.PAppletTOPComment },
+        { hiddenWhenDebugging: true, type: "field", signature: "int BASELINE", template: "§1.p5o.BASELINE", comment: JRC.PAppletBASELINEComment },
+        { hiddenWhenDebugging: true, type: "field", signature: "int BOTTOM", template: "§1.p5o.BOTTOM", comment: JRC.PAppletBOTTOMComment },
 
-        { type: "field", signature: "int CORNER", template: "§1.p5o.CORNER", comment: JRC.PAppletCORNERComment },
-        { type: "field", signature: "int CORNERS", template: "§1.p5o.CORNERS", comment: JRC.PAppletCORNERSComment },
-        { type: "field", signature: "int RADIUS", template: "§1.p5o.RADIUS", comment: JRC.PAppletRADIUSComment },
+        { hiddenWhenDebugging: true, type: "field", signature: "int CORNER", template: "§1.p5o.CORNER", comment: JRC.PAppletCORNERComment },
+        { hiddenWhenDebugging: true, type: "field", signature: "int CORNERS", template: "§1.p5o.CORNERS", comment: JRC.PAppletCORNERSComment },
+        { hiddenWhenDebugging: true, type: "field", signature: "int RADIUS", template: "§1.p5o.RADIUS", comment: JRC.PAppletRADIUSComment },
 
-        { type: "field", signature: "int POINTS", template: "§1.p5o.POINTS", comment: JRC.PAppletPOINTSComment },
-        { type: "field", signature: "int LINES", template: "§1.p5o.LINES", comment: JRC.PAppletLINESComment },
-        { type: "field", signature: "int TRIANGLES", template: "§1.p5o.TRIANGLES", comment: JRC.PAppletTRIANGLESComment },
-        { type: "field", signature: "int TRIANGLE_STRIP", template: "§1.p5o.TRIANGLE_STRIP", comment: JRC.PAppletTRIANGLE_STRIPComment },
-        { type: "field", signature: "int TRIANGLE_FAN", template: "§1.p5o.TRIANGLE_FAN", comment: JRC.PAppletTRIANGLE_FANComment },
+        { hiddenWhenDebugging: true, type: "field", signature: "int POINTS", template: "§1.p5o.POINTS", comment: JRC.PAppletPOINTSComment },
+        { hiddenWhenDebugging: true, type: "field", signature: "int LINES", template: "§1.p5o.LINES", comment: JRC.PAppletLINESComment },
+        { hiddenWhenDebugging: true, type: "field", signature: "int TRIANGLES", template: "§1.p5o.TRIANGLES", comment: JRC.PAppletTRIANGLESComment },
+        { hiddenWhenDebugging: true, type: "field", signature: "int TRIANGLE_STRIP", template: "§1.p5o.TRIANGLE_STRIP", comment: JRC.PAppletTRIANGLE_STRIPComment },
+        { hiddenWhenDebugging: true, type: "field", signature: "int TRIANGLE_FAN", template: "§1.p5o.TRIANGLE_FAN", comment: JRC.PAppletTRIANGLE_FANComment },
 
-        { type: "field", signature: "string QUADS", template: "§1.p5o.QUADS", comment: JRC.PAppletQUADSComment },
-        { type: "field", signature: "string QUAD_STRIP", template: "§1.p5o.QUAD_STRIP", comment: JRC.PAppletQUAD_STRIPComment },
-        { type: "field", signature: "string TESS", template: "§1.p5o.TESS", comment: JRC.PAppletTESSComment },
+        { hiddenWhenDebugging: true, type: "field", signature: "string QUADS", template: "§1.p5o.QUADS", comment: JRC.PAppletQUADSComment },
+        { hiddenWhenDebugging: true, type: "field", signature: "string QUAD_STRIP", template: "§1.p5o.QUAD_STRIP", comment: JRC.PAppletQUAD_STRIPComment },
+        { hiddenWhenDebugging: true, type: "field", signature: "string TESS", template: "§1.p5o.TESS", comment: JRC.PAppletTESSComment },
 
-        { type: "field", signature: "string CLOSE", template: "§1.p5o.CLOSE", comment: JRC.PAppletCLOSEComment },
+        { hiddenWhenDebugging: true, type: "field", signature: "string CLOSE", template: "§1.p5o.CLOSE", comment: JRC.PAppletCLOSEComment },
 
-        { type: "field", signature: "string DEGREES", template: "§1.p5o.DEGREES", comment: JRC.PAppletDEGREESComment },
-        { type: "field", signature: "string RADIANS", template: "§1.p5o.RADIANS", comment: JRC.PAppletRADIANSComment },
+        { hiddenWhenDebugging: true, type: "field", signature: "string DEGREES", template: "§1.p5o.DEGREES", comment: JRC.PAppletDEGREESComment },
+        { hiddenWhenDebugging: true, type: "field", signature: "string RADIANS", template: "§1.p5o.RADIANS", comment: JRC.PAppletRADIANSComment },
 
-        { type: "field", signature: "string WEBGL", template: "§1.p5o.WEBGL", comment: JRC.PAppletWEBGLComment },
-        { type: "field", signature: "string P2D", template: "§1.p5o.P2D", comment: JRC.PAppletP2DComment },
+        { hiddenWhenDebugging: true, type: "field", signature: "string WEBGL", template: "§1.p5o.WEBGL", comment: JRC.PAppletWEBGLComment },
+        { hiddenWhenDebugging: true, type: "field", signature: "string P2D", template: "§1.p5o.P2D", comment: JRC.PAppletP2DComment },
 
-        { type: "field", signature: "string RGB", template: "§1.p5o.RGB", comment: JRC.PAppletRGBComment },
-        { type: "field", signature: "string HSL", template: "§1.p5o.HSL", comment: JRC.PAppletHSLComment },
-        { type: "field", signature: "string HSB", template: "§1.p5o.HSB", comment: JRC.PAppletHSBComment },
+        { hiddenWhenDebugging: true, type: "field", signature: "string RGB", template: "§1.p5o.RGB", comment: JRC.PAppletRGBComment },
+        { hiddenWhenDebugging: true, type: "field", signature: "string HSL", template: "§1.p5o.HSL", comment: JRC.PAppletHSLComment },
+        { hiddenWhenDebugging: true, type: "field", signature: "string HSB", template: "§1.p5o.HSB", comment: JRC.PAppletHSBComment },
 
-        { type: "field", signature: "string PI", template: "§1.p5o.PI", comment: "PI = 3.1415..." },
-        { type: "field", signature: "string QUARTER_PI", template: "§1.p5o.QUARTER_PI", comment: "PI/4" },
-        { type: "field", signature: "string TWO_PI", template: "§1.p5o.TWO_PI", comment: "2*PI" },
-        { type: "field", signature: "string TAU", template: "§1.p5o.TAU", comment: "2*PI" },
+        { hiddenWhenDebugging: true, type: "field", signature: "string PI", template: "§1.p5o.PI", comment: "PI = 3.1415..." },
+        { hiddenWhenDebugging: true, type: "field", signature: "string QUARTER_PI", template: "§1.p5o.QUARTER_PI", comment: "PI/4" },
+        { hiddenWhenDebugging: true, type: "field", signature: "string TWO_PI", template: "§1.p5o.TWO_PI", comment: "2*PI" },
+        { hiddenWhenDebugging: true, type: "field", signature: "string TAU", template: "§1.p5o.TAU", comment: "2*PI" },
 
         { type: "method", signature: "PApplet()", java: PAppletClass.prototype._cj$_constructor_$PApplet$, comment: JRC.PAppletConstructorComment },
 
@@ -295,6 +295,14 @@ export class PAppletClass extends ObjectClass implements GraphicSystem {
         interpreter.storeObject("PAppletClass", this);
 
     }
+
+    get mouseX(): number {return this.p5o.mouseX;} set mouseX(n: number){this.p5o.mouseX = n}
+    get mouseY(): number {return this.p5o.mouseY;} set mouseY(n: number){this.p5o.mouseY = n}
+    get pMouseX(): number {return this.p5o.pmouseX;} set pMouseX(n: number){this.p5o.pmouseX = n}
+    get pMouseY(): number {return this.p5o.pmouseY;} set pMouseY(n: number){this.p5o.pmouseY = n}
+    get mouseButton(): number {return this.p5o.mouseButton;} set mouseButton(n: number){this.p5o.mouseButton = n}
+    get key(): string {return this.p5o.key;} set key(n: string){this.p5o.key = n}
+
 
     setupGraphicsDiv(graphicsDiv: HTMLDivElement, interpreter: Interpreter) {
         this.containerOuter = DOM.makeDiv(undefined, 'jo_pAppletOuter');

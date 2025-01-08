@@ -632,6 +632,7 @@ export class LibraryDeclarationParser extends LibraryDeclarationLexer {
             let adecl = <LibraryAttributeDeclaration>decl;
             // attribute
             let a = new JavaField(identifier, EmptyRange.instance, module, type, modifiers.visibility);
+            a.hiddenWhenDebugging = (<LibraryAttributeDeclaration> decl).hiddenWhenDebugging;
             a._isStatic = modifiers.static;
             a._isFinal = modifiers.final;
             a.classEnum = klassType;
