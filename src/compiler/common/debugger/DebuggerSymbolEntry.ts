@@ -215,7 +215,7 @@ export class DebuggerSymbolEntry {
             this.type = type;
         }
 
-        if (o["isBaseListType"]) {
+        if (o["getElements"]) {
             this.renderList(<BaseListType><any>o);
             return;
         }
@@ -500,7 +500,7 @@ export class ListElementDebuggerEntry extends DebuggerSymbolEntry {
     constructor(symbolTableSection: SymbolTableSection,
         parent: DebuggerSymbolEntry,
         private index: number) {
-        super(symbolTableSection, parent, undefined, parent.identifier + '.get(<span class="jo_debugger_index">' + index + '</span>)');
+        super(symbolTableSection, parent, undefined, parent.identifier + '[<span class="jo_debugger_index">' + index + '</span>]');
     }
 
     fetchValueFromArrayAndRender(a: any[]) {
