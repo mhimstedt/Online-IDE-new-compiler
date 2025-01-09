@@ -1,4 +1,3 @@
-import { Error } from "../../common/Error.ts";
 import { CompilerFile } from "../../common/module/CompilerFile";
 import { IRange } from "../../common/range/Range";
 import { JavaBaseModule } from "../module/JavaBaseModule";
@@ -11,6 +10,8 @@ import { NonPrimitiveType } from "./NonPrimitiveType";
 import { Visibility } from "./Visibility.ts";
 import { JCM } from "../language/JavaCompilerMessages.ts";
 import type * as monaco from 'monaco-editor'
+import { ClassClass } from "../runtime/system/ClassClass.ts";
+import { Error } from "../../common/Error.ts";
 
 export class GenericTypeParameter extends NonPrimitiveType {
 
@@ -34,6 +35,10 @@ export class GenericTypeParameter extends NonPrimitiveType {
         public upperBounds: (IJavaClass | IJavaInterface)[] = [], public lowerBound?: IJavaClass){
         super(identifier, identifierRange, identifier + "@" + GenericTypeParameter.uniqueID++, module);
         this.isWildcard = (this.identifier == '?');
+    }
+
+    getClassObject(): ClassClass {
+        return null;
     }
 
     getField(identifier: string, uptoVisibility: Visibility, forceStatic?: boolean | undefined): JavaField | undefined {

@@ -842,6 +842,9 @@ export class GenericVariantOfJavaClass extends IJavaClass {
                     }
                 }
 
+                if(othersType instanceof GenericTypeParameter && othersType.catches){
+                    othersType.catches.push(myType);
+                }
             }
 
             return true;

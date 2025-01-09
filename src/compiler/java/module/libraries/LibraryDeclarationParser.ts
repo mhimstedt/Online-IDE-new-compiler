@@ -123,12 +123,6 @@ export class LibraryDeclarationParser extends LibraryDeclarationLexer {
             }
         }
 
-        if(npt instanceof JavaClass || npt instanceof JavaEnum){
-            let classType = npt.identifier == "Class" ? npt : this.currentTypeStore.getType("Class");
-            if(classType){
-                npt.fields.push(npt.createClassField(<NonPrimitiveType>classType));
-            }
-        }
 
         return npt;
     }
@@ -510,7 +504,21 @@ export class LibraryDeclarationParser extends LibraryDeclarationLexer {
             this.parseFieldOrMethod(klass, module, decl);
         }
 
+        this.insertClassField(klass);
+        
     }
+    
+    insertClassField(klass: Klass & LibraryKlassType){
+        let npt = <JavaClass | JavaInterface | JavaEnum>klass.type;
+        
+        if(npt instanceof JavaClass || npt instanceof JavaEnum){
+            let classType = this.currentTypeStore.getType("Class");
+            if(classType){
+                npt.fields.push(npt.createClassField(<NonPrimitiveType>classType));
+            }
+        }
+    }
+
 
     parseFieldOrMethod(klass: Klass & LibraryKlassType, module: JavaBaseModule, decl: LibraryMethodOrAttributeDeclaration) {
 
