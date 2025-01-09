@@ -234,6 +234,7 @@ export class EmbeddedFileExplorer {
                 if (focusEditorSubsequently) {
                     this.main.getMainEditor().focus();
                 }
+                this.main.interpreter.onFileSelected();
                 break;
             case "hint":
                 this.main.$monacoDiv.hide();

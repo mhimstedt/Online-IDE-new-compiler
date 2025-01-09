@@ -714,35 +714,39 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
 
     compileSwitchCaseStatement(node: ASTSwitchCaseNode): CodeSnippet | undefined {
         let term = this.compileTerm(node.term);
+
+        
         if (!this.isDefined(term)) return undefined;
         if (!term.type) return undefined;
-
+        
         let type = term.type;
-
+        
         let enumType = type instanceof JavaEnum ? type as JavaEnum : undefined;
-
+        
         if (enumType) {
             term = SnippetFramer.frame(term, "§1.ordinal");
         }
-
+        
         if (!(enumType || type.identifier && ["byte", "short", "int", "char", "String", "string"].includes(type.identifier))) {
             this.pushError(JCM.switchOnlyFeasibleForTypes(), "error", node.term.range);
         }
-
+        
         if (type == this.stringNonPrimitiveType) {
             term = this.unbox(term);
             type = this.stringType;
         }
-
+        
         if (!type) return undefined;
-
+        
         // TODO: Check type
-
+        
         // Contains one label for every case
         // plus one label for default if it exists
         // plus one label to break out of the switch-case expression
-
-
+        
+        
+        this.pushAndGetNewSymbolTable(node.range, false);
+        
         let labelArray = [...node.caseNodes].map((_) => new LabelCodeSnippet());
         let defaultLabel;
         if (node.defaultNode) {
@@ -756,7 +760,10 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
 
         let caseSnippets = node.caseNodes.map((node, i) => this.compileCaseStatement(node, i, labelArray, enumType ? "int" : type.identifier, enumType));
 
-        if (!this.listHasNoUndefined(caseSnippets)) return undefined;
+        if (!this.listHasNoUndefined(caseSnippets)){
+            this.popSymbolTable();
+            return undefined;
+        }
 
         let switchSnippet = new CodeSnippetContainer([], node.range);
 
@@ -782,7 +789,10 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
 
             let statementCode = node.defaultNode.statements.map((statementNode) => this.compileStatementOrTerm(statementNode));
 
-            if (!this.listHasNoUndefined(statementCode)) return undefined;
+            if (!this.listHasNoUndefined(statementCode)){
+                this.popSymbolTable();
+                return undefined;
+            } 
 
             defaultSnippet.addParts(statementCode);
             defaultSnippet.addNextStepMark();
@@ -794,6 +804,9 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
 
         switchSnippet.addParts(breakLabel);
         this.breakStack.pop();
+
+        this.popSymbolTable();
+
 
         return switchSnippet;
     }

@@ -7,19 +7,19 @@ import { MouseEventKind } from '../MouseManager.ts';
 import { GuiTextComponentClass } from './GuiTextComponentClass.ts';
 import { JRC } from '../../../language/JavaRuntimeLibraryComments.ts';
 
-export class RadiobuttonClass extends GuiTextComponentClass {
+export class RadioButtonClass extends GuiTextComponentClass {
     static __javaDeclarations: LibraryDeclarations = [
-        { type: "declaration", signature: "class Radiobutton extends GuiTextComponent", comment: JRC.RadiobuttonClassComment },
-        { type: "method", signature: "Radiobutton(double x, double y, double width, double fontsize, string text, int index)", java: RadiobuttonClass.prototype._cj$_constructor_$Radiobutton$double$double$double$double$string$int, comment: JRC.RadiobuttonConstructorComment },
-        { type: "method", signature: "Radiobutton(double x, double y, double width, double fontsize, string text, string fontFamily, int index)", java: RadiobuttonClass.prototype._cj$_constructor_$Radiobutton$double$double$double$double$string$string$int, comment: JRC.RadiobuttonConstructorComment },
-        { type: "method", signature: "Radiobutton copy()", java: RadiobuttonClass.prototype._mj$copy$Button$, comment: JRC.RadiobuttonCopyComment },
+        { type: "declaration", signature: "class RadioButton extends GuiTextComponent", comment: JRC.RadiobuttonClassComment },
+        { type: "method", signature: "RadioButton(double x, double y, double width, double fontsize, string text, int index)", java: RadioButtonClass.prototype._cj$_constructor_$Radiobutton$double$double$double$double$string$int, comment: JRC.RadiobuttonConstructorComment },
+        { type: "method", signature: "RadioButton(double x, double y, double width, double fontsize, string text, string fontFamily, int index)", java: RadioButtonClass.prototype._cj$_constructor_$Radiobutton$double$double$double$double$string$string$int, comment: JRC.RadiobuttonConstructorComment },
+        { type: "method", signature: "RadioButton copy()", java: RadioButtonClass.prototype._mj$copy$Button$, comment: JRC.RadiobuttonCopyComment },
         { type: "method", signature: "int getIndex()", template: '§1.index', comment: JRC.RadiobuttonGetIndexComment },
-        { type: "method", signature: "int getIndexOfSelectedRadiobutton()", native: RadiobuttonClass.prototype.getIndexOfSelectedRadiobutton, comment: JRC.RadiobuttonGetIndexOfSelectedRadiobuttonComment},
-        { type: "method", signature: "int getTextOfSelectedRadiobutton()", native: RadiobuttonClass.prototype.getTextOfSelectedRadiobutton, comment: JRC.RadiobuttonGetTextOfSelectedRadiobuttonComment},
-        { type: "method", signature: "void setIndex()", native: RadiobuttonClass.prototype.setIndex, comment: JRC.RadiobuttonSetIndexComment},
-        { type: "method", signature: "void setDotColor()", native: RadiobuttonClass.prototype.setDotColor, comment: JRC.RadiobuttonSetDotColorComment},
-        { type: "method", signature: "void connectTo(Radiobutton[] otherButtons)", native: RadiobuttonClass.prototype.connectTo, comment: JRC.RadiobuttonConnectToComment},
-        { type: "method", signature: "void select()", native: RadiobuttonClass.prototype.setSelected, comment: JRC.RadiobuttonSelectComment},
+        { type: "method", signature: "int getIndexOfSelectedRadiobutton()", native: RadioButtonClass.prototype.getIndexOfSelectedRadiobutton, comment: JRC.RadiobuttonGetIndexOfSelectedRadiobuttonComment},
+        { type: "method", signature: "int getTextOfSelectedRadiobutton()", native: RadioButtonClass.prototype.getTextOfSelectedRadiobutton, comment: JRC.RadiobuttonGetTextOfSelectedRadiobuttonComment},
+        { type: "method", signature: "void setIndex()", native: RadioButtonClass.prototype.setIndex, comment: JRC.RadiobuttonSetIndexComment},
+        { type: "method", signature: "void setDotColor()", native: RadioButtonClass.prototype.setDotColor, comment: JRC.RadiobuttonSetDotColorComment},
+        { type: "method", signature: "void connectTo(RadioButton... otherButtons)", native: RadioButtonClass.prototype.connectTo, comment: JRC.RadiobuttonConnectToComment},
+        { type: "method", signature: "void select()", native: RadioButtonClass.prototype.setSelected, comment: JRC.RadiobuttonSelectComment},
         { type: "method", signature: "boolean isSelected()", template: `§1.isSelected`, comment: JRC.RadiobuttonIsSelectedComment},
     ];
 
@@ -43,7 +43,7 @@ export class RadiobuttonClass extends GuiTextComponentClass {
 
     index!: number;
 
-    otherButtons: RadiobuttonClass[] = [];
+    otherButtons: RadioButtonClass[] = [];
 
     _cj$_constructor_$Radiobutton$double$double$double$double$string$int(t: Thread, callback: CallbackFunction,
         x: number, y: number, width: number, fontsize: number, text: string, index: number
@@ -89,7 +89,7 @@ export class RadiobuttonClass extends GuiTextComponentClass {
 
     _mj$copy$Button$(t: Thread, callback: CallbackFunction) {
 
-        let radiobutton = new RadiobuttonClass();
+        let radiobutton = new RadioButtonClass();
         radiobutton.textColor = this.textColor;
         radiobutton.dotColor = this.dotColor;
 
@@ -137,7 +137,7 @@ export class RadiobuttonClass extends GuiTextComponentClass {
         }
     }
 
-    connectTo(otherButtons: RadiobuttonClass[]) {
+    connectTo(otherButtons: RadioButtonClass[]) {
         if(otherButtons == null) return;
 
         for (let rb of otherButtons) {

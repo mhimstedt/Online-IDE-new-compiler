@@ -48,7 +48,7 @@ import { ChangeListenerInterface } from "../graphics/gui/ChangeListenerInterface
 import { CheckboxClass } from "../graphics/gui/CheckboxClass.ts";
 import { GuiComponentClass } from "../graphics/gui/GuiComponentClass.ts";
 import { GuiTextComponentClass } from "../graphics/gui/GuiTextComponentClass.ts";
-import { RadiobuttonClass } from "../graphics/gui/RadiobuttonClass.ts";
+import { RadioButtonClass } from "../graphics/gui/RadiobuttonClass.ts";
 import { TextFieldClass } from "../graphics/gui/TextfieldClass.ts";
 import { JavaHamsterClass, JavaHamsterWorldClass } from "../graphics/JavaHamsterClass.ts";
 import { JavaKaraClass, JavaKaraWorldClass } from "../graphics/JavaKaraClass.ts";
@@ -261,7 +261,7 @@ export class SystemModule extends JavaLibraryModule {
 
             // Gui components
             ChangeListenerInterface, GuiComponentClass, GuiTextComponentClass, ButtonClass, CheckboxClass,
-            RadiobuttonClass, TextFieldClass,
+            RadioButtonClass, TextFieldClass,
 
             // Database
 

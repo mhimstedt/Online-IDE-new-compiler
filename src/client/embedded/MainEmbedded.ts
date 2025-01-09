@@ -190,13 +190,16 @@ export class MainEmbedded implements MainBase {
                         this.fileExplorer?.setFirstFileActive();
                         if (this.fileExplorer == null) {
                             let files = this.currentWorkspace.getFiles();
-                            if (files.length > 0) this.setFileActive(files[0]);
+                            if (files.length > 0){
+                                this.setFileActive(files[0]);
+                            } 
                         }
+                        this.getCompiler().triggerCompile();
 
-                     });
+                    });
                 }
 
-                if(this.config.enableFileAccess){
+                if (this.config.enableFileAccess) {
                     //@ts-ignore
                     window.online_ide_access = new OnlineIDEAccessImpl();
                     OnlineIDEAccessImpl.registerIDE(this);
@@ -219,6 +222,7 @@ export class MainEmbedded implements MainBase {
             this.scriptList.filter((script) => script.title.endsWith(".md")).forEach((script) => this.fileExplorer.addHint(script));
         } else {
             this.setFileActive(this.currentWorkspace.getFirstFile());
+            this.getCompiler().triggerCompile();
         }
 
     }
@@ -283,7 +287,7 @@ export class MainEmbedded implements MainBase {
 
         try {
             this.editor.editor.setModel(file.getMonacoModel());
-        } catch (e){
+        } catch (e) {
             console.log("Catched!");
         }
 
@@ -291,7 +295,6 @@ export class MainEmbedded implements MainBase {
 
         this.disassembler?.disassemble();
 
-        this.getCompiler().triggerCompile();
     }
 
     eraseDokuwikiSearchMarkup(text: string): string {
@@ -304,7 +307,7 @@ export class MainEmbedded implements MainBase {
         files.forEach(f => {
             f.getMonacoModel();
             f.setSaved(true);
-        } )
+        })
 
         let that = this;
 
@@ -575,7 +578,7 @@ export class MainEmbedded implements MainBase {
 
         this.interpreter = new Interpreter(
             printManager, this.actionManager,
-            new GraphicsManager(graphicsDiv),  keyboardManager,
+            new GraphicsManager(graphicsDiv), keyboardManager,
             breakpointManager, this.debugger,
             programPointerManager, inputManager,
             fileManager, new ExceptionMarker(this), this);
@@ -588,8 +591,8 @@ export class MainEmbedded implements MainBase {
         let errorMarker = new ErrorMarker();
         this.language = JavaLanguage.registerMain(this, errorMarker);
 
-        if(this.$junitDiv){
-            new JUnitTestrunner(this,this.$junitDiv[0]);
+        if (this.$junitDiv) {
+            new JUnitTestrunner(this, this.$junitDiv[0]);
         }
 
         this.getCompiler().eventManager.on("compilationFinishedWithNewExecutable", this.onCompilationFinished, this);
@@ -867,6 +870,8 @@ export class MainEmbedded implements MainBase {
                 this.setFileActive(this.currentWorkspace.getFirstFile());
             }
 
+            this.getCompiler().triggerCompile();
+
             that.saveScripts();
 
         };
@@ -954,7 +959,7 @@ export class MainEmbedded implements MainBase {
     }
 
     showFile(file?: CompilerFile): void {
-        if(!file) return;
+        if (!file) return;
         this.fileExplorer?.selectFile(<File>file, false);
     }
 
@@ -968,9 +973,9 @@ export class MainEmbedded implements MainBase {
 
     showProgramPosition(file?: CompilerFile, positionOrRange?: IPosition | IRange, setCursor: boolean = true) {
         this.showFile(file);
-        if(!positionOrRange) return;
-        if(positionOrRange["startLineNumber"]) positionOrRange = Range.getStartPosition(<IRange>positionOrRange);
-        if(setCursor) this.getMainEditor().setPosition(<IPosition>positionOrRange);
+        if (!positionOrRange) return;
+        if (positionOrRange["startLineNumber"]) positionOrRange = Range.getStartPosition(<IRange>positionOrRange);
+        if (setCursor) this.getMainEditor().setPosition(<IPosition>positionOrRange);
         this.getMainEditor().revealPositionInCenterIfOutsideViewport(<IPosition>positionOrRange);
         this.getMainEditor().focus();
     }

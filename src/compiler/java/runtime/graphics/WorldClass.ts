@@ -42,7 +42,7 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
 
         { type: "method", signature: "void setCoordinateSystem(double left, double top, double width, double height)", native: WorldClass.prototype._setCoordinateSystem, comment: JRC.worldSetCoordinateSystemComment },
         { type: "method", signature: "void setCursor(string cursor)", native: WorldClass.prototype._setCursor, comment: JRC.world3dSetCursorComment },
-        { type: "method", signature: "void clear()", native: WorldClass.prototype._clear, comment: JRC.world3dClearComment },
+        { type: "method", signature: "static void clear()", java: WorldClass._mj$clear$, comment: JRC.world3dClearComment },
 
         { type: "method", signature: "double getWidth()", template: `Math.round(§1.currentWidth)`, comment: JRC.worldGetWidthComment },
         { type: "method", signature: "double getHeight()", template: `Math.round(§1.currentHeight)`, comment: JRC.worldGetHeightComment },
@@ -422,9 +422,13 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
         this.app.canvas.style.cursor = cursor;
     }
 
-    _clear() {
-        while (this.shapesWhichBelongToNoGroup.length > 0) {
-            this.shapesWhichBelongToNoGroup.pop()?.destroy();
+    static _mj$clear$(t: Thread) {
+
+        let existingWorld = <WorldClass>t.scheduler.interpreter.retrieveObject("WorldClass");
+        if(!existingWorld) return;
+
+        while (existingWorld.shapesWhichBelongToNoGroup.length > 0) {
+            existingWorld.shapesWhichBelongToNoGroup.pop()?.destroy();
         }
     }
 
