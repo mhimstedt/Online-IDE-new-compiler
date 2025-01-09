@@ -6,6 +6,7 @@ import { JCM } from "../language/JavaCompilerMessages.ts";
 import { ColorHelper } from "../lexer/ColorHelper.ts";
 import { JavaBaseModule } from "../module/JavaBaseModule";
 import { JavaTypeStore } from "../module/JavaTypeStore.ts";
+import { ClassClass } from "../runtime/system/ClassClass.ts";
 import { GenericTypeParameter } from "./GenericTypeParameter.ts";
 import { JavaField } from "./JavaField";
 import { GenericVariantOfJavaInterface, IJavaInterface, JavaInterface } from "./JavaInterface";
@@ -218,9 +219,16 @@ export class JavaClass extends IJavaClass {
     private extends?: IJavaClass;
     private implements: IJavaInterface[] = [];
 
+    private classObject: ClassClass;
+
     constructor(identifier: string, identifierRange: IRange, path: string, module: JavaBaseModule) {
         super(identifier, identifierRange, path, module);
         this.genericTypeParameters = [];
+        this.classObject = new ClassClass(this);
+    }
+
+    getClassObject(): ClassClass {
+        return this.classObject;
     }
 
     getAbstractMethodsNotYetImplemented(): JavaMethod[] {
@@ -602,6 +610,11 @@ export class GenericVariantOfJavaClass extends IJavaClass {
     get runtimeClass(): Klass | undefined {
         return this.isGenericVariantOf?.runtimeClass;
     }
+
+    getClassObject(): ClassClass {
+        return this.isGenericVariantOf.getClassObject();
+    }
+
 
     toString(): string {
         let s: string = this.identifier;

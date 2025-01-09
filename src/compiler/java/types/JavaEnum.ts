@@ -17,6 +17,7 @@ import { PrimitiveType } from "../runtime/system/primitiveTypes/PrimitiveType.ts
 import { JavaParameter } from "./JavaParameter.ts";
 import { JCM } from "../language/JavaCompilerMessages.ts";
 import * as monaco from 'monaco-editor'
+import { ClassClass } from "../runtime/system/ClassClass.ts";
 
 
 export class JavaEnum extends JavaTypeWithInstanceInitializer {
@@ -30,11 +31,18 @@ export class JavaEnum extends JavaTypeWithInstanceInitializer {
     id: number;
 
     private implements: JavaInterface[] = [];
+    private classObject: ClassClass;
+
 
 
     constructor(identifier: string, identifierRange: IRange, path: string, module: JavaBaseModule, public baseEnumClass: JavaClass) {
         super(identifier, identifierRange, path, module);
         this.id = Math.trunc(Math.random() * Number.MAX_SAFE_INTEGER);
+        this.classObject = new ClassClass(this);
+    }
+
+    getClassObject(): ClassClass {
+        return this.classObject;
     }
 
     getCompletionItemDetail(): string {

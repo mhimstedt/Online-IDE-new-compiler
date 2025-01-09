@@ -45,6 +45,32 @@ export class JRC {
         "en": "Wakes up all threads that are waiting on this object's monitor."
     })
 
+    static objectGetClassComment = () => lm({
+        "de": "Gibt das Class-Objekt zurück, das der Klasse dieses Objekts zugeordnet ist.",
+        "en": "Returns the runtime class of this Object."
+    })
+
+    static classFieldComment = () => lm({
+        "de": "Gibt das Class-Objekt zurück, das der Klasse dieses Objekts zugeordnet ist.",
+        "en": "Returns the runtime class of this Object."
+    })
+
+
+
+    /**
+     * class Class
+     */
+    static classClassComment = () => lm({
+        "de": "Jeder Klasse/jedem enum ist ein Objekt der Klasse Class zugeordnet.",
+        "en": "To each class/enum belongs an object of class Class.",
+    })
+
+    static classGetNameComment = () => lm({
+        "de": "Gibt den Bezeichner der Klasse zurück.",
+        "en": "Returns the name of the class/enum.",
+    })
+
+
     /**
      * Class String
      */

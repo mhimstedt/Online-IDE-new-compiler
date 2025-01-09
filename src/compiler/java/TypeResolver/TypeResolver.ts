@@ -748,6 +748,8 @@ export class TypeResolver {
                 javaEnum.fields.push(f);
             }
 
+            javaEnum.fields.push(javaEnum.createClassField(<any>this.libraryModuleManager.typestore.getType("Class")));
+
         }
 
         for (let interfaceNode of this.interfaceDeclarationNodes) {
@@ -789,6 +791,8 @@ export class TypeResolver {
                                 javaClass.fields.push(f);
                             }
                         }
+                        javaClass.fields.push(javaClass.createClassField(<any>this.libraryModuleManager.typestore.getType("Class")));
+
                         done = false;
                     }
                 }

@@ -156,6 +156,7 @@ import { LongClass } from "./primitiveTypes/wrappers/LongClass.ts";
 import { NumberClass } from "./primitiveTypes/wrappers/NumberClass";
 import { ShortClass } from "./primitiveTypes/wrappers/ShortClass.ts";
 import { Sprite3dClass } from "../graphics/3d/FastSprite/Sprite3dClass.ts";
+import { ClassClass } from "./ClassClass.ts";
 
 export class SystemModule extends JavaLibraryModule {
 
@@ -182,6 +183,7 @@ export class SystemModule extends JavaLibraryModule {
         this.classesInterfacesEnums.push(
             ComparableInterface, ComparatorInterface,
 
+            ClassClass,
             ObjectClass, StringClass, EnumClass,                  // These two MUST come first!
 
             //additional system classes

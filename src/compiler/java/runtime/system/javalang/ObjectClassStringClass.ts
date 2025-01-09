@@ -7,6 +7,7 @@ import { LibraryDeclarations } from "../../../module/libraries/DeclareType.ts";
 import { NonPrimitiveType } from "../../../types/NonPrimitiveType";
 import { JCM } from "../../../language/JavaCompilerMessages.ts";
 import { IPrimitiveTypeWrapper } from "../primitiveTypes/wrappers/IPrimitiveTypeWrapper.ts";
+import type { ClassClass } from "../ClassClass.ts";
 
 export type ObjectClassOrNull = ObjectClass | null;
 
@@ -23,6 +24,7 @@ export class ObjectClass {
         { type: "method", signature: "public final void wait(int milliseconds)", java: ObjectClass.prototype._mj$wait$void$, comment: JRC.objectWaitWithTimeoutComment },
         { type: "method", signature: "public final void notify()", java: ObjectClass.prototype._mj$notify$void$, comment: JRC.objectNotifyComment },
         { type: "method", signature: "public final void notifyAll()", java: ObjectClass.prototype._mj$notifyAll$void$, comment: JRC.objectNotifyAllComment },
+        { type: "method", signature: "public final Class<?> getClass()", native: ObjectClass.prototype._getClass, comment: JRC.objectGetClassComment },
     ]
 
     // declare __programs: Program[]; // only for compatibility with java classes; not used in library classes
@@ -138,6 +140,10 @@ export class ObjectClass {
     getType(): NonPrimitiveType {
         //@ts-ignore
         return this.constructor.type;
+    }
+
+    _getClass(): ClassClass {
+        return this.getType().getClassObject();
     }
 
     getClassName(): string {

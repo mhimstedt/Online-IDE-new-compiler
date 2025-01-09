@@ -1034,6 +1034,13 @@ export class Lexer {
                         this.pushToken(tt, text, line, column, this.line, this.column);
                     }
                     break;
+                case TokenType.keywordClass:
+                    if(this.tokens[this.tokens.length - 1]?.tt == TokenType.dot){
+                        this.pushToken(TokenType.identifier, "class", line, column, this.line, this.column);
+                    } else {
+                        this.pushToken(tt, text, line, column, this.line, this.column);
+                    }
+                    break;
                 default:
                     this.pushToken(tt, text, line, column, this.line, this.column);
                     break;

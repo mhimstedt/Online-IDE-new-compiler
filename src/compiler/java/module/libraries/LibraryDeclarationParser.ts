@@ -123,6 +123,13 @@ export class LibraryDeclarationParser extends LibraryDeclarationLexer {
             }
         }
 
+        if(npt instanceof JavaClass || npt instanceof JavaEnum){
+            let classType = npt.identifier == "Class" ? npt : this.currentTypeStore.getType("Class");
+            if(classType){
+                npt.fields.push(npt.createClassField(<NonPrimitiveType>classType));
+            }
+        }
+
         return npt;
     }
 
@@ -185,6 +192,10 @@ export class LibraryDeclarationParser extends LibraryDeclarationLexer {
                 }
             }
 
+        }
+
+        if(npt instanceof JavaClass && !npt.getExtends() && npt.identifier != "Object"){
+            npt.setExtends(<JavaClass>this.currentTypeStore.getType("Object"));
         }
 
     }
@@ -670,5 +681,6 @@ export class LibraryDeclarationParser extends LibraryDeclarationLexer {
             klass[value.name] = value;
         }
     }
+
 }
 

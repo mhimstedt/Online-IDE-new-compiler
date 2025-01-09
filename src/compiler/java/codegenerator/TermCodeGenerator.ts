@@ -1030,10 +1030,16 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
 
         if (field._isStatic) {
             let classIdentifier = field.classEnum.pathAndIdentifier;
-            let snippet = new OneParameterTemplate(`${Helpers.classes}["${classIdentifier}"].${field.getInternalName()}`)
-                .applyToSnippet(field.type, range, objectSnippet);
-            snippet.isLefty = !field._isFinal;
-            return snippet;
+            if(field.template){
+                let code = field.template.replace("§1", `${Helpers.classes}["${classIdentifier}"]`);
+                let snippet = new StringCodeSnippet(code, range, field.type);
+                snippet.isLefty = false;
+                return snippet;
+            } else {
+                let snippet = new StringCodeSnippet(`${Helpers.classes}["${classIdentifier}"].${field.getInternalName()}`, range, field.type);
+                snippet.isLefty = !field._isFinal;
+                return snippet;
+            }
         } else {
             let template: string = objectSnippet.type instanceof JavaEnum ? `§1` : `(§1 || ${Helpers.throwNPE}(${range.startLineNumber}, ${range.startColumn}, ${range.endLineNumber}, ${range.endColumn}))`;
 

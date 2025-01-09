@@ -1,6 +1,6 @@
 import { Program } from "../../common/interpreter/Program.ts";
 import { Klass } from "../../common/interpreter/StepFunction.ts";
-import { IRange } from "../../common/range/Range";
+import { EmptyRange, IRange, Range } from "../../common/range/Range";
 import { TokenType } from "../TokenType.ts";
 import { JavaBaseModule } from "../module/JavaBaseModule";
 import { JavaField } from "./JavaField";
@@ -11,6 +11,9 @@ import { Visibility } from "./Visibility.ts";
 import { BaseObjectType } from "../../common/BaseType.ts";
 import { JavaAnnotation } from "./JavaAnnotation.ts";
 import type * as monaco from 'monaco-editor'
+import type { ClassClass } from "../runtime/system/ClassClass.ts";
+import { JRC } from "../language/JavaRuntimeLibraryComments.ts";
+import { GenericVariantOfJavaClass, JavaClass } from "./JavaClass.ts";
 
 /**
  * A NonPrimitiveType
@@ -31,6 +34,9 @@ export abstract class NonPrimitiveType extends JavaType implements BaseObjectTyp
     abstract getAllMethods(): JavaMethod[];
 
     private _isMainClass?: boolean;
+
+    abstract getClassObject(): ClassClass;
+
 
     set isMainClass(isMainClass: boolean){
         this._isMainClass = true;
@@ -191,4 +197,15 @@ export abstract class NonPrimitiveType extends JavaType implements BaseObjectTyp
         this.annotations = annotations;
     }
 
+    createClassField(classType: NonPrimitiveType): JavaField {
+        const cf = new JavaField("class", EmptyRange.instance, this.module, this, TokenType.keywordPublic);
+        cf._isStatic = true;
+        cf.template = "§1.type.getClassObject()";    
+        cf.classEnum = <any>this;
+        cf.documentation = JRC.classFieldComment;
+        let typeMap = new Map();
+        typeMap.set(classType.genericTypeParameters[0], this);
+        cf.type = new GenericVariantOfJavaClass(<JavaClass>classType, typeMap);
+        return cf;
+    }
 }

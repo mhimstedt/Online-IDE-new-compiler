@@ -3,6 +3,7 @@ import { IRange } from "../../common/range/Range";
 import { TokenType, TokenTypeReadable } from "../TokenType";
 import { JCM } from "../language/JavaCompilerMessages";
 import { JavaBaseModule } from "../module/JavaBaseModule";
+import { ClassClass } from "../runtime/system/ClassClass.ts";
 import { GenericTypeParameter } from "./GenericTypeParameter";
 import { JavaField } from "./JavaField";
 import { JavaMethod } from "./JavaMethod";
@@ -21,6 +22,10 @@ export abstract class IJavaInterface extends NonPrimitiveType {
 
     getCompletionItemDetail(): string {
         return JCM.interface();
+    }
+
+    getClassObject(): ClassClass {
+        return null;
     }
 
     getFile(): CompilerFile {
