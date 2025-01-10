@@ -410,5 +410,13 @@ export class Main implements MainBase {
         this.getMainEditor().focus();
     }
 
+    markFilesAsStartable(files: File[], active: boolean){
+        this.projectExplorer.markFilesAsStartable(files, active);
+    }
+
+    onStartFileClicked(file: File){
+        this.interpreter.start(file);
+    }
+
 }
 

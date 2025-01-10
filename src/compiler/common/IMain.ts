@@ -1,4 +1,5 @@
 import { BottomDiv } from "../../client/main/gui/BottomDiv.ts";
+import { File } from "../../client/workspace/File.ts";
 import { Compiler } from "../common/Compiler.ts";
 import { JavaRepl } from "../java/parser/repl/JavaRepl.ts";
 import { Disassembler } from "./disassembler/Disassembler.ts";
@@ -45,5 +46,9 @@ export interface IMain {
     showJUnitDiv(): void;
 
     getBottomDiv(): BottomDiv;
+
+    markFilesAsStartable(files: File[], active: boolean);
+
+    onStartFileClicked(file: File);
 
 }

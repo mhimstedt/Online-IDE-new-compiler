@@ -480,10 +480,10 @@ export class AccordionPanel {
         <div class="jo_fileimage"></div>
         <div class="jo_filename"></div>
         <div class="jo_textAfterName"></div>
+        ${this.withDeleteButton && !element.readonly ? '<div class="jo_delete img_delete jo_button jo_active' + (false ? " jo_delete_always" : "") + '"></div>' : ""}
         <div class="jo_additionalButtonHomework"></div>
         <div class="jo_additionalButtonStart"></div>
         <div class="jo_additionalButtonRepository"></div>
-        ${this.withDeleteButton && !element.readonly ? '<div class="jo_delete img_delete jo_button jo_active' + (false ? " jo_delete_always" : "") + '"></div>' : ""}
         ${!jo_mouseDetected ? '<div class="jo_settings_button img_ellipsis-dark jo_button jo_active"></div>' : ""}
         </div>`);
         
@@ -990,6 +990,32 @@ export class AccordionPanel {
         }
         return null;
     }
+
+        markElementsAsStartable(element: any[], active: boolean, onElementClicked: (element: any) => void){
+            let event = (window.PointerEvent ? "pointer" : "mouse") + "down";
+
+            for(let fd of this.elements){
+                let buttonDiv = fd.$htmlFirstLine.find('.jo_additionalButtonStart');
+                if(fd.externalElement && element.indexOf(fd.externalElement) >= 0){
+                    buttonDiv.addClass('img_start-dark jo_button');
+                    buttonDiv.off(event + '.fileList');
+                    if(active){
+                        buttonDiv.addClass('jo_active');
+                        buttonDiv.on(event + '.fileList', (ev) => {
+                            onElementClicked(fd.externalElement);
+                            ev.stopPropagation();
+                        })
+                    } else {
+                        buttonDiv.removeClass('jo_active');
+                    }
+                } else {
+                    buttonDiv.removeClass('img_start-dark jo_button jo_active');
+                    buttonDiv.off(event + '.fileList');
+                }
+            }
+        }
+    
+    
 
 }
 

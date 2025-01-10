@@ -980,6 +980,15 @@ export class MainEmbedded implements MainBase {
         this.getMainEditor().focus();
     }
 
+    
+    markFilesAsStartable(files: File[], active: boolean){
+        this.fileExplorer?.markFilesAsStartable(files, active);
+    }
+
+    onStartFileClicked(file: File){
+        this.interpreter.start(file);
+    }
+
 }
 
 

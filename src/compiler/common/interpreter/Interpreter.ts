@@ -23,6 +23,7 @@ import { SchedulerState } from "./SchedulerState.ts";
 import { Thread } from "./Thread.ts";
 import { ThreadState } from "./ThreadState.ts";
 import { InterpreterMessages } from './InterpreterMessages.ts';
+import { File } from "../../../client/workspace/File.ts";
 
 
 type InterpreterEvents = "stop" | "done" | "resetRuntime" | "stateChanged" |
@@ -281,7 +282,7 @@ export class Interpreter {
 
     }
 
-    start() {
+    start(fileToStart?: File) {
         // this.main.getBottomDiv()?.console?.clearErrors();
 
         this.main?.getBottomDiv()?.errorManager?.hideAllErrorDecorations();
@@ -290,7 +291,7 @@ export class Interpreter {
 
         if (this.scheduler.state != SchedulerState.paused && this.executable) {
             this.printManager.clear();
-            this.#init(this.executable);
+            this.#init(this.executable, fileToStart);
             this.#resetRuntime();
         }
 
@@ -477,6 +478,14 @@ export class Interpreter {
             });
 
         }
+
+        let startableFiles: File[] = [];
+        if(this.executable){
+            for(let module of this.executable.moduleManager.modules){
+                if(module.isStartable()) startableFiles.push(<File>module.file);
+            }
+        }
+        this.main?.markFilesAsStartable(startableFiles, state >= 3);
     }
 
     #resetRuntime() {
@@ -489,7 +498,7 @@ export class Interpreter {
         // this.gngEreignisbehandlungHelper = null;
     }
 
-    #init(executable: Executable) {
+    #init(executable: Executable, fileToStart?: File) {
         // this.main.getBottomDiv()?.console?.clearErrors();
         // this.main.getBottomDiv()?.console?.clearExceptions();
 
@@ -502,8 +511,15 @@ export class Interpreter {
         //     this.main.getBottomDiv()?.console?.detachValues();  // detach values from console entries
         // }
 
+        let mainModule = this.#findStartableModule();
+        if(fileToStart){
+            for(let module of executable.moduleManager.modules){
+                if(module.file == fileToStart) mainModule = module;                
+            }
+        }
+
         this.setState(SchedulerState.stopped);
-        this.#mainThread = this.scheduler.init(executable, this.#findStartableModule());
+        this.#mainThread = this.scheduler.init(executable, mainModule);
 
         if (this.#mainThread) {
             this.codeReachedAssertions.init(executable.moduleManager);

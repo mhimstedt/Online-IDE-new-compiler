@@ -871,5 +871,11 @@ export class ProjectExplorer {
 
     }
 
+    markFilesAsStartable(files: File[], active: boolean){
+        this.fileListPanel.markElementsAsStartable(files, active, (file: File) => {
+            this.main.getInterpreter().start(file);
+        });
+    }
+
 
 }

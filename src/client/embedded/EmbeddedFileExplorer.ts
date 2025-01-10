@@ -98,8 +98,9 @@ export class EmbeddedFileExplorer {
         let $fileDiv = jQuery(`<div class="jo_file ${cssClass}" >
         <div class="jo_fileimage"></div>
         <div class="jo_filename" style="line-height: 22px">${file.name}</div>
+        <div class="jo_delete img_delete jo_button jo_active" title="Datei löschen"></div>
         <div class="jo_additionalButtonStart"></div>
-        <div class="jo_delete img_delete jo_button jo_active" title="Datei löschen"></div></div></div>`);
+        </div></div>`);
         if (this.$fileListDiv != null) {
             this.$fileListDiv.append($fileDiv);
         }
@@ -312,6 +313,33 @@ export class EmbeddedFileExplorer {
 
     getFiles(){
         return this.fileDataList.map(f => f.file);
+    }
+
+    markFilesAsStartable(files: File[], active: boolean){
+
+        for(let fd of this.fileDataList){
+            let buttonDiv = fd.$fileDiv.find('.jo_additionalButtonStart');
+            if(fd.file && files.indexOf(fd.file) >= 0){
+                buttonDiv.addClass('img_start-dark jo_button');
+                buttonDiv.off('click.fileList');
+                if(active){
+                    buttonDiv.addClass('jo_active');
+                    buttonDiv.on('click.fileList', (ev) => {
+                        this.onClickStart(fd);
+                        ev.stopPropagation();
+                    })
+                } else {
+                    buttonDiv.removeClass('jo_active');
+                }
+            } else {
+                buttonDiv.removeClass('img_start-dark jo_button jo_active');
+                buttonDiv.off('click.fileList');
+            }
+        }
+    }
+
+    onClickStart(fd: FileData){
+        this.main.onStartFileClicked(fd.file);
     }
 
 
