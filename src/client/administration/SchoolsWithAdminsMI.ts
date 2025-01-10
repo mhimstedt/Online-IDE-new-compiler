@@ -48,13 +48,13 @@ export class SchoolsWithAdminsMI extends AdminMenuItem {
                 toolbarSearch: true
             },
             defaultOperator: {
-                'text'    : 'contains',
-                'number'  : '=',
-                'date'    : 'is',
-                'list'    : 'is',
-                'enum'    : 'in',
-                'hex'     : 'begins',
-                'color'   : 'begins'
+                'text': 'contains',
+                'number': '=',
+                'date': 'is',
+                'list': 'is',
+                'enum': 'in',
+                'hex': 'begins',
+                'color': 'begins'
             },
             recid: "id",
             columns: [
@@ -75,9 +75,9 @@ export class SchoolsWithAdminsMI extends AdminMenuItem {
             { field: 'numberOfClasses', direction: 'asc' }, { field: 'numberOfUsers', direction: 'asc' }],
             onSelect: (event) => {
                 // event.done(() => {
-                    setTimeout(() => {
-                        that.onSelectSchool();
-                    }, 100);
+                setTimeout(() => {
+                    that.onSelectSchool();
+                }, 100);
                 // });
             },
             onUnselect: (event) => { that.onUnSelectSchool(event) },
@@ -280,7 +280,7 @@ export class SchoolsWithAdminsMI extends AdminMenuItem {
 
     onUpdateSchool(event: any) {
 
-        if(event.phase == 'after') return;
+        if (event.phase == 'after') return;
 
         let data: SchoolData = <SchoolData>this.schoolGrid.records[event.detail.index];
         let field = this.schoolGrid.columns[event.detail.column]["field"];
@@ -326,8 +326,10 @@ export class SchoolsWithAdminsMI extends AdminMenuItem {
                 //@ts-ignore
                 this.schoolGrid.scrollIntoView(index, undefined, true);
                 //@ts-ignore
-                this.schoolGrid.editField(cd.id, 1, undefined, { keyCode: 13 });
-            }, 1000);
+                setTimeout(() => {
+                    this.schoolGrid.editField(cd.id, 1, "");
+                }, 300);
+            }, 300);
 
             // this.selectTextInCell();
         });
