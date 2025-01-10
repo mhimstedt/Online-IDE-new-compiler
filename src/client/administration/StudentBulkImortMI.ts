@@ -1,6 +1,6 @@
 import { AdminMenuItem } from "./AdminMenuItem.js";
 import { UserData, ClassData, GetClassesDataRequest, GetClassesDataResponse, BulkCreateUsersRequest, BulkCreateUsersResponse } from "../communication/Data.js";
-import { ajax } from "../communication/AjaxHelper.js";
+import { ajax, ajaxAsync } from "../communication/AjaxHelper.js";
 import { Administration } from "./Administration.js";
 import { setSelectItems, getSelectedObject } from "../../tools/HtmlTools.js";
 import { w2grid } from 'w2ui'
@@ -10,7 +10,7 @@ import jQuery from 'jquery'
 
 type Step = "Step 1 Paste" | "Step 2 check" | "Step 3 import" | "Step 4 print";
 
-type Column = "rufname" | "familienname" | "username" | "passwort";
+type Column = "klasse" | "rufname" | "familienname" | "username" | "passwort";
 type ColumnMapping = { [column: string]: number };
 
 export class StudentBulkImportMI extends AdminMenuItem {
@@ -28,6 +28,7 @@ export class StudentBulkImportMI extends AdminMenuItem {
     $importTextArea: JQuery<HTMLElement>;
     $protocol: JQuery<HTMLElement>;
 
+    classes: ClassData[] = [];
     selectedClass: ClassData;
     usersToWrite: UserData[];
 
@@ -43,9 +44,19 @@ export class StudentBulkImportMI extends AdminMenuItem {
         return "Schülerdatenimport";
     }
 
-    onMenuButtonPressed($mainHeading: JQuery<HTMLElement>, $tableLeft: JQuery<HTMLElement>,
+    async fetchClassesFromServer(){
+        let request: GetClassesDataRequest = {
+            school_id: this.administration.userData.schule_id
+        }
+
+        const response: GetClassesDataResponse = await ajaxAsync('servlet/getClassesData', request);
+        this.classes = response.classDataList;
+    }
+
+    async onMenuButtonPressed($mainHeading: JQuery<HTMLElement>, $tableLeft: JQuery<HTMLElement>,
         $tableRight: JQuery<HTMLElement>, $mainFooter: JQuery<HTMLElement>) {
 
+        await this.fetchClassesFromServer();
 
         this.$tableLeft = $tableLeft;
         this.$tableRight = $tableRight;
@@ -73,23 +84,34 @@ export class StudentBulkImportMI extends AdminMenuItem {
             recid: "id",
             columns: [
                 { field: 'id', text: 'ID', size: '20px', sortable: true, hidden: true },
-                { field: 'rufname', text: 'Rufname', size: '25%', sortable: true, resizable: true, editable: { type: 'text' }, sortMode: 'i18n' },
-                { field: 'familienname', text: 'Familienname', size: '25%', sortable: true, resizable: true, editable: { type: 'text' }, sortMode: 'i18n' },
-                { field: 'username', text: 'Benutzername', size: '25%', sortable: true, resizable: true, editable: { type: 'text' }, sortMode: 'i18n' },
-                { field: 'password', text: 'Passwort', size: '25%', sortable: false, editable: { type: 'text' } }
+                { field: 'klasse_id', text: 'Klasse', size: '20%', sortable: true, resizable: true, 
+                    render: function (record: UserData) {
+                        let classData = that.classes.find(cl => cl.id == record.klasse_id);
+                        let classIdentifier = classData != null ? classData.name : "";
+                            return '<div>' + classIdentifier + '</div>';
+                    },
+                    editable: { type: 'list', items: that.classes.map(cl => {return {id: cl.id, text: cl.name}}), showAll: true, openOnFocus: true },
+                    sortMode: 'i18n' },
+                { field: 'rufname', text: 'Rufname', size: '20%', sortable: true, resizable: true, editable: { type: 'text' }, sortMode: 'i18n' },
+                { field: 'familienname', text: 'Familienname', size: '20%', sortable: true, resizable: true, editable: { type: 'text' }, sortMode: 'i18n' },
+                { field: 'username', text: 'Benutzername', size: '20%', sortable: true, resizable: true, editable: { type: 'text' }, sortMode: 'i18n' },
+                { field: 'password', text: 'Passwort', size: '20%', sortable: false, editable: { type: 'text' } }
             ],
             searches: [
                 { field: 'username', label: 'Benutzername', type: 'text' },
                 { field: 'rufname', label: 'Rufname', type: 'text' },
                 { field: 'familienname', label: 'Familienname', type: 'text' }
             ],
-            sortData: [{ field: 'klasse', direction: 'asc' }, { field: 'familienname', direction: 'asc' }, { field: 'rufname', direction: 'asc' }],
+            sortData: [{ field: 'klasse_id', direction: 'asc' }, { field: 'familienname', direction: 'asc' }, { field: 'rufname', direction: 'asc' }],
             onDelete: function (event) {
                 if (!event.detail.force || event.isStopped) return;
                 let recIds: number[] = this.studentsGrid.getSelection().map((sel) => sel["recid"]).filter((value, index, array) => array.indexOf(value) === index);
                 event.onComplete = () => {
                     recIds.forEach((id) => this.studentsGrid.remove(id + ""));
                 }
+            },
+            onChange: (event) => {
+                that.onUpdateStudent(event);
             }
         });
 
@@ -97,6 +119,19 @@ export class StudentBulkImportMI extends AdminMenuItem {
 
         this.showStep("Step 1 Paste");
 
+    }
+
+    onUpdateStudent(event: any){
+        let student: UserData = <UserData>this.studentGrid.records[event.detail.index];
+        let newValue = event.detail.value.new;
+        let field = this.studentGrid.columns[event.detail.column]["field"];
+
+        if(event.detail.column == 1){
+            student.klasse_id = newValue.id;
+        }
+        if(student["w2ui"]){
+            delete student["w2ui"]["changes"][field];
+        }
     }
 
     showStep(step: Step) {
@@ -127,7 +162,7 @@ export class StudentBulkImportMI extends AdminMenuItem {
 
     showStep4Print() {
 
-        let description: string = `Die Schüler/innen wurden erfolgreich angelegt und der Klasse ${this.selectedClass.name} zugeordnet.
+        let description: string = `Die Schüler/innen wurden erfolgreich angelegt und der Klasse/den Klassen (ersatzweise: ${this.selectedClass.name}) zugeordnet.
         Eine Liste der Zugangsdaten zum Ausdrucken erhalten Sie durch Klick auf den Button "Drucken...".
         `
 
@@ -150,7 +185,7 @@ export class StudentBulkImportMI extends AdminMenuItem {
             $printDiv.append(`<div style="page-break-inside: avoid;">
             <div><b>URL:</b> https://www.online-ide.de</div>
             <div><b>Name:</b> ${user.rufname} ${user.familienname}</div>
-            <div><b>Klasse:</b> ${this.selectedClass.name}</div>
+            <div><b>Klasse:</b> ${this.classes.find(cl => cl.id == user.klasse_id)?.name}</div>
             <div><b>Benutzername:</b> ${user.username}</div>
             <div style="margin-bottom: 3em"><b>Passwort:</b> ${user.password}</div>
             </div>`);
@@ -224,30 +259,25 @@ export class StudentBulkImportMI extends AdminMenuItem {
 
     showStep2Check() {
 
-        let description: string = `Bitte wählen Sie im Auswahlfeld die Klasse aus, in die die Schülerdaten importiert werden sollen. Sie können die Daten in der Tabelle noch bearbeiten, bevor Sie sie zur Überprüfung (noch kein Import!) absenden.`
+        let description: string = `Bitte wählen Sie im Auswahlfeld die Klasse aus, in die die Schülerdaten importiert werden sollen, 
+        für die in den Eingabedaten keine Klasse angegeben ist. Sie können die Daten in der Tabelle noch bearbeiten, bevor Sie sie zur Überprüfung (noch kein Import!) absenden.`
 
         this.$tableLeft.append(jQuery('<div class="jo_bulk_heading">Schritt 2: Daten überprüfen</div>'));
         let $description = jQuery(`<div class="jo_bulk_description"></div>`);
         $description.html(description);
         this.$tableLeft.append($description);
 
-        let request: GetClassesDataRequest = {
-            school_id: this.administration.userData.schule_id
-        }
 
         let $select = <JQuery<HTMLSelectElement>>jQuery('<select class="jo_bulk_chooseClass"></select>');
         this.$tableLeft.append($select);
 
-        ajax('getClassesData', request, (response: GetClassesDataResponse) => {
-            // cd.id, cd.name
-            setSelectItems($select, response.classDataList.map((cd) => {
-                return {
-                    caption: cd.name,
-                    value: cd.id,
-                    object: cd
-                }
-            }));
-        });
+        setSelectItems($select, this.classes.map((cd) => {
+            return {
+                caption: cd.name,
+                value: cd.id,
+                object: cd
+            }
+        }));
 
 
         let $buttondiv = jQuery(`<div class="jo_bulk_buttondiv" style="justify-content: space-between"></div>`);
@@ -274,6 +304,12 @@ export class StudentBulkImportMI extends AdminMenuItem {
     }
 
     checkData(classData: ClassData) {
+
+        for(let record of this.studentGrid.records){
+            if(record["w2ui"] && record["w2ui"]["changes"]) delete record["w2ui"]["changes"]["klasse_id"];
+            if(record.klasse_id == -1) record.klasse_id = classData.id;
+        }
+
         this.studentGrid.mergeChanges();
 
         this.usersToWrite = <UserData[]>this.studentGrid.records
@@ -289,7 +325,7 @@ export class StudentBulkImportMI extends AdminMenuItem {
 
                 for (let user of this.usersToWrite) {
                     user.schule_id = this.administration.userData.schule_id;
-                    user.klasse_id = classData.id;
+                    if(user.klasse_id == -1) user.klasse_id = classData.id;
                     user.is_admin = false;
                     user.is_schooladmin = false;
                     user.is_teacher = false;
@@ -309,10 +345,10 @@ export class StudentBulkImportMI extends AdminMenuItem {
     showStep1Paste() {
 
         let description: string = `
-        Zum Importieren wird eine Tabelle mit den Spalten Rufname, Familienname, Username und (optional:) Passwort benötigt,
+        Zum Importieren wird eine Tabelle mit den Spalten Rufname, Familienname, Username, (optional:) Klasse und (ebenso optional:) Passwort benötigt,
         wobei die Daten in den Zellen jeweils mit Tab-Zeichen getrennt sind. Sie erhalten dieses Format beispielsweise,
         indem Sie eine Tabelle in Excel in die Zwischenablage kopieren. <br> Falls die erste Zeile Spaltenköpfe mit
-        den korrekten Bezeichnern (Rufname, Familienname, Username, Passwort) enthält, kümmert sich der Import-Algorithmus
+        den korrekten Bezeichnern (Klasse, Rufname, Familienname, Username, Passwort) enthält, kümmert sich der Import-Algorithmus
         um die richtige Reihenfolge und blendet ggf. auch überflüssige Spalten aus. Falls eine Zeile kein Passwort enthält,
         setzt die Online-IDE ein Zufallspasswort.<br>
         Bitte fügen Sie den Inhalt der Tabelle per Copy-Paste in dieses Eingabefeld ein:`
@@ -380,6 +416,13 @@ export class StudentBulkImportMI extends AdminMenuItem {
                 password = line[columnMapping["passwort"]].trim()
             }
 
+            let classIdentifier = line[columnMapping["klasse"]];
+            let klasse_id: number = -1;
+            if(classIdentifier != null){
+                klasse_id = this.classes.find(cl => cl.name.toLowerCase() == classIdentifier.toLowerCase())?.id;
+                if(klasse_id == null) klasse_id = -1;
+            }
+
             userData.push({
                 id: id++,
                 familienname: line[columnMapping["familienname"]],
@@ -390,7 +433,7 @@ export class StudentBulkImportMI extends AdminMenuItem {
                 is_schooladmin: false,
                 is_teacher: false,
                 locked: false,
-                klasse_id: -1,
+                klasse_id: klasse_id,
                 schule_id: -1
             });
         }
@@ -400,7 +443,7 @@ export class StudentBulkImportMI extends AdminMenuItem {
     }
 
     static getRandomPassword(minimumLength: number = 8, minimumNumberOfCategries: number = 3): string {
-        let categoryList: string[] = ["abcdefghkmnpqrstuvwxy", "ABCDEFGHKLMNPQRSTUVW", "123456789", "#!§$%&/()=[]{}*+:;,.-<>"];
+        let categoryList: string[] = ["abcdefghkmnpqrstuvwxy", "ABCDEFGHKLMNPQRSTUVW", "123456789", "#!§$%&/()=[]{}*+:;,.-"];
 
         let goodCharacters: string = categoryList.join("");
 
@@ -429,13 +472,14 @@ export class StudentBulkImportMI extends AdminMenuItem {
 
     getColumnMapping(lines: string[][]): { columnMapping: ColumnMapping, line1HasHeaders: boolean } {
 
-        let columnHeaders: string[] = ["rufname", "familienname", "username", "passwort"];
+        let columnHeaders: string[] = ["klasse", "rufname", "familienname", "username", "passwort"];
 
         let columnMapping: ColumnMapping = {
-            "rufname": 0,
-            "familienname": 1,
-            "username": 2,
-            "passwort": 3
+            "klasse": 0, 
+            "rufname": 1,
+            "familienname": 2,
+            "username": 3,
+            "passwort": 4
         }
 
         if (lines.length < 2) {
