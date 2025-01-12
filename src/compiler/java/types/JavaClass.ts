@@ -396,6 +396,7 @@ export class JavaClass extends IJavaClass {
     }
 
     getCopyWithConcreteType(typeMap: Map<GenericTypeParameter, NonPrimitiveType>): IJavaClass {
+        if(this.genericTypeParameters.length == 0) return this;
         return new GenericVariantOfJavaClass(this, typeMap);
     }
 

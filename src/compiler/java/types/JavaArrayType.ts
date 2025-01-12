@@ -6,6 +6,8 @@ import { JavaBaseModule } from "../module/JavaBaseModule";
 import { JavaTypeStore } from "../module/JavaTypeStore";
 import { BinaryOperator, UnaryPrefixOperator } from "../parser/AST";
 import { GenericTypeParameters, GenericTypeParameter } from "./GenericTypeParameter";
+import { GenericVariantOfJavaClass } from "./JavaClass";
+import { GenericVariantOfJavaInterface } from "./JavaInterface";
 import { JavaType } from "./JavaType";
 
 export class JavaArrayType extends JavaType implements BaseArrayType {
@@ -35,8 +37,15 @@ export class JavaArrayType extends JavaType implements BaseArrayType {
     }
 
     getCopyWithConcreteType(_typeMap: Map<GenericTypeParameter, JavaType>): JavaType {
-        if(!(this.elementType instanceof GenericTypeParameter)) return this;
-        let mappedElemenType = _typeMap.get(this.elementType);
+
+        let mappedElemenType: JavaType | undefined;
+        if(this.elementType instanceof GenericVariantOfJavaClass || this.elementType instanceof GenericVariantOfJavaInterface){
+            mappedElemenType = this.elementType.getCopyWithConcreteType(<any>_typeMap);
+        } 
+        if(this.elementType instanceof GenericTypeParameter){
+            mappedElemenType = _typeMap.get(this.elementType);
+        } 
+
         if(!mappedElemenType) return this;
 
         return new JavaArrayType(mappedElemenType, this.dimension, this.module, this.identifierRange)

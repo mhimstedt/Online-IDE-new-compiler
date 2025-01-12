@@ -164,6 +164,7 @@ export class JavaInterface extends IJavaInterface {
 
 
     getCopyWithConcreteType(typeMap: Map<GenericTypeParameter, NonPrimitiveType>): IJavaInterface {
+        if(this.genericTypeParameters.length == 0) return this;
         return new GenericVariantOfJavaInterface(this, typeMap);
     }
 
