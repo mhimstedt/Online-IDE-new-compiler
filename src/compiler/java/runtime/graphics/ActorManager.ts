@@ -61,7 +61,7 @@ export class ActorManager {
     runningactThread?: Thread;
     tickHappenedWhenThreadNotEmpty: boolean = false;
     callActMethods(dt: number) {
-        if (this.runningactThread && this.runningactThread.state == ThreadState.running) {
+        if (this.runningactThread && [ThreadState.running, ThreadState.waiting].indexOf(this.runningactThread.state) >= 0 ) {
             this.tickHappenedWhenThreadNotEmpty = true;
             return;
         }
