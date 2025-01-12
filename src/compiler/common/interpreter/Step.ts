@@ -28,6 +28,7 @@ export class Step {
 
     getValidRangeOrUndefined(): IRange | undefined {
         const r = this.range;
+        if(!r) return undefined;
         if (typeof r.startLineNumber != "undefined" && r.startLineNumber >= 0) {
             return <any>r;
         }
