@@ -129,12 +129,12 @@ export abstract class StatementParser extends TermParser {
 
     parseLocalVariableDeclaration(): ASTStatementNode | undefined {
 
-        if (this.isInsideMainMethod && this.nestingLevel == 0 && this.tt != TokenType.keywordVar) {
-            let modifiers = this.nodeFactory.buildNodeWithModifiers(this.cct.range);
-            modifiers.isStatic = true;
-            this.parseFieldOrMethodDeclaration(this.module.mainClass!, modifiers, undefined);
-            return undefined;
-        }
+        // if (this.isInsideMainMethod && this.nestingLevel == 0 && this.tt != TokenType.keywordVar) {
+        //     let modifiers = this.nodeFactory.buildNodeWithModifiers(this.cct.range);
+        //     modifiers.isStatic = true;
+        //     this.parseFieldOrMethodDeclaration(this.module.mainClass!, modifiers, undefined);
+        //     return undefined;
+        // }
 
         let declarations: ASTLocalVariableDeclarations = {
             kind: TokenType.localVariableDeclarations,
