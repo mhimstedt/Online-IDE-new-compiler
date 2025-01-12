@@ -112,13 +112,13 @@ export class Parser extends StatementParser {
     }
 
     parseMainProgramFragment() {
-
+        
         /**
          * Map<String, Integer> test(ArrayList<String> list){...} // -> static method
          *
          * others: statements of main method
          */
-
+        this.isInsideMainMethod = true;
         this.isCodeOutsideClassdeclarations = true;
         while (!this.isEnd() && Parser.visibilityModifiersOrTopLevelTypeDeclaration.indexOf(this.tt) < 0 && this.tt != TokenType.at) {
             let pos = this.pos;
@@ -134,7 +134,7 @@ export class Parser extends StatementParser {
         this.maybeParseAndSkipAnnotation();
 
         this.isCodeOutsideClassdeclarations = false;
-
+        this.isInsideMainMethod = false;
     }
 
     parseClassOrInterfaceOrEnum(parent: TypeScope, documentation1: string | undefined, modifiers?: ASTNodeWithModifiers) {

@@ -12,6 +12,9 @@ export abstract class StatementParser extends TermParser {
 
     protected isCodeOutsideClassdeclarations: boolean = false;
 
+    isInsideMainMethod: boolean = false;
+    nestingLevel: number = 0;
+
     constructor(module: JavaCompiledModule) {
         super(module);
     }
@@ -20,23 +23,44 @@ export abstract class StatementParser extends TermParser {
 
         switch (this.tt) {
             case TokenType.keywordWhile:
-                return this.parseWhile();
+                this.nestingLevel++;
+                let ret1 = this.parseWhile();
+                this.nestingLevel--;
+                return ret1;
             case TokenType.keywordDo:
-                return this.parseDo();
+                this.nestingLevel++;
+                let ret2 = this.parseDo();
+                this.nestingLevel--;
+                return ret2;
             case TokenType.keywordIf:
-                return this.parseIf();
+                this.nestingLevel++;
+                let ret3 = this.parseIf();
+                this.nestingLevel--;
+                return ret3;
             case TokenType.leftCurlyBracket:
-                return this.parseBlock();
+                this.nestingLevel++;
+                let ret4 = this.parseBlock();
+                this.nestingLevel--;
+                return ret4;
             case TokenType.keywordFor:
-                return this.parseFor();
+                this.nestingLevel++;
+                let ret5 = this.parseFor();
+                this.nestingLevel--;
+                return ret5;
             case TokenType.keywordSwitch:
-                return this.parseSwitch();
+                this.nestingLevel++;
+                let ret6 = this.parseSwitch();
+                this.nestingLevel--;
+                return ret6;
             case TokenType.keywordBreak:
                 return this.nodeFactory.buildBreakNode(this.getAndSkipTokenWithSemicolon());
             case TokenType.keywordContinue:
                 return this.nodeFactory.buildContinueNode(this.getAndSkipTokenWithSemicolon());
             case TokenType.keywordTry:
-                return this.parseTryCatch();
+                this.nestingLevel++;
+                let ret7 = this.parseTryCatch();
+                this.nestingLevel--;
+                return ret7;
             case TokenType.keywordThrow:
                 return this.parseThrow();
             case TokenType.keywordReturn:
@@ -47,7 +71,10 @@ export abstract class StatementParser extends TermParser {
                 this.nextToken();
                 return node;
             case TokenType.keywordSynchronized:
-                return this.parseSynchronizedBlock();
+                this.nestingLevel++;
+                let ret8 = this.parseSynchronizedBlock();
+                this.nestingLevel--;
+                return ret8;
             default:
                 let statement = this.parseVariableDeclarationOrMethodDeclarationTerm(expectSemicolonAfterStatement);
 
@@ -89,8 +116,7 @@ export abstract class StatementParser extends TermParser {
                 return undefined;
         }
 
-        if ((expectSemicolonAfterStatement && !this.expectSemicolon(true, true))
-            || !statement) {
+        if (!statement || (expectSemicolonAfterStatement && !this.expectSemicolon(true, true))) {
             if (this.cct.range.startLineNumber == line) {
                 this.skipTillNextTokenAfter([TokenType.semicolon, TokenType.newline, TokenType.rightCurlyBracket]);
             }
@@ -102,6 +128,13 @@ export abstract class StatementParser extends TermParser {
     abstract parseFieldOrMethodDeclaration(classASTNode: ASTClassDefinitionNode | ASTEnumDefinitionNode | ASTInterfaceDefinitionNode, modifiers: ASTNodeWithModifiers, documentation: string | undefined): void;
 
     parseLocalVariableDeclaration(): ASTStatementNode | undefined {
+
+        if (this.isInsideMainMethod && this.nestingLevel == 0 && this.tt != TokenType.keywordVar) {
+            let modifiers = this.nodeFactory.buildNodeWithModifiers(this.cct.range);
+            modifiers.isStatic = true;
+            this.parseFieldOrMethodDeclaration(this.module.mainClass!, modifiers, undefined);
+            return undefined;
+        }
 
         let declarations: ASTLocalVariableDeclarations = {
             kind: TokenType.localVariableDeclarations,
@@ -213,7 +246,7 @@ export abstract class StatementParser extends TermParser {
 
             this.expect(TokenType.rightBracket);
 
-            if(this.comesToken(TokenType.rightCurlyBracket, false)){
+            if (this.comesToken(TokenType.rightCurlyBracket, false)) {
                 this.pushError(JCM.statementOrBlockExpected());
                 return undefined;
             }
@@ -254,7 +287,7 @@ export abstract class StatementParser extends TermParser {
             if (statement) blockNode.statements.push(statement);
         }
 
-        if(blockNode.statements.length == 0) blockNode.isEmpty = true;
+        if (blockNode.statements.length == 0) blockNode.isEmpty = true;
 
         this.expect(TokenType.rightCurlyBracket, true);
         this.setEndOfRange(blockNode);
@@ -302,7 +335,7 @@ export abstract class StatementParser extends TermParser {
 
     parseStatementToRepeat(): ASTStatementNode | undefined {
         let statementToRepeat = this.parseStatementOrExpression(false);
-        if(statementToRepeat?.isEmpty){
+        if (statementToRepeat?.isEmpty) {
             let beginOfBlockRange: IRange = Range.fromPositions(Range.getStartPosition(statementToRepeat.range));
             this.pushError(JCM.loopOverEmptyStatement(), "info", beginOfBlockRange);
         }
@@ -415,9 +448,9 @@ export abstract class StatementParser extends TermParser {
     parseReturn(): ASTReturnNode {
         let returnToken = this.getAndSkipToken();
         let term;
-        if(this.tt==TokenType.semicolon){
-            term=undefined;
-        }else{
+        if (this.tt == TokenType.semicolon) {
+            term = undefined;
+        } else {
             term = this.parseTerm();
             this.expect(TokenType.semicolon);
         }

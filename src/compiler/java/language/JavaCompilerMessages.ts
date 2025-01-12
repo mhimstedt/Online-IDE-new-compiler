@@ -321,6 +321,11 @@ export class JCM {
      * Error messages in class TermCodeGenerator
      */
 
+    static localVariableUsedBeforeDeclaration = (variable: string) => le({
+        "de": `Die Variable ${variable} wurde vor ihrer Deklaration verwendet.`,
+        "en": `Variable ${variable} is used before it's declaration.`,
+    })
+
     static superOnlyInClassesOrEnums = () => le({
         "de": `Das Schlüsselwort super ist nur innerhalb einer Klasse oder eines Enum sinnvoll.`,
         "en": `Keyword super is only usable in classes and enums.`,

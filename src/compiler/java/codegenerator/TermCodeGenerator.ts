@@ -780,6 +780,13 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
             this.classOfCurrentlyCompiledStaticInitialization.staticConstructorsDependOn.set(field.classEnum, true);
         }
 
+        if(field._isStatic &&field.classEnum.isMainClass){
+            if(range.startLineNumber < field.identifierRange.startLineNumber){
+                this.pushError(JCM.localVariableUsedBeforeDeclaration(field.identifier), "error", range);
+            }
+        }
+
+
         let type = (field).type;
 
         if (field._isFinal && field.initialValueIsConstant) {

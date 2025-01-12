@@ -16,6 +16,7 @@ import { NonPrimitiveType } from "./NonPrimitiveType";
 import { JavaParameter } from "./JavaParameter";
 import { Visibility } from "./Visibility";
 import { JavaAnnotation } from "./JavaAnnotation.ts";
+import { JavaCompilerStringConstants } from "../JavaCompilerStringConstants.ts";
 
 export class JavaMethod extends BaseSymbol {
 
@@ -37,6 +38,7 @@ export class JavaMethod extends BaseSymbol {
     hasOuterClassParameter: boolean = false;            // constructors of non-static inner classes have invisible first parameter with identifier outerClassAttributeIdentifier
 
     template?: string;      // only for library Methods, i.e. Math.sin
+
     constantFoldingFunction?: (...parms: any) => any;
 
     /**
@@ -267,6 +269,10 @@ export class JavaMethod extends BaseSymbol {
         return this.returnParameterType!;
     }
 
+    isMainMethod(): boolean {
+        return this.identifier.startsWith(JavaCompilerStringConstants.mainMethodIdentifier);
+    }
+
 
 }
 
@@ -372,6 +378,5 @@ export class GenericMethod extends JavaMethod {
         decl += this.returnParameterType?.toString() + " " + this.identifier;
         return decl + "(" + this.parameters.map(p => p.getDeclaration()).join(", ") + ")";
     }
-
 
 }
