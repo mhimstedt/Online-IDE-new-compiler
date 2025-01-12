@@ -3,6 +3,7 @@ import { Thread } from "../../../../common/interpreter/Thread";
 import { JRC } from "../../../language/JavaRuntimeLibraryComments";
 import { LibraryDeclarations } from "../../../module/libraries/DeclareType";
 import { NonPrimitiveType } from "../../../types/NonPrimitiveType";
+import { RuntimeExceptionClass } from "../../system/javalang/RuntimeException";
 import { ActorClass } from "../ActorClass";
 import { Vector3Class } from "./Vector3Class";
 import { World3dClass } from "./World3dClass";
@@ -37,7 +38,7 @@ export class Object3dClass extends ActorClass {
         { type: "method", signature: "double getY()", template: `§1.getObject3d().position.y` },
         { type: "method", signature: "double getZ()", template: `§1.getObject3d().position.z` },
 
-
+        { type: "method", signature: "final World3d getWorld3d()", java: Object3dClass.prototype._mj$getWorld3d$World3d, comment: JRC.getWorld3dComment },
 
 
         { type: "method", signature: "abstract void destroy()", native: Object3dClass.prototype.destroy },
@@ -109,5 +110,15 @@ export class Object3dClass extends ActorClass {
         super.destroy();
         this.world3d.objects.splice(this.world3d.objects.indexOf(this), 1);
     }
+
+    _mj$getWorld3d$World3d(t: Thread, callback: CallbackParameter) {
+        const w = t.scheduler.interpreter.retrieveObject("World3dClass");
+        if(w==undefined){
+            throw new RuntimeExceptionClass(JRC.actorWorld3dDoesntexistException());
+        }else{
+            t.s.push(w);
+        }
+    }
+
 
 }

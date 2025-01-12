@@ -53,10 +53,10 @@ export class Sphere3dClass extends Mesh3dClass {
     _cj$_constructor_$Sphere3d$double$int$int$double$double$double$double(t: Thread, callback: CallbackParameter, radius: number, 
         widthSegments: number, heightSegments: number, phiStart: number, phiLength: number, thetaStart: number, thetaLength: number) {
         super._cj$_constructor_$Mesh3d$(t, ()=>{
-            phiStart = phiStart/Math.PI*180;
-            phiLength = phiLength/Math.PI*180;
-            thetaStart = thetaStart/Math.PI*180;
-            thetaLength = thetaLength/Math.PI*180;
+            phiStart = phiStart/180*Math.PI;
+            phiLength = phiLength/180*Math.PI;
+            thetaStart = thetaStart/180*Math.PI;
+            thetaLength = thetaLength/180*Math.PI;
 
             const geometry = new THREE.SphereGeometry(radius, widthSegments, heightSegments, 
                 phiStart, phiLength, thetaStart, thetaLength);

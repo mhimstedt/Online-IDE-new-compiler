@@ -15,7 +15,7 @@ export class Torus3dClass extends Mesh3dClass {
     _cj$_constructor_$Torus3d$double$double$int$int$double(t: Thread, callback: CallbackParameter, radius: number, tube: number, radialSegments: number, tubularSegments: number, arc: number) {
         arc *= Math.PI/180;
         super._cj$_constructor_$Mesh3d$(t, ()=>{
-            const geometry = new THREE.TorusGeometry(radius, tube, radialSegments, tubularSegments);
+            const geometry = new THREE.TorusGeometry(radius, tube, radialSegments, tubularSegments, arc);
 
             this.mesh = new THREE.Mesh(geometry, this.getInitialMaterial().getMaterialAndIncreaseUsageCounter());
             this.world3d.scene.add(this.mesh);

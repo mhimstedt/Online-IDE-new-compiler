@@ -1372,7 +1372,8 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
 
             if (!method.canTakeNumberOfParameters(parameterTypes.length)) continue;
 
-            if (method instanceof GenericMethod) method.initCatches();
+            if (method instanceof GenericMethod) 
+                method.initCatches();
 
             let castsNeeded: number = 0;
             let ellipsisType: JavaType | undefined;

@@ -1,23 +1,21 @@
-import * as THREE from 'three';
 
 import { CallbackParameter } from "../../../../../common/interpreter/CallbackParameter";
 import { Thread } from "../../../../../common/interpreter/Thread";
-import { JRC } from "../../../../language/JavaRuntimeLibraryComments";
 import { LibraryDeclarations } from "../../../../module/libraries/DeclareType";
-import { UnusedSpriteMaterial3dClass } from "../materials/UnusedSpriteMaterial3dClass";
-import { Matrix4Class } from "../Matrix4Class";
-import { Object3dClass } from "../Object3dClass";
 import { SpriteLibraryEnum } from '../../SpriteLibraryEnum';
 import { FastSprite } from './FastSpriteManager3d';
 import { ActorClass } from '../../ActorClass';
 import { World3dClass } from '../World3dClass';
+import { Vector3Class } from '../Vector3Class';
+import { Object3dClass } from "../Object3dClass";
 
-export class Sprite3dClass extends ActorClass {
+export class Sprite3dClass extends Object3dClass {
     static __javaDeclarations: LibraryDeclarations = [
-        { type: "declaration", signature: "class Sprite3d extends Actor"},
+        { type: "declaration", signature: "class Sprite3d extends Object3d"},
         { type: "method", signature: "Sprite3d(double width, SpriteLibrary spriteLibrary, int index)", java: Sprite3dClass.prototype._cj$_constructor_$Sprite3d$double$SpriteLibrary$int,  },
 
         { type: "method", signature: "void move(double x,double y,double z)", native: Sprite3dClass.prototype.move },
+        { type: "method", signature: "void moveTo(double x,double y,double z)", native: Sprite3dClass.prototype.moveTo },
         { type: "method", signature: "double getX()", native: Sprite3dClass.prototype.getX },
         { type: "method", signature: "double getY()", native: Sprite3dClass.prototype.getY },
         { type: "method", signature: "double getZ()", native: Sprite3dClass.prototype.getZ },
@@ -25,8 +23,16 @@ export class Sprite3dClass extends ActorClass {
         { type: "method", signature: "void setColor(int color)", native: Sprite3dClass.prototype.setColorInt },
         { type: "method", signature: "void setAlpha(double alpha)", native: Sprite3dClass.prototype.setAlpha },
 
+        { type: "method", signature: "void scaleX(double angleDeg)",native: Sprite3dClass.prototype.scaleX },
+        { type: "method", signature: "void scaleY(double angleDeg)",native: Sprite3dClass.prototype.scaleY },
+        { type: "method", signature: "void scaleZ(double angleDeg)",native: Sprite3dClass.prototype.scale },
+        { type: "method", signature: "void scale(Vector3 v)", native: Sprite3dClass.prototype.scaleV },
+        { type: "method", signature: "void scale(double d)", native: Sprite3dClass.prototype.scale },
 
-
+        { type: "method", signature: "void rotateX(double angleDeg)",native: Sprite3dClass.prototype.rotate },
+        { type: "method", signature: "void rotateY(double angleDeg)",native: Sprite3dClass.prototype.rotate },
+        { type: "method", signature: "void rotateZ(double angleDeg)",native: Sprite3dClass.prototype.rotate },
+        { type: "method", signature: "void rotate(double angleDeg)",native: Sprite3dClass.prototype.rotate },
 
         // { type: "method", signature: "final void move(Vector3 v)", native: Sprite3dClass.prototype.vmove },
         // { type: "method", signature: "void moveTo(double x,double y,double z)", native: Sprite3dClass.prototype.moveTo },
@@ -42,23 +48,13 @@ export class Sprite3dClass extends ActorClass {
     ];
 
     fastSprite: FastSprite;
-    world3d!: World3dClass;
 
     _cj$_constructor_$Sprite3d$double$SpriteLibrary$int(t: Thread, callback: CallbackParameter, width: number, library: SpriteLibraryEnum, index: number) {
 
-        t.s.push(this);
-        this.world3d = t.scheduler.interpreter.retrieveObject("World3dClass");
-        if (!this.world3d) {
-            this.world3d = new World3dClass();
-            this.world3d._cj$_constructor_$World3d$(t, () => {
-                t.s.pop(); // constructor of world3d pushed it's this-object
-                this.init(width, library, index);
-                if(callback) callback();
-            })
-            return;
-        }
-        this.init(width, library, index);
-        if(callback)callback();
+        super._cj$_constructor_$Object3d$(t, () => {
+            this.init(width, library, index);
+            if(callback) callback();
+        });
         return;
         
     }
@@ -76,7 +72,28 @@ export class Sprite3dClass extends ActorClass {
         this.world3d.fastSpriteManager.moveSprite(this.fastSprite, x, y, z);
     }
     moveTo(x: number, y: number, z: number): void {
-        this.world3d.fastSpriteManager.moveSprite(this.fastSprite, x, y, z);
+        this.world3d.fastSpriteManager.moveSpriteTo(this.fastSprite, x, y, z);
+    }
+
+    scale(factor: number): void {
+        this.world3d.fastSpriteManager.scaleSprite(this.fastSprite, factor, factor);
+    }
+
+    scaleX(factor: number): void {
+        this.world3d.fastSpriteManager.scaleSprite(this.fastSprite, factor, 1);
+    }
+
+    scaleY(factor: number): void {
+        this.world3d.fastSpriteManager.scaleSprite(this.fastSprite, 1, factor);
+    }
+
+    scaleV(v: Vector3Class): void {
+        this.world3d.fastSpriteManager.scaleSprite(this.fastSprite, v.v.x, v.v.y);
+    }
+
+    rotate(angle: number): void {
+        angle *= Math.PI/180;
+        this.world3d.fastSpriteManager.rotateSprite(this.fastSprite, angle);
     }
 
     getX(): number {

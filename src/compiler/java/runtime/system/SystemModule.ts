@@ -157,6 +157,7 @@ import { NumberClass } from "./primitiveTypes/wrappers/NumberClass";
 import { ShortClass } from "./primitiveTypes/wrappers/ShortClass.ts";
 import { Sprite3dClass } from "../graphics/3d/FastSprite/Sprite3dClass.ts";
 import { ClassClass } from "./ClassClass.ts";
+import { Icosahedron3dClass } from "../graphics/3d/Icosahedron3dClass.ts";
 
 export class SystemModule extends JavaLibraryModule {
 
@@ -243,7 +244,7 @@ export class SystemModule extends JavaLibraryModule {
 
             // Graphics 3D
             Vector3Class, Material3dClass, BasicMaterial3dClass, LambertMaterial3dClass, PhongMaterial3dClass, PhysicallyBasedMaterial3dClass,
-            World3dClass, Object3dClass, Group3dClass, Mesh3dClass, Box3dClass, Sphere3dClass, 
+            World3dClass, Object3dClass, Group3dClass, Mesh3dClass, Box3dClass, Sphere3dClass, Icosahedron3dClass,
             Light3dClass, PointLight3dClass, DirectionalLight3dClass, AmbientLight3dClass,
             Matrix4Class, TextureEnum, Cone3dClass, Cylinder3dClass,
             Circle3dClass, Plane3dClass, Ring3dClass, Torus3dClass,

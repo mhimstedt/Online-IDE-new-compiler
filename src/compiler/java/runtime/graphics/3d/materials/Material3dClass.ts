@@ -10,24 +10,29 @@ import { JRC } from "../../../../language/JavaRuntimeLibraryComments";
 export class Material3dClass extends ObjectClass {
     static __javaDeclarations: LibraryDeclarations = [
         { type: "declaration", signature: "abstract final class Material3d extends Object", comment: JRC.material3dClassComment },
-        { type: "method", signature: "void setColor(Color color)", native: Material3dClass.prototype.setColor, comment: JRC.material3dSetColorComment },
-        { type: "method", signature: "void setColor(int color)", native: Material3dClass.prototype.setColor, comment: JRC.material3dSetColorComment },
-        { type: "method", signature: "void setColor(String color)", native: Material3dClass.prototype.setColor, comment: JRC.material3dSetColorComment },
+        { type: "method", signature: "Material3d setColor(Color color)", native: Material3dClass.prototype._setColor, comment: JRC.material3dSetColorComment },
+        { type: "method", signature: "Material3d setColor(int color)", native: Material3dClass.prototype._setColor, comment: JRC.material3dSetColorComment },
+        { type: "method", signature: "Material3d setColor(String color)", native: Material3dClass.prototype._setColor, comment: JRC.material3dSetColorComment },
 
         { type: "method", signature: "int getColor()", native: Material3dClass.prototype.getColor, comment: JRC.material3dGetColorComment },
 
 
         { type: "field", signature: "private boolean transparent", comment: JRC.material3dSetTransparentComment },
         { type: "method", signature: "boolean isTransparent()", template: "§1.material.transparent", comment: JRC.material3dIsTransparentComment },
-        { type: "method", signature: "void setTransparent(boolean value)", template: "§1.material.transparent = §2", comment: JRC.material3dSetTransparentComment },
+        { type: "method", signature: "Material3d setTransparent(boolean value)", native: Material3dClass.prototype._setTransparent, comment: JRC.material3dSetTransparentComment },
 
         { type: "field", signature: "private boolean flatShading", comment: JRC.material3dFlatShadingComment },
         { type: "method", signature: "boolean isFlatShading()", template: "§1.material.flatShading", comment: JRC.material3dFlatShadingComment },
-        { type: "method", signature: "void setFlatShading(boolean value)", template: "§1.material.flatShading = §2", comment: JRC.material3dFlatShadingComment },
+        { type: "method", signature: "Material3d setFlatShading(boolean value)", native: Material3dClass.prototype._setFlatShading, comment: JRC.material3dFlatShadingComment },
 
         { type: "field", signature: "private double alpha", comment: JRC.material3dAlphaComment },
-        { type: "method", signature: "void setAlpha(double value)", template: "§1.alpha = §2", comment: JRC.material3dAlphaComment },
+        { type: "method", signature: "Material3d setAlpha(double value)", native: Material3dClass.prototype._setAlpha, comment: JRC.material3dAlphaComment },
         { type: "method", signature: "double getAlpha(double value)", template: "§1.alpha", comment: JRC.material3dAlphaComment },
+        
+        
+        { type: "field", signature: "private boolean wireframe", comment: JRC.materialWireframeComment },
+        { type: "method", signature: "Material3d setWireframe(boolean value)", native: Material3dClass.prototype._setWireframe, comment: JRC.materialWireframeComment },
+        { type: "method", signature: "boolean isWireframe()", template: "§1.material.wireframe", comment: JRC.materialWireframeComment },
 
     ]
 
@@ -40,24 +45,54 @@ export class Material3dClass extends ObjectClass {
         if(value > 1) value = 1;
         if(value < 0) value = 0;
         this.material.opacity = 1 - value;
+        this.material.transparent = this.material.opacity < 0.99999999;
     }
 
     get transparent(): boolean {
         return this.material.transparent;
     }
 
+    set transparent(value: boolean){
+        this.material.transparent = value;
+    }
+
     get flatShading(): boolean {
         return this.material["flatShading"] || false;
+    }
+
+    set flatShading(value: boolean){
+        this.material["flatShading"] = value;
     }
 
     get alpha():number {
         return 1 - this.material.opacity;
     }
 
-    setColor(color: number | string | ColorClass) {
+    _setFlatShading(value: boolean){
+        this.material["flatShading"] = value;
+        return this;
+    }
+
+    _setTransparent(value: boolean){
+        this.material.transparent = value;
+        return this;
+    }
+
+    _setWireframe(value: boolean){
+        this.material["wireframe"] = value;
+        return this;
+    }
+
+    _setAlpha(value: number){
+        this.alpha = value;
+        return this;
+    }
+
+    _setColor(color: number | string | ColorClass) {
         if (this.material["color"]!==undefined) {
             this.material["color"]?.set(ColorConverter.convertToThreeJsColor(color));
         }
+        return this;
     }
 
     getMaterialAndIncreaseUsageCounter(){

@@ -24,10 +24,10 @@ export class ArcClass extends FilledShapeClass {
         { type: "method", signature: "final double getOuterRadiusX()", template: '(§1.outerRadius*§1.scaleFactor)', comment: JRC.ArcGetOuterRadiusComment },
 
         { type: "method", signature: "final void setStartAngle(double startAngle)", native: ArcClass.prototype._setStartAngle, comment: JRC.ArcSetStartAngleComment },
-        { type: "method", signature: "final double getStartAngleX()", template: '(§1.startAngle/Math.PI*180)', comment: JRC.ArcGetStartAngleComment },
+        { type: "method", signature: "final double getStartAngleX()", template: '(§1.startAngle/180*Math.PI)', comment: JRC.ArcGetStartAngleComment },
 
         { type: "method", signature: "final void setEndAngle(double endAngle)", native: ArcClass.prototype._setEndAngle, comment: JRC.ArcSetEndAngleComment },
-        { type: "method", signature: "final double getEndAngleX()", template: '(§1.endAngle/Math.PI*180)', comment: JRC.ArcGetEndAngleComment },
+        { type: "method", signature: "final double getEndAngleX()", template: '(§1.endAngle/180*Math.PI)', comment: JRC.ArcGetEndAngleComment },
 
         { type: "method", signature: "final Arc copy()", java: ArcClass.prototype._mj$copy$Arc$, comment: JRC.ArcCopyComment },
 

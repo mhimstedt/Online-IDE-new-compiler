@@ -30,9 +30,9 @@ export class Mesh3dClass extends Object3dClass {
         { type: "method", signature: "void rotateY(double angleDeg)", native: Mesh3dClass.prototype.rotateY },
         { type: "method", signature: "void rotateZ(double angleDeg)", native: Mesh3dClass.prototype.rotateZ },
         
-        { type: "method", signature: "final void scaleX(double angleDeg)", native: Mesh3dClass.prototype.scaleX },
-        { type: "method", signature: "final void scaleY(double angleDeg)", native: Mesh3dClass.prototype.scaleY },
-        { type: "method", signature: "final void scaleZ(double angleDeg)", native: Mesh3dClass.prototype.scaleZ },
+        { type: "method", signature: "final void scaleX(double scale)", native: Mesh3dClass.prototype.scaleX },
+        { type: "method", signature: "final void scaleY(double scale)", native: Mesh3dClass.prototype.scaleY },
+        { type: "method", signature: "final void scaleZ(double scale)", native: Mesh3dClass.prototype.scaleZ },
         { type: "method", signature: "final void scale(Vector3 v)", native: Mesh3dClass.prototype.vscale },
         { type: "method", signature: "final void scale(double d)", native: Mesh3dClass.prototype.scaleDouble },
 

@@ -79,6 +79,7 @@ export class ShapeClass extends ActorClass {
         { type: "method", signature: "void stopTrackingEveryMouseMovement()", native: ShapeClass.prototype._stopTrackingEveryMouseMovement, comment: JRC.shapeStartTrackingEveryMouseMovementComment },
 
         { type: "method", signature: "abstract Shape copy()", java: ShapeClass.prototype._mj$copy$Shape$, comment: JRC.shapeCopyComment },
+        { type: "method", signature: "final World getWorld()", java: ShapeClass.prototype._mj$getWorld$World, comment: JRC.getWorldComment },
 
 
 
@@ -128,11 +129,11 @@ export class ShapeClass extends ActorClass {
         return this._getCenterY();
     }
 
-    set _centerX(cx: number){
+    set _centerX(cx: number) {
         this._moveTo(cx, this._centerY);
     }
 
-    set _centerY(cy: number){
+    set _centerY(cy: number) {
         this._moveTo(this._centerX, cy);
     }
 
@@ -140,7 +141,7 @@ export class ShapeClass extends ActorClass {
         return this.angle;
     }
 
-    set _angle(a: number){
+    set _angle(a: number) {
         this._setAngle(a);
     }
 
@@ -148,8 +149,8 @@ export class ShapeClass extends ActorClass {
         return this.scaleFactor;
     }
 
-    set _scaleFactor(sf: number){
-        this._scale(sf/this.scaleFactor);
+    set _scaleFactor(sf: number) {
+        this._scale(sf / this.scaleFactor);
     }
 
 
@@ -901,5 +902,15 @@ export class ShapeClass extends ActorClass {
         this.lastMoveDy = lmdy;
     }
 
+    _mj$getWorld$World(t: Thread, callback: CallbackParameter) {
+        const w = t.scheduler.interpreter.retrieveObject("WorldClass");
+        if (w == undefined) {
+            if (this["world3d"] != null) {//equivalent to this instanceof Object3d, other option: t.scheduler.interpreter.retrieveObject("World3dClass") !== undefined
+                throw new RuntimeExceptionClass(JRC.actorWorld2dDoesntexistOn3dObjectException());
+            }
+            throw new RuntimeExceptionClass(JRC.actorWorld2dDoesntexistException());
+        }
+        t.s.push(w);
+    }
 
 }

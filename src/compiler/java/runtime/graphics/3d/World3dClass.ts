@@ -25,6 +25,7 @@ import { CoordinateSystemHelper3d } from './CoordinateSystemHelper3d';
 import type { Light3dClass } from './lights/Light3dClass';
 import type { Camera3dClass } from './camera/Camera3dClass';
 import { FastSpriteManager3d } from './FastSprite/FastSpriteManager3d';
+import { RuntimeExceptionClass } from '../../system/javalang/RuntimeException';
 // import { DirectionalLight3dClass } from './lights/DirectionalLight3dClass';
 // import { AmbientLight3dClass } from './lights/AmbientLight3dClass';
 
@@ -47,7 +48,8 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         { type: "method", signature: "Light3d[] getLights()", template: `§1.lights.slice()`, comment: JRC.worldGetLightsComment },
         { type: "method", signature: "void destroyAllLights()", native: World3dClass.prototype._destroyAllLights, comment: JRC.worldDestroyAllLightsComment },
 
-        { type: "method", signature: "void setCurrentCamera(Camera3d camera)", native: World3dClass.prototype._setCurrentCamera },
+        { type: "method", signature: "void setCamera(Camera3d camera)", native: World3dClass.prototype._setCamera },
+        { type: "method", signature: "Camera3d getCamera()", native: World3dClass.prototype._getCamera },
         { type: "method", signature: "void removeCoordinateAxes()", native: World3dClass.prototype._removeCoordinateAxes },
         { type: "method", signature: "void removeOrbitControls()", native: World3dClass.prototype._removeOrbitControls },
 
@@ -353,8 +355,16 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         while (this.lights.length > 0) this.scene.remove(this.lights.pop().light)
     }
 
-    _setCurrentCamera(camera: Camera3dClass) {
+    _setCamera(camera: Camera3dClass) {
+        if(camera == null){
+            throw new RuntimeExceptionClass("Camera must not be null.");
+        }
+        this._removeOrbitControls();
         this.currentCamera = camera;
+    }
+
+    _getCamera(): Camera3dClass {
+        return this.currentCamera;
     }
 
     _removeCoordinateAxes() {
@@ -363,6 +373,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
     _removeOrbitControls() {
         this.orbitControls.dispose();
+        this.orbitControls = null;
     }
 }
 

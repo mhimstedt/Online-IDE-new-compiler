@@ -30,8 +30,6 @@ export class ActorClass extends ObjectClass implements IActor {
         { type: "method", signature: "void destroy()", java: ActorClass.prototype._mj$destroy$void$ },
         { type: "method", signature: "final boolean isKeyUp(string key)", java: ActorClass.prototype._mj$isKeyUp$boolean$string, comment: JRC.actorOnKeyUpComment },
         { type: "method", signature: "final boolean isKeyDown(string key)", java: ActorClass.prototype._mj$isKeyDown$boolean$string, comment: JRC.actorOnKeyDownComment },
-        { type: "method", signature: "final World getWorld()", java: ActorClass.prototype._mj$getWorld$World, comment: JRC.getWorldComment },
-        { type: "method", signature: "final World3d getWorld3d()", java: ActorClass.prototype._mj$getWorld3d$World3d, comment: JRC.getWorld3dComment },
         { type: "method", signature: "final boolean isActing()", native: ActorClass.prototype._isActing, comment: JRC.actorIsActingComment },
         { type: "method", signature: "final boolean isDestroyed()", native: ActorClass.prototype._isDestroyed, comment: JRC.actorIsDestroyedComment },
         { type: "method", signature: "final void stopActing()", native: ActorClass.prototype._stopActing, comment: JRC.actorStopActingComment },
@@ -134,24 +132,6 @@ export class ActorClass extends ObjectClass implements IActor {
         t.s.push(keyboardManager.isPressed(key));
     }
 
-    _mj$getWorld$World(t: Thread, callback: CallbackParameter) {
-        const w = t.scheduler.interpreter.retrieveObject("WorldClass");
-        if(w==undefined){
-            if(this["world3d"]!=null){//equivalent to this instanceof Object3d, other option: t.scheduler.interpreter.retrieveObject("World3dClass") !== undefined
-                throw new RuntimeExceptionClass(JRC.actorWorld2dDoesntexistOn3dObjectException());
-            }
-            throw new RuntimeExceptionClass(JRC.actorWorld2dDoesntexistException());
-        }
-        t.s.push(w);
-    }
-    _mj$getWorld3d$World3d(t: Thread, callback: CallbackParameter) {
-        const w = t.scheduler.interpreter.retrieveObject("World3dClass");
-        if(w==undefined){
-            throw new RuntimeExceptionClass(JRC.actorWorld3dDoesntexistException());
-        }else{
-            t.s.push(w);
-        }
-    }
 
     _isDestroyed(): boolean {
         return this.isDestroyed;

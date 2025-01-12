@@ -280,6 +280,19 @@ export class FastSpriteManager3d {
         this.interleavedBuffer[baseIndex + 2] = this.interleavedBuffer[baseIndex + 2] + z;
         this.dirty = true;
     }
+    
+    scaleSprite(fastSprite: FastSprite, scaleH: number, scaleV: number){
+        let baseIndex = fastSprite.index * this.bufferElementSize + this.iOffset;
+        this.interleavedBuffer[baseIndex + 3] *= scaleH;
+        this.interleavedBuffer[baseIndex + 4] *= scaleV;
+        this.dirty = true;
+    }
+
+    rotateSprite(fastSprite: FastSprite, angleRad: number){
+        let baseIndex = fastSprite.index * this.bufferElementSize + this.iOffset;
+        this.interleavedBuffer[baseIndex + 9] += angleRad;
+        this.dirty = true;
+    }
 
     setColor(fastSprite: FastSprite, color: number) {
         let r = ((color & 0xff0000) >> 16) / 0xff;
@@ -318,16 +331,19 @@ export class FastSpriteManager3d {
     }
 
     sortByDistanceToCamera() {
-        if (this.geometry.instanceCount < 2) return;
+        this.instanceInterleavedBuffer.needsUpdate = true;
+
+        
         let camera = this.world3d.currentCamera.camera3d;
         let cameraPosition = camera.position;
-
+        
         if (!this.dirty) {
             if (cameraPosition.distanceTo(this.oldCameraPos) < 1e-2) return;
         }
-
+        
         this.removeIntern();
         let count = this.geometry.instanceCount;
+        if (count < 2) return;
 
         this.oldCameraPos = cameraPosition.clone();
         this.dirty = false;
@@ -341,7 +357,6 @@ export class FastSpriteManager3d {
             // distanceToCamera[i] = -cameraPosition.distanceTo(pos);
         }
         this.quickSort(distanceToCamera, this.interleavedBuffer, 0, count - 1);
-        this.instanceInterleavedBuffer.needsUpdate = true;
     }
 
     quickSort(distances: Float32Array, items: Float32Array, left: number, right: number) {

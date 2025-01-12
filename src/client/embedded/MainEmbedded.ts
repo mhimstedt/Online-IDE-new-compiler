@@ -169,11 +169,11 @@ export class MainEmbedded implements MainBase {
 
 
 
-    constructor($div: JQuery<HTMLElement>, private scriptList: JOScript[]) {
+    constructor(private $outerDiv: JQuery<HTMLElement>, private scriptList: JOScript[]) {
 
-        this.readConfig($div);
+        this.readConfig($outerDiv);
 
-        this.initGUI($div);
+        this.initGUI($outerDiv);
 
         this.initScripts();
 
@@ -692,11 +692,11 @@ export class MainEmbedded implements MainBase {
 
         $parent.append($window);
 
-        jQuery(".joe_codeResetModalCancel").on("click", () => {
+        this.$outerDiv.find(".joe_codeResetModalCancel").on("click", () => {
             $window.hide();
         });
 
-        jQuery(".joe_codeResetModalOK").on("click", () => {
+        this.$outerDiv.find(".joe_codeResetModalOK").on("click", () => {
 
             this.initScripts();
             this.currentWorkspace.getFiles().forEach(f => f.setSaved(true));

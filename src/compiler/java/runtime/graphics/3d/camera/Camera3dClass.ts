@@ -1,13 +1,11 @@
 import * as THREE from 'three';
 import { CallbackParameter } from "../../../../../common/interpreter/CallbackParameter";
 import { Thread } from "../../../../../common/interpreter/Thread";
-import { JRC } from "../../../../language/JavaRuntimeLibraryComments";
 import { LibraryDeclarations } from "../../../../module/libraries/DeclareType";
 import { NonPrimitiveType } from "../../../../types/NonPrimitiveType";
+import { Matrix4Class } from '../Matrix4Class';
 import { Object3dClass } from "../Object3dClass";
 import { Vector3Class } from '../Vector3Class';
-import { Matrix4Class } from '../Matrix4Class';
-import { BaseListType } from '../../../../../common/BaseType';
 
 export class Camera3dClass extends Object3dClass {
 

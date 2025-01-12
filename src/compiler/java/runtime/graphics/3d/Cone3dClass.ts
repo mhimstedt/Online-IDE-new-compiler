@@ -45,7 +45,7 @@ export class Cone3dClass extends Mesh3dClass {
     
         _cj$_constructor_$Cone3d$double$double(t: Thread, callback: CallbackParameter, radius:number, h: number) {
             super._cj$_constructor_$Mesh3d$(t, ()=>{
-                const geometry = new THREE.ConeGeometry(radius, radius, h);
+                const geometry = new THREE.ConeGeometry(radius, h);
     
                 this.mesh = new THREE.Mesh(geometry, this.getInitialMaterial().getMaterialAndIncreaseUsageCounter());
                 this.world3d.scene.add(this.mesh);
