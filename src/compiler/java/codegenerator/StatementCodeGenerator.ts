@@ -5,7 +5,7 @@ import { TokenType } from "../TokenType";
 import { JCM } from "../language/JavaCompilerMessages.ts";
 import { JavaCompiledModule } from "../module/JavaCompiledModule";
 import { JavaTypeStore } from "../module/JavaTypeStore";
-import { ASTArrayLiteralNode, ASTAttributeDereferencingNode, ASTBinaryNode, ASTBlockNode, ASTBreakNode, ASTCaseNode, ASTContinueNode, ASTDoWhileNode, ASTEnhancedForLoopNode, ASTForLoopNode, ASTIfNode, ASTInitialFieldAssignmentInMainProgramNode, ASTLambdaFunctionDeclarationNode, ASTLocalVariableDeclaration, ASTLocalVariableDeclarations, ASTNode, ASTPrintStatementNode, ASTReturnNode, ASTStatementNode, ASTSwitchCaseNode, ASTSymbolNode, ASTSynchronizedBlockNode, ASTTermNode, ASTThrowNode, ASTTryCatchNode, ASTUnaryPrefixNode, ASTWhileNode } from "../parser/AST";
+import { ASTArrayLiteralNode, ASTAttributeDereferencingNode, ASTBinaryNode, ASTBlockNode, ASTBreakNode, ASTCaseNode, ASTContinueNode, ASTDoWhileNode, ASTEnhancedForLoopNode, ASTForLoopNode, ASTIfNode, ASTInitialFieldAssignmentInMainProgramNodes, ASTLambdaFunctionDeclarationNode, ASTLocalVariableDeclaration, ASTLocalVariableDeclarations, ASTNode, ASTPrintStatementNode, ASTReturnNode, ASTStatementNode, ASTSwitchCaseNode, ASTSymbolNode, ASTSynchronizedBlockNode, ASTTermNode, ASTThrowNode, ASTTryCatchNode, ASTUnaryPrefixNode, ASTWhileNode } from "../parser/AST";
 import { SystemCollection } from "../runtime/system/collections/SystemCollection.ts";
 import { ObjectClass } from "../runtime/system/javalang/ObjectClassStringClass.ts";
 import { PrimitiveType } from "../runtime/system/primitiveTypes/PrimitiveType";
@@ -80,7 +80,7 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
             case TokenType.keywordThrow:
                 snippet = this.compileThrowStatement(<ASTThrowNode>ast); break;
             case TokenType.initialFieldAssignementInMainProgram:
-                snippet = this.compileInitialFieldAssignmentInMainProgram(<ASTInitialFieldAssignmentInMainProgramNode>ast); break;
+                snippet = this.compileInitialFieldAssignmentInMainProgram(<ASTInitialFieldAssignmentInMainProgramNodes>ast); break;
 
 
             default:
@@ -103,14 +103,26 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
 
     }
     
-    compileInitialFieldAssignmentInMainProgram(node: ASTInitialFieldAssignmentInMainProgramNode): CodeSnippet {
-        let field = <JavaField>this.currentSymbolTable.findSymbol(node.fieldNode.identifier).symbol;
-        let leftSideSnippet = this.compileSymbolNode(node.fieldNode, true);
-        let rightSideSnippet = this.compileTerm(node.initialTerm);
+    compileInitialFieldAssignmentInMainProgram(node: ASTInitialFieldAssignmentInMainProgramNodes): CodeSnippet {
 
-        if(rightSideSnippet?.type) field.type = rightSideSnippet.type;
+        let snippets: CodeSnippet[] = [];
+        for(let assignment of node.assignments){
+            let field = <JavaField>this.currentSymbolTable.findSymbol(assignment.fieldNode.identifier).symbol;
+            let leftSideSnippet = this.compileSymbolNode(assignment.fieldNode, true);
+            let rightSideSnippet = this.compileInitialValue(assignment.initialTerm, leftSideSnippet.type);
+    
+            if(rightSideSnippet?.type && !field.type) field.type = rightSideSnippet.type;
+    
+            if(leftSideSnippet && rightSideSnippet) {
+                snippets.push(new TwoParameterTemplate("§1 = §2;").applyToSnippet(this.voidType, node.range, leftSideSnippet, rightSideSnippet))
+            }                
 
-        return new TwoParameterTemplate("§1 = §2;").applyToSnippet(this.voidType, node.range, leftSideSnippet, rightSideSnippet);
+        }
+
+        if(snippets.length == 0) return undefined;
+        if(snippets.length == 1) return snippets[0];
+
+        return new CodeSnippetContainer(snippets);
 
     }
 

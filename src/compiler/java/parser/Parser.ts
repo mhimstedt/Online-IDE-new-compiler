@@ -362,7 +362,7 @@ export class Parser extends StatementParser {
     }
 
     parseFieldDeclaration(classASTNode: ASTClassDefinitionNode | ASTEnumDefinitionNode | ASTInterfaceDefinitionNode, modifiers: ASTNodeWithModifiers, 
-        type: ASTTypeNode | undefined, documentation: string | undefined): ASTFieldDeclarationNode | undefined {
+        type: ASTTypeNode | undefined, documentation: string | undefined) {
         let rangeStart = this.cct.range;
         let identifier = this.expectAndSkipIdentifierAsToken();
 
@@ -376,10 +376,7 @@ export class Parser extends StatementParser {
             node.documentation = documentation;
             classASTNode.fieldsOrInstanceInitializers.push(node);
             this.setEndOfRange(node);
-            return node;
         }
-
-        return undefined;
 
     }
 
