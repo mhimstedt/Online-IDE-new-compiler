@@ -413,7 +413,7 @@ export class InnerClassCodeGenerator extends StatementCodeGenerator {
  */
     compileFieldDeclaration(fieldNode: ASTFieldDeclarationNode, classContext: JavaClass | JavaEnum | JavaInterface): CodeSnippet | undefined {
 
-        if (!fieldNode.type.resolvedType) return undefined;
+        if (fieldNode.type.kind != TokenType.varType && !fieldNode.type.resolvedType) return undefined;
 
         let field = classContext.fields.find(f => f.identifier == fieldNode.identifier);
         if (!field) return undefined;

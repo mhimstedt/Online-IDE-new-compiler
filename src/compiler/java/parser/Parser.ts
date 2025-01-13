@@ -11,6 +11,7 @@ import {
     ASTClassDefinitionNode,
     ASTEnumDefinitionNode,
     ASTEnumValueNode,
+    ASTFieldDeclarationNode,
     ASTGenericParameterDeclarationNode,
     ASTInterfaceDefinitionNode, ASTMethodDeclarationNode,
     ASTNewObjectNode,
@@ -266,7 +267,8 @@ export class Parser extends StatementParser {
 
     }
 
-    parseFieldOrMethodDeclaration(classASTNode: ASTClassDefinitionNode | ASTEnumDefinitionNode | ASTInterfaceDefinitionNode, modifiers: ASTNodeWithModifiers, documentation: string | undefined) {
+    parseFieldOrMethodDeclaration(classASTNode: ASTClassDefinitionNode | ASTEnumDefinitionNode | ASTInterfaceDefinitionNode, modifiers: ASTNodeWithModifiers, 
+        documentation: string | undefined) {
         /**
          * Problem:
          * class Test { Test a; Test(); Test getValue(); <E> Test<E> genericMethod()}
@@ -359,7 +361,8 @@ export class Parser extends StatementParser {
         }
     }
 
-    parseFieldDeclaration(classASTNode: ASTClassDefinitionNode | ASTEnumDefinitionNode | ASTInterfaceDefinitionNode, modifiers: ASTNodeWithModifiers, type: ASTTypeNode | undefined, documentation: string | undefined) {
+    parseFieldDeclaration(classASTNode: ASTClassDefinitionNode | ASTEnumDefinitionNode | ASTInterfaceDefinitionNode, modifiers: ASTNodeWithModifiers, 
+        type: ASTTypeNode | undefined, documentation: string | undefined): ASTFieldDeclarationNode | undefined {
         let rangeStart = this.cct.range;
         let identifier = this.expectAndSkipIdentifierAsToken();
 
@@ -373,7 +376,10 @@ export class Parser extends StatementParser {
             node.documentation = documentation;
             classASTNode.fieldsOrInstanceInitializers.push(node);
             this.setEndOfRange(node);
+            return node;
         }
+
+        return undefined;
 
     }
 

@@ -73,6 +73,11 @@ export class JavaField extends BaseField {
     }
 
     getDeclaration(): string {
+
+        if(this.classEnum.isMainClass){     // local variables in main class are compiled as static fields => don't show that to students!
+            return this.toString();
+        }
+
         let decl: string = TokenTypeReadable[this.visibility] + " ";
         if(this._isStatic) decl += "static ";
         if(this._isFinal) decl += "final ";

@@ -312,6 +312,12 @@ export interface ASTTernaryNode extends ASTTermNode {
     termIfFalse: ASTTermNode;
 }
 
+export interface ASTInitialFieldAssignmentInMainProgramNode extends ASTTermNode {
+    kind: TokenType.initialFieldAssignementInMainProgram,
+    fieldNode: ASTSymbolNode,
+    initialTerm: ASTTermNode
+}
+
 export interface ASTBinaryNode extends ASTTermNode {
     kind: TokenType.binaryOp;
     precedence?: number;

@@ -3,7 +3,8 @@ import { JCM } from "../language/JavaCompilerMessages.ts";
 import { Token } from "../lexer/Token.ts";
 import { JavaCompiledModule } from "../module/JavaCompiledModule.ts";
 import { TokenType } from "../TokenType.ts";
-import { ASTDoWhileNode, ASTForLoopNode, ASTIfNode, ASTLocalVariableDeclarations, ASTReturnNode, ASTEnhancedForLoopNode, ASTStatementNode, ASTSwitchCaseNode, ASTTermNode, ASTThrowNode, ASTTryCatchNode, ASTTypeNode, ASTWhileNode, ASTClassDefinitionNode, ASTEnumDefinitionNode, ASTInterfaceDefinitionNode, ASTNodeWithModifiers, ASTSynchronizedBlockNode } from "./AST.ts";
+import { JavaType } from "../types/JavaType.ts";
+import { ASTDoWhileNode, ASTForLoopNode, ASTIfNode, ASTLocalVariableDeclarations, ASTReturnNode, ASTEnhancedForLoopNode, ASTStatementNode, ASTSwitchCaseNode, ASTTermNode, ASTThrowNode, ASTTryCatchNode, ASTTypeNode, ASTWhileNode, ASTClassDefinitionNode, ASTEnumDefinitionNode, ASTInterfaceDefinitionNode, ASTNodeWithModifiers, ASTSynchronizedBlockNode, ASTFieldDeclarationNode, ASTBinaryNode, ASTInitialFieldAssignmentInMainProgramNode } from "./AST.ts";
 import { TermParser } from "./TermParser.ts";
 import type * as monaco from 'monaco-editor'
 
@@ -125,16 +126,49 @@ export abstract class StatementParser extends TermParser {
         return statement;
     }
 
-    abstract parseFieldOrMethodDeclaration(classASTNode: ASTClassDefinitionNode | ASTEnumDefinitionNode | ASTInterfaceDefinitionNode, modifiers: ASTNodeWithModifiers, documentation: string | undefined): void;
+    abstract parseFieldOrMethodDeclaration(classASTNode: ASTClassDefinitionNode | ASTEnumDefinitionNode | ASTInterfaceDefinitionNode,
+        modifiers: ASTNodeWithModifiers, documentation: string | undefined);
+    
+    abstract parseFieldDeclaration(classASTNode: ASTClassDefinitionNode | ASTEnumDefinitionNode | ASTInterfaceDefinitionNode, modifiers: ASTNodeWithModifiers, 
+        type: ASTTypeNode | undefined, documentation: string | undefined): ASTFieldDeclarationNode | undefined;
+
+    convertLocalVariableToStaticField(): ASTStatementNode | undefined {
+
+        let modifiers = this.nodeFactory.buildNodeWithModifiers(this.cct.range);
+        modifiers.isStatic = true;
+        let type: ASTTypeNode;
+        if(this.comesToken(TokenType.varType, true)){
+            type = this.nodeFactory.buildVarTypeNode();
+        } else {
+            type = this.parseType(false);
+        } 
+        let fieldDeclarationNode = this.parseFieldDeclaration(this.module.mainClass!, modifiers, type, undefined);
+        let initialization = fieldDeclarationNode?.initialization;
+        if(!initialization){
+            return undefined;
+        }
+
+        fieldDeclarationNode.initialization = undefined;
+        let newNode: ASTInitialFieldAssignmentInMainProgramNode =
+        {
+            kind: TokenType.initialFieldAssignementInMainProgram,
+            range: initialization.range,
+            fieldNode: this.nodeFactory.buildVariableNode({value: fieldDeclarationNode.identifier, range: fieldDeclarationNode.identifierRange, tt: TokenType.identifier}),
+            initialTerm: initialization
+        }
+
+        return newNode;
+
+    }
+
 
     parseLocalVariableDeclaration(): ASTStatementNode | undefined {
 
-        // if (this.isInsideMainMethod && this.nestingLevel == 0 && this.tt != TokenType.keywordVar) {
-        //     let modifiers = this.nodeFactory.buildNodeWithModifiers(this.cct.range);
-        //     modifiers.isStatic = true;
-        //     this.parseFieldOrMethodDeclaration(this.module.mainClass!, modifiers, undefined);
-        //     return undefined;
-        // }
+        // In main program we convert local variables in uppermost nesting level to fields
+        // in order to make them usable in methods inside main program.
+        if (this.isInsideMainMethod && this.nestingLevel == 0) {
+            return this.convertLocalVariableToStaticField();
+        }
 
         let declarations: ASTLocalVariableDeclarations = {
             kind: TokenType.localVariableDeclarations,

@@ -535,7 +535,7 @@ export class Thread {
     }
     
     println(text: string | undefined, color: number | undefined) {
-        if(text == null) text = "null";
+        if(text == null && typeof text != "undefined") text = "null";
         this.scheduler.interpreter.printManager.print(text, true, color);
     }
 

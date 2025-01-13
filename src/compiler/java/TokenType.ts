@@ -152,6 +152,7 @@ export enum TokenType {
     selectArrayElement, // select Element from Array (e.g. a[20])
     methodCall,
     newObject,
+    initialFieldAssignementInMainProgram,
 
     // additional AST node types
     global,

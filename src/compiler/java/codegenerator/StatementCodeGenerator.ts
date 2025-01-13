@@ -5,7 +5,7 @@ import { TokenType } from "../TokenType";
 import { JCM } from "../language/JavaCompilerMessages.ts";
 import { JavaCompiledModule } from "../module/JavaCompiledModule";
 import { JavaTypeStore } from "../module/JavaTypeStore";
-import { ASTArrayLiteralNode, ASTAttributeDereferencingNode, ASTBinaryNode, ASTBlockNode, ASTBreakNode, ASTCaseNode, ASTContinueNode, ASTDoWhileNode, ASTEnhancedForLoopNode, ASTForLoopNode, ASTIfNode, ASTLambdaFunctionDeclarationNode, ASTLocalVariableDeclaration, ASTLocalVariableDeclarations, ASTNode, ASTPrintStatementNode, ASTReturnNode, ASTStatementNode, ASTSwitchCaseNode, ASTSymbolNode, ASTSynchronizedBlockNode, ASTTermNode, ASTThrowNode, ASTTryCatchNode, ASTUnaryPrefixNode, ASTWhileNode } from "../parser/AST";
+import { ASTArrayLiteralNode, ASTAttributeDereferencingNode, ASTBinaryNode, ASTBlockNode, ASTBreakNode, ASTCaseNode, ASTContinueNode, ASTDoWhileNode, ASTEnhancedForLoopNode, ASTForLoopNode, ASTIfNode, ASTInitialFieldAssignmentInMainProgramNode, ASTLambdaFunctionDeclarationNode, ASTLocalVariableDeclaration, ASTLocalVariableDeclarations, ASTNode, ASTPrintStatementNode, ASTReturnNode, ASTStatementNode, ASTSwitchCaseNode, ASTSymbolNode, ASTSynchronizedBlockNode, ASTTermNode, ASTThrowNode, ASTTryCatchNode, ASTUnaryPrefixNode, ASTWhileNode } from "../parser/AST";
 import { SystemCollection } from "../runtime/system/collections/SystemCollection.ts";
 import { ObjectClass } from "../runtime/system/javalang/ObjectClassStringClass.ts";
 import { PrimitiveType } from "../runtime/system/primitiveTypes/PrimitiveType";
@@ -13,6 +13,7 @@ import { GenericTypeParameter } from "../types/GenericTypeParameter.ts";
 import { JavaArrayType } from "../types/JavaArrayType.ts";
 import { GenericVariantOfJavaClass, IJavaClass } from "../types/JavaClass.ts";
 import { JavaEnum } from "../types/JavaEnum.ts";
+import { JavaField } from "../types/JavaField.ts";
 import { GenericVariantOfJavaInterface, IJavaInterface } from "../types/JavaInterface.ts";
 import { JavaMethod } from "../types/JavaMethod.ts";
 import { JavaType } from "../types/JavaType.ts";
@@ -78,6 +79,8 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
                 snippet = this.compileTryCatchStatement(<ASTTryCatchNode>ast); break;
             case TokenType.keywordThrow:
                 snippet = this.compileThrowStatement(<ASTThrowNode>ast); break;
+            case TokenType.initialFieldAssignementInMainProgram:
+                snippet = this.compileInitialFieldAssignmentInMainProgram(<ASTInitialFieldAssignmentInMainProgramNode>ast); break;
 
 
             default:
@@ -97,6 +100,17 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
         }
 
         return snippet;
+
+    }
+    
+    compileInitialFieldAssignmentInMainProgram(node: ASTInitialFieldAssignmentInMainProgramNode): CodeSnippet {
+        let field = <JavaField>this.currentSymbolTable.findSymbol(node.fieldNode.identifier).symbol;
+        let leftSideSnippet = this.compileSymbolNode(node.fieldNode, true);
+        let rightSideSnippet = this.compileTerm(node.initialTerm);
+
+        if(rightSideSnippet?.type) field.type = rightSideSnippet.type;
+
+        return new TwoParameterTemplate("§1 = §2;").applyToSnippet(this.voidType, node.range, leftSideSnippet, rightSideSnippet);
 
     }
 
