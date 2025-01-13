@@ -107,7 +107,7 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
         // let symbolTable = this.isConsole ? this.main.getDebugger().lastSymboltable : module.findSymbolTableAtPosition(position.lineNumber, position.column);
 
         if (dotMatch != null) {
-            
+
             symbolTable = module.findSymbolTableAtPosition(position);
             classContext = symbolTable == null ? undefined : symbolTable.classContext;
             return this.getCompletionItemsAfterDot(dotMatch, position, module, main,
@@ -273,6 +273,10 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
         let methodContext = symbolTable?.methodContext;
         if (methodContext != null) {
 
+            if (methodContext.isMainMethod()) {
+                completionItems = completionItems.filter(item => item.filterText != 'args');
+            }
+
             completionItems = completionItems.concat(this.getAssertMethods(methodContext, rangeToReplace));
 
             if (classContext != null) {
@@ -350,7 +354,7 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
         }
 
         completionItems = completionItems.concat(this.getKeywordCompletion(symbolTable, rangeToReplace));
-
+        completionItems = this.deleteDoublesWithIdenticalInsertText(completionItems);
 
         // console.log("Complete variable/Class/Keyword " + text);
 
@@ -360,6 +364,22 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
             suggestions: completionItems
         });
     }
+
+    deleteDoublesWithIdenticalInsertText(itemList: monaco.languages.CompletionItem[]): monaco.languages.CompletionItem[] {
+        let seenTexts: Set<string> = new Set();
+
+        itemList = itemList.filter(item => {
+            //@ts-ignore
+            let insertText: string = item.insertText // item.signature;
+            if (seenTexts.has(insertText)) return false;
+            seenTexts.add(insertText);
+            return true;
+        })
+
+        return itemList;
+
+    }
+
 
     getCompletionItemsAfterDot(dotMatch: RegExpMatchArray, position: monaco.Position, module: JavaCompiledModule,
         main: IMain,
@@ -385,19 +405,21 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
             let visibilityUpTo = getVisibilityUpTo(type, classContext);
 
             return Promise.resolve({
-                suggestions: type.getCompletionItems(visibilityUpTo, leftBracketAlreadyThere,
-                    identifierAndBracketAfterCursor, rangeToReplace, undefined)
+                suggestions: this.deleteDoublesWithIdenticalInsertText(type.getCompletionItems(visibilityUpTo, leftBracketAlreadyThere,
+                    identifierAndBracketAfterCursor, rangeToReplace, undefined))
             });
         }
 
         if (type instanceof IJavaInterface || type instanceof GenericTypeParameter) {
             let items = type.getCompletionItems(TokenType.keywordPublic, leftBracketAlreadyThere,
                 identifierAndBracketAfterCursor, rangeToReplace, undefined);
-            
-            let objectClassType = <JavaClass>main.getInterpreter().scheduler.classObjectRegistry["Object"].type;   
-            
+
+            let objectClassType = <JavaClass>main.getInterpreter().scheduler.classObjectRegistry["Object"].type;
+
             items = items.concat(objectClassType.getCompletionItems(TokenType.keywordPublic, leftBracketAlreadyThere,
                 identifierAndBracketAfterCursor, rangeToReplace, undefined))
+
+            items = this.deleteDoublesWithIdenticalInsertText(items);
 
             return Promise.resolve({
                 suggestions: items
@@ -759,7 +781,7 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
 
         for (let m of methods) {
 
-            if(m.isConstructor) continue;
+            if (m.isConstructor) continue;
 
             let alreadyImplemented = false;
             for (let m1 of classContext.getOwnMethods()) {

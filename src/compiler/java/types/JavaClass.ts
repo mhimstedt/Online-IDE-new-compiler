@@ -51,8 +51,6 @@ export abstract class IJavaClass extends JavaTypeWithInstanceInitializer {
     getCompletionItems(visibilityUpTo: Visibility, leftBracketAlreadyThere: boolean, identifierAndBracketAfterCursor: string,
         rangeToReplace: monaco.IRange, methodContext: JavaMethod | undefined, onlyStatic?: false): monaco.languages.CompletionItem[] {
 
-        if (this.isMainClass) return [];
-
         let itemList: monaco.languages.CompletionItem[] = [];
 
         for (let field of this.getFields().filter(f => f.visibility <= visibilityUpTo && (f._isStatic || !onlyStatic))) {
@@ -109,25 +107,20 @@ export abstract class IJavaClass extends JavaTypeWithInstanceInitializer {
                 rangeToReplace, methodContext, onlyStatic));
         }
 
-        return this.deleteDoublesWithIdenticalSignature(itemList);
-
-
-    }
-
-    deleteDoublesWithIdenticalSignature(itemList: monaco.languages.CompletionItem[]): monaco.languages.CompletionItem[] {
-        let signatureList: Set<string> = new Set();
-
-        itemList = itemList.filter(item => {
-            //@ts-ignore
-            let signature: string = item.signature;
-            if (signatureList.has(signature)) return false;
-            signatureList.add(signature);
-            return true;
-        })
+        if(this.isMainClass){
+            let identifiers = ['args', '$main', 'fromJson', 'class'];
+            itemList = itemList.filter(item => {
+                if(identifiers.indexOf(item.filterText) >= 0) return false;
+                if(identifiers.indexOf(item.insertText) >= 0) return false;
+                return true;
+            });
+        }
 
         return itemList;
 
+
     }
+
 
     pushSuperCompletionItem(itemList: monaco.languages.CompletionItem[], method: JavaMethod, leftBracketAlreadyThere: boolean,
         rangeToReplace: monaco.IRange) {
