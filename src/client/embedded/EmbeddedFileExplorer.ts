@@ -98,6 +98,7 @@ export class EmbeddedFileExplorer {
         let $fileDiv = jQuery(`<div class="jo_file ${cssClass}" >
         <div class="jo_fileimage"></div>
         <div class="jo_filename" style="line-height: 22px">${file.name}</div>
+        <div class="jo_textAfterName"></div>
         <div class="jo_delete img_delete jo_button jo_active" title="Datei löschen"></div>
         <div class="jo_additionalButtonStart"></div>
         </div></div>`);
@@ -342,5 +343,23 @@ export class EmbeddedFileExplorer {
         this.main.onStartFileClicked(fd.file);
     }
 
+    renderErrorCount(currentWorkspace: Workspace, errorCountMap: Map<File, number>) {
+        if (errorCountMap == null) return;
+        for (let f of currentWorkspace.getFiles()) {
+            let errorCount: number = errorCountMap.get(f);
+            let errorCountS: string = ((errorCount == null || errorCount == 0) ? "" : "(" + errorCount + ")");
+
+            this.setTextAfterFilename(f, errorCountS, 'jo_errorcount');
+        }
+
+    }
+
+    setTextAfterFilename(f: File, text: string, cssClass: string) {
+        let fd = this.fileDataList.find(fd1 => fd1.file == f);
+        if(!fd) return;
+        let $div = fd.$fileDiv.find('.jo_textAfterName');
+        $div.addClass(cssClass);
+        $div.html(text);
+    }
 
 }
