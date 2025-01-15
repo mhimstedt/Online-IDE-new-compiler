@@ -13,6 +13,7 @@ export class QueueInterface extends CollectionInterface {
         { type: "method", signature: "E remove()", java: QueueInterface.prototype._mj$remove$E$, comment: JRC.queueRemoveComment },
         { type: "method", signature: "E poll()", java: QueueInterface.prototype._mj$poll$E$, comment: JRC.queuePollComment },
         { type: "method", signature: "E peek()", java: QueueInterface.prototype._mj$peek$E$, comment: JRC.queuePeekComment },
+        { type: "method", signature: "boolean offer(E element)", java: QueueInterface.prototype._mj$offer$boolean$E, comment: JRC.queueOfferComment },
 
     ]
 
@@ -24,6 +25,6 @@ export class QueueInterface extends CollectionInterface {
 
     _mj$peek$E$(t: Thread, callback: CallbackFunction) { }
 
-
+    _mj$offer$boolean$E(t: Thread, callback: CallbackFunction) { }
 
 }

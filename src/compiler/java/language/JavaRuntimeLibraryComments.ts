@@ -4892,6 +4892,11 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
         "en": "Retrieves, but does not remove, the head of this queue, or returns null if this queue is empty.",
     })
 
+    static queueOfferComment = () => lm({
+        "de": "Fügt ein Element hinten an die Liste an. Gibt true zurück, wenn das Element eingefügt werden konnte, ansonsten false.",
+        "en": "Inserts the specified element into this queue if it is possible to do so immediately without violating capacity restrictions. When using a capacity-restricted queue, this method is generally preferable to add(E), which can fail to insert an element only by throwing an exception.",
+    })
+
     /**
      * interface dequeue
      */

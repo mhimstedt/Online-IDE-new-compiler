@@ -38,6 +38,8 @@ export class LinkedListClass extends ObjectClass implements BaseListType {
         { type: "method", signature: "E remove()", java: LinkedListClass.prototype._mj$remove$E$, comment: JRC.queueRemoveComment },
         { type: "method", signature: "E poll()", java: LinkedListClass.prototype._mj$poll$E$, comment: JRC.queuePollComment },
         { type: "method", signature: "E peek()", java: LinkedListClass.prototype._mj$peek$E$, comment: JRC.queuePeekComment },
+        { type: "method", signature: "boolean offer(E element)", native: LinkedListClass.prototype._add, template: "(§1.elements.push(§2) >= 0)", comment: JRC.queueOfferComment },
+
 
         // from Deque
         { type: "method", signature: "boolean removeFirstOccurrence(E element)", java: LinkedListClass.prototype._mj$removeFirstOccurrence$boolean$E, comment: JRC.dequeRemoveFirstOccurrenceComment },
@@ -319,6 +321,7 @@ export class LinkedListClass extends ObjectClass implements BaseListType {
 
     _add(element: ObjectClassOrNull) {
         this.elements.push(element);
+        return true;
     }
 
     _addAll(t: Thread, callback: CallbackFunction, collection: CollectionInterface) {

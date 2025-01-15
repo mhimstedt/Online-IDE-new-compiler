@@ -188,10 +188,11 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
     }
 
     startAnimationLoop(interpreter: Interpreter) {
-        // interpreter.isExternalTimer = true;
+        //interpreter.isExternalTimer = true;
 
         let render = () => {
             this.renderer.render(this.scene, this.currentCamera.camera3d);
+            //this.tick(33, interpreter);
         }
         
         this.renderer.setAnimationLoop(render);
@@ -200,7 +201,6 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
 
     tick(msLeft: number, interpreter: Interpreter) {
-        this.actorManager.callActMethods(33);
         interpreter.timerFunction(msLeft);
     }
 
