@@ -324,6 +324,7 @@ export class MainEmbedded implements MainBase {
                         that.saveScripts();
                     }, 1000);
                 }, 2000);
+                callback();
             } else {
 
                 let scriptList: string[] = JSON.parse(scriptListJSon);
