@@ -157,9 +157,12 @@ export class MainEmbedded implements MainBase {
 
     onCompilationFinished(executable: Executable | undefined): void {
         this.interpreter.setExecutable(executable);
-        let errors = this.bottomDiv?.errorManager?.showErrors(this.currentWorkspace);
-        this.fileExplorer.renderErrorCount(this.currentWorkspace, errors);
-        this.printProgram();
+
+        if(this.bottomDiv){
+            let errors = this.bottomDiv?.errorManager?.showErrors(this.currentWorkspace);
+            this.fileExplorer.renderErrorCount(this.currentWorkspace, errors);
+            this.printProgram();
+        }
     }
 
     adjustWidthToWorld(): void {
@@ -186,11 +189,13 @@ export class MainEmbedded implements MainBase {
 
                 if (this.config.id != null) {
                     this.readScripts(async () => {
-                        this.getCompiler().setFiles(this.fileExplorer.getFiles());
-
-                        this.fileExplorer?.setFirstFileActive();
+                        if(this.fileExplorer){
+                            this.getCompiler().setFiles(this.fileExplorer.getFiles());
+                            this.fileExplorer.setFirstFileActive();
+                        }
                         if (this.fileExplorer == null) {
                             let files = this.currentWorkspace.getFiles();
+                            this.getCompiler().setFiles(files);
                             if (files.length > 0){
                                 this.setFileActive(files[0]);
                             } 
