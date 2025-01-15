@@ -188,7 +188,7 @@ export class JavaMethod extends BaseSymbol {
         return this.classEnumInterface.pathAndIdentifier + "." + this.getInternalNameWithGenericParameterIdentifiers("java");
     }
 
-    getCompletionLabel() {
+    getCompletionLabel(withTypes: boolean = true) {
 
         let label = "";
 
@@ -206,7 +206,7 @@ export class JavaMethod extends BaseSymbol {
                 let arrayType: JavaArrayType = <any>p.type;
                 label += arrayType.getElementType().toString() + "... " + p.identifier;
             } else {
-                label += p.type.toString() + " " + p.identifier;
+                label += (withTypes ? (p.type.toString() + " ") : "") + p.identifier;
             }
 
             if (i < parameters.length - 1) {

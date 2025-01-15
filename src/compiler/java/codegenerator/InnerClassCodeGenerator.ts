@@ -468,6 +468,7 @@ export class InnerClassCodeGenerator extends StatementCodeGenerator {
             return snippet;
         } else {
 
+            if(fieldNode.initialization) field.initializedBeforeConstructor = true;
             let snippet = this.compileInitialValue(fieldNode.initialization, fieldNode.type.resolvedType);
             if (snippet) {
 

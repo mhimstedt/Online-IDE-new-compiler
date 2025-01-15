@@ -256,6 +256,7 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
 
         if (symbolTable.classContext && !symbolTable.methodContext && symbolTable.classContext instanceof IJavaClass) {
             completionItems = completionItems.concat(this.getOverridableMethodsCompletion(symbolTable.classContext, rangeToReplace));
+            completionItems = completionItems.concat(this.getConstructorCompletion(symbolTable.classContext, rangeToReplace));
         }
 
         if (symbolTable != null) {
@@ -793,7 +794,7 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
 
             if (alreadyImplemented) continue;
 
-            let label: string = (m.isAbstract ? "implement " : "override ") + m.getCompletionLabel();
+            let label: string = (m.isAbstract ? "implement " : "override ") + m.getCompletionLabel(false);
             let filterText = m.identifier;
             let insertText = TokenTypeReadable[m.visibility] + " " + (m.returnParameterType == null ? "void" : m.returnParameterType.toString()) + " ";
             insertText += m.identifier + "(" + m.parameters.map(p => p.type.toString() + " " + p.identifier).join(", ");
@@ -801,8 +802,7 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
 
             keywordCompletionItems.push(
                 {
-                    label: label,
-                    detail: MonacoProviderLanguage.implementOverrideMethod(m.isAbstract, label),
+                    label: { label: label, detail: " -> " + MonacoProviderLanguage.implementOverrideMethod(m.isAbstract, label) },
                     filterText: filterText,
                     insertText: insertText,
                     insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
@@ -812,6 +812,43 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
             );
 
         }
+
+        return keywordCompletionItems;
+
+    }
+
+    getConstructorCompletion(classContext: IJavaClass, range: IRange) {
+
+        let keywordCompletionItems: monaco.languages.CompletionItem[] = [];
+
+        let constructors = classContext.getOwnMethods().filter(m => m.isConstructor && m.identifier == classContext.identifier);
+        if (constructors.length > 0) return [];
+
+        
+        let fields = classContext.getFields().filter(f => f.classEnum == classContext && !f.isStatic() && !f.initializedBeforeConstructor && !f.isFinal());
+        
+        let i: number = 1;
+
+        let attibuteParameters: string = fields.map(f => "${" + i++ + ":" + f.type.toString() + " " + f.identifier ).join(", }");
+        if(attibuteParameters.length > 0) attibuteParameters += "}";
+
+        let attributeInitialization: string = fields.map(f => "${" + i++ + ":this." + f.identifier + " = " + f.identifier + ";").join("\n\t}");
+        if(attributeInitialization.length > 0) attributeInitialization += "}";
+
+
+        let insertText = `public ${classContext.identifier}(${attibuteParameters}){\n\t${attributeInitialization}\n\t$0\n}`;
+
+        keywordCompletionItems.push(
+            {
+                label: { label: classContext.identifier + "(){...}", detail: " -> insert constructor" },
+                filterText: classContext.identifier,
+                insertText: insertText,
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                kind: monaco.languages.CompletionItemKind.Snippet,
+                range: range,
+                sortText: "_aaa"
+            }
+        );
 
         return keywordCompletionItems;
 

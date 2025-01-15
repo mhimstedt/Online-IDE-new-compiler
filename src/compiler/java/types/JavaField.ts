@@ -27,6 +27,7 @@ export class JavaField extends BaseField {
 
     initialValue?: any;
     initialValueIsConstant: boolean = false;    // enables us to resolve values of final variables as constants
+    initializedBeforeConstructor?: boolean;
 
     isInnerClassCopyOfOuterClassLocalVariable?: JavaLocalVariable;
 
