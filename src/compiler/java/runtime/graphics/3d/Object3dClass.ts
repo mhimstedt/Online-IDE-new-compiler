@@ -89,15 +89,15 @@ export class Object3dClass extends ActorClass {
     move(x: number, y: number, z: number): void{}
 
     lookAt(xTarget: number, yTarget: number, zTarget: number, up: Vector3Class): void{
-        let rotationMatrix = new Three.Matrix4();
         let object3d = this.getObject3d();
-        rotationMatrix.lookAt(object3d.position, new Three.Vector3(xTarget, yTarget, zTarget), up.v);
+        object3d.up = up.v.clone();
+        object3d.lookAt(new Three.Vector3(xTarget, yTarget, zTarget));
     }
     
     lookAtTarget(target: Object3dClass, up: Vector3Class): void{
-        let rotationMatrix = new Three.Matrix4();
         let object3d = this.getObject3d();
-        rotationMatrix.lookAt(object3d.position, target.getObject3d().position, up.v);
+        object3d.up = up.v.clone();
+        object3d.lookAt(target.getObject3d().position);
     }
 
     moveTo(x: number, y: number, z: number): void {}

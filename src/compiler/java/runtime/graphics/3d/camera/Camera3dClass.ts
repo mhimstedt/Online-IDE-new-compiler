@@ -17,18 +17,22 @@ export class Camera3dClass extends Object3dClass {
         { type: "method", signature: "final void move(Vector3 v)", native: Camera3dClass.prototype.vmove },
         { type: "method", signature: "void moveTo(double x,double y,double z)" },
         { type: "method", signature: "final void moveTo(Vector3 p)", native: Camera3dClass.prototype.vmoveTo },
-        
+
+        { type: "method", signature: "void lookAt(double xTarget, double yTarget, double zTarget, Vector3 up, boolean keepTarget)", native: Camera3dClass.prototype.clookAt },
+        { type: "method", signature: "void lookAt(Object3d target, Vector3 up, boolean keepTarget)", native: Camera3dClass.prototype.clookAtTarget },
+
+
         { type: "method", signature: "void rotateX(double angleDeg)", native: Camera3dClass.prototype.rotateX },
         { type: "method", signature: "void rotateY(double angleDeg)", native: Camera3dClass.prototype.rotateY },
         { type: "method", signature: "void rotateZ(double angleDeg)", native: Camera3dClass.prototype.rotateZ },
-        
+
         { type: "method", signature: "final void scaleX(double angleDeg)", native: Camera3dClass.prototype.scaleX },
         { type: "method", signature: "final void scaleY(double angleDeg)", native: Camera3dClass.prototype.scaleY },
         { type: "method", signature: "final void scaleZ(double angleDeg)", native: Camera3dClass.prototype.scaleZ },
         { type: "method", signature: "final void scale(Vector3 v)", native: Camera3dClass.prototype.vscale },
         { type: "method", signature: "final void scale(double d)", native: Camera3dClass.prototype.scaleDouble },
 
-        {type: "method", signature: "final void applyMatrix4(Matrix4 matrix)", native: Camera3dClass.prototype.applyMatrix4 },
+        { type: "method", signature: "final void applyMatrix4(Matrix4 matrix)", native: Camera3dClass.prototype.applyMatrix4 },
 
         { type: "method", signature: "void destroy()", java: Camera3dClass.prototype.destroy },
 
@@ -38,6 +42,11 @@ export class Camera3dClass extends Object3dClass {
 
     camera3d: THREE.Camera;
 
+    target: THREE.Object3D;
+    targetPosition: THREE.Vector3;
+    up: THREE.Vector3;
+
+
     getObject3d(): THREE.Object3D {
         return this.camera3d;
     }
@@ -45,16 +54,59 @@ export class Camera3dClass extends Object3dClass {
     _cj$_constructor_$Camera3d$(t: Thread, callback: CallbackParameter) {
         super._cj$_constructor_$Object3d$(t, () => {
             this.world3d.scene.add(this.camera3d);
-            if(callback) callback();
+            if (callback) callback();
         });
     }
+
+    clookAt(xTarget: number, yTarget: number, zTarget: number, up: Vector3Class, keepTarget: boolean): void{
+        let object3d = this.getObject3d();
+        let target = new THREE.Vector3(xTarget, yTarget, zTarget);
+
+        object3d.up = up.v.clone();
+        object3d.lookAt(target);
+
+        if(keepTarget){
+            this.targetPosition = target;
+            this.target = undefined;
+            this.up = up.v.clone();
+        }
+    }
+    
+    clookAtTarget(target: Object3dClass, up: Vector3Class, keepTarget: boolean): void{
+        let object3d = this.getObject3d();
+        object3d.up = up.v.clone();
+        object3d.lookAt(target.getObject3d().position)
+        if(keepTarget){
+            this.targetPosition = undefined;
+            this.target = target.getObject3d();
+            this.up = up.v.clone();
+        }
+    }
+
 
     move(x: number, y: number, z: number): void {
         // this.mesh.position.add(new THREE.Vector3(x,y,z));
         this.camera3d.position.set(this.camera3d.position.x + x, this.camera3d.position.y + y, this.camera3d.position.z + z)
+        if (this.target) {
+            this.camera3d.up = this.up;
+            this.camera3d.lookAt(this.target.position);
+        }
+        if (this.targetPosition) {
+            this.camera3d.up = this.up;
+            this.camera3d.lookAt(this.targetPosition);
+        }
     }
+
     moveTo(x: number, y: number, z: number): void {
         this.camera3d.position.set(x, y, z);
+        if (this.target) {
+            this.camera3d.up = this.up;
+            this.camera3d.lookAt(this.target.position);
+        }
+        if (this.targetPosition) {
+            this.camera3d.up = this.up;
+            this.camera3d.lookAt(this.targetPosition);
+        }
     }
 
     rotateX(angleDeg: number): void {
@@ -83,7 +135,7 @@ export class Camera3dClass extends Object3dClass {
         this.camera3d.scale.setZ(this.camera3d.scale.z * factor);
     }
 
-    applyMatrix4(matrix4: Matrix4Class){
+    applyMatrix4(matrix4: Matrix4Class) {
 
         // a vector v local to this mesh is transformed via
         // W * L * v to world coordinates. W is World matrix of parent, L is local matrix.
@@ -91,7 +143,7 @@ export class Camera3dClass extends Object3dClass {
         // A * W * L * v, but we only can alter matrix L. As
         // A * W * L * v = W * (W^-1 * A * W) * L * v, we have to premultiply L by W^-1 * A * W.
 
-        if(this.camera3d.parent){
+        if (this.camera3d.parent) {
             const helperMatrix = this.camera3d.parent.matrixWorld.clone().invert();
             helperMatrix.multiply(matrix4.m);
             helperMatrix.multiply(this.camera3d.parent.matrixWorld);
@@ -123,7 +175,7 @@ export class Camera3dClass extends Object3dClass {
         this.world3d.scene.remove(this.camera3d);
     }
 
-    updateViewport(){}
+    updateViewport() { }
 
 
 }
