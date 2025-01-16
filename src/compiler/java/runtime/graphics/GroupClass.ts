@@ -16,7 +16,7 @@ export class GroupClass extends ShapeClass implements BaseListType {
         { type: "declaration", signature: "class Group<T extends Shape> extends Shape", comment: JRC.groupClassComment },
 
         { type: "method", signature: "Group()", java: GroupClass.prototype._cj$_constructor_$Group$, comment: JRC.groupConstructorComment },
-        { type: "method", signature: "Group(T... shapes)", java: GroupClass.prototype._cj$_constructor_$Group$T, comment: JRC.groupConstructorComment },
+        { type: "method", signature: "Group(T... shapes)", java: GroupClass.prototype._cj$_constructor_$Group$Shape_I, comment: JRC.groupConstructorComment },
         { type: "method", signature: "final void add(T shape)", native: GroupClass.prototype.add, comment: JRC.groupAddComment },
         { type: "method", signature: "final void add(T... shapes)", native: GroupClass.prototype.addMultiple, comment: JRC.groupAddComment },
         { type: "method", signature: "final void remove(T shape)", native: GroupClass.prototype.remove, comment: JRC.groupRemoveComment },
@@ -49,7 +49,7 @@ export class GroupClass extends ShapeClass implements BaseListType {
         });
     }
 
-    _cj$_constructor_$Group$T(t: Thread, callback: CallbackFunction, shapes: ShapeClass[]) {
+    _cj$_constructor_$Group$Shape_I(t: Thread, callback: CallbackFunction, shapes: ShapeClass[]) {
         this._cj$_constructor_$Group$(t, () => {
             if (!shapes) return;
             for (let shape of shapes) {
