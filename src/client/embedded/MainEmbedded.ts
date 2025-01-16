@@ -158,7 +158,7 @@ export class MainEmbedded implements MainBase {
     onCompilationFinished(executable: Executable | undefined): void {
         this.interpreter.setExecutable(executable);
 
-        if(this.bottomDiv){
+        if(this.bottomDiv && this.fileExplorer){
             let errors = this.bottomDiv?.errorManager?.showErrors(this.currentWorkspace);
             this.fileExplorer.renderErrorCount(this.currentWorkspace, errors);
             this.printProgram();
