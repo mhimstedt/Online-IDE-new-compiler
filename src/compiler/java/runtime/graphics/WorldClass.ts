@@ -56,6 +56,7 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
 
         { type: "method", signature: "void addMouseListener(MouseListener mouseListener)", template: `§1.mouseManager.${MouseManager.prototype.addJavaMouseListener.name}(§2);`, comment: JRC.world3dAddMouseListenerComment },
 
+        { type: "method", signature: "static World getWorld()", java: WorldClass._getWorld, comment: JRC.getWorldComment },
 
 
 
@@ -107,7 +108,7 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
         if (existingWorld) {
             t.s.push(existingWorld);
             existingWorld.changeResolution(interpreter, width, height);
-            if(callback) callback();
+            if (callback) callback();
             return existingWorld;
         }
 
@@ -119,7 +120,7 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
         let graphicsDivParent = <HTMLDivElement>interpreter.graphicsManager?.graphicsDiv;
 
         let oldGraphicsDivs = graphicsDivParent.getElementsByClassName('pixiWorld');
-        for(let i = 0; i < oldGraphicsDivs.length; i++){
+        for (let i = 0; i < oldGraphicsDivs.length; i++) {
             oldGraphicsDivs[i].remove();
         }
 
@@ -127,12 +128,12 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
         this.graphicsDiv.style.overflow = "hidden";
 
         let hasWorld3D = graphicsDivParent.getElementsByClassName('world3d').length > 0;
-        if(hasWorld3D) this.graphicsDiv.style.pointerEvents = "none";
+        if (hasWorld3D) this.graphicsDiv.style.pointerEvents = "none";
 
 
         this.app = new PIXI.Application();
 
-        this.app.init({backgroundAlpha: hasWorld3D ? 0 : 1, background: '#000000', width: width, height: height, resizeTo: undefined, antialias: true}).then( async () => {
+        this.app.init({ backgroundAlpha: hasWorld3D ? 0 : 1, background: '#000000', width: width, height: height, resizeTo: undefined, antialias: true }).then(async () => {
 
             this.app!.canvas.style.width = "10px";
             this.app!.canvas.style.height = "10px";
@@ -425,7 +426,7 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
     static _mj$clear$(t: Thread) {
 
         let existingWorld = <WorldClass>t.scheduler.interpreter.retrieveObject("WorldClass");
-        if(!existingWorld) return;
+        if (!existingWorld) return;
 
         while (existingWorld.shapesWhichBelongToNoGroup.length > 0) {
             existingWorld.shapesWhichBelongToNoGroup.pop()?.destroy();
@@ -485,6 +486,17 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
                 });
         }
 
+    }
+
+    static _getWorld(t: Thread) {
+        const w = t.scheduler.interpreter.retrieveObject("WorldClass");
+        if (w == undefined) {
+            if (this["world3d"] != null) {//equivalent to this instanceof Object3d, other option: t.scheduler.interpreter.retrieveObject("World3dClass") !== undefined
+                throw new RuntimeExceptionClass(JRC.actorWorld2dDoesntexistOn3dObjectException());
+            }
+            throw new RuntimeExceptionClass(JRC.actorWorld2dDoesntexistException());
+        }
+        t.s.push(w);
     }
 
 }
