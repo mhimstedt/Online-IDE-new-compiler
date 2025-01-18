@@ -2,7 +2,7 @@ import { CodeFragment } from "../../../common/disassembler/CodeFragment.ts";
 import { Program } from "../../../common/interpreter/Program";
 import { Klass } from "../../../common/interpreter/StepFunction.ts";
 import { JavaLibraryModule, LibraryKlassType } from "../../module/libraries/JavaLibraryModule";
-import { ArrayCamera3dClass } from "../graphics/3d/ArrayCamera3dClass.ts";
+import { ArrayCamera3dClass } from "../graphics/3d/camera/ArrayCamera3dClass.ts";
 import { Box3dClass } from "../graphics/3d/Box3dClass.ts";
 import { Camera3dClass } from "../graphics/3d/camera/Camera3dClass.ts";
 import { Circle3dClass } from "../graphics/3d/Circle3dClass.ts";

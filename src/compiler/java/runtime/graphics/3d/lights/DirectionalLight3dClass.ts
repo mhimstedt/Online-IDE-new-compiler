@@ -9,11 +9,11 @@ import { Object3dClass } from '../Object3dClass';
 
 export class DirectionalLight3dClass extends Light3dClass {
     static __javaDeclarations: LibraryDeclarations = [
-        { type: "declaration", signature: "class DirectionalLight3d extends Object3d" },
+        { type: "declaration", signature: "class DirectionalLight3d extends Light3d" },
         { type: "method", signature: "DirectionalLight3d()", java: DirectionalLight3dClass.prototype._cj$_constructor_$DirectionalLight3d$ },
         { type: "method", signature: "DirectionalLight3d(double x,double y,double z)", java: DirectionalLight3dClass.prototype._cj$_constructor_$DirectionalLight3d$double$double$double$ },
         { type: "method", signature: "DirectionalLight3d(Vector3 position)", java: DirectionalLight3dClass.prototype._cj$_constructor_$DirectionalLight3d$double$double$double$ },
-        { type: "method", signature: "DirectionalLight3d setTarget(Object3d object3d)", java: DirectionalLight3dClass.prototype._setTarget },
+        { type: "method", signature: "DirectionalLight3d setTarget(Object3d object3d)", native: DirectionalLight3dClass.prototype._setTarget },
     ];
 
     static type: NonPrimitiveType;

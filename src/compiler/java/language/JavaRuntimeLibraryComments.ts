@@ -268,9 +268,19 @@ export class JRC {
     "en": `Returns an array containing all Light3d objects`,
     })
 
-    static worldDestroyAllLightsComment = () => lm({
-    "de": `Zerstört alle Light3d-Objekte.`,
-    "en": `Destroys all Light3d objects.`,
+    static worldRemoveAllLightsComment = () => lm({
+    "de": `Entfernt alle Light3d-Objekte.`,
+    "en": `Removes all Light3d objects.`,
+    })
+
+    static worldRemoveLightComment = () => lm({
+    "de": `Entfernt das Light3d-Objekt. Die Lichtquelle ist dann nicht mehr aktiv.`,
+    "en": `Removes given Light3d object.`,
+    })
+
+    static worldAddLightComment = () => lm({
+    "de": `Fügt der Szene die gegebene Lichtquelle hinzu.`,
+    "en": `Adds given Light3d object.`,
     })
 
     static worldMoveComment = () => lm({
@@ -353,7 +363,7 @@ export class JRC {
     })
 
     static actorWorld3dDoesntexistException = () => lm({
-        "de": "Es ist derzeit kein World3d-Objekt vorhanden. Diese wird automatisch erstellt, sobald ein 3d-Grafikobjekt erstellt wird.",
+        "de": "Es ist derzeit kein World3d-Objekt vorhanden. Dieses wird automatisch erstellt, sobald ein 3d-Grafikobjekt erstellt wird.",
         "en": "There is currently no World3d object. It will be automatically created once a 3d graphics object is created.",
     })
 
@@ -5748,6 +5758,20 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
     static materialWireframeComment = () => lm({
     "de": `Legt fest, ob das Objekt ungefüllt (nur als Gitter) gezeichnet werden soll.`,
     "en": `If true, then the object is renderd as wireframe (without filling).`,
+    })
+
+    /**
+     * 
+     * Toon Material
+     */
+    static toonMaterialClassComment = () => lm({
+    "de": `Comic-ähnliches Material`,
+    "en": `A material implementing toon shading.`,
+    })
+
+    static toonMaterialConstructorComment = () => lm({
+    "de": ``,
+    "en": ``,
     })
 
     /**

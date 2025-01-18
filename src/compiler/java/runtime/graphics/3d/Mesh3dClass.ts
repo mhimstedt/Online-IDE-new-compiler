@@ -9,6 +9,7 @@ import { Object3dClass } from "./Object3dClass";
 import { Vector3Class } from './Vector3Class';
 import { PhongMaterial3dClass } from './materials/PhongMaterial3dClass';
 import { Matrix4Class } from './Matrix4Class';
+import type { Camera3dClass } from './camera/Camera3dClass';
 
 export class Mesh3dClass extends Object3dClass {
 
@@ -85,9 +86,11 @@ export class Mesh3dClass extends Object3dClass {
     move(x: number, y: number, z: number): void {
         // this.mesh.position.add(new THREE.Vector3(x,y,z));
         this.mesh.position.set(this.mesh.position.x + x, this.mesh.position.y + y, this.mesh.position.z + z)
+        if(this.cameraLookingAtThisObject) this.cameraLookingAtThisObject.adjustViewingDirection();
     }
     moveTo(x: number, y: number, z: number): void {
         this.mesh.position.set(x, y, z);
+        if(this.cameraLookingAtThisObject) this.cameraLookingAtThisObject.adjustViewingDirection();
     }
 
     rotateX(angleDeg: number): void {

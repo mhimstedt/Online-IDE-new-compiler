@@ -46,12 +46,16 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         { type: "method", signature: "void addMouseListener(MouseListener mouseListener)", template: `§1.mouseListener.addMouseListener(§2);`, comment: JRC.world3dAddMouseListenerComment },
 
         { type: "method", signature: "Light3d[] getLights()", template: `§1.lights.slice()`, comment: JRC.worldGetLightsComment },
-        { type: "method", signature: "void destroyAllLights()", native: World3dClass.prototype._destroyAllLights, comment: JRC.worldDestroyAllLightsComment },
+        { type: "method", signature: "void removeAllLights()", native: World3dClass.prototype._removeAllLights, comment: JRC.worldRemoveAllLightsComment },
+        { type: "method", signature: "void removeLight(Light3d light)", native: World3dClass.prototype._removeLight, comment: JRC.worldRemoveLightComment },
+        { type: "method", signature: "void addLight(Light3d light)", native: World3dClass.prototype._addLight, comment: JRC.worldAddLightComment },
 
         { type: "method", signature: "void setCamera(Camera3d camera)", native: World3dClass.prototype._setCamera },
         { type: "method", signature: "Camera3d getCamera()", native: World3dClass.prototype._getCamera },
         { type: "method", signature: "void removeCoordinateAxes()", native: World3dClass.prototype._removeCoordinateAxes },
         { type: "method", signature: "void removeOrbitControls()", native: World3dClass.prototype._removeOrbitControls },
+
+        { type: "method", signature: "static World3d getWorld3d()", java: World3dClass._getWorld3d, comment: JRC.getWorld3dComment },
 
 
     ]
@@ -95,7 +99,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         let existingWorld = <World3dClass>interpreter.retrieveObject("World3dClass");
         if (existingWorld) {
             t.s.push(existingWorld);
-            if(callback) callback();
+            if (callback) callback();
             return existingWorld;
         }
 
@@ -158,7 +162,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         light1.light.intensity = 1.5;
         this.scene.add(light1.light);
         this.lights.push(light1);
-        
+
         const light2 = new t.classes["AmbientLight3d"]();
         light2.world3d = this;
         light2.light.intensity = 0.5;
@@ -167,14 +171,14 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
 
         this.scene.background = new THREE.Color(0, 0, 0);
 
-        
+
         this.addCallbacks(interpreter);
-        
+
         // this.mouseManager = new MouseManager(this);
-        
-        
+
+
         this.textureManager3d = new TextureManager3d();
-        
+
         this.textureManager3d.init(interpreter).then(() => {
             this.coordinateSystemHelper = new CoordinateSystemHelper3d(this).show();
             this.fastSpriteManager = new FastSpriteManager3d(this);
@@ -194,7 +198,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
             this.renderer.render(this.scene, this.currentCamera.camera3d);
             //this.tick(33, interpreter);
         }
-        
+
         this.renderer.setAnimationLoop(render);
 
     }
@@ -224,7 +228,7 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
     }
 
     destroyWorld(interpreter: Interpreter) {
-        while(this.objects.length > 0) this.objects.pop().destroy(); 
+        while (this.objects.length > 0) this.objects.pop().destroy();
         this.resizeObserver?.disconnect();
         this.renderer?.dispose();
         this.renderer = undefined;
@@ -351,12 +355,24 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         if (index >= 0) this.lights.splice(index, 1);
     }
 
-    _destroyAllLights() {
+    _removeAllLights() {
         while (this.lights.length > 0) this.scene.remove(this.lights.pop().light)
     }
 
+    _removeLight(light: Light3dClass){
+        let index = this.lights.indexOf(light);
+        if(index < 0) return;
+        this.scene.remove(light.light);
+        this.lights.splice(index, 1);
+    }
+
+    _addLight(light: Light3dClass){
+        this.lights.push(light);
+        this.scene.add(light.light);
+    }
+
     _setCamera(camera: Camera3dClass) {
-        if(camera == null){
+        if (camera == null) {
             throw new RuntimeExceptionClass("Camera must not be null.");
         }
         this._removeOrbitControls();
@@ -375,5 +391,14 @@ export class World3dClass extends ObjectClass implements IWorld3d, GraphicSystem
         this.orbitControls.dispose();
         this.orbitControls = null;
     }
+
+    static _getWorld3d(t: Thread) {
+        const w = t.scheduler.interpreter.retrieveObject("World3dClass");
+        if (w == undefined) {
+            throw new RuntimeExceptionClass(JRC.actorWorld3dDoesntexistException());
+        }
+        t.s.push(w);
+    }
+
 }
 
