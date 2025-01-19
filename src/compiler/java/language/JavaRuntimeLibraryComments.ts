@@ -3585,6 +3585,11 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
         "en": "Adds given BigInteger-object to this BigInteger-object and returns a NEW BigInteger-object whose value is the sum of the two.",
     })
 
+    static BigIntegerSubtractComment = () => lm({
+        "de": "Subtrahiert das übergebene BigInteger-Objekt vom aktuellen BigInteger-Objekt und gibt ein neues BigInteger-Objekt zurück, dessen Wert die errechnete Differenz ist. Die Methode add ändert nicht das aktuelle BigInteger-Objekt!",
+        "en": "Subtracts given BigInteger-object from this BigInteger-object and returns a NEW BigInteger-object whose value is the difference of the two.",
+    })
+
     static BigIntegerDivideComment = () => lm({
         "de": "Dividiert das BigInteger-Objekt durch das übergebene undd gibt ein neues BigInteger-Objekt zurück, dessen Wert der errechnete Quotient ist. Die Methode add ändert nicht das aktuelle BigInteger-Objekt!",
         "en": "Divides this BigInteger-object by given one and returns a NEW BigInteger-object whose value is the quotient of the two.",

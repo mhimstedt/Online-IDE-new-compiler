@@ -29,6 +29,8 @@ export class CharacterClass extends ObjectClass implements IPrimitiveTypeWrapper
         { type: "method", signature: "public static boolean isDigit(char c)", native: CharacterClass._isDigit },
         { type: "method", signature: "public static boolean isLowerCase(char c)", native: CharacterClass._isLowerCase },
         { type: "method", signature: "public static boolean isUpperCase(char c)", native: CharacterClass._isUpperCase },
+        { type: "method", signature: "public static char toUpperCase(char c)", native: CharacterClass._toUpperCase },
+        { type: "method", signature: "public static char toLowerCase(char c)", native: CharacterClass._toLowerCase },
 
 
 
@@ -91,5 +93,12 @@ export class CharacterClass extends ObjectClass implements IPrimitiveTypeWrapper
         return this.uppercase.indexOf(c) >= 0;
     }
 
+    static _toUpperCase(c: string){
+        return c.toLocaleUpperCase();
+    }
+
+    static _toLowerCase(c: string){
+        return c.toLocaleLowerCase();
+    }
 
 }
