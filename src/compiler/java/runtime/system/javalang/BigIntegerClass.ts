@@ -10,7 +10,9 @@ export class BigIntegerClass extends ObjectClass {
         { type: "declaration", signature: "class BigInteger extends Object", comment: JRC.BigIntegerClassComment },
 
         { type: "method", signature: "BigInteger(long val)", java: BigIntegerClass.prototype._cj$_constructor_$BigInteger$long, comment: JRC.BigIntegerConstructorComment },
+        { type: "method", signature: "BigInteger(string val)", java: BigIntegerClass.prototype._cj$_constructor_$BigInteger$string, comment: JRC.BigIntegerConstructorComment },
         { type: "method", signature: "final BigInteger add(BigInteger otherNumber)", native: BigIntegerClass.prototype._add, comment: JRC.BigIntegerAddComment },
+        { type: "method", signature: "final BigInteger subtract(BigInteger otherNumber)", native: BigIntegerClass.prototype._subtract, comment: JRC.BigIntegerSubtractComment },
         { type: "method", signature: "final BigInteger divide(BigInteger otherNumber)", native: BigIntegerClass.prototype._divide, comment: JRC.BigIntegerDivideComment },
         { type: "method", signature: "final BigInteger multiply(BigInteger otherNumber)", native: BigIntegerClass.prototype._multiply, comment: JRC.BigIntegerMultiplyComment },
         { type: "method", signature: "final BigInteger remainder(BigInteger otherNumber)", native: BigIntegerClass.prototype._remainder, comment: JRC.BigIntegerRemainderComment },
@@ -31,6 +33,12 @@ export class BigIntegerClass extends ObjectClass {
         return this.value;
     }
 
+    _cj$_constructor_$BigInteger$string(t: Thread, callback: CallbackFunction, value: string){
+        this.value = BigInt(value);
+        t.s.push(this);
+        if(callback) callback();
+    }
+
     _cj$_constructor_$BigInteger$long(t: Thread, callback: CallbackFunction, value: number){
         this.value = BigInt(value);
         t.s.push(this);
@@ -39,6 +47,10 @@ export class BigIntegerClass extends ObjectClass {
 
     _add(other: BigIntegerClass): BigIntegerClass {
         return new BigIntegerClass(this.value + other.value);
+    }
+
+    _subtract(other: BigIntegerClass): BigIntegerClass {
+        return new BigIntegerClass(this.value - other.value);
     }
 
     _divide(other: BigIntegerClass): BigIntegerClass {

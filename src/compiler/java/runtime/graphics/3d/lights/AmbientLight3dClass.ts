@@ -7,7 +7,7 @@ import { Light3dClass } from './Light3dClass';
 
 export class AmbientLight3dClass extends Light3dClass {
     static __javaDeclarations: LibraryDeclarations = [
-        { type: "declaration", signature: "class AmbientLight3d extends Object3d" },
+        { type: "declaration", signature: "class AmbientLight3d extends Light3d" },
         { type: "method", signature: "AmbientLight3d()", java: AmbientLight3dClass.prototype._cj$_constructor_$AmbientLight3d$ },
         { type: "method", signature: "AmbientLight3d(double intensity)", java: AmbientLight3dClass.prototype._cj$_constructor_$AmbientLight3d$double },
 

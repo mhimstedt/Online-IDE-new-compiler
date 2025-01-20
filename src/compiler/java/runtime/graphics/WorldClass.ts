@@ -491,9 +491,6 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
     static _getWorld(t: Thread) {
         const w = t.scheduler.interpreter.retrieveObject("WorldClass");
         if (w == undefined) {
-            if (this["world3d"] != null) {//equivalent to this instanceof Object3d, other option: t.scheduler.interpreter.retrieveObject("World3dClass") !== undefined
-                throw new RuntimeExceptionClass(JRC.actorWorld2dDoesntexistOn3dObjectException());
-            }
             throw new RuntimeExceptionClass(JRC.actorWorld2dDoesntexistException());
         }
         t.s.push(w);

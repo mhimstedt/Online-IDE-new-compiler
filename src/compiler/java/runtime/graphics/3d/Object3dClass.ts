@@ -5,6 +5,7 @@ import { LibraryDeclarations } from "../../../module/libraries/DeclareType";
 import { NonPrimitiveType } from "../../../types/NonPrimitiveType";
 import { RuntimeExceptionClass } from "../../system/javalang/RuntimeException";
 import { ActorClass } from "../ActorClass";
+import type { Camera3dClass } from "./camera/Camera3dClass";
 import { Vector3Class } from "./Vector3Class";
 import { World3dClass } from "./World3dClass";
 import * as Three from 'three';
@@ -46,6 +47,8 @@ export class Object3dClass extends ActorClass {
 
     static type: NonPrimitiveType;
     world3d!: World3dClass;
+
+    cameraLookingAtThisObject?: Camera3dClass;
 
     getObject3d(): Three.Object3D {return null};
 

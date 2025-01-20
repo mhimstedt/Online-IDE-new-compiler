@@ -42,10 +42,9 @@ export class Camera3dClass extends Object3dClass {
 
     camera3d: THREE.Camera;
 
-    target: THREE.Object3D;
+    target: Object3dClass;
     targetPosition: THREE.Vector3;
     up: THREE.Vector3;
-
 
     getObject3d(): THREE.Object3D {
         return this.camera3d;
@@ -67,6 +66,7 @@ export class Camera3dClass extends Object3dClass {
 
         if(keepTarget){
             this.targetPosition = target;
+            if(this.target) this.target.cameraLookingAtThisObject = undefined;
             this.target = undefined;
             this.up = up.v.clone();
         }
@@ -78,7 +78,9 @@ export class Camera3dClass extends Object3dClass {
         object3d.lookAt(target.getObject3d().position)
         if(keepTarget){
             this.targetPosition = undefined;
-            this.target = target.getObject3d();
+            if(this.target) this.target.cameraLookingAtThisObject = undefined;
+            this.target = target;
+            this.target.cameraLookingAtThisObject = this;
             this.up = up.v.clone();
         }
     }
@@ -87,21 +89,18 @@ export class Camera3dClass extends Object3dClass {
     move(x: number, y: number, z: number): void {
         // this.mesh.position.add(new THREE.Vector3(x,y,z));
         this.camera3d.position.set(this.camera3d.position.x + x, this.camera3d.position.y + y, this.camera3d.position.z + z)
-        if (this.target) {
-            this.camera3d.up = this.up;
-            this.camera3d.lookAt(this.target.position);
-        }
-        if (this.targetPosition) {
-            this.camera3d.up = this.up;
-            this.camera3d.lookAt(this.targetPosition);
-        }
+        this.adjustViewingDirection();
     }
 
     moveTo(x: number, y: number, z: number): void {
         this.camera3d.position.set(x, y, z);
+        this.adjustViewingDirection();
+    }
+
+    adjustViewingDirection(): void {
         if (this.target) {
             this.camera3d.up = this.up;
-            this.camera3d.lookAt(this.target.position);
+            this.camera3d.lookAt(this.target.getObject3d().position);
         }
         if (this.targetPosition) {
             this.camera3d.up = this.up;
@@ -170,8 +169,6 @@ export class Camera3dClass extends Object3dClass {
 
     destroy() {
         super.destroy();
-        this.world3d.scene.remove(this.camera3d);
-
         this.world3d.scene.remove(this.camera3d);
     }
 

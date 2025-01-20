@@ -8,7 +8,7 @@ import { Light3dClass } from './Light3dClass';
 
 export class PointLight3dClass extends Light3dClass {
     static __javaDeclarations: LibraryDeclarations = [
-        { type: "declaration", signature: "class PointLight3d extends Object3d" },
+        { type: "declaration", signature: "class PointLight3d extends Light3d" },
         { type: "method", signature: "PointLight3d()", java: PointLight3dClass.prototype._cj$_constructor_$PointLight3d$ },
         { type: "method", signature: "PointLight3d(double x,double y,double z)", java: PointLight3dClass.prototype._cj$_constructor_$PointLight3d$double$double$double$ },
         { type: "method", signature: "PointLight3d(Vector3 position)", java: PointLight3dClass.prototype._cj$_constructor_$PointLight3d$double$double$double$ },
