@@ -432,14 +432,14 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
 
 
         let conditionNode = node.condition;
-        if (!conditionNode) return undefined;
+        // if (!conditionNode) return undefined;
 
         let negationResult = this.negateConditionIfPossible(conditionNode);
 
-        conditionNode = negationResult.newNode;
+        conditionNode = negationResult?.newNode;
 
         let condition = this.compileTerm(conditionNode);
-        if (!condition) condition = new StringCodeSnippet('true', node.range, this.booleanType);
+        // if (!condition) condition = new StringCodeSnippet('true', node.range, this.booleanType);
 
         let labelBeforeCheckingCondition = new LabelCodeSnippet();
         let jumpToLabelBeforeCheckingCondition = new JumpToLabelCodeSnippet(labelBeforeCheckingCondition);
@@ -456,7 +456,7 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
 
         let statementsToRepeat = this.compileStatementOrTerm(node.statementToRepeat);
 
-        if (!(condition && statementsToRepeat)) {
+        if (!statementsToRepeat) {
             this.popSymbolTable();
             return undefined;
         }
@@ -467,10 +467,12 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
             forSnippet.addNextStepMark();
         }
         forSnippet.addParts(labelBeforeCheckingCondition);
-        forSnippet.addParts(new OneParameterTemplate(negationResult.negationHappened ? 'if(§1){\n' : 'if(!(§1)){\n').applyToSnippet(this.voidType, node.condition!.range, condition));
-        forSnippet.addParts(jumpToLabelAfterForBlock);
-        forSnippet.addStringPart("}\n");
-        forSnippet.addNextStepMark();
+        if(condition){
+            forSnippet.addParts(new OneParameterTemplate(negationResult?.negationHappened ? 'if(§1){\n' : 'if(!(§1)){\n').applyToSnippet(this.voidType, node.condition!.range, condition));
+            forSnippet.addParts(jumpToLabelAfterForBlock);
+            forSnippet.addStringPart("}\n");
+            forSnippet.addNextStepMark();
+        }
 
         forSnippet.addParts(statementsToRepeat);
 
@@ -623,6 +625,7 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
 
 
     negateConditionIfPossible(node: ASTTermNode): { newNode: ASTTermNode, negationHappened: boolean } {
+        if(!node) return undefined;
         if (node.kind == TokenType.binaryOp) {
             let node1 = <ASTBinaryNode>node;
             switch (node1.operator) {

@@ -174,14 +174,14 @@ export abstract class StatementParser extends TermParser {
 
             if (initialization) {
                 assignmentStatementNodes.assignments.push(
-                {
-                    assignmentOperatorRange: assignmentOperatorRange,
-                    fieldNode: this.nodeFactory.buildVariableNode(identifier),
-                    initialTerm: initialization
-                });
+                    {
+                        assignmentOperatorRange: assignmentOperatorRange,
+                        fieldNode: this.nodeFactory.buildVariableNode(identifier),
+                        initialTerm: initialization
+                    });
             }
 
-            if(!this.comesToken(TokenType.comma, true)) break;
+            if (!this.comesToken(TokenType.comma, true)) break;
 
         }
 
@@ -367,11 +367,24 @@ export abstract class StatementParser extends TermParser {
         let colonFound = this.lookForTokenTillOtherToken(TokenType.colon, [TokenType.rightBracket, TokenType.leftCurlyBracket, TokenType.rightCurlyBracket]);
         if (colonFound) return this.parseEnhancedForLoop(tokenFor);
 
-        let firstStatement = this.parseStatementOrExpression(false);
+        let firstStatement: ASTStatementNode | undefined = undefined;
+        if (!this.comesToken(TokenType.semicolon, false)) {
+            firstStatement = this.parseStatementOrExpression(false);
+        }
         semicolonPositions.push(Range.getStartPosition(this.cct.range));
         this.expect(TokenType.semicolon, true);
-        let condition = this.parseTerm();
-        if (!condition) this.skipTokensTillEndOfLineOr(TokenType.semicolon)
+        let condition: ASTTermNode | undefined = undefined;
+        if (!this.comesToken(TokenType.semicolon, false)) {
+            condition = this.parseTerm();
+            if (!condition) this.skipTokensTillEndOfLineOr(TokenType.semicolon)
+        }
+        // else {
+        //     condition = this.nodeFactory.buildConstantNode({
+        //         tt: TokenType.true,
+        //         value: "true",
+        //         range: this.cct.range
+        //     })
+        // }
         semicolonPositions.push(Range.getStartPosition(this.cct.range));
         this.expect(TokenType.semicolon, true);
         let lastStatement = this.parseTerm();

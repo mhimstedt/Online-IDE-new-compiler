@@ -65,8 +65,14 @@ export class Step {
 
     setRangeStartIfUndefined(range?: IRange) {
         if (!this.range?.startLineNumber && range && range != EmptyRange.instance) {
-            this.range.startLineNumber = range.startLineNumber;
-            this.range.startColumn = range.startColumn;
+            this.range = {
+                startLineNumber: range.startLineNumber,
+                startColumn: range.startColumn,
+                endLineNumber: range.endLineNumber,
+                endColumn: range.endColumn
+            }
+            // this.range.startLineNumber = range.startLineNumber;
+            // this.range.startColumn = range.startColumn;
         }
     }
 
