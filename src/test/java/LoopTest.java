@@ -147,7 +147,17 @@ for (Iterator<Integer> i = list.iterator(); i.hasNext(); ) {
     println(i.next());
 }
 
-
+/**::
+ * forever-loop
+ * { "expectedOutput": "1\n2\n3\n4\n" }
+ */
+int i = 1;
+for (;;)
+{
+   if(i == 5) break;
+   println(i);
+   i++;
+}
 
 
 /**::
