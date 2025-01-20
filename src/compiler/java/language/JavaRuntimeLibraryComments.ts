@@ -2276,7 +2276,7 @@ export class JRC {
         "en": "Returns the current number of permits available in this semaphore.",
     })
 
-    static semaphoreAquireComment = () => lm({
+    static semaphoreAcquireComment = () => lm({
         "de": "Beschafft ein Permit. Falls keines vorhanden sind wird der Thread blockiert. Der Thread bleibt blockiert bis wieder ein Permit vorhanden ist oder der Thread unterbrochen (interrupted) wird.",
         "en": "Acquires a permit from this semaphore, blocking until one is available, or the thread is interrupted.",
     })

@@ -24,7 +24,7 @@ export class SemaphoreClass extends ObjectClass {
         { type: "declaration", signature: "class Semaphore extends Object" , comment: JRC.semaphoreClassComment},
         { type: "method", signature: "public Semaphore(int permits)", java: SemaphoreClass.prototype._jconstructor , comment: JRC.semaphoreConstructorComment},
         { type: "method", signature: "public final int availablePermits()", native: SemaphoreClass.prototype._nAvailablePermits , comment: JRC.semaphoreAvailablePermitsComment},
-        { type: "method", signature: "public void aquire()", java: SemaphoreClass.prototype._mj$aquire$void , comment: JRC.semaphoreAquireComment},
+        { type: "method", signature: "public void acquire()", java: SemaphoreClass.prototype._mj$acquire$void , comment: JRC.semaphoreAcquireComment},
         { type: "method", signature: "public void release()", java: SemaphoreClass.prototype._mj$release$void , comment: JRC.semaphoreReleaseComment},
     ]
 
@@ -44,7 +44,7 @@ export class SemaphoreClass extends ObjectClass {
         return this.permitsAvailable;
     }
 
-    _mj$aquire$void(t: Thread, callback: CallbackFunction){
+    _mj$acquire$void(t: Thread, callback: CallbackFunction){
         if(this.permitsAvailable > 0){
             this.permitsAvailable--;
         } else {
