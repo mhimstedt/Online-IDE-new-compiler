@@ -222,7 +222,7 @@ export class Main implements MainBase {
 
         jQuery(window).trigger('resize');
 
-        this.themeManager = new ThemeManager();
+        this.themeManager = new ThemeManager(<HTMLDivElement>jQuery('.joeCssFence')[0]);
         this.themeManager.switchTheme("dark");
 
         let breakpointManager = new BreakpointManager(this);

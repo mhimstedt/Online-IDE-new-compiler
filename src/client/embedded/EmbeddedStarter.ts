@@ -94,8 +94,6 @@ export class EmbeddedStarter {
     initGUI() {
 
         this.checkStartupComplete();
-
-        new ThemeManager().switchTheme("dark");
     }
 
     initEditor() {
@@ -149,6 +147,8 @@ export class EmbeddedStarter {
         });
 
         for (let dws of divsWithScriptLists) {
+            new ThemeManager(<HTMLDivElement>dws[0][0]).switchTheme("dark");
+
             await this.initDiv(dws[0], dws[1]);
         }
 

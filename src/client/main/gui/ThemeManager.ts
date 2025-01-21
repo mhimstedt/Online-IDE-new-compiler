@@ -10,7 +10,7 @@ export class ThemeManager {
 
     themes: Theme[] = [];
 
-    constructor() {
+    constructor(private rootElement: HTMLDivElement) {
         this.initThemes();
         this.initEditorThemes();
     }
@@ -27,11 +27,11 @@ export class ThemeManager {
     internalSwitchTheme(theme: Theme) {
         monaco.editor.setTheme(theme.monacoTheme);
 
-        let root = document.documentElement;
+        // let root = document.documentElement;
         for (const key of Object.keys(theme.cssColors)) {
             const value = theme.cssColors[key]
 
-            root.style.setProperty(key, value);
+            this.rootElement.style.setProperty(key, value);
 
         }
 
