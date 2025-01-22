@@ -86,6 +86,9 @@ export function openContextMenu(items: ContextMenuItem[], x: number, y: number):
     let mousePointer = window.PointerEvent ? "pointer" : "mouse";
 
     let $contextMenu = jQuery('<div class="jo_contextmenu"></div>');
+    let rootElement = <HTMLDivElement>jQuery('.joeCssFence')[0];
+    let backgroundColor = rootElement.style.getPropertyValue('--contextmenu-background');
+    $contextMenu.css('background-color', backgroundColor);
 
     let $openSubMenu: JQuery<HTMLElement> | undefined = undefined;
     let parentMenuItem: ContextMenuItem | undefined = undefined;

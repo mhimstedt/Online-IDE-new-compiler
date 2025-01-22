@@ -18,8 +18,8 @@
 }
 
 .jo_contextmenu>div:hover {
-    background-color: var(--contextmenu-hover-background);
-    color: var(--contextmenu-hover-color);
+    background-color: #094771;
+    color: #ffffff;
 }
 
 .jo_contextmenu>div:hover:active {
@@ -29,7 +29,7 @@
 .jo_menulink {
     display: inline-block;
     text-decoration: none;
-    color: var(--fontColorNormal) !important;
+    color: #000000 !important;
     width: 100%;
     box-sizing: border-box;
 }
@@ -697,7 +697,7 @@
     .jo_file {
         display: flex;
         position: relative;
-        font-size: 11px;
+        font-size: 13px;
         padding-left: 10px;
         user-select: none;
         -ms-user-select: none;
@@ -721,6 +721,10 @@
         background-color: var(--file-active);
         border: 1px solid var(--file-active-border);
         color: var(--fontColorLight);
+    }
+
+    .jo_file.jo_active .jo_filename {
+        font-weight: bold;
     }
 
     .jo_file.jo_active:hover {
@@ -921,7 +925,7 @@
 
     .jo_file:hover>.jo_delete, .jo_file>.jo_delete_always, .jo_file:hover .jo_pruefung_settings {
         display: block;
-        margin-top: 2px;
+        margin-top: 1px;
         width: 16px;
         height: 16px;
     }

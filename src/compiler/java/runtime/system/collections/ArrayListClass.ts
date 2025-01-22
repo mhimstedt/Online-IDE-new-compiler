@@ -128,7 +128,7 @@ export class ArrayListClass extends SystemCollection implements BaseListType {
         this.elements.push(element);
     }
 
-    _addWithIndex(element: ObjectClassOrNull, index: number) {
+    _addWithIndex(index: number, element: ObjectClassOrNull) {
         if (index < 0 || index > this.elements.length) {
             throw new IndexOutOfBoundsExceptionClass(JRC.indexOutOfBoundsException(index, this.elements.length - 1));
         }

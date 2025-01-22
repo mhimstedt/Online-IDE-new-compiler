@@ -27,7 +27,7 @@ export class DoubleClass extends NumberClass {
         {type: "method", signature: "public int compareTo(Double otherValue)", java: DoubleClass.prototype._mj$compareTo$int$T},
         {type: "method", signature: "public static double parseDouble(String s)", native: DoubleClass.parseDouble},
         {type: "method", signature: "public static Double valueOf(double f)", native: DoubleClass.valueOf},
-        {type: "method", signature: "public static Double valueOf(String s)", native: DoubleClass.valueOfString},
+        {type: "method", signature: "public static Double valueOf(string s)", native: DoubleClass.valueOfString},
     ]
 
     static type: NonPrimitiveType;

@@ -122,7 +122,7 @@ export class MyConsole {
                     that.historyPos = 0;
 
                     let returnValue = await that.main.getRepl().executeAsync(command!, false);
-                    this.showCompilationErrors(returnValue.errors);
+                    this.showCompilationErrors(returnValue?.errors);
 
                     if (typeof returnValue !== "undefined") {
                         that.writeConsoleEntry(command, returnValue);
