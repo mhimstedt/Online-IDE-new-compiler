@@ -7,6 +7,8 @@ import { SymbolTableSection } from "./SymbolTableSection";
 import { ValueRenderer } from "./ValueRenderer.ts";
 import { IPosition } from "../range/Position.ts";
 import jQuery from 'jquery';
+import { JavaField } from "../../java/types/JavaField.ts";
+import { Interpreter } from "../interpreter/Interpreter.ts";
 
 export type RuntimeObject = {
     getType(): RuntimeObjectType & BaseType;
@@ -378,6 +380,45 @@ export class StackElementDebuggerEntry extends DebuggerSymbolEntry {
 
             this.render(value, (newValue: any) => {
                 stack[stackBase + this.symbol.stackframePosition] = newValue;
+            });
+        }
+
+
+
+    }
+
+}
+
+export class StaticFieldDebuggerEntry extends DebuggerSymbolEntry {
+
+    constructor(symbolTableSection: SymbolTableSection,
+        private field: JavaField) {
+        super(symbolTableSection, undefined, field.getType(), field.identifier);
+
+    }
+
+    fetchValueAndRender(position: IPosition, interpreter: Interpreter) {
+
+        let notYetDefined: boolean = true;
+        let symbolRange = this.field.identifierRange;
+
+        if (symbolRange.endLineNumber < position.lineNumber) {
+            notYetDefined = false;
+        } else if (symbolRange.endLineNumber == position.lineNumber && symbolRange.endColumn < position.column) {
+            notYetDefined = false;
+        }
+
+        if (notYetDefined) {
+            this.treeViewNode.getMainDiv().style.display = 'none';
+        } else {
+            this.treeViewNode.getMainDiv().style.display = '';
+
+            let klass = interpreter.scheduler.classObjectRegistry[this.field.classEnum.identifier];
+
+            let value = klass[this.field.getInternalName()];
+
+            this.render(value, (newValue: any) => {
+                klass[this.field.getInternalName()] = newValue;
             });
         }
 

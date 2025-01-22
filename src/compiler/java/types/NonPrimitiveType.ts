@@ -203,6 +203,7 @@ export abstract class NonPrimitiveType extends JavaType implements BaseObjectTyp
         cf.template = "§1.type.getClassObject()";    
         cf.classEnum = <any>this;
         cf.documentation = JRC.classFieldComment;
+        cf.hiddenWhenDebugging = true;
         let typeMap = new Map();
         typeMap.set(classType.genericTypeParameters[0], this);
         cf.type = new GenericVariantOfJavaClass(<JavaClass>classType, typeMap);

@@ -70,7 +70,7 @@ export abstract class BaseSymbolTable {
         this.identifierToSymbolMap.set(symbol.identifier, symbol);
     }
 
-    abstract getSymbolsForDebugger(): SymbolOnStackframe[];
+    abstract getSymbolsOnStackframeForDebugger(): SymbolOnStackframe[];
 
     findSymbolTableAtPosition(position: IPosition): BaseSymbolTable | undefined {
         if (!Range.containsPosition(this.range, position)) return undefined;

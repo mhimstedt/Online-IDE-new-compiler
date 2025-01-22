@@ -50,7 +50,7 @@ export class JavaSymbolTable extends BaseSymbolTable {
         }
     }
 
-    getSymbolsForDebugger(): SymbolOnStackframe[] {
+    getSymbolsOnStackframeForDebugger(): SymbolOnStackframe[] {
         let symbols: SymbolOnStackframe[] = [];
         this.identifierToSymbolMap.forEach((symbol, identifier) => {symbols.push(symbol)});
         if(this.classContext && this.classContext != this.parent?.classContext && !(this.classContext instanceof StaticNonPrimitiveType)){
@@ -59,6 +59,7 @@ export class JavaSymbolTable extends BaseSymbolTable {
             thisVariable.stackframePosition = 0;
             symbols.push(thisVariable);
         }
+
         return symbols;
     }
 

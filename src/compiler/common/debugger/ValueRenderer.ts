@@ -82,7 +82,7 @@ export class ValueRenderer {
         let s: string = "{ ";
             let type = value.getType();
             if(type){
-                let fields = type.getOwnAndInheritedFields();
+                let fields = type.getOwnAndInheritedFields().filter(f => !f.hiddenWhenDebugging);
 
                 let i: number = 0;
                 while(i < fields.length && s.length < maxLength){

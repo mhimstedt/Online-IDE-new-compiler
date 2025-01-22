@@ -152,7 +152,7 @@ export abstract class StatementParser extends TermParser {
 
         let assignmentStatementNodes: ASTInitialFieldAssignmentInMainProgramNodes = {
             kind: TokenType.initialFieldAssignementInMainProgram,
-            range: EmptyRange.instance,
+            range: Object.assign(this.cct.range),
             assignments: []
         }
 
@@ -184,6 +184,8 @@ export abstract class StatementParser extends TermParser {
             if (!this.comesToken(TokenType.comma, true)) break;
 
         }
+
+        this.setEndOfRange(assignmentStatementNodes);
 
         if (assignmentStatementNodes.assignments.length == 0) return undefined;
 
