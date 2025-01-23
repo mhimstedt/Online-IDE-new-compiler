@@ -29,7 +29,6 @@
 .jo_menulink {
     display: inline-block;
     text-decoration: none;
-    color: var(--fontColorNormal) !important;
     width: 100%;
     box-sizing: border-box;
 }
