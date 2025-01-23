@@ -784,6 +784,9 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
             if(range.startLineNumber < field.identifierRange.startLineNumber){
                 this.pushError(JCM.localVariableUsedBeforeDeclaration(field.identifier), "error", range);
             }
+            const snippet = new StringCodeSnippet(`${StepParams.stack}[0].${field.getInternalName()}`, range, field.type);
+            snippet.isLefty = !field._isFinal;
+            return snippet;
         }
 
 

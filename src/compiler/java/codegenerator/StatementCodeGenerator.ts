@@ -5,7 +5,7 @@ import { TokenType } from "../TokenType";
 import { JCM } from "../language/JavaCompilerMessages.ts";
 import { JavaCompiledModule } from "../module/JavaCompiledModule";
 import { JavaTypeStore } from "../module/JavaTypeStore";
-import { ASTArrayLiteralNode, ASTAttributeDereferencingNode, ASTBinaryNode, ASTBlockNode, ASTBreakNode, ASTCaseNode, ASTContinueNode, ASTDoWhileNode, ASTEnhancedForLoopNode, ASTForLoopNode, ASTIfNode, ASTInitialFieldAssignmentInMainProgramNodes, ASTLambdaFunctionDeclarationNode, ASTLocalVariableDeclaration, ASTLocalVariableDeclarations, ASTNode, ASTPrintStatementNode, ASTReturnNode, ASTStatementNode, ASTSwitchCaseNode, ASTSymbolNode, ASTSynchronizedBlockNode, ASTTermNode, ASTThrowNode, ASTTryCatchNode, ASTUnaryPrefixNode, ASTWhileNode } from "../parser/AST";
+import { ASTArrayLiteralNode, ASTAttributeDereferencingNode, ASTBinaryNode, ASTBlockNode, ASTBreakNode, ASTCaseNode, ASTContinueNode, ASTDoWhileNode, ASTEnhancedForLoopNode, ASTFirstMainMethodStatementNode, ASTForLoopNode, ASTIfNode, ASTInitialFieldAssignmentInMainProgramNodes, ASTLambdaFunctionDeclarationNode, ASTLocalVariableDeclaration, ASTLocalVariableDeclarations, ASTNode, ASTPrintStatementNode, ASTReturnNode, ASTStatementNode, ASTSwitchCaseNode, ASTSymbolNode, ASTSynchronizedBlockNode, ASTTermNode, ASTThrowNode, ASTTryCatchNode, ASTUnaryPrefixNode, ASTWhileNode } from "../parser/AST";
 import { SystemCollection } from "../runtime/system/collections/SystemCollection.ts";
 import { ObjectClass } from "../runtime/system/javalang/ObjectClassStringClass.ts";
 import { PrimitiveType } from "../runtime/system/primitiveTypes/PrimitiveType";
@@ -81,6 +81,8 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
                 snippet = this.compileThrowStatement(<ASTThrowNode>ast); break;
             case TokenType.initialFieldAssignementInMainProgram:
                 snippet = this.compileInitialFieldAssignmentInMainProgram(<ASTInitialFieldAssignmentInMainProgramNodes>ast); break;
+            case TokenType.firstMainProgramStatement:
+                snippet = this.compileFirstMainProgramStatement(<ASTFirstMainMethodStatementNode> ast); break;
 
 
             default:
@@ -101,6 +103,11 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
 
         return snippet;
 
+    }
+
+    compileFirstMainProgramStatement(arg0: ASTFirstMainMethodStatementNode): CodeSnippet {
+        let klass = this.currentSymbolTable.classContext;
+        return new StringCodeSnippet(`${StepParams.stack}.push(${Helpers.classes}.${klass.identifier});\n`);
     }
     
     compileInitialFieldAssignmentInMainProgram(node: ASTInitialFieldAssignmentInMainProgramNodes): CodeSnippet {

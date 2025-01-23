@@ -78,6 +78,10 @@ export class Parser extends StatementParser {
 
         mainMethod.statement = mainStatement;
         this.mainMethodStatements = mainStatement.statements;
+        this.mainMethodStatements.push({
+            kind: TokenType.firstMainProgramStatement,
+            range: EmptyRange.instance 
+        })
 
 
         let stringArrayType = this.nodeFactory.buildArrayTypeNode(this.buildBaseType("String"));

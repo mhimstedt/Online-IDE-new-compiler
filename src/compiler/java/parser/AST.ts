@@ -305,6 +305,10 @@ export interface ASTSymbolNode extends ASTTermNode {
 //     rightSide: ASTTermNode;
 // }
 
+export interface ASTFirstMainMethodStatementNode extends ASTStatementNode {
+    kind: TokenType.firstMainProgramStatement
+}
+
 export interface ASTTernaryNode extends ASTTermNode {
     kind: TokenType.ternaryOperator;
     condition: ASTTermNode;

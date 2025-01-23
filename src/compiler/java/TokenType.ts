@@ -153,6 +153,7 @@ export enum TokenType {
     methodCall,
     newObject,
     initialFieldAssignementInMainProgram,
+    firstMainProgramStatement,
 
     // additional AST node types
     global,
