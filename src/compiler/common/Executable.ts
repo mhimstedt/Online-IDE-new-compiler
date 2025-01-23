@@ -47,7 +47,7 @@ export class Executable {
 
         this.staticInitializationSequence = [];
 
-        for (const module of this.moduleManager.modules) {
+        for (const module of this.moduleManager.modules.filter(m => !m.hasErrors())) {
             if (!module.ast) continue;
             for (const cdef of module.ast.innerTypes) {
                 if (cdef.resolvedType)
