@@ -101,7 +101,7 @@ export function openContextMenu(items: ContextMenuItem[], x: number, y: number):
             caption = `<a href="${mi.link}" target="_blank" class="jo_menulink">${mi.caption}</a>`;
         }
         let $item: JQuery<HTMLElement> = jQuery('<div>' + caption + (mi.subMenu != null ? '<span style="float: right"> &nbsp; &nbsp; &gt;</span>' : "") + '</div>');
-        $item.find('a').css('color', fontColorNormal);
+        $item.find('a').attr('style', 'color: ' + fontColorNormal + " !important");
         if (mi.color != null) {
             $item.css('color', mi.color);
         }

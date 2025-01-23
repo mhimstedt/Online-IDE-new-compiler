@@ -35,7 +35,7 @@ type MenuItem = {
 export class MainMenu {
 
     constructor(private main: Main) {
-
+        
     }
 
     currentSubmenu: { [level: number]: JQuery<HTMLElement> } = {};
@@ -354,7 +354,11 @@ export class MainMenu {
                 let noHoverKlass = mi.noHoverAnimation ? ' class="jo_menuitem_nohover"' : '';
                 mi.$element = jQuery(`<div${noHoverKlass}>${mi.identifier}</div>`);
                 if (mi.link != null) {
+                    let rootElement = <HTMLDivElement>jQuery('.joeCssFence')[0];
+                    let fontColorNormal = rootElement.style.getPropertyValue('--fontColorNormal');
+                
                     let $link = jQuery('<a href="' + mi.link + '" target="_blank" class="jo_menulink"></a>');
+                    $link.attr('style', 'color: ' + fontColorNormal + " !important");
                     $link.on("pointerdown", (event) => {
                         event.stopPropagation();
                     })
