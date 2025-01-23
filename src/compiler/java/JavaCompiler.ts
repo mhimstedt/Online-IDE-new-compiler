@@ -130,7 +130,8 @@ export class JavaCompiler implements Compiler {
 
         // resolve returns false if cyclic references are found. In this case we don't continue compiling.
         if (typeResolver.resolve()) {
-            this.moduleManager.typestore.initFastExtendsImplementsLookup();
+
+            // this.moduleManager.typestore.initFastExtendsImplementsLookup();
 
 
             for (const module of newOrDirtyModules) {

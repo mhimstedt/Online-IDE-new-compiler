@@ -49,6 +49,8 @@ export class TypeResolver {
 
         this.resolveGenericParameterTypesAndExtendsImplements();
 
+        this.moduleManager.typestore.initFastExtendsImplementsLookup();
+
         this.checkGenericTypeInstantiationNodes();
 
         if (CycleFinder.findCycle(this.moduleManager)) return false;
