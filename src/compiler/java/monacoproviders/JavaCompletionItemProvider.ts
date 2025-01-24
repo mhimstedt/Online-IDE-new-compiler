@@ -534,7 +534,7 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
                     // insertText: "while(${1:Bedingung}){\n\t$0\n}",
                     insertText: "while($1){\n\t$0\n}",
                     command: {
-                        id: "editor.action.triggerParameterHints",
+                        id: "editor.action.triggerSuggest",
                         title: '123',
                         arguments: []
                     },
@@ -579,7 +579,7 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
                     detail: MonacoProviderLanguage.switchStatement(),
                     filterText: 'switch',
                     command: {
-                        id: "editor.action.triggerParameterHints",
+                        id: "editor.action.triggerSuggest",
                         title: '123',
                         arguments: []
                     },
@@ -593,11 +593,11 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
                     insertText: "if($1){\n\t$0\n}",
                     detail: MonacoProviderLanguage.ifClause(),
                     filterText: 'if',
-                    // command: {
-                    //     id: "editor.action.triggerParameterHints",
-                    //     title: '123',
-                    //     arguments: []
-                    // },
+                    command: {
+                        id: "editor.action.triggerSuggest",
+                        title: '123',
+                        arguments: []
+                    },
                     insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
                     kind: monaco.languages.CompletionItemKind.Snippet,
                     range: range
@@ -607,11 +607,11 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
                     insertText: "if($1){\n\t$2\n}\nelse {\n\t$0\n}",
                     detail: MonacoProviderLanguage.doubleSidedIfClause(),
                     filterText: 'if',
-                    // command: {
-                    //     id: "editor.action.triggerParameterHints",
-                    //     title: '123',
-                    //     arguments: []
-                    // },
+                    command: {
+                        id: "editor.action.triggerSuggest",
+                        title: '123',
+                        arguments: []
+                    },
                     insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
                     kind: monaco.languages.CompletionItemKind.Snippet,
                     range: range
@@ -821,7 +821,7 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
 
         let keywordCompletionItems: monaco.languages.CompletionItem[] = [];
 
-        let constructors = classContext.getOwnMethods().filter(m => m.isConstructor && m.identifier == classContext.identifier);
+        let constructors = classContext.getOwnMethods().filter(m => m.isConstructor && m.identifier == classContext.identifier && m.identifierRange.startLineNumber !== -1);
         if (constructors.length > 0) return [];
 
         

@@ -320,12 +320,10 @@ export abstract class StatementParser extends TermParser {
                 statementIfFalse = this.parseStatementOrExpression();
             }
 
-            if (condition && statementIfTrue) {
 
-                return this.nodeFactory.buildIfNode(ifToken,
-                    this.cct, condition, statementIfTrue, statementIfFalse);
+            return this.nodeFactory.buildIfNode(ifToken,
+                this.cct, condition, statementIfTrue, statementIfFalse);
 
-            }
 
         } else {
             this.skipTokensTillEndOfLineOr([TokenType.rightBracket]);
