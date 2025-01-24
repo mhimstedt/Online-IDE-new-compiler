@@ -780,13 +780,17 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
             this.classOfCurrentlyCompiledStaticInitialization.staticConstructorsDependOn.set(field.classEnum, true);
         }
 
+        // local variable in main program declared at outmost scope is
+        // modeled as field in order to be able to reach it inside methods declared in main program.
         if(field._isStatic &&field.classEnum.isMainClass){
             if(range.startLineNumber < field.identifierRange.startLineNumber){
                 this.pushError(JCM.localVariableUsedBeforeDeclaration(field.identifier), "error", range);
             }
-            const snippet = new StringCodeSnippet(`${StepParams.stack}[0].${field.getInternalName()}`, range, field.type);
-            snippet.isLefty = !field._isFinal;
-            return snippet;
+            if(outerClassLevel == 0){   // outerClassLevel > 0 could be inside run-Method or runnable whicht runs on other thread and has other stack than main program
+                const snippet = new StringCodeSnippet(`${StepParams.stack}[0].${field.getInternalName()}`, range, field.type);
+                snippet.isLefty = !field._isFinal;
+                return snippet;
+            }
         }
 
 
