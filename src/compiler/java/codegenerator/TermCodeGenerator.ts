@@ -632,7 +632,7 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
                     this.pushError(JCM.arrayLiteralElementDimensionWrong(), "error", node.range);
                     return undefined;
                 }
-                let snippet = this.compileArrayLiteral(elementType.elementType, <ASTArrayLiteralNode>elementNode);
+                let snippet = this.compileArrayLiteral(elementType.getElementType(), <ASTArrayLiteralNode>elementNode);
                 if (snippet) elementSnippets.push(snippet);
             } else {
                 let elementSnippet = this.compileTerm(elementNode);
