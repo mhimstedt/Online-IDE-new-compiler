@@ -161,7 +161,6 @@ export class MainEmbedded implements MainBase {
         if(this.bottomDiv && this.fileExplorer){
             let errors = this.bottomDiv?.errorManager?.showErrors(this.currentWorkspace);
             this.fileExplorer.renderErrorCount(this.currentWorkspace, errors);
-            this.printProgram();
         }
     }
 
@@ -741,12 +740,6 @@ export class MainEmbedded implements MainBase {
         if (this.compileRunsAfterCodeReset == 3) {
             this.$resetButton.fadeIn(1000);
         }
-    }
-
-    printProgram() {
-        // TODO!
-        //this.bottomDiv.printModuleToBottomDiv(this.currentWorkspace, this.getCurrentlyEditedModule());
-
     }
 
     drawClassDiagrams(onlyUpdateIdentifiers: boolean) {

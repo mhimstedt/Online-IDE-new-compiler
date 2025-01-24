@@ -314,18 +314,10 @@ export class Main implements MainBase {
         this.interpreter.setExecutable(executable);
         let errors = this.bottomDiv?.errorManager?.showErrors(this.currentWorkspace);
         this.projectExplorer.renderErrorCount(this.currentWorkspace, errors);
-        this.printProgram();
         this.drawClassDiagrams(!this.rightDiv.isClassDiagramEnabled());
 
     }
 
-
-    printProgram() {
-
-        // TODO!
-        // this.bottomDiv.printModuleToBottomDiv(this.currentWorkspace, this.getCurrentWorkspace()?.getCurrentlyEditedFile());
-
-    }
 
     drawClassDiagrams(onlyUpdateIdentifiers: boolean) {
         clearTimeout(this.debounceDiagramDrawing);

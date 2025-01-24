@@ -9,7 +9,6 @@ import { BottomDiv } from "./gui/BottomDiv.js";
 import { RightDiv } from "./gui/RightDiv.js";
 
 export interface MainBase extends IMain {
-    printProgram();
     drawClassDiagrams(onlyUpdateIdentifiers: boolean);
 
     getDebugger(): Debugger;

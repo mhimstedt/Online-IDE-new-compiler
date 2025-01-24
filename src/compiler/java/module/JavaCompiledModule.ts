@@ -203,7 +203,7 @@ export class JavaCompiledModule extends JavaBaseModule {
 
             if (mainMethod) {
                 let statements = mainMethod.statement as ASTBlockNode;
-                if(statements.statements.length > 0) return this.mainClass.resolvedType;
+                if(statements.statements.length > 1) return this.mainClass.resolvedType;
             }
 
         }
