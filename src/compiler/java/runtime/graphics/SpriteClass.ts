@@ -299,6 +299,8 @@ export class SpriteClass extends ShapeClass {
 
     setTexture(spriteLibrary?: string, imageIndex?: number) {
 
+        if(this.container?.destroyed) return;
+
         if (spriteLibrary == this.spriteLibrary && imageIndex == this.imageIndex) return;
         if (spriteLibrary == null) spriteLibrary = this.spriteLibrary;
 
@@ -365,7 +367,11 @@ export class SpriteClass extends ShapeClass {
             this.centerXInitial = sprite.width / 2;
             this.centerYInitial = sprite.height / 2;
 
-            if(this.container.parent){
+            let dx = oldCenterX - this.centerXInitial;
+            let dy = oldCenterY - this.centerYInitial;
+
+
+            if(this.belongsToGroup && dx*dx + dy*dy > 1e-10){
 
                 this.container.setFromMatrix(this.container.localTransform.append(new PIXI.Matrix().translate(oldCenterX - this.centerXInitial, oldCenterY - this.centerYInitial)));
 
@@ -473,7 +479,7 @@ export class SpriteClass extends ShapeClass {
         // this method is called by PIXI.Ticker, not by Thread.run, so we have to catch
         // the exception ourselves...
         try {
-            this.setTexture(this.spriteLibrary, this.animationIndices[image]);
+            this.setTexture(this.textureName, this.animationIndices[image]);
         } catch (exception: any){
             this.world.interpreter.stop(false);
             this.world.interpreter.printManager.printHtmlElement(ExceptionPrinter.getHtmlWithLinks(exception, [], this.world.interpreter.getMain()));

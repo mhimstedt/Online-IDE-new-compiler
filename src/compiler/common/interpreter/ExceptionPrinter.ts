@@ -43,6 +43,13 @@ export class ExceptionPrinter {
         let outerDiv = DOM.makeDiv(undefined, 'jo_exceptionPrinter_outer');
 
         let headingDiv = DOM.makeDiv(outerDiv, 'jo_exceptionPrinter_heading');
+
+        if(!exception["getThread"]){
+            console.error(exception);
+            return;
+            //
+        }
+
         let inThread = exception.getThread() ? " in thread " + exception.getThread()!.name : "";
         headingDiv.textContent = `${exception.getIdentifier()}${inThread}: ${exception.getMessage()}`;
 

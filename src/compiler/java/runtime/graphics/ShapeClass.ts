@@ -314,6 +314,8 @@ export class ShapeClass extends ActorClass {
             cY = p.y;
         }
 
+        console.log({cX: cX, cY: cY});
+
         this.container.localTransform.translate(-cX, -cY);
         this.container.localTransform.scale(factor, factor);
         this.container.localTransform.translate(cX, cY);
