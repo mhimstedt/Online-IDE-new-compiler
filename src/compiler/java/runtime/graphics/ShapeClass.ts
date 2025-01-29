@@ -48,6 +48,7 @@ export class ShapeClass extends ActorClass {
 
         { type: "method", signature: "final void tint(int color)", native: ShapeClass.prototype._setTintInt, comment: JRC.shapeTintComment },
         { type: "method", signature: "final void tint(string color)", native: ShapeClass.prototype._setTintString, comment: JRC.shapeTintComment },
+        { type: "method", signature: "final void tint(Color color)", native: ShapeClass.prototype._setTintColor, comment: JRC.shapeTintComment },
 
         { type: "method", signature: "final Direction directionRelativeTo(Shape otherShape)", native: ShapeClass.prototype._directionRelativeTo, comment: JRC.shapeDirectionRelativeToComment },
         { type: "method", signature: "final void moveBackFrom(Shape otherShape, boolean keepColliding)", native: ShapeClass.prototype._moveBackFrom, comment: JRC.shapeMoveBackFromComment },
@@ -789,6 +790,14 @@ export class ShapeClass extends ActorClass {
         let c = ColorHelper.parseColorToOpenGL(color);
         if (typeof this.container.tint !== 'undefined') {
             this.container.tint = c.color!;
+        }
+    }
+
+    _setTintColor(color: ColorClass) {
+        if(color == null){
+            this.container.tint = 0xffffff;
+        } else {
+            this.container.tint = color._toInt();
         }
     }
 
