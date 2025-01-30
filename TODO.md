@@ -1,3 +1,26 @@
+Hallo Martin,
+
+ich bin nur drauf gestoßen, weil ich mit der 11 NUT in der alten IDE
+programmiere und da vor meine Methoden immer das Wort public schreibe
+und beim Wechsel in die neue IDE mit der 11 spät hat es nicht mehr
+funktioniert. Da programmiere ich laut Lehrplan ja Algorithmen ohne OO
+und meist auch ohne Klasse. Aber wenn es daran liegt, dass ich eine
+Klasse erzeugen muss mache ich das. Du brauchst aus meiner Sicht nichts
+machen.
+
+In meinem Workspace i11bc-Scn-24_25 kann ich komischerweise in der neuen
+IDE nichts mehr abspielen.
+
+Und bei meiner Schülerin Christina Müller aus der i11bc-Scn_24_25 sagt
+die Online IDE immer solche Sachen wie "Auf dieser Seite gibt es ein
+Problem" oder "Die Seite reagiert nicht". Das ist aber nur bei ihr zu
+Hause aber auf mehreren Endgeräten. Dazu fällt mir im Moment nichts ein.
+Dir vielleicht?
+
+Grüsse,
+Uli
+
+
 
 * committen: compiler geerbter konstruktor fix
 

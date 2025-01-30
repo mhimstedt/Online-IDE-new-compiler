@@ -308,6 +308,7 @@ export class Parser extends StatementParser {
 
     parseMethodDeclaration(parentNode: ASTClassDefinitionNode | ASTEnumDefinitionNode | ASTInterfaceDefinitionNode, modifiers: ASTNodeWithModifiers,
         isContructor: boolean, returnType: ASTTypeNode | undefined, genericParameters: ASTGenericParameterDeclarationNode[], documentation: string | undefined) {
+        
         let rangeStart = modifiers.range;
         let identifier = this.expectAndSkipIdentifierAsToken();
         let methodNode = this.nodeFactory.buildMethodNode(returnType, isContructor, modifiers, identifier,

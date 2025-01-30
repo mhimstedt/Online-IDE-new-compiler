@@ -427,6 +427,7 @@ export class TokenIterator {
     analyzeIfVariableDeclarationOrMethodDeclarationAhead(isCodeOutsideClassdeclarations: boolean): "variabledeclaration" | "methoddeclaration" | "statement" {
 
         if(this.tt == TokenType.keywordFinal) return "variabledeclaration";
+        if([TokenType.keywordPrivate, TokenType.keywordProtected, TokenType.keywordPublic, TokenType.keywordStatic, TokenType.keywordVoid].indexOf(this.tt) >= 0) return "methoddeclaration";
 
         let pos = this.pos;
         let nonSpaceTokenTypesFound: TokenType[] = [];
@@ -466,6 +467,7 @@ export class TokenIterator {
                     return "methoddeclaration"
                 }
         }
+
 
         if ([TokenType.identifier, TokenType.leftRightSquareBracket].indexOf(lastToken1) < 0) return "statement";
 

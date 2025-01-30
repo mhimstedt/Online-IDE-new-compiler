@@ -528,6 +528,11 @@ export class JCM {
         "en": `Loop over empty statement (; or {  }).`,
     })
 
+    static noMethodDeclarationAllowedHere = () => le({
+        "de": "Hier ist keine Methodendeklaration möglich.",
+        "en": "No method declaration allowed here."
+    })
+
     static statementOrBlockExpected = () => le({
         "de": "Hier wird eine Anweisung oder ein Anweisungsblock (in geschweiften Klammern) erwartet.",
         "en": `Statement or block-Statement in curly braces { ... } expected.`,

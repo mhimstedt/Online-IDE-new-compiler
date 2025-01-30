@@ -118,10 +118,14 @@ export abstract class StatementParser extends TermParser {
                 break;
             // Only if this.isCodeOutsideClassdeclarations == true:
             case "methoddeclaration":
-                let modifiers = this.nodeFactory.buildNodeWithModifiers(this.cct.range);
-                modifiers.isStatic = true;
-                this.parseFieldOrMethodDeclaration(this.module.mainClass!, modifiers, undefined);
-                return undefined;
+                if(this.isCodeOutsideClassdeclarations && this.currentMethod == null){
+                    let modifiers = this.nodeFactory.buildNodeWithModifiers(this.cct.range);
+                    modifiers.isStatic = true;
+                    this.parseFieldOrMethodDeclaration(this.module.mainClass!, modifiers, undefined);
+                    return undefined;
+                } else {
+                    this.pushError(JCM.noMethodDeclarationAllowedHere());
+                }
         }
 
         if (!statement || (expectSemicolonAfterStatement && !this.expectSemicolon(true, true))) {
