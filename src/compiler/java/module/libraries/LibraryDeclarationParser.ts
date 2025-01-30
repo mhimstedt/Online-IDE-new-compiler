@@ -683,10 +683,9 @@ export class LibraryDeclarationParser extends LibraryDeclarationLexer {
             a.classEnum = enumType;
             a.initialValueIsConstant = true;
             a.initialValue = value;
-            a.internalName = value.name;
 
             enumType.fields.push(a);
-            klass[value.name] = value;
+            klass[a.getInternalName()] = value;
         }
     }
 

@@ -249,8 +249,8 @@ export class CodeGenerator extends InnerClassCodeGenerator {
             } else {
                 callConstructorSnippet = new StringCodeSnippet(`new ${Helpers.classes}["${javaEnum.identifier}"]("${valueNode.identifier}", ${enumValueIndex})`);
             }
-
-            let buildEnumValueSnippet = new OneParameterTemplate(`${Helpers.classes}["${javaEnum.identifier}"].values.push(${Helpers.classes}["${javaEnum.identifier}"]["${valueNode.identifier}"] = §1);\n`).applyToSnippet(javaEnum, valueNode.range, callConstructorSnippet);
+            let field = javaEnum.fields.find(f => f.identifier == valueNode.identifier);
+            let buildEnumValueSnippet = new OneParameterTemplate(`${Helpers.classes}["${javaEnum.identifier}"].values.push(${Helpers.classes}["${javaEnum.identifier}"]["${field.getInternalName()}"] = §1);\n`).applyToSnippet(javaEnum, valueNode.range, callConstructorSnippet);
             staticFieldSnippets.push(buildEnumValueSnippet);
 
             enumValueIndex++;

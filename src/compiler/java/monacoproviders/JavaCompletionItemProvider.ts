@@ -829,7 +829,7 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
         
         let i: number = 1;
 
-        let attibuteParameters: string = fields.map(f => "${" + i++ + ":" + f.type.toString() + " " + f.identifier ).join(", }");
+        let attibuteParameters: string = fields.map(f => "${" + i++ + ":" + f.type?.toString() + " " + f.identifier ).join(", }");
         if(attibuteParameters.length > 0) attibuteParameters += "}";
 
         let attributeInitialization: string = fields.map(f => "${" + i++ + ":this." + f.identifier + " = " + f.identifier + ";").join("\n\t}");

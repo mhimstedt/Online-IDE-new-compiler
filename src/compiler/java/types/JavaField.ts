@@ -54,7 +54,7 @@ export class JavaField extends BaseField {
 
     getInternalName(): string {
         if(!this.internalName){
-            this.internalName = this.identifier;
+            this.internalName = "$f_" + this.identifier;
             if(this.classEnum instanceof JavaClass){
                 let parent = this.classEnum.getExtends();
                 while(parent){
