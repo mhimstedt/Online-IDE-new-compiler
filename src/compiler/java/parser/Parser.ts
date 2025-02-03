@@ -291,10 +291,12 @@ export class Parser extends StatementParser {
                 if (genericParameters.length > 0) {
                     this.pushError(JCM.fieldDefinitionDoesntStartWithGenericParamter(), "error", genericParameters[0].range);
                 }
+
+                if(type != null && type.kind == TokenType.baseType && (<ASTBaseTypeNode>type).identifiers[0].identifier == "String"){
+                    (<ASTBaseTypeNode>type).identifiers[0].identifier = "string";
+                }
+
                 do {
-                    if(type.kind == TokenType.baseType && (<ASTBaseTypeNode>type).identifiers[0].identifier == "String"){
-                        (<ASTBaseTypeNode>type).identifiers[0].identifier = "string";
-                    }
                     this.parseFieldDeclaration(classASTNode, modifiers, type, documentation);
                 } while (this.comesToken(TokenType.comma, true));
 
