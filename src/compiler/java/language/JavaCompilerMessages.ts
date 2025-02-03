@@ -591,6 +591,11 @@ export class JCM {
      * TypeResolver
     */
 
+    static multipleFieldsWithSameIdentifier = (signature: string, otherLineNumber: number) => le({
+        "de": `Es gibt in dieser Klasse/diesem enum ein weiteres Attribut mit dem Bezeichner ${signature} in Zeile ${otherLineNumber}.`,
+        "en": `There's another field with signature ${signature} in this class/this enum (line ${otherLineNumber}).`,
+    })
+
     static multipleMethodsWithSameSignature = (signature: string, otherLineNumber: number) => le({
         "de": `Es gibt in dieser Klasse/diesem Interface/diesem enum eine weitere Methode mit der Signatur ${signature} in Zeile ${otherLineNumber}.`,
         "en": `There's another method for this class/interface/enum with signature ${signature} in line ${otherLineNumber}.`,

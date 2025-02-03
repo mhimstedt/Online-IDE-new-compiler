@@ -235,6 +235,7 @@ export class StringClass extends ObjectClass implements IPrimitiveTypeWrapper {
         { type: "declaration", signature: "final class String extends Object implements Comparable<String>", comment: JRC.stringClassComment },
         { type: "method", signature: "public String()", native: StringClass.prototype._emptyConstructor, comment: JRC.stringConstructorComment },
         { type: "method", signature: "public String(String original)", native: StringClass.prototype._constructor2, comment: JRC.stringConstructorComment2 },
+        { type: "method", signature: "public String(char[] value)", native: StringClass.prototype._constructor3, comment: JRC.stringConstructorComment3 },
         { type: "method", signature: "public final String toString()", native: StringClass.prototype._nToString, template: "§1", comment: JRC.objectToStringComment },
 
         { type: "method", signature: "public final int length()", native: StringClass.prototype._nLength, template: "§1.value.length", comment: JRC.stringLengthComment },
@@ -296,6 +297,11 @@ export class StringClass extends ObjectClass implements IPrimitiveTypeWrapper {
 
     _constructor2(original: string) {
         this.value = original;
+        return this;
+    }
+
+    _constructor3(original: string[]) {
+        this.value = original.join("");
         return this;
     }
 

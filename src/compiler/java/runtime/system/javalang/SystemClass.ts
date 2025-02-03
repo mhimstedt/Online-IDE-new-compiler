@@ -1,4 +1,3 @@
-import { Punkt, abstandPunktZuGerade, abstandPunktZuStrecke, polygonEnthältPunkt, schnittpunkteKreisStrecke, streckeSchneidetStrecke } from "../../../../../tools/MatheTools";
 import { JRC } from "../../../language/JavaRuntimeLibraryComments";
 import { CallbackFunction } from "../../../../common/interpreter/StepFunction";
 import { Thread } from "../../../../common/interpreter/Thread";
@@ -11,7 +10,13 @@ export class PrintStreamClass extends ObjectClass {
     static __javaDeclarations: LibraryDeclarations = [
         { type: "declaration", signature: "class PrintStream extends Object", comment: JRC.PrintStreamClassComment },
         { type: "method", signature: "void print(string text)", java: PrintStreamClass.prototype._mn$print$void$string, comment: JRC.PrintStreamPrintComment},
+        { type: "method", signature: "void print(int number)", java: PrintStreamClass.prototype._mn$print$void$int, comment: JRC.PrintStreamPrintComment},
+        { type: "method", signature: "void print(double number)", java: PrintStreamClass.prototype._mn$print$void$double, comment: JRC.PrintStreamPrintComment},
+        { type: "method", signature: "void print(boolean b)", java: PrintStreamClass.prototype._mn$print$void$boolean, comment: JRC.PrintStreamPrintComment},
         { type: "method", signature: "void println(string text)", java: PrintStreamClass.prototype._mn$println$void$string, comment: JRC.PrintStreamPrintlnComment},
+        { type: "method", signature: "void println(int number)", java: PrintStreamClass.prototype._mn$println$void$int, comment: JRC.PrintStreamPrintlnComment},
+        { type: "method", signature: "void println(double number)", java: PrintStreamClass.prototype._mn$println$void$double, comment: JRC.PrintStreamPrintlnComment},
+        { type: "method", signature: "void println(boolean b)", java: PrintStreamClass.prototype._mn$println$void$boolean, comment: JRC.PrintStreamPrintlnComment},
         { type: "method", signature: "void println()", java: PrintStreamClass.prototype._mn$println$void$string, comment: JRC.PrintStreamPrintlnComment2},
     ];
 
@@ -19,15 +24,63 @@ export class PrintStreamClass extends ObjectClass {
 
     _mn$print$void$string(t: Thread, callback: CallbackFunction, text: string){
         if(text == null) return;
-        t.print(text, 0xffffff);
+        t.print(text, undefined);
+        if(callback) callback();
+    }
+
+    _mn$print$void$int(t: Thread, callback: CallbackFunction, n: number){
+        if(n == null) return;
+        t.print(n + "", undefined);
+        if(callback) callback();
+    }
+
+    _mn$print$void$double(t: Thread, callback: CallbackFunction, n: number){
+        if(n == null) return;
+        t.print(n + "", undefined);
+        if(callback) callback();
+    }
+
+    _mn$print$void$boolean(t: Thread, callback: CallbackFunction, n: boolean){
+        if(n == null) return;
+        t.print(n + "", undefined);
         if(callback) callback();
     }
 
     _mn$println$void$string(t: Thread, callback: CallbackFunction, text?: string){
         if(!text){
-            t.println("", 0xffffff);
+            t.println("", undefined);
         } else {
-            t.println(text, 0xffffff);
+            t.println(text, undefined);
+        }
+
+        if(callback) callback();
+    }
+
+    _mn$println$void$int(t: Thread, callback: CallbackFunction, n?: number){
+        if(!n){
+            t.println("", undefined);
+        } else {
+            t.println(n + "", undefined);
+        }
+
+        if(callback) callback();
+    }
+
+    _mn$println$void$double(t: Thread, callback: CallbackFunction, n?: number){
+        if(!n){
+            t.println("", undefined);
+        } else {
+            t.println(n + "", undefined);
+        }
+
+        if(callback) callback();
+    }
+
+    _mn$println$void$boolean(t: Thread, callback: CallbackFunction, n?: boolean){
+        if(!n){
+            t.println("", undefined);
+        } else {
+            t.println(n + "", undefined);
         }
 
         if(callback) callback();

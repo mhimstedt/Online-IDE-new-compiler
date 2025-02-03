@@ -286,7 +286,7 @@ export abstract class TermParser extends TokenIterator {
             case TokenType.leftCurlyBracket:
                 node = this.parseArrayLiteral();
                 break;
-            default:
+            case TokenType.keywordElse:
                 this.pushError(JCM.unexpectedToken("" + this.cct.value));
                 this.nextToken();
                 break;
