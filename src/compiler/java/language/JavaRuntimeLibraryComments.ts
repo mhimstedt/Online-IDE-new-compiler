@@ -5046,6 +5046,18 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
         "en": "Returns a Set containing all keys of this map.",
         "de": "Gibt ein Set zurück, das alle Schlüssel dieser Map enthält.",
     })
+
+    static mapRemoveComment1 = () => lm({
+        "en": "Removes the mapping for a key from this map if it is present (optional operation). Returns the previous value associated with key, or null if there was no mapping for key.",
+        "de": "Entfernt das Mapping für den gegebenen Schlüssel (falls vorhanden). Gibt ggf. den zu diesem Schlüssel gespeicherten Wert zurück oder null, falls zum Schlüssel kein Wert gespeichert war.",
+    })
+
+    static mapRemoveComment2 = () => lm({
+        "en": "Removes the entry for the specified key only if it is currently mapped to the specified value. Returns true if the value was removed.",
+        "de": "Entfernt das Mapping für den gegebenen Schlüssel falls es vorhanden ist und zum Schlüssel der gegebenen Wert gehört. Gibt genau dann true zurück, wenn ein Schlüssel-Wert-Paar ('Mapping') entfernt wurde.",
+    })
+
+
     /**
      * Class HashMap
      */

@@ -4,7 +4,7 @@ import { Thread } from "../../../../common/interpreter/Thread.ts";
 import { LibraryDeclarations } from "../../../module/libraries/DeclareType.ts";
 import { NonPrimitiveType } from "../../../types/NonPrimitiveType.ts";
 import { BiConsumerInterface } from "../functional/BiConsumerInterface.ts";
-import { ObjectClass, StringClass } from "../javalang/ObjectClassStringClass.ts";
+import { ObjectClass, ObjectClassOrNull, StringClass } from "../javalang/ObjectClassStringClass.ts";
 import { ArrayListClass } from "./ArrayListClass.ts";
 import { HashSetClass } from "./HashSetClass.ts";
 
@@ -30,6 +30,10 @@ export class HashMapClass extends ObjectClass {
         { type: "method", signature: "void forEach(BiConsumer<? super K, ? super V> action)", java: HashMapClass.prototype._mj$forEach$void$BiConsumer, comment: JRC.mapForeachComment },
         { type: "method", signature: "Collection<V> values()", java: HashMapClass.prototype._mj$values$Collection$, comment: JRC.mapValuesComment },
         { type: "method", signature: "Set<K> keySet()", java: HashMapClass.prototype._mj$keySet$Set$, comment: JRC.mapKeySetComment },
+
+        { type: "method", signature: "V remove(K key)", java: HashMapClass.prototype._mj$remove$V$K, comment: JRC.mapRemoveComment1 },
+        { type: "method", signature: "boolean remove(K key, V value)", java: HashMapClass.prototype._mj$remove$boolean$K$V, comment: JRC.mapRemoveComment1 },
+
 
         // override toString-method
         { type: "method", signature: "String toString()", java: HashMapClass.prototype._mj$toString$String$, comment: JRC.objectToStringComment },
@@ -191,6 +195,70 @@ export class HashMapClass extends ObjectClass {
         })
 
     }
+
+
+    _mj$remove$V$K(t: Thread, callback: CallbackFunction, key: ObjectClass) { 
+        let value: Value | undefined;
+        let hashCode: any;
+
+        if (key == null) {
+            value = this.map.get(null);
+        } else {
+            hashCode = key.__internalHashCode();
+            value = this.map.get(hashCode);
+        }
+
+        if(typeof value !== "undefined"){
+            this.map.delete(hashCode);
+            t.s.push(value.v);
+            if(callback) callback();
+        }
+
+        t.s.push(null);
+        if(callback) callback();
+}
+    
+    _mj$remove$boolean$K$V(t: Thread, callback: CallbackFunction, key: ObjectClass, value: ObjectClass) {
+        let value1: Value | undefined;
+        let hashCode: any;
+
+        if (key == null) {
+            value1 = this.map.get(null);
+        } else {
+            hashCode = key.__internalHashCode();
+            value1 = this.map.get(hashCode);
+        }
+
+        if(typeof value1 !== "undefined"){
+
+            // test if value.equals(value1.v);
+            let v1 = value1.v;
+            if(v1 == null){
+                if(value == null){
+                    this.map.delete(hashCode);
+                }
+                t.s.push(value == null);
+                if(callback) callback(); 
+                return;       
+            }
+            
+            v1._mj$equals$boolean$Object(t, () => {
+                const ret = t.s.pop();
+                if(ret){
+                    this.map.delete(hashCode);
+                }
+                t.s.push(ret);
+                if(callback) callback(); 
+                return;       
+            }, value);
+
+            return;
+
+        }
+
+        t.s.push(false);
+        if(callback) callback();
+ }
 
 
 }
