@@ -94,6 +94,11 @@ export class JRC {
         "en": "Initializes a newly created String object so that it represents the same sequence of characters as the argument; in other words, the newly created string is a copy of the argument string.",
     })
 
+    static stringConstructorComment3 = () => lm({
+        "de": "Erzeugt ein String-Objekt auf Grundlage des übergebenen char[].",
+        "en": "Initializes a newly created String object so that it represents the same sequence of characters as the argument; in other words, the newly created string is a copy of the argument string.",
+    })
+
     static stringLengthComment = () => lm({
         "de": "Gibt die Länge des Strings (== Anzahl an Zeichen) zurück.",
         "en": "Returns the length of this string (number of characters).",

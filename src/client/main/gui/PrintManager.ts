@@ -4,6 +4,7 @@ import { InputManager } from './InputManager.js';
 import { IPrintManager } from '../../../compiler/common/interpreter/IPrintManager.js';
 import { ColorClass } from '../../../compiler/java/runtime/graphics/ColorClass.js';
 import { ColorConverter } from '../../../compiler/java/runtime/graphics/ColorConverter.js';
+import { Main } from '../Main.js';
 
 type PrintCommand = {
     text: string;
@@ -208,7 +209,12 @@ export class PrintManager implements IPrintManager {
         if(text == '') return;
 
         if(color == null){
-            color = 0xffffff;
+            color = "var(--defaultPrintColor)";
+            // if(this.main instanceof Main){
+            //     if(this.main.themeManager.currentTheme.name == 'light'){
+            //         color = 0x000000;
+            //     }
+            // }
         } else {
             color = ColorConverter.convertToInt(color);
         }

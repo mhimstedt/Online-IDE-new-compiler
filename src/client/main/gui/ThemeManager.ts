@@ -9,10 +9,12 @@ export type Theme = {
 export class ThemeManager {
 
     themes: Theme[] = [];
+    currentTheme: Theme;
 
     constructor(private rootElement: HTMLDivElement) {
         this.initThemes();
         this.initEditorThemes();
+        this.currentTheme = this.themes[0];
     }
 
     switchTheme(name: string) {
@@ -35,6 +37,8 @@ export class ThemeManager {
 
         }
 
+        this.currentTheme = theme;
+
     }
 
     initThemes() {
@@ -43,6 +47,7 @@ export class ThemeManager {
             name: "dark",
             monacoTheme: "myCustomThemeDark",
             cssColors: {
+                "--defaultPrintColor": "#ffffff",
                 "--backgroundDark": "#1e1e1e",
                 "--backgroundLight": "#252526",
                 "--backgroundHeading": "#37373d",
@@ -136,6 +141,7 @@ export class ThemeManager {
             name: "light",
             monacoTheme: "myCustomThemeLight",
             cssColors: {
+                "--defaultPrintColor": "#000000",
                 "--backgroundDark": "white",
                 "--backgroundLight": "#f3f3f3",
                 "--backgroundHeading": "#dcdcdc",

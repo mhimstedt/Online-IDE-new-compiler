@@ -7,7 +7,7 @@ import { JavaBaseModule } from "../module/JavaBaseModule";
 import { JavaCompiledModule } from "../module/JavaCompiledModule";
 import { JavaModuleManager } from "../module/JavaModuleManager";
 import { JavaLibraryModuleManager } from "../module/libraries/JavaLibraryModuleManager";
-import { ASTArrayTypeNode, ASTBaseTypeNode, ASTClassDefinitionNode, ASTEnumDefinitionNode, ASTGenericTypeInstantiationNode, ASTInterfaceDefinitionNode, ASTMethodDeclarationNode, ASTTypeDefinitionWithGenerics, ASTTypeNode, ASTWildcardTypeNode, TypeScope } from "../parser/AST";
+import { ASTArrayTypeNode, ASTBaseTypeNode, ASTClassDefinitionNode, ASTEnumDefinitionNode, ASTFieldDeclarationNode, ASTGenericTypeInstantiationNode, ASTInterfaceDefinitionNode, ASTMethodDeclarationNode, ASTTypeDefinitionWithGenerics, ASTTypeNode, ASTWildcardTypeNode, TypeScope } from "../parser/AST";
 import { InterfaceClass } from "../runtime/system/javalang/InterfaceClass";
 import { PrimitiveType } from "../runtime/system/primitiveTypes/PrimitiveType.ts";
 import { JavaArrayType } from "../types/JavaArrayType";
@@ -784,8 +784,28 @@ export class TypeResolver {
                     if (!baseClass) baseClass = objectClass;
                     if (baseClass.runtimeClass) {
                         javaClass.initRuntimeClass(baseClass.runtimeClass);  // first recursively initialize field of base classes
+                        const fieldIdentifiers: Map<string, ASTFieldDeclarationNode> = new Map();
+                        const staticFieldIdentifiers: Map<string, ASTFieldDeclarationNode> = new Map();
+
                         for (let field of classNode.fieldsOrInstanceInitializers) {
                             if (field.kind == TokenType.fieldDeclaration) {
+
+                                if(field.isStatic){
+                                    const otherField = staticFieldIdentifiers.get(field.identifier);
+                                    if(otherField){
+                                        this.pushError(JCM.multipleFieldsWithSameIdentifier(field.identifier, otherField.identifierRange.startLineNumber), field.identifierRange, classNode.module , "error");
+                                        continue;
+                                    }
+                                    staticFieldIdentifiers.set(field.identifier, field);
+                                } else {
+                                    const otherField = fieldIdentifiers.get(field.identifier);
+                                    if(otherField){
+                                        this.pushError(JCM.multipleFieldsWithSameIdentifier(field.identifier, otherField.identifierRange.startLineNumber), field.identifierRange, classNode.module , "error");
+                                        continue;
+                                    }
+                                    fieldIdentifiers.set(field.identifier, field);
+                                }
+
                                 let f: JavaField = new JavaField(field.identifier, field.range, javaClass.module, field.type.resolvedType!, field.visibility);
                                 f._isStatic = field.isStatic;
                                 f._isFinal = field.isFinal;
