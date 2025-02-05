@@ -131,6 +131,7 @@ export class JavaMethod extends BaseSymbol {
         newMethod.returnParameterType = this.returnParameterType;
         newMethod.parameters = newParameters;
         newMethod.isCopyOf = this;
+        newMethod.classEnumInterface = this.classEnumInterface;
 
         return newMethod;
 

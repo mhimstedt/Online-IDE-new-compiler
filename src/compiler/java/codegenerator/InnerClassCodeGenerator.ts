@@ -325,6 +325,7 @@ export class InnerClassCodeGenerator extends StatementCodeGenerator {
             }
 
             classContext.methods.push(method);
+            method.classEnumInterface = classContext;
 
             if (classContext.instanceInitializer?.length == 0 && !method.hasOuterClassParameter) {
                 method.hasImplementationWithNativeCallingConvention = baseConstructor.hasImplementationWithNativeCallingConvention;
