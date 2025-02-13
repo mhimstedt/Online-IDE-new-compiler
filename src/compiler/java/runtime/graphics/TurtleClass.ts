@@ -38,7 +38,8 @@ export class TurtleClass extends FilledShapeClass {
         { type: "method", signature: "final double getX()", template: `§1.getPosition().x`, comment: JRC.TurtleGetXComment },
         { type: "method", signature: "final double getY()", template: `§1.getPosition().y`, comment: JRC.TurtleGetYComment },
         { type: "method", signature: "final void moveTo(double x, double y)", native: TurtleClass.prototype._moveTo, comment: JRC.TurtleMoveToComment },
-
+        
+        { type: "method", signature: "final double getTurtleAngle()", native: TurtleClass.prototype._getTurtleAngleDeg, comment: JRC.TurtleGetTurtleAngleComment },
 
         { type: "method", signature: "final Turtle copy()", java: TurtleClass.prototype._mj$copy$Turtle$, comment: JRC.TurtleCopyComment },
 
@@ -589,6 +590,9 @@ export class TurtleClass extends FilledShapeClass {
         return s;
     }
 
+    _getTurtleAngleDeg(): number {
+        return -this.turtleAngleDeg + this.angle;
+    }
 
 
 }

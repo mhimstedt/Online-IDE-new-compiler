@@ -1423,6 +1423,11 @@ export class JRC {
         "en": "Makes Turtle walk to position (x, y).",
     })
 
+    static TurtleGetTurtleAngleComment = () => lm({
+    "de": `Gibt den Blickwinkel der Turtle in Grad zurück.`,
+    "en": `Returns turtle's viewing angle in degrees.`,
+    })
+
 
 
     /**

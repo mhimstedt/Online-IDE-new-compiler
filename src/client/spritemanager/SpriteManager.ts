@@ -215,8 +215,8 @@ export class SpriteManager {
     async generateZipAndPrintZipSize() {
         await this.userSpritesheet.generateAndZipSpritesheet();
         let size = this.userSpritesheet.spritesheet.zipFile.length;
-        this.$zipSizeDiv.text("Spritesheet: " + Math.round(size / 1024 * 100) / 100 + " kB (Max: 1024 kB)");
-        let color: string = size > 1024 * 1024 ? "red" : "";
+        this.$zipSizeDiv.text("Spritesheet: " + Math.round(size / 1024 * 100) / 100 + " kB (Max: 2 MB)");
+        let color: string = size > 2 * 1024 * 1024 ? "red" : "";
         this.$zipSizeDiv.css("color", color);
     }
 
