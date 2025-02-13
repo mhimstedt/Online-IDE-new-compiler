@@ -9,7 +9,7 @@ import { ObjectClass, StringClass } from "../../system/javalang/ObjectClassStrin
 export class ChangeListenerInterface extends InterfaceClass {
     static __javaDeclarations: LibraryDeclarations = [
 
-        { type: "declaration", signature: "interface ChangeListener", comment: JRC.ChangeListenerInterfaceComment },
+        { type: "declaration", signature: "interface GuiChangeListener", comment: JRC.ChangeListenerInterfaceComment },
 
         { type: "method", signature: "void onChange(Object changedObject, String newValue)", java: ChangeListenerInterface.prototype._mj$onChange$void$Object$String, comment: JRC.ChangeListenerOnChangeComment },
     ]
