@@ -50,13 +50,15 @@
         position: relative;
         display: flex;
         flex-direction: column;
-        color: #b8b8b8;
+        color: var(--fontColorNormal);
+        background-color: var(--backgroundDark);
         font-size: 13px;
         height: 100%;
     }
 
     /* Caption */
     .jo_treeview_caption {
+        background-color: var(--backgroundLight);
         display: flex;
         flex-direction: row;
         padding-left: 4px;
