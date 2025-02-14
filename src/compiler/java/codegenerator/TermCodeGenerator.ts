@@ -789,6 +789,7 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
             if(outerClassLevel == 0){   // outerClassLevel > 0 could be inside run-Method or runnable whicht runs on other thread and has other stack than main program
                 const snippet = new StringCodeSnippet(`${StepParams.stack}[0].${field.getInternalName()}`, range, field.type);
                 snippet.isLefty = !field._isFinal;
+                this.registerUsagePosition(field, range);
                 return snippet;
             }
         }

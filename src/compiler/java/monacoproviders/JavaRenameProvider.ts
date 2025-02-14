@@ -30,15 +30,21 @@ export class JavaRenameProvider extends BaseMonacoProvider implements monaco.lan
 
         let edits: monaco.languages.IWorkspaceTextEdit[] = [];
 
+        let ranges: Set<string> = new Set();
         for (let module of main.getCompiler().getAllModules()) {
 
             let allUsagePositions = (<JavaCompiledModule>module).getUsagePositionsForSymbol(usagePosition?.symbol);
 
             if (!allUsagePositions) continue;
 
-
             for (let up of allUsagePositions) {
-                if (!up.file.getMonacoModel()!?.uri) continue;
+                if(ranges.has(up.range.startLineNumber + "_" + up.range.startColumn))
+                    if (!up.file.getMonacoModel()!?.uri) continue;
+                let id: string = up.file.name + "_" + up.range.startLineNumber + "_" + up.range.startColumn;
+                
+                if(ranges.has(id)) continue;
+                ranges.add(id);
+
                 edits.push({
                     resource: up.file.getMonacoModel()!.uri,
                     versionId: up.file.getMonacoModel()!.getVersionId(),
