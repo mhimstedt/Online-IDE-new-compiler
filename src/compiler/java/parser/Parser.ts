@@ -114,6 +114,11 @@ export class Parser extends StatementParser {
             }
         }
 
+        // if(this.mainMethodStatements.length > 0){
+        //     let lastStatement = this.mainMethodStatements[this.mainMethodStatements.length - 1];
+        //     console.log(lastStatement);
+        // }
+
     }
 
     parseMainProgramFragment() {

@@ -8,8 +8,9 @@ import { SnippetLinker } from "../../codegenerator/SnippetLinker.ts";
 import { StatementCodeGenerator } from "../../codegenerator/StatementCodeGenerator.ts";
 import { JavaCompiledModule } from "../../module/JavaCompiledModule.ts";
 import { JavaTypeStore } from "../../module/JavaTypeStore.ts";
+import { TokenType } from "../../TokenType.ts";
 import { JavaType } from "../../types/JavaType.ts";
-import { ASTAnonymousClassNode, ASTLambdaFunctionDeclarationNode } from "../AST.ts";
+import { ASTAnonymousClassNode, ASTLambdaFunctionDeclarationNode, ASTStatementNode } from "../AST.ts";
 
 
 export class JavaReplCodeGenerator extends StatementCodeGenerator {
@@ -34,7 +35,12 @@ export class JavaReplCodeGenerator extends StatementCodeGenerator {
         snippets.push(new StringCodeSnippet(`${Helpers.startReplProgram}();\n`))
 
         let snippet: CodeSnippet | undefined;
-        for (let statement of this.module.ast!.mainProgramNode.statements) {
+        let statement: ASTStatementNode;
+        let statements = this.module.ast!.mainProgramNode.statements;
+
+        for(let i = 0; i < statements.length; i++){
+            statement = statements[i];
+            if(statement.kind == TokenType.block && statement.isEmpty && i == statements.length - 1) break;
             snippet = this.compileStatementOrTerm(statement);
             if (snippet) snippets.push(snippet);
         }
