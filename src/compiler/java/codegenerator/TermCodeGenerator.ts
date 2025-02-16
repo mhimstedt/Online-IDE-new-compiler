@@ -921,7 +921,7 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
     }
 
     compilePlusPlusMinusMinusSuffixOperator(ast: ASTPlusPlusMinusMinusSuffixNode): CodeSnippet | undefined {
-        let operand = this.compileTerm(ast.term);
+        let operand = this.compileTerm(ast.term, true);
 
         if (operand && operand.type) {
 
