@@ -19,7 +19,7 @@ import {
 } from "./AST.ts";
 import { ASTNodeFactory } from "./ASTNodeFactory.ts";
 import { StatementParser } from "./StatementParser.ts";
-import { JavaCompilerStringConstants} from "../JavaCompilerStringConstants.ts";
+import { JavaCompilerStringConstants } from "../JavaCompilerStringConstants.ts";
 
 export class Parser extends StatementParser {
 
@@ -61,7 +61,7 @@ export class Parser extends StatementParser {
         }
 
         this.javaCompiledModule.mainClass = this.nodeFactory.buildClassNode(this.nodeFactory.buildNodeWithModifiers(EmptyRange.instance),
-        { tt: TokenType.identifier, value: "$MainClass" + (Parser.mainClassCounter++), range: EmptyRange.instance }, this.javaCompiledModule.ast!, [], this.javaCompiledModule);
+            { tt: TokenType.identifier, value: "$MainClass" + (Parser.mainClassCounter++), range: EmptyRange.instance }, this.javaCompiledModule.ast!, [], this.javaCompiledModule);
         this.javaCompiledModule.mainClass.range = globalRange;
         this.javaCompiledModule.mainClass.isMainClass = true;
 
@@ -80,7 +80,7 @@ export class Parser extends StatementParser {
         this.mainMethodStatements = mainStatement.statements;
         this.mainMethodStatements.push({
             kind: TokenType.firstMainProgramStatement,
-            range: EmptyRange.instance 
+            range: EmptyRange.instance
         })
 
 
@@ -99,7 +99,16 @@ export class Parser extends StatementParser {
         while (!this.isEnd()) {
             let pos = this.pos;
 
-            if (this.comesToken(Parser.visibilityModifiersOrTopLevelTypeDeclaration, false)) {
+            if (this.comesToken(Parser.visibilityModifiers, false)) {
+                if (Parser.classOrInterfaceOrEnum.indexOf(this.lookahead(1).tt) >= 0) {
+                    this.parseClassOrInterfaceOrEnum(this.javaCompiledModule.ast!, undefined);
+                    this.currentClassOrInterface = undefined;
+                } else {
+                    let visibility = this.tt;
+                    this.nextToken();
+                    this.parseMethodDeclarationInMainProgram(visibility);
+                }
+            } else if (this.comesToken(Parser.classOrInterfaceOrEnum, false)) {
                 this.parseClassOrInterfaceOrEnum(this.javaCompiledModule.ast!, undefined);
                 this.currentClassOrInterface = undefined;
             } else if (this.tt == TokenType.at) {
@@ -121,8 +130,23 @@ export class Parser extends StatementParser {
 
     }
 
+    parseMethodDeclarationInMainProgram(visibilityModifier?: TokenType) {
+        this.isInsideMainMethod = true;
+        this.isCodeOutsideClassdeclarations = true;
+
+        let modifiers = this.nodeFactory.buildNodeWithModifiers(this.cct.range);
+        modifiers.isStatic = true;
+        modifiers.visibility = visibilityModifier | TokenType.keywordPublic;
+        this.parseFieldOrMethodDeclaration(this.module.mainClass!, modifiers, undefined);
+
+        this.maybeParseAndSkipAnnotation();
+
+        this.isCodeOutsideClassdeclarations = false;
+        this.isInsideMainMethod = false;
+    }
+
     parseMainProgramFragment() {
-        
+
         /**
          * Map<String, Integer> test(ArrayList<String> list){...} // -> static method
          *
@@ -140,7 +164,7 @@ export class Parser extends StatementParser {
 
             if (pos == this.pos) this.nextToken(); // prevent endless loop
         }
-        
+
         this.maybeParseAndSkipAnnotation();
 
         this.isCodeOutsideClassdeclarations = false;
@@ -180,7 +204,7 @@ export class Parser extends StatementParser {
             // restore current class after leaving child class
             this.currentClassOrInterface = currentClassOrInterface;
 
-            while(this.comesToken(TokenType.semicolon, true)){}
+            while (this.comesToken(TokenType.semicolon, true)) { }
         }
 
     }
@@ -276,7 +300,7 @@ export class Parser extends StatementParser {
 
     }
 
-    parseFieldOrMethodDeclaration(classASTNode: ASTClassDefinitionNode | ASTEnumDefinitionNode | ASTInterfaceDefinitionNode, modifiers: ASTNodeWithModifiers, 
+    parseFieldOrMethodDeclaration(classASTNode: ASTClassDefinitionNode | ASTEnumDefinitionNode | ASTInterfaceDefinitionNode, modifiers: ASTNodeWithModifiers,
         documentation: string | undefined) {
         /**
          * Problem:
@@ -297,7 +321,7 @@ export class Parser extends StatementParser {
                     this.pushError(JCM.fieldDefinitionDoesntStartWithGenericParamter(), "error", genericParameters[0].range);
                 }
 
-                if(type != null && type.kind == TokenType.baseType && (<ASTBaseTypeNode>type).identifiers[0].identifier == "String"){
+                if (type != null && type.kind == TokenType.baseType && (<ASTBaseTypeNode>type).identifiers[0].identifier == "String") {
                     (<ASTBaseTypeNode>type).identifiers[0].identifier = "string";
                 }
 
@@ -315,7 +339,7 @@ export class Parser extends StatementParser {
 
     parseMethodDeclaration(parentNode: ASTClassDefinitionNode | ASTEnumDefinitionNode | ASTInterfaceDefinitionNode, modifiers: ASTNodeWithModifiers,
         isContructor: boolean, returnType: ASTTypeNode | undefined, genericParameters: ASTGenericParameterDeclarationNode[], documentation: string | undefined) {
-        
+
         let rangeStart = modifiers.range;
         let identifier = this.expectAndSkipIdentifierAsToken();
         let methodNode = this.nodeFactory.buildMethodNode(returnType, isContructor, modifiers, identifier,
@@ -344,7 +368,7 @@ export class Parser extends StatementParser {
             let statement = this.parseStatementOrExpression();
             methodNode.statement = statement;
         } else {
-            if(!methodNode.isAbstract && parentNode.kind != TokenType.keywordInterface){
+            if (!methodNode.isAbstract && parentNode.kind != TokenType.keywordInterface) {
                 methodNode.statement = this.nodeFactory.buildBlockNode(this.cct);
             }
             this.expectSemicolon(true, true);
@@ -373,7 +397,7 @@ export class Parser extends StatementParser {
         }
     }
 
-    parseFieldDeclaration(classASTNode: ASTClassDefinitionNode | ASTEnumDefinitionNode | ASTInterfaceDefinitionNode, modifiers: ASTNodeWithModifiers, 
+    parseFieldDeclaration(classASTNode: ASTClassDefinitionNode | ASTEnumDefinitionNode | ASTInterfaceDefinitionNode, modifiers: ASTNodeWithModifiers,
         type: ASTTypeNode | undefined, documentation: string | undefined) {
         let rangeStart = this.cct.range;
         let identifier = this.expectAndSkipIdentifierAsToken();
@@ -606,7 +630,7 @@ export class Parser extends StatementParser {
 
             } while (this.comesToken(TokenType.comma, true));
 
-            if(this.comesToken(TokenType.shiftRight, false)){
+            if (this.comesToken(TokenType.shiftRight, false)) {
                 this.exchangeShiftRightForTwoClosingGreater();
             }
 
@@ -617,7 +641,7 @@ export class Parser extends StatementParser {
     }
 
     maybeParseAndSkipAnnotation() {
-        if(this.comesToken(TokenType.at, true)){
+        if (this.comesToken(TokenType.at, true)) {
             let identifier = this.expectAndSkipIdentifierAsToken();
             if (identifier) {
                 this.collectedAnnotations.push(this.nodeFactory.buildAnnotationNode(identifier));
