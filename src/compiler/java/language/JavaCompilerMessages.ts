@@ -705,6 +705,11 @@ export class JCM {
         "en": `Method ${identifier} overrides final method of base class ${baseClass}.`
     })
 
+    static overrideAnnotationNotNecessary = (identifier: string) => le({
+        "de": `Die Methode ${identifier} überschreibt keine Methode mit gleicher Signatur einer Oberklasse, daher ist die @Override-Annotation unnötig.`,
+        "en": `Method ${identifier} doesn't override a method with identical signature in base class, therefore @Override is not necessary here.`
+    })
+
     /**
      * class GenericTypeParameter
      */
