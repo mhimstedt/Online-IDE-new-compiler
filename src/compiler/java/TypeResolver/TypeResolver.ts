@@ -672,6 +672,7 @@ export class TypeResolver {
             method.isDefault = methodNode.isDefault;
             method.isSynchronized = methodNode.isSynchronized;
             method.documentation = methodNode.documentation;
+            method.annotations = methodNode.annotations;
 
             method.returnParameterType = methodNode.isContructor ? type : methodNode.returnParameterType?.resolvedType;
             for (let p of methodNode.parameters) {
