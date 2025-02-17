@@ -319,6 +319,19 @@ export class JavaClass extends IJavaClass {
                 }
             }
             baseMethods.forEach(m => overriddenOrImplementedMethodPaths[m.getPathWithMethodIdentifier()] = true);
+
+            let overrideAnnotation = m.annotations.find(a => a.identifier == 'Override');
+            if(overrideAnnotation){
+                if(baseMethods.length == 0){
+                    let jc = JCM.overrideAnnotationNotNecessary(m.getSignature());
+                    m.classEnumInterface.module.errors.push({
+                        message: jc.message,
+                        id: jc.id,
+                        level: "warning",
+                        range: overrideAnnotation.range
+                    })
+                }
+            }
         }
 
     }
