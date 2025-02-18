@@ -21,6 +21,8 @@ export class MyConsole {
 
     errorMarker: ErrorMarker = new ErrorMarker();
 
+    lastStatement: string = "";
+
     constructor(private main: MainBase, public $bottomDiv: JQuery<HTMLElement>) {
         if ($bottomDiv == null) return; // Console is only used to highlight exceptions
 
@@ -132,10 +134,6 @@ export class MyConsole {
         }, '!suggestWidgetVisible')
 
         this.editor.addCommand(monaco.KeyCode.UpArrow, (e) => {
-            let programAndModule = this.compile();
-            if (programAndModule) {
-                this.showCompilationErrors(programAndModule.module.errors);
-            }
             let nextHistoryPos = that.history.length - (that.historyPos + 1);
             if (nextHistoryPos >= 0) {
                 that.historyPos++;
@@ -145,16 +143,15 @@ export class MyConsole {
                     lineNumber: 1,
                     column: text.length + 1
                 })
-                that.compile();
+                let programAndModule = this.compile();
+                if (programAndModule) {
+                    this.showCompilationErrors(programAndModule.module.errors);
+                }
             }
 
         }, '!suggestWidgetVisible')
 
         this.editor.addCommand(monaco.KeyCode.DownArrow, (e) => {
-            let programAndModule = this.compile();
-            if (programAndModule) {
-                this.showCompilationErrors(programAndModule.module.errors);
-            }
             let nextHistoryPos = that.history.length - (that.historyPos - 1);
             if (nextHistoryPos <= that.history.length - 1) {
                 that.historyPos--;
@@ -168,37 +165,28 @@ export class MyConsole {
                 that.editor.setValue("");
                 that.historyPos = 0;
             }
-            that.compile();
+            let programAndModule = this.compile();
+            if (programAndModule) {
+                this.showCompilationErrors(programAndModule.module.errors);
+            }
 
         }, '!suggestWidgetVisible')
 
 
 
-        // this.editor.onKeyDown((e) => {
-        //     let statement = this.editor.getModel()?.getValue();
-        //     if (!statement) return;
+        this.editor.onKeyDown((e) => {
+            let statement = this.editor.getModel()?.getValue();
+            if (!statement) return;
+            if (statement != this.lastStatement) {
+                this.lastStatement = statement;
+                
+                let programAndModule = this.compile();
+                if (programAndModule) {
+                    this.showCompilationErrors(programAndModule.module.errors);
+                }
 
-        //     if (e.code == 'Enter') {
-        //         setTimeout(async () => {
-        //             let command = that.editor.getModel().getValue(monaco.editor.EndOfLinePreference.LF, false);
-
-        //             if (!command || command == "") return;
-
-        //             that.history.push(command);
-        //             that.historyPos = 0;
-
-        //             let returnValue = await that.main.getRepl().executeAsync(command!, false);
-        //             this.showCompilationErrors(returnValue?.errors);
-
-        //             if (typeof returnValue !== "undefined") {
-        //                 that.writeConsoleEntry(command, returnValue);
-        //                 this.editor.getModel()?.setValue('');
-        //             }
-        //             this.main.getInterpreter().updateDebugger();
-        //         }, 10);
-        //         e.preventDefault();
-        //     }
-        // })
+            }
+        })
 
         // this.editor.onKeyUp((e) => {
         //     let programAndModule = this.compile();

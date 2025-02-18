@@ -205,8 +205,6 @@ export class JavaRepl {
 
     }
 
-
-
     prepareThread(programAndModule: { module: JavaReplCompiledModule; program: Program | undefined; },
         callback?: (returnValue: ReplReturnValue) => void,
         withMaxSpeed: boolean = true): Thread | undefined {
@@ -215,7 +213,7 @@ export class JavaRepl {
         let scheduler = interpreter.scheduler;
 
         if (programAndModule.module.hasErrors()) {
-            return undefined;
+             return undefined;
         }
 
         if (!programAndModule.program) {
