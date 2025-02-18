@@ -10,6 +10,7 @@ import { ThreadState } from "../../../common/interpreter/ThreadState.ts";
 import { CompilerFile } from "../../../common/module/CompilerFile.ts";
 import { ErrorMarker } from "../../../common/monacoproviders/ErrorMarker.ts";
 import { EmptyRange } from "../../../common/range/Range.ts";
+import { JavaCompiler } from "../../JavaCompiler.ts";
 import { ExceptionTree } from "../../codegenerator/ExceptionTree.ts";
 import { JavaSymbolTable } from "../../codegenerator/JavaSymbolTable.ts";
 import { JavaCompiledModule } from "../../module/JavaCompiledModule.ts";
@@ -37,22 +38,40 @@ export class JavaRepl {
 
     lastCompiledModule?: JavaCompiledModule;
 
-    constructor(private main: IMain, libraryModuleManager: JavaLibraryModuleManager) {
+    constructor(private main: IMain, private compiler: JavaCompiler) {
+
+        this.replCompiler = new JavaReplCompiler();
+        this.compiler.eventManager.on("compilationFinishedWithNewExecutable", (executable: Executable) => {
+            setTimeout(() => {                
+                this.init(executable);
+            }, 100);
+        })
+    }
+
+    init(executable: Executable) {
         let interpreter = this.getInterpreter();
-        if(!interpreter){
+        if (!interpreter) {
             console.error("JavaRepl constructor called before interpreter was created.");
         }
 
         this.standaloneModule = new JavaCompiledModule(new CompilerFile());
         this.standaloneSymbolTable = new JavaSymbolTable(this.standaloneModule, EmptyRange.instance, true);
+        
         this.standaloneThread = interpreter.scheduler.createThread("Java REPL standalone thread");
+        this.standaloneThread.classes = executable.classObjectRegistry;
+
         this.standaloneModuleManager = new JavaModuleManager();
         this.standaloneModuleManager.addModule(this.standaloneModule);
-        this.standaloneExecutable = new Executable(interpreter.scheduler.classObjectRegistry, this.standaloneModuleManager,
-            libraryModuleManager, [], new ExceptionTree(libraryModuleManager.typestore, this.standaloneModuleManager.typestore)
+
+        for(let module of executable.moduleManager.modules){
+            this.standaloneModuleManager.addModule(module);
+            module.registerTypesAtTypestore(this.standaloneModuleManager.typestore);
+        }
+
+        this.standaloneExecutable = new Executable(executable.classObjectRegistry, this.standaloneModuleManager,
+            this.compiler.libraryModuleManager, [], new ExceptionTree(executable.libraryModuleManager.typestore, this.standaloneModuleManager.typestore)
         )
 
-        this.replCompiler = new JavaReplCompiler();
     }
 
     getCurrentModule(): JavaCompiledModule | undefined {
@@ -61,7 +80,7 @@ export class JavaRepl {
 
     private getInterpreter(): Interpreter {
         let interpreter = this.main.getInterpreter();
-        if(!interpreter) console.error("JavaRepl.getInterpreter: Interpreter is missing!");
+        if (!interpreter) console.error("JavaRepl.getInterpreter: Interpreter is missing!");
         return interpreter!;
     }
 
@@ -126,10 +145,10 @@ export class JavaRepl {
 
             interpreter.runREPLSynchronously();
 
-            if(currentProgramState) currentProgramState.lastExecutedStep = lastExecutedStep;
-            if(stackSizeBefore) threadBefore?.s.splice(stackSizeBefore, threadBefore?.s.length - stackSizeBefore);
+            if (currentProgramState) currentProgramState.lastExecutedStep = lastExecutedStep;
+            if (stackSizeBefore) threadBefore?.s.splice(stackSizeBefore, threadBefore?.s.length - stackSizeBefore);
 
-        } catch(ex){
+        } catch (ex) {
             console.log(ex);
             return undefined;
         }
@@ -160,9 +179,9 @@ export class JavaRepl {
 
             let callback = (returnValue: ReplReturnValue) => {
 
-                if(currentProgramState) currentProgramState.lastExecutedStep = lastExecutedStep;
-                if(stackSizeBefore) threadBefore?.s.splice(stackSizeBefore, threadBefore?.s.length - stackSizeBefore);
-                if(returnValue){
+                if (currentProgramState) currentProgramState.lastExecutedStep = lastExecutedStep;
+                if (stackSizeBefore) threadBefore?.s.splice(stackSizeBefore, threadBefore?.s.length - stackSizeBefore);
+                if (returnValue) {
                     returnValue.errors = programAndModule?.module?.errors;
 
                     resolve(returnValue);
@@ -190,7 +209,7 @@ export class JavaRepl {
 
     prepareThread(programAndModule: { module: JavaReplCompiledModule; program: Program | undefined; },
         callback?: (returnValue: ReplReturnValue) => void,
-                   withMaxSpeed: boolean = true): Thread | undefined {
+        withMaxSpeed: boolean = true): Thread | undefined {
 
         let interpreter = this.getInterpreter();
         let scheduler = interpreter.scheduler;
@@ -216,7 +235,7 @@ export class JavaRepl {
         scheduler.saveAllThreadsBut(currentThread);
 
         let saveMaxStepsPerSecond = currentThread.maxStepsPerSecond;
-        if(withMaxSpeed){
+        if (withMaxSpeed) {
             currentThread.maxStepsPerSecond = undefined;
         } else {
             currentThread.maxStepsPerSecond = interpreter.isMaxSpeed ? undefined : interpreter.stepsPerSecondGoal;
@@ -232,7 +251,7 @@ export class JavaRepl {
             currentThread.lastTimeThreadWasRun = performance.now();
             interpreter.setState(oldState);
             scheduler.retrieveThreads();
-            if(callback) callback(currentThread.replReturnValue);
+            if (callback) callback(currentThread.replReturnValue);
         }
         currentThread.pushReplProgram(programAndModule.program);
 

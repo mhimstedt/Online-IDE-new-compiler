@@ -38,9 +38,9 @@ export class JavaLanguage extends Language {
 
     public static registerMain(main: IMain, errorMarker: ErrorMarker): JavaLanguage {
         let compiler = new JavaCompiler(main, errorMarker);
-        let repl = new JavaRepl(main, compiler.libraryModuleManager);
         let instance = JavaLanguage.getInstance();
         instance.registerCompiler(main, compiler);
+        let repl = new JavaRepl(main, compiler);
         instance.registerRepl(main, repl);
         JavaOnDidTypeProvider.configureEditor(main.getMainEditor());
         new JavaSymbolAndMethodMarker(main);

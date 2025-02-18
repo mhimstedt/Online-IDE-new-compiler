@@ -108,70 +108,136 @@ export class MyConsole {
         let that = this;
 
 
-        this.editor.onKeyDown((e) => {
+        this.editor.addCommand(monaco.KeyCode.Enter, (e) => {
             let statement = this.editor.getModel()?.getValue();
             if (!statement) return;
 
-            if (e.code == 'Enter') {
-                setTimeout(async () => {
-                    let command = that.editor.getModel().getValue(monaco.editor.EndOfLinePreference.LF, false);
+            setTimeout(async () => {
+                let command = that.editor.getModel().getValue(monaco.editor.EndOfLinePreference.LF, false);
 
-                    if (!command || command == "") return;
+                if (!command || command == "") return;
 
-                    that.history.push(command);
-                    that.historyPos = 0;
+                that.history.push(command);
+                that.historyPos = 0;
 
-                    let returnValue = await that.main.getRepl().executeAsync(command!, false);
-                    this.showCompilationErrors(returnValue?.errors);
+                let returnValue = await that.main.getRepl().executeAsync(command!, false);
+                this.showCompilationErrors(returnValue?.errors);
 
-                    if (typeof returnValue !== "undefined") {
-                        that.writeConsoleEntry(command, returnValue);
-                        this.editor.getModel()?.setValue('');
-                    }
-                    this.main.getInterpreter().updateDebugger();
-                }, 10);
-                e.preventDefault();
-            }
-        })
+                if (typeof returnValue !== "undefined") {
+                    that.writeConsoleEntry(command, returnValue);
+                    this.editor.getModel()?.setValue('');
+                }
+                this.main.getInterpreter().updateDebugger();
+            }, 10);
+        }, '!suggestWidgetVisible')
 
-        this.editor.onKeyUp((e) => {
+        this.editor.addCommand(monaco.KeyCode.UpArrow, (e) => {
             let programAndModule = this.compile();
             if (programAndModule) {
                 this.showCompilationErrors(programAndModule.module.errors);
             }
-
-
-            if(e.code == "ArrowUp"){
-                let nextHistoryPos = that.history.length - (that.historyPos + 1);
-                if (nextHistoryPos >= 0) {
-                    that.historyPos++;
-                    let text = that.history[nextHistoryPos];
-                    that.editor.setValue(text);
-                    that.editor.setPosition({
-                        lineNumber: 1,
-                        column: text.length + 1
-                    })
-                    that.compile();
-                }
-            } else if(e.code == "ArrowDown"){
-                let nextHistoryPos = that.history.length - (that.historyPos - 1);
-                if (nextHistoryPos <= that.history.length - 1) {
-                    that.historyPos--;
-                    let text = that.history[nextHistoryPos];
-                    that.editor.setValue(text);
-                    that.editor.setPosition({
-                        lineNumber: 1,
-                        column: text.length + 1
-                    })
-                } else {
-                    that.editor.setValue("");
-                    that.historyPos = 0;
-                }
+            let nextHistoryPos = that.history.length - (that.historyPos + 1);
+            if (nextHistoryPos >= 0) {
+                that.historyPos++;
+                let text = that.history[nextHistoryPos];
+                that.editor.setValue(text);
+                that.editor.setPosition({
+                    lineNumber: 1,
+                    column: text.length + 1
+                })
                 that.compile();
-
             }
 
-        })
+        }, '!suggestWidgetVisible')
+
+        this.editor.addCommand(monaco.KeyCode.DownArrow, (e) => {
+            let programAndModule = this.compile();
+            if (programAndModule) {
+                this.showCompilationErrors(programAndModule.module.errors);
+            }
+            let nextHistoryPos = that.history.length - (that.historyPos - 1);
+            if (nextHistoryPos <= that.history.length - 1) {
+                that.historyPos--;
+                let text = that.history[nextHistoryPos];
+                that.editor.setValue(text);
+                that.editor.setPosition({
+                    lineNumber: 1,
+                    column: text.length + 1
+                })
+            } else {
+                that.editor.setValue("");
+                that.historyPos = 0;
+            }
+            that.compile();
+
+        }, '!suggestWidgetVisible')
+
+
+
+        // this.editor.onKeyDown((e) => {
+        //     let statement = this.editor.getModel()?.getValue();
+        //     if (!statement) return;
+
+        //     if (e.code == 'Enter') {
+        //         setTimeout(async () => {
+        //             let command = that.editor.getModel().getValue(monaco.editor.EndOfLinePreference.LF, false);
+
+        //             if (!command || command == "") return;
+
+        //             that.history.push(command);
+        //             that.historyPos = 0;
+
+        //             let returnValue = await that.main.getRepl().executeAsync(command!, false);
+        //             this.showCompilationErrors(returnValue?.errors);
+
+        //             if (typeof returnValue !== "undefined") {
+        //                 that.writeConsoleEntry(command, returnValue);
+        //                 this.editor.getModel()?.setValue('');
+        //             }
+        //             this.main.getInterpreter().updateDebugger();
+        //         }, 10);
+        //         e.preventDefault();
+        //     }
+        // })
+
+        // this.editor.onKeyUp((e) => {
+        //     let programAndModule = this.compile();
+        //     if (programAndModule) {
+        //         this.showCompilationErrors(programAndModule.module.errors);
+        //     }
+
+
+        //     if(e.code == "ArrowUp"){
+        //         let nextHistoryPos = that.history.length - (that.historyPos + 1);
+        //         if (nextHistoryPos >= 0) {
+        //             that.historyPos++;
+        //             let text = that.history[nextHistoryPos];
+        //             that.editor.setValue(text);
+        //             that.editor.setPosition({
+        //                 lineNumber: 1,
+        //                 column: text.length + 1
+        //             })
+        //             that.compile();
+        //         }
+        //     } else if(e.code == "ArrowDown"){
+        //         let nextHistoryPos = that.history.length - (that.historyPos - 1);
+        //         if (nextHistoryPos <= that.history.length - 1) {
+        //             that.historyPos--;
+        //             let text = that.history[nextHistoryPos];
+        //             that.editor.setValue(text);
+        //             that.editor.setPosition({
+        //                 lineNumber: 1,
+        //                 column: text.length + 1
+        //             })
+        //         } else {
+        //             that.editor.setValue("");
+        //             that.historyPos = 0;
+        //         }
+        //         that.compile();
+
+        //     }
+
+        // })
 
         this.$consoleTabHeading.on("mousedown", () => {
             Helper.showHelper("consoleHelper", this.main);
@@ -214,7 +280,7 @@ export class MyConsole {
 
     replReturnValueToOutput(replReturnValue: ReplReturnValue): string | undefined {
         if (typeof replReturnValue == "undefined") return undefined;
-        if(!replReturnValue.text) return undefined;
+        if (!replReturnValue.text) return undefined;
         let type: string = replReturnValue.type ? replReturnValue.type.toString() + " " : "";
         let text = replReturnValue.text;
         //@ts-ignore#
@@ -255,8 +321,8 @@ export class MyConsole {
         consoleTop.append(commandEntry.$consoleEntry);
 
         let replReturnOutputAsString = this.replReturnValueToOutput(value);
-        if(replReturnOutputAsString){
-            let resultEntry = new ConsoleEntry(false, replReturnOutputAsString, value.value,  null, null, true, color);
+        if (replReturnOutputAsString) {
+            let resultEntry = new ConsoleEntry(false, replReturnOutputAsString, value.value, null, null, true, color);
             this.consoleEntries.push(resultEntry);
             consoleTop.append(resultEntry.$consoleEntry);
         }
