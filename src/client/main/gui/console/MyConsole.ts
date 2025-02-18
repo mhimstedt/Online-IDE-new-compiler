@@ -23,6 +23,8 @@ export class MyConsole {
 
     lastStatement: string = "";
 
+    lastCompileTime: number = 0;
+
     constructor(private main: MainBase, public $bottomDiv: JQuery<HTMLElement>) {
         if ($bottomDiv == null) return; // Console is only used to highlight exceptions
 
@@ -143,10 +145,7 @@ export class MyConsole {
                     lineNumber: 1,
                     column: text.length + 1
                 })
-                let programAndModule = this.compile();
-                if (programAndModule) {
-                    this.showCompilationErrors(programAndModule.module.errors);
-                }
+                this.compileAndShowErrors();
             }
 
         }, '!suggestWidgetVisible')
@@ -165,10 +164,7 @@ export class MyConsole {
                 that.editor.setValue("");
                 that.historyPos = 0;
             }
-            let programAndModule = this.compile();
-            if (programAndModule) {
-                this.showCompilationErrors(programAndModule.module.errors);
-            }
+            this.compileAndShowErrors();
 
         }, '!suggestWidgetVisible')
 
@@ -180,52 +176,10 @@ export class MyConsole {
             if (statement != this.lastStatement) {
                 this.lastStatement = statement;
                 
-                let programAndModule = this.compile();
-                if (programAndModule) {
-                    this.showCompilationErrors(programAndModule.module.errors);
-                }
-
+                this.compileAndShowErrors();
             }
         })
 
-        // this.editor.onKeyUp((e) => {
-        //     let programAndModule = this.compile();
-        //     if (programAndModule) {
-        //         this.showCompilationErrors(programAndModule.module.errors);
-        //     }
-
-
-        //     if(e.code == "ArrowUp"){
-        //         let nextHistoryPos = that.history.length - (that.historyPos + 1);
-        //         if (nextHistoryPos >= 0) {
-        //             that.historyPos++;
-        //             let text = that.history[nextHistoryPos];
-        //             that.editor.setValue(text);
-        //             that.editor.setPosition({
-        //                 lineNumber: 1,
-        //                 column: text.length + 1
-        //             })
-        //             that.compile();
-        //         }
-        //     } else if(e.code == "ArrowDown"){
-        //         let nextHistoryPos = that.history.length - (that.historyPos - 1);
-        //         if (nextHistoryPos <= that.history.length - 1) {
-        //             that.historyPos--;
-        //             let text = that.history[nextHistoryPos];
-        //             that.editor.setValue(text);
-        //             that.editor.setPosition({
-        //                 lineNumber: 1,
-        //                 column: text.length + 1
-        //             })
-        //         } else {
-        //             that.editor.setValue("");
-        //             that.historyPos = 0;
-        //         }
-        //         that.compile();
-
-        //     }
-
-        // })
 
         this.$consoleTabHeading.on("mousedown", () => {
             Helper.showHelper("consoleHelper", this.main);
@@ -235,6 +189,19 @@ export class MyConsole {
             }, 500);
         });
 
+    }
+
+
+    compileAndShowErrors(){
+        setTimeout(() => {
+            if(performance.now() - this.lastCompileTime > 390){
+                let programAndModule = this.compile();
+                if (programAndModule) {
+                    this.showCompilationErrors(programAndModule.module.errors);
+                }
+                this.lastCompileTime = performance.now();                    
+            }
+        }, 400);
     }
 
 
