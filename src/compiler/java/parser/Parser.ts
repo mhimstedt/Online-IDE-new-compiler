@@ -108,7 +108,7 @@ export class Parser extends StatementParser {
                     this.nextToken();
                     this.parseMethodDeclarationInMainProgram(visibility);
                 }
-            } else if (this.comesToken(Parser.classOrInterfaceOrEnum, false)) {
+            } else if (this.comesToken(Parser.visibilityModifiersOrTopLevelTypeDeclaration, false)) {
                 this.parseClassOrInterfaceOrEnum(this.javaCompiledModule.ast!, undefined);
                 this.currentClassOrInterface = undefined;
             } else if (this.tt == TokenType.at) {
