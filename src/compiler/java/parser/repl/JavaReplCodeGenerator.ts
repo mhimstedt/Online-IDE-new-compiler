@@ -18,6 +18,8 @@ export class JavaReplCodeGenerator extends StatementCodeGenerator {
     constructor(module: JavaCompiledModule, libraryTypestore: JavaTypeStore, compiledTypesTypestore: JavaTypeStore,
         exceptionTree: ExceptionTree) {
         super(module, libraryTypestore, compiledTypesTypestore, exceptionTree);
+        
+        this.isRepl = true;
 
     }
 

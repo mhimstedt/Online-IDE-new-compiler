@@ -22,6 +22,8 @@ import { ReplReturnValue } from "./ReplReturnValue.ts";
 
 type ProgramAndModule = { module: JavaReplCompiledModule, program: Program | undefined };
 
+type ReplState = "standalone" | "none";
+
 export class JavaRepl {
 
     /**
@@ -40,13 +42,21 @@ export class JavaRepl {
 
     lastCompiledModule?: JavaCompiledModule;
 
+    state: ReplState = "none";
+
     constructor(private main: IMain, private compiler: JavaCompiler) {
 
         this.replCompiler = new JavaReplCompiler();
         this.compiler.eventManager.on("compilationFinishedWithNewExecutable", (executable: Executable) => {
-            setTimeout(() => {                
+            setTimeout(() => {
                 this.init(executable);
             }, 100);
+        })
+
+        this.getInterpreter().eventManager.on("resetRuntime", () => {
+            this.state = "none";
+            let executable = this.getInterpreter().executable;
+            if(executable) this.init(executable);
         })
     }
 
@@ -58,14 +68,14 @@ export class JavaRepl {
 
         this.standaloneModule = new JavaCompiledModule(new CompilerFile());
         this.standaloneSymbolTable = new JavaSymbolTable(this.standaloneModule, EmptyRange.instance, true);
-        
+
         this.standaloneThread = interpreter.scheduler.createThread("Java REPL standalone thread");
         this.standaloneThread.classes = executable.classObjectRegistry;
 
         this.standaloneModuleManager = new JavaModuleManager();
         this.standaloneModuleManager.addModule(this.standaloneModule);
 
-        for(let module of executable.moduleManager.modules){
+        for (let module of executable.moduleManager.modules) {
             this.standaloneModuleManager.addModule(module);
             module.registerTypesAtTypestore(this.standaloneModuleManager.typestore);
         }
@@ -75,6 +85,8 @@ export class JavaRepl {
         )
 
         this.standaloneStack = [];
+
+        this.state = "none";
 
     }
 
@@ -176,6 +188,8 @@ export class JavaRepl {
             return undefined;
         }
 
+        this.state = this.getInterpreter().scheduler.state == SchedulerState.paused ? "none" : "standalone";
+
 
         let p = new Promise<any>((resolve, reject) => {
 
@@ -217,7 +231,7 @@ export class JavaRepl {
         let scheduler = interpreter.scheduler;
 
         if (programAndModule.module.hasErrors()) {
-             return undefined;
+            return undefined;
         }
 
         if (!programAndModule.program) {
@@ -233,7 +247,7 @@ export class JavaRepl {
             scheduler.setAsCurrentThread(this.standaloneThread);
             currentThread = this.standaloneThread;
             let numberOfLocalVariables = this.standaloneSymbolTable.getStackFrame().numberOfLocalVariables;
-            while(this.standaloneThread.s.length < numberOfLocalVariables) this.standaloneThread.s.push(null);
+            while (this.standaloneThread.s.length < numberOfLocalVariables) this.standaloneThread.s.push(null);
         }
 
         scheduler.saveAllThreadsBut(currentThread);

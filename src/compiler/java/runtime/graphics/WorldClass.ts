@@ -187,6 +187,7 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
         }
 
         let onProgramStoppedCallback = () => {
+            if(this.interpreter.getMain().getRepl().state == "standalone") return;
             this.onProgramStopped();
             interpreter.eventManager.off(onProgramStoppedCallback);
             this.mouseManager.unregisterListeners();

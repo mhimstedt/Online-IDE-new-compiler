@@ -52,6 +52,8 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
 
     nextArrayLiteralTypeExpected: JavaType[] = [];
 
+    isRepl: boolean = false;
+
 
     constructor(module: JavaCompiledModule, libraryTypestore: JavaTypeStore, compiledTypesTypestore: JavaTypeStore) {
         super(module, libraryTypestore, compiledTypesTypestore);
@@ -782,7 +784,7 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
 
         // local variable in main program declared at outmost scope is
         // modeled as field in order to be able to reach it inside methods declared in main program.
-        if(field._isStatic &&field.classEnum.isMainClass){
+        if(field._isStatic &&field.classEnum.isMainClass && !this.isRepl){
             if(range.startLineNumber < field.identifierRange.startLineNumber){
                 this.pushError(JCM.localVariableUsedBeforeDeclaration(field.identifier), "error", range);
             }
