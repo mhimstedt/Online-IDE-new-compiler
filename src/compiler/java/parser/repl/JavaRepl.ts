@@ -34,6 +34,8 @@ export class JavaRepl {
     standaloneExecutable: Executable;
     standaloneModuleManager: JavaModuleManager;
 
+    standaloneStack: any[] = [];
+
     replCompiler: JavaReplCompiler;
 
     lastCompiledModule?: JavaCompiledModule;
@@ -72,6 +74,8 @@ export class JavaRepl {
             this.compiler.libraryModuleManager, [], new ExceptionTree(executable.libraryModuleManager.typestore, this.standaloneModuleManager.typestore)
         )
 
+        this.standaloneStack = [];
+
     }
 
     getCurrentModule(): JavaCompiledModule | undefined {
@@ -103,7 +107,7 @@ export class JavaRepl {
                 if (symbolTable) {
                     let oldNumberOfChildTables = symbolTable.childTables.length;
 
-                    programAndModule = this.replCompiler.compile(statement, symbolTable, interpreter.executable, withToStringCall);
+                    programAndModule = this.replCompiler.compile(statement, symbolTable, interpreter.executable, withToStringCall, false);
 
                     symbolTable.childTables.splice(oldNumberOfChildTables, symbolTable.childTables.length - oldNumberOfChildTables);
                 }
@@ -111,7 +115,7 @@ export class JavaRepl {
             }
         } else {
             // execute in REPL standalone context
-            programAndModule = this.replCompiler.compile(statement, this.standaloneSymbolTable, this.standaloneExecutable, withToStringCall);
+            programAndModule = this.replCompiler.compile(statement, this.standaloneSymbolTable, this.standaloneExecutable, withToStringCall, true);
         }
 
         if (programAndModule) {
@@ -228,6 +232,8 @@ export class JavaRepl {
         if (noProgramIsRunning) {
             scheduler.setAsCurrentThread(this.standaloneThread);
             currentThread = this.standaloneThread;
+            let numberOfLocalVariables = this.standaloneSymbolTable.getStackFrame().numberOfLocalVariables;
+            while(this.standaloneThread.s.length < numberOfLocalVariables) this.standaloneThread.s.push(null);
         }
 
         scheduler.saveAllThreadsBut(currentThread);

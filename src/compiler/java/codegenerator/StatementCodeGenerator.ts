@@ -27,10 +27,13 @@ import { JavaLocalVariable } from "./JavaLocalVariable";
 import { JumpToLabelCodeSnippet, LabelCodeSnippet } from "./LabelManager.ts";
 import { TermCodeGenerator } from "./TermCodeGenerator";
 
+export type CodeGenerationMode = "normal" | "repl" | "replStandalone";
+
 export abstract class StatementCodeGenerator extends TermCodeGenerator {
 
     synchronizedBlockCount: number = 0;
 
+    codeGenerationMode: CodeGenerationMode = "normal";
 
     constructor(module: JavaCompiledModule, libraryTypestore: JavaTypeStore, compiledTypesTypestore: JavaTypeStore,
         protected exceptionTree: ExceptionTree) {
@@ -954,13 +957,17 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
             node.type.resolvedType!, this.currentSymbolTable);
         variable.isFinal = node.isFinal;
 
-        if (this.currentSymbolTable.findSymbolButNotInParentScopes(variable.identifier)) {
-            this.pushError(JCM.cantRedeclareVariableError(variable.identifier), "error", node.range);
-        }
-
         let initValueSnippet: CodeSnippet | undefined = this.compileInitialValue(node.initialization, variable.type);
-
-        this.currentSymbolTable.addSymbol(variable);    // sets stackOffset
+        
+        let oldVariableWithSameName = this.currentSymbolTable.findSymbolButNotInParentScopes(variable.identifier);
+        if (oldVariableWithSameName) {
+            if(this.codeGenerationMode == "normal"){
+                this.pushError(JCM.cantRedeclareVariableError(variable.identifier), "error", node.range);
+            }
+            variable = oldVariableWithSameName;
+        } else {
+            this.currentSymbolTable.addSymbol(variable);    // sets stackOffset
+        }
 
         this.module.compiledSymbolsUsageTracker.registerUsagePosition(variable, this.module.file, node.identifierRange);
 

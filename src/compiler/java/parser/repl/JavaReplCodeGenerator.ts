@@ -21,10 +21,16 @@ export class JavaReplCodeGenerator extends StatementCodeGenerator {
 
     }
 
-    start(baseSymbolTable: JavaSymbolTable, withToStringCall: boolean): Program {
+    start(baseSymbolTable: JavaSymbolTable, withToStringCall: boolean, isStandalone: boolean): Program {
 
-        this.currentSymbolTable = new JavaSymbolTable(this.module, this.module.ast!.range, true, baseSymbolTable);
-        this.module.symbolTables.push(this.currentSymbolTable);
+        if(isStandalone){
+            this.currentSymbolTable = baseSymbolTable;
+            this.codeGenerationMode = "replStandalone";
+        } else {
+            this.currentSymbolTable = new JavaSymbolTable(this.module, this.module.ast!.range, true, baseSymbolTable);
+            this.module.symbolTables.push(this.currentSymbolTable);
+            this.codeGenerationMode = "repl";
+        }
         this.symbolTableStack.push(this.currentSymbolTable)
 
         this.module.programsToCompileToFunctions = [];
