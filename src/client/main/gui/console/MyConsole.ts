@@ -102,7 +102,7 @@ export class MyConsole {
             },
             theme: "myCustomThemeDark",
 
-            acceptSuggestionOnEnter: "off"
+            acceptSuggestionOnEnter: "on"
 
         }
         );
@@ -112,70 +112,87 @@ export class MyConsole {
         let that = this;
 
 
-        this.editor.addCommand(monaco.KeyCode.Enter, (e) => {
-            let statement = this.editor.getModel()?.getValue();
-            if (!statement) return;
+        this.editor.addAction({
+            id: "action_enter",
+            label: "Enter key",
+            keybindings: [monaco.KeyCode.Enter],
+            precondition: '!suggestWidgetVisible',
+            run: () => {
+                let statement = this.editor.getModel()?.getValue();
+                if (!statement) return;
 
-            setTimeout(async () => {
-                let command = that.editor.getModel().getValue(monaco.editor.EndOfLinePreference.LF, false);
+                setTimeout(async () => {
+                    let command = that.editor.getModel().getValue(monaco.editor.EndOfLinePreference.LF, false);
 
-                if (!command || command == "") return;
+                    if (!command || command == "") return;
 
-                that.history.push(command);
-                that.historyPos = 0;
+                    that.history.push(command);
+                    that.historyPos = 0;
 
-                let returnValue = await that.main.getRepl().executeAsync(command!, false);
-                this.showCompilationErrors(returnValue?.errors);
+                    let returnValue = await that.main.getRepl().executeAsync(command!, false);
+                    this.showCompilationErrors(returnValue?.errors);
 
-                if (typeof returnValue !== "undefined") {
-                    that.writeConsoleEntry(command, returnValue);
-                    this.editor.getModel()?.setValue('');
+                    if (typeof returnValue !== "undefined") {
+                        that.writeConsoleEntry(command, returnValue);
+                        this.editor.getModel()?.setValue('');
+                    }
+                    this.main.getInterpreter().updateDebugger();
+                }, 10);
+
+            }
+        });
+
+        this.editor.addAction({
+            id: "action_arrow_up",
+            label: "ArrowUp",
+            keybindings: [monaco.KeyCode.UpArrow],
+            precondition: '!suggestWidgetVisible',
+            run: () => {
+                let nextHistoryPos = that.history.length - (that.historyPos + 1);
+                if (nextHistoryPos >= 0) {
+                    that.historyPos++;
+                    let text = that.history[nextHistoryPos];
+                    that.editor.setValue(text);
+                    that.editor.setPosition({
+                        lineNumber: 1,
+                        column: text.length + 1
+                    })
+                    this.compileAndShowErrors();
                 }
-                this.main.getInterpreter().updateDebugger();
-            }, 10);
-        }, '!suggestWidgetVisible')
+            }
+        });
 
-        this.editor.addCommand(monaco.KeyCode.UpArrow, (e) => {
-            let nextHistoryPos = that.history.length - (that.historyPos + 1);
-            if (nextHistoryPos >= 0) {
-                that.historyPos++;
-                let text = that.history[nextHistoryPos];
-                that.editor.setValue(text);
-                that.editor.setPosition({
-                    lineNumber: 1,
-                    column: text.length + 1
-                })
+        this.editor.addAction({
+            id: "action_arrow_down",
+            label: "ArrowDown",
+            keybindings: [monaco.KeyCode.DownArrow],
+            precondition: '!suggestWidgetVisible',
+            run: () => {
+                let nextHistoryPos = that.history.length - (that.historyPos - 1);
+                if (nextHistoryPos <= that.history.length - 1) {
+                    that.historyPos--;
+                    let text = that.history[nextHistoryPos];
+                    that.editor.setValue(text);
+                    that.editor.setPosition({
+                        lineNumber: 1,
+                        column: text.length + 1
+                    })
+                } else {
+                    that.editor.setValue("");
+                    that.historyPos = 0;
+                }
                 this.compileAndShowErrors();
             }
-
-        }, '!suggestWidgetVisible')
-
-        this.editor.addCommand(monaco.KeyCode.DownArrow, (e) => {
-            let nextHistoryPos = that.history.length - (that.historyPos - 1);
-            if (nextHistoryPos <= that.history.length - 1) {
-                that.historyPos--;
-                let text = that.history[nextHistoryPos];
-                that.editor.setValue(text);
-                that.editor.setPosition({
-                    lineNumber: 1,
-                    column: text.length + 1
-                })
-            } else {
-                that.editor.setValue("");
-                that.historyPos = 0;
-            }
-            this.compileAndShowErrors();
-
-        }, '!suggestWidgetVisible')
+        });
 
 
 
-        this.editor.onKeyDown((e) => {
+        this.editor.onDidChangeModelContent((e) => {
             let statement = this.editor.getModel()?.getValue();
             if (!statement) return;
             if (statement != this.lastStatement) {
                 this.lastStatement = statement;
-                
+
                 this.compileAndShowErrors();
             }
         })
@@ -192,14 +209,14 @@ export class MyConsole {
     }
 
 
-    compileAndShowErrors(){
+    compileAndShowErrors() {
         setTimeout(() => {
-            if(performance.now() - this.lastCompileTime > 390){
+            if (performance.now() - this.lastCompileTime > 390) {
                 let programAndModule = this.compile();
                 if (programAndModule) {
                     this.showCompilationErrors(programAndModule.module.errors);
                 }
-                this.lastCompileTime = performance.now();                    
+                this.lastCompileTime = performance.now();
             }
         }, 400);
     }
