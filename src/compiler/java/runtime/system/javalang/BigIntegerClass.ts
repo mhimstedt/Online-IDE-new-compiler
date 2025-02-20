@@ -16,6 +16,7 @@ export class BigIntegerClass extends ObjectClass {
         { type: "method", signature: "final BigInteger divide(BigInteger otherNumber)", native: BigIntegerClass.prototype._divide, comment: JRC.BigIntegerDivideComment },
         { type: "method", signature: "final BigInteger multiply(BigInteger otherNumber)", native: BigIntegerClass.prototype._multiply, comment: JRC.BigIntegerMultiplyComment },
         { type: "method", signature: "final BigInteger remainder(BigInteger otherNumber)", native: BigIntegerClass.prototype._remainder, comment: JRC.BigIntegerRemainderComment },
+        { type: "method", signature: "final BigInteger modPow(BigInteger exponent,BigInteger m)", native: BigIntegerClass.prototype._modPow, comment: JRC.BigIntegerRemainderComment },
         { type: "method", signature: "final String toString()", java: BigIntegerClass.prototype._mj$toString$String$, comment: JRC.BigIntegerToStringComment },
         { type: "method", signature: "final int intValue()", native: BigIntegerClass.prototype._intValue, comment: JRC.BigIntegerIntValueComment },
 
@@ -80,5 +81,21 @@ export class BigIntegerClass extends ObjectClass {
         return s;
     }
 
+    _modPow(exponent:BigIntegerClass,m2:BigIntegerClass):BigIntegerClass{
+        let exp=exponent.value;
+        let m=m2.value;
+        let v=1n;
+        let expBin=this.value;
+        while(exp>0n){
+            if((exp&1n)==1n){
+                v*=expBin;
+                v%=m;
+            }
+            expBin*=expBin;
+            expBin%=m;
+            exp>>=1n;
+        }
+        return new BigIntegerClass(v);
+    }
 
 }
