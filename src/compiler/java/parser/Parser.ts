@@ -100,7 +100,7 @@ export class Parser extends StatementParser {
             let pos = this.pos;
 
             if (this.comesToken(Parser.visibilityModifiers, false)) {
-                if (Parser.classOrInterfaceOrEnum.indexOf(this.lookahead(1).tt) >= 0) {
+                if (Parser.visibilityModifiersOrTopLevelTypeDeclaration.indexOf(this.lookahead(1).tt) >= 0) {
                     this.parseClassOrInterfaceOrEnum(this.javaCompiledModule.ast!, undefined);
                     this.currentClassOrInterface = undefined;
                 } else {
