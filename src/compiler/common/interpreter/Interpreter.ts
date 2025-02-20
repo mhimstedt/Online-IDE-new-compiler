@@ -430,9 +430,9 @@ export class Interpreter {
         let runningStates: SchedulerState[] = [SchedulerState.paused, SchedulerState.running];
         if (runningStates.indexOf(this.scheduler.state) >= 0 && runningStates.indexOf(state) < 0) {
             this.keyboardManager?.unsubscribeAllListeners();
-            if(this.main?.getRepl().state != "standalone"){
+            // if(this.main?.getRepl().state != "standalone"){
                 this._debugger?.hide();
-            }
+            // }
         }
 
         if (runningStates.indexOf(this.scheduler.state) < 0 && runningStates.indexOf(state) >= 0) {
