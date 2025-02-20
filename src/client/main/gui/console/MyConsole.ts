@@ -146,7 +146,7 @@ export class MyConsole {
             id: "action_arrow_up",
             label: "ArrowUp",
             keybindings: [monaco.KeyCode.UpArrow],
-            precondition: '!suggestWidgetVisible',
+            precondition: '!suggestWidgetVisible && !parameterHintsVisible',
             run: () => {
                 let nextHistoryPos = that.history.length - (that.historyPos + 1);
                 if (nextHistoryPos >= 0) {
@@ -166,7 +166,7 @@ export class MyConsole {
             id: "action_arrow_down",
             label: "ArrowDown",
             keybindings: [monaco.KeyCode.DownArrow],
-            precondition: '!suggestWidgetVisible',
+            precondition: '!suggestWidgetVisible && !parameterHintsVisible',
             run: () => {
                 let nextHistoryPos = that.history.length - (that.historyPos - 1);
                 if (nextHistoryPos <= that.history.length - 1) {
@@ -298,10 +298,12 @@ export class MyConsole {
             this.consoleEntries.push(resultEntry);
             consoleTop.append(resultEntry.$consoleEntry);
         }
-
-
-        var height = consoleTop[0].scrollHeight;
-        consoleTop.scrollTop(height);
+        
+        
+        setTimeout(() => {
+            consoleTop[0].scrollTop = consoleTop[0].scrollHeight;
+            // resultEntry.$consoleEntry[0].scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }, 30);
 
     }
 

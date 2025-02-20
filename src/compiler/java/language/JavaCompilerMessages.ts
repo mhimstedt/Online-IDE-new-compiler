@@ -220,6 +220,11 @@ export class JCM {
         "en": `break statement is only expected inside loops (for, while, do...while) and switch-statements.`,
     })
 
+    static noVariableDeclarationWhileProgramIsRunning = () => le({
+        "de": "Während ein Programm läuft (oder pausiert ist) kann keine Variable in der Konsole deklariert werden.",
+        "en": `You can't declare a variable while a program is running (or paused).`,
+    })
+
     static continueNotExpected = () => le({
         "de": "An dieser Stelle kann kein continue stehen, da der Ausdruck nicht innerhalb einer Schleife (for, while, do) oder switch-case Anweisung steht.",
         "en": `continue statement is only expected inside loops (for, while, do...while) and switch-statements.`,

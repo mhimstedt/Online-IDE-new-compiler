@@ -26,8 +26,17 @@ export class JavaSignatureHelpProvider extends BaseMonacoProvider implements mon
         let main = this.findMainForModel(model);
         if (!main) return;
 
+        let module: JavaCompiledModule;
 
-        let module = <JavaCompiledModule>main.getCurrentWorkspace()?.getModuleForMonacoModel(model);
+
+        let onlineIDEConsole = main.getBottomDiv()?.console;
+        if (onlineIDEConsole?.editor?.getModel() == model) {
+            onlineIDEConsole.compile();
+            module = main.getRepl().getCurrentModule();
+        } else {
+            module = <JavaCompiledModule>main.getCurrentWorkspace()?.getModuleForMonacoModel(model);
+        }
+
         if (!module) return;
 
 

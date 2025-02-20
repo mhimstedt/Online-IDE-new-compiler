@@ -28,6 +28,7 @@ export class JavaReplCodeGenerator extends StatementCodeGenerator {
         if(isStandalone){
             this.currentSymbolTable = baseSymbolTable;
             this.codeGenerationMode = "replStandalone";
+            this.module.symbolTables = [baseSymbolTable];
         } else {
             this.currentSymbolTable = new JavaSymbolTable(this.module, this.module.ast!.range, true, baseSymbolTable);
             this.module.symbolTables.push(this.currentSymbolTable);

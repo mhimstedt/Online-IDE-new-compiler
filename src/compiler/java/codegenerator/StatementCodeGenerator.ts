@@ -953,6 +953,11 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
     }
 
     compileLocalVariableDeclaration(node: ASTLocalVariableDeclaration): CodeSnippet | undefined {
+
+        if(this.codeGenerationMode == "repl"){
+            this.pushError(JCM.noVariableDeclarationWhileProgramIsRunning(), "error", node.range);
+        }
+
         let variable = new JavaLocalVariable(node.identifier, node.identifierRange,
             node.type.resolvedType!, this.currentSymbolTable);
         variable.isFinal = node.isFinal;
