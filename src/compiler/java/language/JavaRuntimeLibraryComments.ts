@@ -4048,6 +4048,11 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
         "en": "Milliseconds since 1970-01-01 00:00:00 UTC.",
     })
 
+    static SystemNanoTimeComment = () => lm({
+        "de": "Gibt die Anzahl an Nanosekunden seit einem nicht näher definierten Startzeitpunkt zurück.",
+        "en": "Nanoseconds since arbitrary start timestamp.",
+    })
+
     static SystemOutComment = () => lm({
         "de": "PrintStream-Objekt, mit dem Text ausgegeben werden kann.",
         "en": "PrintStream-object to print text.",

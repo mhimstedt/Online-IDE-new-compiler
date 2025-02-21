@@ -105,7 +105,6 @@ export class DebuggerSymbolEntry {
         let caption = `<span class="${cssClass}">${this.identifier}</span>${delimiter}<span class="${valuecss}">${quote}<span class="jo_valueSpan">${value}</span>${quote}</span>`;
         this.treeViewNode.caption = caption;
 
-
         if (setChangedValue) {
             let valueSpan = <HTMLSpanElement>this.treeViewNode.captionDiv.getElementsByClassName('jo_valueSpan')[0]
 

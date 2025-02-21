@@ -61,6 +61,11 @@ export class JavaRepl {
     }
 
     init(executable: Executable) {
+        if(!executable){
+            this.state = "none";
+            this.main.hideDebugger();
+            return;
+        }
         let interpreter = this.getInterpreter();
         if (!interpreter) {
             console.error("JavaRepl constructor called before interpreter was created.");
@@ -87,6 +92,7 @@ export class JavaRepl {
         this.standaloneStack = [];
 
         this.state = "none";
+        this.main.hideDebugger();
 
     }
 
@@ -203,6 +209,7 @@ export class JavaRepl {
                     returnValue.errors = programAndModule?.module?.errors;
 
                     resolve(returnValue);
+                    interpreter.updateDebugger();
                 }
             }
 

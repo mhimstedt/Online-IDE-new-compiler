@@ -144,7 +144,7 @@ export class MainEmbedded implements MainBase {
     }
 
     getRepl(): JavaRepl {
-        return this.language.getRepl(this);
+        return this.language?.getRepl(this);
     }
 
     getMainEditor(): monaco.editor.IStandaloneCodeEditor {
@@ -647,17 +647,27 @@ export class MainEmbedded implements MainBase {
             }
         }
 
-        this.interpreter.eventManager.on("stateChanged", (oldState: SchedulerState, newState: SchedulerState) => {
-            if (newState == SchedulerState.paused) {
-                this.$debuggerDiv.show();
-                this.$alternativeDebuggerDiv.hide();
-                return;
-            } else if (!(oldState == SchedulerState.paused && newState == SchedulerState.running)) {
-                this.$debuggerDiv.hide();
-                this.$alternativeDebuggerDiv.show();
-            }
-        })
-
+        // this.interpreter.eventManager.on("stateChanged", (oldState: SchedulerState, newState: SchedulerState) => {
+        //     if (newState == SchedulerState.paused) {
+        //         this.$debuggerDiv.show();
+        //         this.$alternativeDebuggerDiv.hide();
+        //         return;
+        //     } else if (!(oldState == SchedulerState.paused && newState == SchedulerState.running)) {
+        //         this.$debuggerDiv.hide();
+        //         this.$alternativeDebuggerDiv.show();
+        //     }
+        // })
+        
+    }
+    
+    hideDebugger(){
+        this.$debuggerDiv.hide();
+        this.$alternativeDebuggerDiv.show();
+    }
+    
+    showDebugger(){
+        this.$debuggerDiv.show();
+        this.$alternativeDebuggerDiv.hide();
     }
 
     // makeBracketErrorDiv(): JQuery<HTMLElement> {

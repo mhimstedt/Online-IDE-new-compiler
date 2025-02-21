@@ -21,4 +21,5 @@ export interface MainBase extends IMain {
 
     addWorkspace(ws: CompilerWorkspace): void;
 
+
 }

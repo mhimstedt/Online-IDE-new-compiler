@@ -38,6 +38,8 @@ export class DebuggerCallstackEntry {
         if(this.range && this.range.startLineNumber){
             caption += `:${this.range.startLineNumber}`
         }
+        caption = caption.replace(/\d*\./g, ".");
+        caption = caption.replaceAll(/\$/g, "");
         return caption;
     }
 

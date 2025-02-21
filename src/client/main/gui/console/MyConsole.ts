@@ -136,7 +136,9 @@ export class MyConsole {
                         that.writeConsoleEntry(command, returnValue);
                         this.editor.getModel()?.setValue('');
                     }
-                    this.main.getInterpreter().updateDebugger();
+                    setTimeout(() => {
+                        this.editor.focus();
+                    }, 100);
                 }, 10);
 
             }

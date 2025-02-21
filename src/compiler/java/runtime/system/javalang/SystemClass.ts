@@ -95,6 +95,7 @@ export class SystemClass extends ObjectClass {
         { type: "field", signature: "static PrintStream out", comment: JRC.SystemOutComment},
         { type: "method", signature: "static void exit(int status)", java: SystemClass._mj$exit$void$int, comment: JRC.SystemExitComment },
         { type: "method", signature: "static int currentTimeMillis()", native: SystemClass._currentTimeMillis, comment: JRC.SystemCurrentTimeMillisComment },
+        { type: "method", signature: "static long nanoTime()", native: SystemClass._currentTimeNano, comment: JRC.SystemNanoTimeComment },
     ];
 
     static type: NonPrimitiveType;
@@ -108,6 +109,10 @@ export class SystemClass extends ObjectClass {
 
     static _currentTimeMillis(){
         return Math.round(performance.now()) + SystemClass.deltaTimeMillis;
+    }
+
+    static _currentTimeNano(){
+        return Math.round(performance.now() * 1000) + SystemClass.deltaTimeMillis * 1000;
     }
 
     static synchronizeToServerTimeMillis(serverTimeMillis: number){

@@ -131,7 +131,7 @@ export class Main implements MainBase {
     }
 
     getRepl(): JavaRepl {
-        return this.language.getRepl(this);
+        return this.language?.getRepl(this);
     }
 
     getMainEditor(): monaco.editor.IStandaloneCodeEditor {
@@ -408,6 +408,14 @@ export class Main implements MainBase {
 
     onStartFileClicked(file: File){
         this.interpreter.start(file);
+    }
+
+    hideDebugger(): void {
+        this.debugger.hide();
+    }
+
+    showDebugger(): void {
+        this.debugger.show();
     }
 
 }

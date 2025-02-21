@@ -16,6 +16,8 @@ import { SymbolTableSection } from "./SymbolTableSection";
 import '/assets/css/debugger.css';
 import { IPosition } from "../range/Position.ts";
 import { Range } from "../range/Range.ts";
+import { JavaSymbolTable } from "../../java/codegenerator/JavaSymbolTable.ts";
+import { IRange } from "monaco-editor";
 
 export class Debugger {
 
@@ -50,7 +52,7 @@ export class Debugger {
     hide(){
         this.debuggerDiv.style.display = "none";
     }
-
+    
     show(){
         this.debuggerDiv.style.display = "block";
     }
@@ -145,13 +147,22 @@ export class Debugger {
             node.onClickHandler = (t) => {
                 if(!t) return;
                 this.showCallstack(t);
-                this.showVariables(t);
+                this.showVariablesOfProgramState(t);
             }
         }
     }
 
     showCurrentThreadState(){
-        this.showThreadState(this.main.getInterpreter().scheduler.getCurrentThread());
+        let repl = this.main.getRepl();
+        if(repl.state == "standalone"){
+            let thread = this.main.getRepl().standaloneThread;
+            this.showVariablesOfStandaloneRepl(thread, repl.standaloneSymbolTable);
+            this.showCallstack(thread);
+            this.showThreads(thread.scheduler);
+            this.watchSection.update(thread.scheduler.interpreter);
+        } else {
+            this.showThreadState(this.main.getInterpreter().scheduler.getCurrentThread());
+        }
     }
 
     showThreadState(thread: Thread | undefined){
@@ -164,7 +175,7 @@ export class Debugger {
 
         if(!thread) return;
 
-        this.showVariables(thread);
+        this.showVariablesOfProgramState(thread);
         this.showCallstack(thread);
         this.showThreads(thread.scheduler);
         this.watchSection.update(thread.scheduler.interpreter)
@@ -182,8 +193,8 @@ export class Debugger {
             let node = this.callstackTreeview.addNode(false, entry.getCaption(), undefined,
                 entry, entry, undefined, true);
             node.onClickHandler = (entry) => {
-                this.showVariables(thread, entry?.programState);
-                this.showProgramPosition(thread, entry);
+                this.showVariablesOfProgramState(thread, entry?.programState);
+                this.showCallstackPositionInsideProgram(thread, entry);
             }
             if(i == programStack.length - 1){
                 node.setSelected(true);
@@ -196,7 +207,7 @@ export class Debugger {
         }
     }
 
-    showProgramPosition(thread: Thread, entry?: DebuggerCallstackEntry) {
+    showCallstackPositionInsideProgram(thread: Thread, entry?: DebuggerCallstackEntry) {
         if(!entry?.range) return;
 
         let position: ProgramPointerPositionInfo = {
@@ -214,7 +225,31 @@ export class Debugger {
         })
     }
 
-    showVariables(thread: Thread, programState?: ProgramState){
+    showVariablesOfStandaloneRepl(thread: Thread, symbolTable: JavaSymbolTable){
+        let symbolTableSection = this.currentlyVisibleSymbolTableSections.length == 1 ? this.currentlyVisibleSymbolTableSections[0] : undefined;
+        if(symbolTableSection && symbolTableSection.symbolTable == symbolTable){
+            symbolTableSection.reReadSymbolTable();
+        } else {
+            symbolTableSection = new SymbolTableSection(this.showVariablesTreeview, symbolTable, this);
+        }
+
+        this.currentlyVisibleSymbolTableSections = [symbolTableSection];
+
+        let position: IPosition;
+        let range:IRange = {startLineNumber: 100, startColumn: 0, endLineNumber: 100, endColumn: 1e5};
+        if(range && range.startLineNumber >= 0){
+            position = Range.getStartPosition(range);
+        }
+
+        this.showVariablesTreeview.detachAllNodes();
+        for(let sts of this.currentlyVisibleSymbolTableSections){
+            sts.attachNodesToTreeview();
+            sts.renewValues(thread.s, 0, position);
+        }
+       
+    }
+
+    showVariablesOfProgramState(thread: Thread, programState?: ProgramState){
         if(!programState){
             if(thread.programStack.length > 0) programState = thread.programStack[thread.programStack.length - 1];
         }

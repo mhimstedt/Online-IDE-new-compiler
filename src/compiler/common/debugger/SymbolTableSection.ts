@@ -15,16 +15,34 @@ export class SymbolTableSection {
 
         // divToRenderInto.prepend(this.treeview.outerDiv);
 
-        let symbols = symbolTable.getSymbolsOnStackframeForDebugger();
+        this.reReadSymbolTable();
+        
+    }
+    
+    reReadSymbolTable(){
+        let oldChildren: StackElementDebuggerEntry[] = this.children.slice();
+        this.children = [];
+
+        let i = 0;
+        let symbols = this.symbolTable.getSymbolsOnStackframeForDebugger();
         for (let symbol of symbols) {
             if(symbol.hiddenWhenDebugging) continue;
+
+            if(oldChildren.length > i){
+                let oldChild = oldChildren[i++];
+                if(oldChild.identifier == symbol.identifier){
+                    this.children.push(oldChild);
+                    continue;
+                }
+            }
+
             this.children.push(new StackElementDebuggerEntry(
                 this, symbol
             ));
         }
-
-        if(symbolTable instanceof JavaSymbolTable && symbolTable.classContext?.isMainClass && symbolTable.classContext != symbolTable.parent?.classContext){
-            for(let field of symbolTable.classContext.getFields().filter(field => field.isStatic() && !field.hiddenWhenDebugging)){
+    
+        if(this.symbolTable instanceof JavaSymbolTable && this.symbolTable.classContext?.isMainClass && this.symbolTable.classContext != this.symbolTable.parent?.classContext){
+            for(let field of this.symbolTable.classContext.getFields().filter(field => field.isStatic() && !field.hiddenWhenDebugging)){
                 this.staticFieldChildren.push(new StaticFieldDebuggerEntry(this, field));
             }
         }

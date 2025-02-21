@@ -51,4 +51,8 @@ export interface IMain {
 
     onStartFileClicked(file: File);
 
+    hideDebugger(): void;
+    showDebugger(): void;
+
+
 }

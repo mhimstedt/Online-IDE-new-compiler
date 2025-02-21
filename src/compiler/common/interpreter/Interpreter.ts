@@ -356,7 +356,12 @@ export class Interpreter {
 
         this.actionManager.registerAction("interpreter.stop", [], "Programm anhalten",
             () => {
-                this.stop(false);
+                if(this.main?.getRepl().state == "standalone"){
+                    this.main?.getRepl().init(this.executable);
+                    this.setState(SchedulerState.stopped);
+                } else {
+                    this.stop(false);
+                }
             });
 
         this.actionManager.registerAction("interpreter.toggleBreakpoint", ['F9'], "Haltepunkt an/aus",
@@ -430,13 +435,13 @@ export class Interpreter {
         let runningStates: SchedulerState[] = [SchedulerState.paused, SchedulerState.running];
         if (runningStates.indexOf(this.scheduler.state) >= 0 && runningStates.indexOf(state) < 0) {
             this.keyboardManager?.unsubscribeAllListeners();
-            // if(this.main?.getRepl().state != "standalone"){
-                this._debugger?.hide();
-            // }
+            if(this.main?.getRepl().state != "standalone"){
+                this.main?.hideDebugger();
+            }
         }
 
         if (runningStates.indexOf(this.scheduler.state) < 0 && runningStates.indexOf(state) >= 0) {
-            this._debugger?.show();
+            this.main?.showDebugger();
         }
 
         this.eventManager.fire("stateChanged", this.scheduler.state, state);
@@ -450,6 +455,9 @@ export class Interpreter {
                 this.actionManager.setActive("interpreter." + actionId, this.#buttonActiveMatrix[actionId][state]);
             }
 
+            if(this.main?.getRepl()?.state == "standalone"){
+                this.actionManager.setActive("interpreter.stop", true);
+            }
 
             const mainModule = this.#findStartableModule();
             const mainModuleExists = mainModule != null;
@@ -531,7 +539,8 @@ export class Interpreter {
     }
 
     hideProgrampointerPosition(tag?: string) {
-        this.programPointerManager?.hide(tag || Interpreter.#ProgramPointerIndentifier);
+        this.programPointerManager.hideAll();
+        // this.programPointerManager?.hide(tag || Interpreter.#ProgramPointerIndentifier);
         this.eventManager.fire("hideProgramPointer");
     }
 
