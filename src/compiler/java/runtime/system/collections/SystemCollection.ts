@@ -7,12 +7,12 @@ export abstract class SystemCollection extends ObjectClass {
 
     abstract getAllElements(): ObjectClassOrNull[];
 
-    static shuffle(list: SystemCollection){
+    static shuffle(list: SystemCollection) {
         let elements = list.getAllElements();
         let length = elements.length;
-        for(let i = 0; i < length * 2; i++){
-            let index1 = Math.floor(Math.random()*length);
-            let index2 = Math.floor(Math.random()*length);
+        for (let i = 0; i < length * 2; i++) {
+            let index1 = Math.floor(Math.random() * length);
+            let index2 = Math.floor(Math.random() * length);
             let z = elements[index1];
             elements[index1] = elements[index2];
             elements[index2] = z;
@@ -35,8 +35,21 @@ export abstract class SystemCollection extends ObjectClass {
         let that = this;
 
         if (toIndex - fromIndex <= 1) {
-            if (callback) callback(); // nothing to do
-            return;
+
+            if (toIndex > fromIndex) {
+                comparator._mj$compare$int$T$T(t, () => {
+                    if (t.s.pop() >= 0) {
+                        let z = elements[toIndex];
+                        elements[toIndex] = elements[fromIndex];
+                        elements[fromIndex] = z;
+                    }
+                    if (callback) callback(); // nothing to do
+                }, elements[fromIndex], elements[toIndex])
+                return;
+            } else {
+                if (callback) callback(); // nothing to do
+                return;
+            }
         }
 
         SystemCollection.partition(t, () => {

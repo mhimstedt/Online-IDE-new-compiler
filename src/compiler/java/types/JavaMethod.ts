@@ -110,6 +110,7 @@ export class JavaMethod extends BaseSymbol {
         newMethod.classEnumInterface = genericClassOrInterfaceOrEnum;
         newMethod.isCopyOf = this;
         newMethod.documentation = this.documentation;
+        newMethod.isStatic = this.isStatic;
 
         this.getInternalName("java");
         this.getInternalName("native");
@@ -132,6 +133,7 @@ export class JavaMethod extends BaseSymbol {
         newMethod.parameters = newParameters;
         newMethod.isCopyOf = this;
         newMethod.classEnumInterface = this.classEnumInterface;
+        newMethod.isStatic = this.isStatic;
 
         return newMethod;
 
@@ -362,6 +364,7 @@ export class GenericMethod extends JavaMethod {
         newMethod.classEnumInterface = genericClassOrInterfaceOrEnum;
         newMethod.isCopyOf = this;
         newMethod.documentation = this.documentation;
+        newMethod.isStatic = this.isStatic;
 
         this.getInternalName("java");
         this.getInternalName("native");

@@ -14,16 +14,15 @@ export class CollectionsClass extends ObjectClass {
         { type: "declaration", signature: "class Collections extends Object", comment: JRC.CollectionsClassComment},
         { type: "method", signature: "static void shuffle(List<?> list)", java: CollectionsClass.shuffle, comment: JRC.CollectionsShuffleComment},
         { type: "method", signature: "static <T extends Comparable> void sort(List<T> list)", java: CollectionsClass.sortComparableList, comment: JRC.CollectionsSortComparableListComment},
-        { type: "method", signature: "static <T> void sort(List<T> list, Comparator<? super T> comparator)", java: CollectionsClass.sortComparableList, comment: JRC.CollectionsSortComparableListComment},
+        { type: "method", signature: "static <T> void sort(List<T> list, Comparator<? super T> comparator)", java: CollectionsClass.sortListWithComparator, comment: JRC.CollectionsSortComparableListComment},
     ];
 
     static type: NonPrimitiveType;
 
-    static shuffle(t: Thread, callback: CallbackFunction, list: ListInterface){
+    static shuffle(t: Thread, list: ListInterface){
 
         if(list instanceof SystemCollection){
             SystemCollection.shuffle(list);
-            if(callback) callback();
         }
 
         list._mj$size$int$(t, () => {
@@ -32,6 +31,7 @@ export class CollectionsClass extends ObjectClass {
 
             let f = () => {
                 if(shuffleCount > 0){
+                    shuffleCount--;
                     let index1 = Math.floor(Math.random()*size);
                     let index2 = Math.floor(Math.random()*size);
 
@@ -54,9 +54,7 @@ export class CollectionsClass extends ObjectClass {
 
                     }, index1);
 
-                } else {
-                    if(callback) callback();
-                }
+                } 
             }
 
             if(size > 1) f();
@@ -64,19 +62,19 @@ export class CollectionsClass extends ObjectClass {
         })
     }
 
-    static sortListWithComparator(t: Thread, callback: CallbackFunction, list: ListInterface, comparator: ComparatorInterface){
+    static sortListWithComparator(t: Thread, list: ListInterface, comparator: ComparatorInterface){
 
         if(list instanceof SystemCollection){
-            SystemCollection.sortWithComparator(t, callback, comparator, list);
+            SystemCollection.sortWithComparator(t, undefined, comparator, list);
             return;
         }
 
-        list._mj$sort$void$Comparator(t, callback, comparator);
+        list._mj$sort$void$Comparator(t, undefined, comparator);
 
     }
 
 
-    static sortComparableList(t: Thread, callback: CallbackFunction, list: ListInterface){
+    static sortComparableList(t: Thread, list: ListInterface){
 
         let comparator: ComparatorInterface = {
             _mj$compare$int$T$T: function (t: Thread, callback: CallbackFunction, object1: ObjectClass, object2: ObjectClass): void {
@@ -97,7 +95,7 @@ export class CollectionsClass extends ObjectClass {
             }
         }
 
-        CollectionsClass.sortListWithComparator(t, callback, list, comparator);
+        CollectionsClass.sortListWithComparator(t, list, comparator);
 
     }
 
