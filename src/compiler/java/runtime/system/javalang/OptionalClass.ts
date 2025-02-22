@@ -43,11 +43,10 @@ export class OptionalClass extends ObjectClass {
         if(c) c();
     }
 
-    static _mj$of$Optional$T(t: Thread, c: CallbackFunction, element: ObjectClass){
+    static _mj$of$Optional$T(t: Thread, element: ObjectClass){
         let justElement = new OptionalClass();
         justElement._nconstructor(element);
         t.s.push(justElement);
-        if(c) c();
     }
 
     _mj$isEmpty$boolean$(t: Thread, c: CallbackFunction){

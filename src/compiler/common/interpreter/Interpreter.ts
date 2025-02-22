@@ -349,7 +349,7 @@ export class Interpreter {
                 if (this.actionManager!.isActive("interpreter.start")) {
                     this.start();
                 } else {
-                    this.pause();
+                    this.pause(); 
                 }
 
             });
@@ -539,7 +539,7 @@ export class Interpreter {
     }
 
     hideProgrampointerPosition(tag?: string) {
-        this.programPointerManager.hideAll();
+        this.programPointerManager?.hideAll();
         // this.programPointerManager?.hide(tag || Interpreter.#ProgramPointerIndentifier);
         this.eventManager.fire("hideProgramPointer");
     }

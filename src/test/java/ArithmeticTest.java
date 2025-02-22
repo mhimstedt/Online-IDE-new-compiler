@@ -47,3 +47,16 @@ assertTrue(v4.equals(new Vector2(4, -3)), "Vector2.rotate");
 assertEquals(1, v4.getUnitVector().getLength(), "Vector2 -> unit vector");
 
 
+/**::
+ * BigInteger
+ */
+BigInteger a = new BigInteger(5e10);
+BigInteger product = a.multiply(new BigInteger(6e10));
+
+assertEquals("3000000000000000000000", product.toString(), "BigInteger.multiply");
+BigInteger quotient = product.divide(new BigInteger(7e6));
+assertEquals("428571428571428", quotient.toString(), "BigInteger.quotient");
+
+
+BigInteger modPow = a.modPow(new BigInteger(12345), new BigInteger(537));
+assertEquals("320", modPow.toString(), "BigInteger.quotient");

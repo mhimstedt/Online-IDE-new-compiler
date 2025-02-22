@@ -255,8 +255,11 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
         let completionItems: monaco.languages.CompletionItem[] = [];
 
         if (symbolTable.classContext && !symbolTable.methodContext && symbolTable.classContext instanceof IJavaClass) {
-            completionItems = completionItems.concat(this.getOverridableMethodsCompletion(symbolTable.classContext, rangeToReplace));
-            completionItems = completionItems.concat(this.getConstructorCompletion(symbolTable.classContext, rangeToReplace));
+            let range = symbolTable.range;
+            if(range.startLineNumber < range.endLineNumber){
+                completionItems = completionItems.concat(this.getOverridableMethodsCompletion(symbolTable.classContext, rangeToReplace));
+                completionItems = completionItems.concat(this.getConstructorCompletion(symbolTable.classContext, rangeToReplace));
+            }
         }
 
         if (symbolTable != null) {
