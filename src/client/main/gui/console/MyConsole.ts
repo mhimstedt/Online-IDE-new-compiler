@@ -133,7 +133,11 @@ export class MyConsole {
                     this.showCompilationErrors(returnValue?.errors);
 
                     if (typeof returnValue !== "undefined") {
-                        that.writeConsoleEntry(command, returnValue);
+                        if (typeof returnValue.value == "undefined" && returnValue.errors?.length > 0 && returnValue.errors?.find(error => error.level == "error")) {
+                            that.writeConsoleError(command, returnValue.errors?.find(error => error.level == "error"));
+                        } else {
+                            that.writeConsoleEntry(command, returnValue);
+                        }
                         this.editor.getModel()?.setValue('');
                     }
                     setTimeout(() => {
@@ -282,6 +286,29 @@ export class MyConsole {
 
     }
 
+    writeConsoleError(command: string | JQuery<HTMLElement>, error: Error) {
+
+        if (this.$consoleTab == null) {
+            return;
+        }
+        let consoleTop = this.$consoleTab.find('.jo_console-top');
+
+        let commandEntry = new ConsoleEntry(true, command, null, null, null, null, false);
+        this.consoleEntries.push(commandEntry);
+        consoleTop.append(commandEntry.$consoleEntry);
+
+
+        let resultEntry = new ConsoleEntry(false, null, error.message, error.message, "Fehler:", null, true, "#ff0000");
+        this.consoleEntries.push(resultEntry);
+        consoleTop.append(resultEntry.$consoleEntry);
+
+
+        setTimeout(() => {
+            consoleTop[0].scrollTop = consoleTop[0].scrollHeight;
+            // resultEntry.$consoleEntry[0].scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }, 30);
+
+    }
 
     writeConsoleEntry(command: string | JQuery<HTMLElement>, value: ReplReturnValue, color: string = null) {
 
@@ -290,18 +317,18 @@ export class MyConsole {
         }
         let consoleTop = this.$consoleTab.find('.jo_console-top');
 
-        let commandEntry = new ConsoleEntry(true, command, null, null, null, value == null, color);
+        let commandEntry = new ConsoleEntry(true, command, null, null, null, null, value == null, color);
         this.consoleEntries.push(commandEntry);
         consoleTop.append(commandEntry.$consoleEntry);
 
         let replReturnOutputAsString = this.replReturnValueToOutput(value);
         if (replReturnOutputAsString) {
-            let resultEntry = new ConsoleEntry(false, replReturnOutputAsString, value.value, null, null, true, color);
+            let resultEntry = new ConsoleEntry(false, null, value.value, replReturnOutputAsString, null, null, true, color);
             this.consoleEntries.push(resultEntry);
             consoleTop.append(resultEntry.$consoleEntry);
         }
-        
-        
+
+
         setTimeout(() => {
             consoleTop[0].scrollTop = consoleTop[0].scrollHeight;
             // resultEntry.$consoleEntry[0].scrollIntoView({ behavior: 'smooth', block: 'end' });

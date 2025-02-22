@@ -1,6 +1,7 @@
 import jQuery from 'jquery';
 import { ValueTool } from '../../../../compiler/common/debugger/ValueTool';
 import * as monaco from 'monaco-editor'
+import { NonPrimitiveType } from '../../../../compiler/java/types/NonPrimitiveType';
 
 
 export class ConsoleEntry {
@@ -20,7 +21,8 @@ export class ConsoleEntry {
 
     $consoleEntry: JQuery<HTMLElement>;
 
-    constructor(private isCommand: boolean, caption: string|JQuery<HTMLElement>, value: any, identifier: string, parent: ConsoleEntry,
+    constructor(private isCommand: boolean, caption: string|JQuery<HTMLElement>, value: any, private valueAsString: string,
+         identifier: string, parent: ConsoleEntry,
         private withBottomBorder: boolean, private color: string = null ) {
         this.caption = caption;
         this.parent = parent;
@@ -49,16 +51,12 @@ export class ConsoleEntry {
         this.$consoleEntry.addClass("jo_consoleEntry");
         this.$consoleEntry.css('margin-left', '' + this.getIndent() + 'px');
 
-        if(this.color != null){
-            this.$consoleEntry.css('background-color', this.color);
-        }
-
         if(this.withBottomBorder){
             this.$consoleEntry.addClass('jo_withBorder');
         }
-
+        
         let $deFirstLine = jQuery('<div class="jo_ceFirstline"></div>');
-
+        
         this.$consoleEntry.append($deFirstLine);
 
 
@@ -97,7 +95,7 @@ export class ConsoleEntry {
         this.children = [];
 
         for(let iv of ValueTool.getChildren(this.value)){
-            let de = new ConsoleEntry(false, null, iv.value, iv.identifier, this, false);
+            let de = new ConsoleEntry(false, null, iv.value, undefined, iv.identifier + " =", this, false, '#e6e92c');
             de.render();
             this.$consoleEntry.find('.jo_ceChildContainer').append(de.$consoleEntry);
         }
@@ -127,10 +125,21 @@ export class ConsoleEntry {
         } else {
 
             if(this.identifier != null){
-                $firstLine.append(jQuery('<span class="jo_ceIdentifier">' + this.identifier + ":&nbsp;</span>"));
+                let $identifier = jQuery('<span class="jo_ceIdentifier">' + this.identifier + "&nbsp;</span>");
+                if(this.color != null){
+                    $identifier.css('color', this.color);
+                }
+                $firstLine.append($identifier);
             }
             let $span = jQuery('<span class="jo_ceValue"></span>')
-            $span.text(<string>this.caption);
+            let v: string =  this.valueAsString || ValueTool.renderValue(this.value, 30);
+
+            if (typeof this.value == 'object' && !v.endsWith('-object')) {
+                let type = <NonPrimitiveType>this.value.constructor.type;
+                if(type) v = type.identifier + " " + v;
+            }
+
+            $span.text(v);
             $firstLine.append($span);
         }    }
 

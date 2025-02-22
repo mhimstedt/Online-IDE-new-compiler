@@ -2,7 +2,7 @@ import { EnumType } from "typescript";
 import { JavaRepl } from "../../java/parser/repl/JavaRepl";
 import { SystemCollection } from "../../java/runtime/system/collections/SystemCollection";
 import { EnumClass } from "../../java/runtime/system/javalang/EnumClass";
-import { JavaClass } from "../../java/types/JavaClass";
+import { IJavaClass, JavaClass } from "../../java/types/JavaClass";
 import { JavaEnum } from "../../java/types/JavaEnum";
 import { JavaType } from "../../java/types/JavaType";
 import { NonPrimitiveType } from "../../java/types/NonPrimitiveType";
@@ -10,7 +10,8 @@ import { IPrimitiveTypeWrapper } from "../../java/runtime/system/primitiveTypes/
 
 export type IdentifierValuePair = {
     identifier: string,
-    value: any
+    value: any,
+    valueAsString?: string | undefined
 }
 
 export class ValueTool {
@@ -94,7 +95,9 @@ export class ValueTool {
                     })
                 }
             } else {
-                for(let field of type.getFields()){
+                let fields = type.getFields();
+                if(type instanceof IJavaClass) fields = type.getOwnAndInheritedFields();
+                for(let field of fields){
                     if(field.internalName){
                         children.push({
                             identifier: field.identifier,

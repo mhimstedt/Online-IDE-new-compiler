@@ -194,6 +194,15 @@ export class JavaRepl {
             return undefined;
         }
 
+        if(programAndModule.module.errors.find(error => error.level == "error")){
+            return {
+                errors: programAndModule.module.errors,
+                text: null,
+                type: undefined,
+                value: undefined
+            }
+        }
+
         this.state = this.getInterpreter().scheduler.state == SchedulerState.paused ? "none" : "standalone";
 
 
