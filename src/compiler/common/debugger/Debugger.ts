@@ -38,7 +38,7 @@ export class Debugger {
 
     watchSection: DebuggerWatchSection;
 
-    constructor(private debuggerDiv: HTMLDivElement, public main: IMain){
+    constructor(private debuggerDiv: HTMLDivElement, public main: IMain) {
 
         this.treeviewAccordion = new TreeviewAccordion(debuggerDiv);
         this.initShowVariablesTreeview();
@@ -49,15 +49,15 @@ export class Debugger {
         this.watchSection = new DebuggerWatchSection(this.watchTreeview, this);
     }
 
-    hide(){
+    hide() {
         this.debuggerDiv.style.display = "none";
     }
-    
-    show(){
+
+    show() {
         this.debuggerDiv.style.display = "block";
     }
 
-    initWatchTreeview(){
+    initWatchTreeview() {
         this.watchTreeview = new Treeview(this.treeviewAccordion, {
             captionLine: {
                 enabled: true,
@@ -74,7 +74,7 @@ export class Debugger {
 
     }
 
-    initThreadsTreeview(){
+    initThreadsTreeview() {
         this.threadsTreeview = new Treeview(this.treeviewAccordion, {
             captionLine: {
                 enabled: true,
@@ -91,7 +91,7 @@ export class Debugger {
 
     }
 
-    initCallstackTreeview(){
+    initCallstackTreeview() {
         this.callstackTreeview = new Treeview(this.treeviewAccordion, {
             captionLine: {
                 enabled: true,
@@ -108,7 +108,7 @@ export class Debugger {
 
     }
 
-    initShowVariablesTreeview(){
+    initShowVariablesTreeview() {
         this.showVariablesTreeview = new Treeview(this.treeviewAccordion, {
             captionLine: {
                 enabled: true,
@@ -125,16 +125,16 @@ export class Debugger {
 
     }
 
-    showThreads(scheduler: Scheduler){
+    showThreads(scheduler: Scheduler) {
         let currentThread = scheduler.getCurrentThread();
         this.threadsTreeview.clear();
 
         let threadList = scheduler.getAllThreads();
-        if(threadList.length == 0 && this.lastThread){
+        if (threadList.length == 0 && this.lastThread) {
             threadList = [this.lastThread];
         }
 
-        for(let thread of threadList){
+        for (let thread of threadList) {
             let caption = thread.name;
             let icon = "img_thread-" + ThreadState[thread.state];
             let node = this.threadsTreeview.addNode(false, caption,
@@ -142,38 +142,41 @@ export class Debugger {
             )
 
             node.setTooltip(caption + "(" + ThreadState[thread.state] + ")");
-            
-            if(thread == currentThread) node.setSelected(true);
+
+            if (thread == currentThread) node.setSelected(true);
             node.onClickHandler = (t) => {
-                if(!t) return;
+                if (!t) return;
                 this.showCallstack(t);
                 this.showVariablesOfProgramState(t);
             }
         }
     }
 
-    showCurrentThreadState(){
+    showCurrentThreadState() {
         let repl = this.main.getRepl();
-        if(repl.state == "standalone"){
-            let thread = this.main.getRepl().standaloneThread;
-            this.showVariablesOfStandaloneRepl(thread, repl.standaloneSymbolTable);
-            this.showCallstack(thread);
-            this.showThreads(thread.scheduler);
-            this.watchSection.update(thread.scheduler.interpreter);
-        } else {
+        let currentThread = this.main.getInterpreter().scheduler.getCurrentThread();
+        if (currentThread && !currentThread.currentProgramState.program.isReplProgram || repl.state != "standalone") {
             this.showThreadState(this.main.getInterpreter().scheduler.getCurrentThread());
+            return;
         }
+
+        // Show repl thread:
+        let thread = this.main.getRepl().standaloneThread;
+        this.showVariablesOfStandaloneRepl(thread, repl.standaloneSymbolTable);
+        this.showCallstack(thread);
+        this.showThreads(thread.scheduler);
+        this.watchSection.update(thread.scheduler.interpreter);
     }
 
-    showThreadState(thread: Thread | undefined){
+    showThreadState(thread: Thread | undefined) {
 
-        if(!thread){
-            if(this.lastThread) thread = this.lastThread;
+        if (!thread) {
+            if (this.lastThread) thread = this.lastThread;
         }
 
         this.lastThread = thread;
 
-        if(!thread) return;
+        if (!thread) return;
 
         this.showVariablesOfProgramState(thread);
         this.showCallstack(thread);
@@ -181,13 +184,13 @@ export class Debugger {
         this.watchSection.update(thread.scheduler.interpreter)
     }
 
-    showCallstack(thread: Thread){
+    showCallstack(thread: Thread) {
         this.callstackTreeview.clear();
         let programStack = thread.programStack;
-        if(programStack.length == 0) return;
+        if (programStack.length == 0) return;
 
         let count = Math.min(programStack.length, this.maxCallstackEntries);
-        for(let i = programStack.length - 1; i >= programStack.length - count; i--){
+        for (let i = programStack.length - 1; i >= programStack.length - count; i--) {
             let programState = programStack[i];
             let entry = new DebuggerCallstackEntry(programState);
             let node = this.callstackTreeview.addNode(false, entry.getCaption(), undefined,
@@ -196,19 +199,23 @@ export class Debugger {
                 this.showVariablesOfProgramState(thread, entry?.programState);
                 this.showCallstackPositionInsideProgram(thread, entry);
             }
-            if(i == programStack.length - 1){
+            if (i == programStack.length - 1) {
                 node.setSelected(true);
             }
         }
 
-        if(count < programStack.length){
+        if (count < programStack.length) {
             //@ts-ignore
             this.callstackTreeview.addNode(false, `${programStack.length - count} ${DebM.more()}`, undefined, "x", undefined, undefined, true);
         }
     }
 
     showCallstackPositionInsideProgram(thread: Thread, entry?: DebuggerCallstackEntry) {
-        if(!entry?.range) return;
+        if (!entry?.range) return;
+        if (entry.program.isReplProgram) {
+            thread.scheduler.interpreter.programPointerManager?.hide("callstackEntry");
+            return;
+        }
 
         let position: ProgramPointerPositionInfo = {
             programOrmoduleOrFile: entry.program,
@@ -225,9 +232,9 @@ export class Debugger {
         })
     }
 
-    showVariablesOfStandaloneRepl(thread: Thread, symbolTable: JavaSymbolTable){
+    showVariablesOfStandaloneRepl(thread: Thread, symbolTable: JavaSymbolTable) {
         let symbolTableSection = this.currentlyVisibleSymbolTableSections.length == 1 ? this.currentlyVisibleSymbolTableSections[0] : undefined;
-        if(symbolTableSection && symbolTableSection.symbolTable == symbolTable){
+        if (symbolTableSection && symbolTableSection.symbolTable == symbolTable) {
             symbolTableSection.reReadSymbolTable();
         } else {
             symbolTableSection = new SymbolTableSection(this.showVariablesTreeview, symbolTable, this);
@@ -236,25 +243,25 @@ export class Debugger {
         this.currentlyVisibleSymbolTableSections = [symbolTableSection];
 
         let position: IPosition;
-        let range:IRange = {startLineNumber: 100, startColumn: 0, endLineNumber: 100, endColumn: 1e5};
-        if(range && range.startLineNumber >= 0){
+        let range: IRange = { startLineNumber: 100, startColumn: 0, endLineNumber: 100, endColumn: 1e5 };
+        if (range && range.startLineNumber >= 0) {
             position = Range.getStartPosition(range);
         }
 
         this.showVariablesTreeview.detachAllNodes();
-        for(let sts of this.currentlyVisibleSymbolTableSections){
+        for (let sts of this.currentlyVisibleSymbolTableSections) {
             sts.attachNodesToTreeview();
             sts.renewValues(thread.s, 0, position);
         }
-       
+
     }
 
-    showVariablesOfProgramState(thread: Thread, programState?: ProgramState){
-        if(!programState){
-            if(thread.programStack.length > 0) programState = thread.programStack[thread.programStack.length - 1];
+    showVariablesOfProgramState(thread: Thread, programState?: ProgramState) {
+        if (!programState) {
+            if (thread.programStack.length > 0) programState = thread.programStack[thread.programStack.length - 1];
         }
 
-        if(!programState){
+        if (!programState) {
             this.showVariablesTreeview.clear();
             this.currentlyVisibleSymbolTableSections = [];
             return;
@@ -262,12 +269,12 @@ export class Debugger {
 
         let callstackEntry = new DebuggerCallstackEntry(programState);
 
-        if(!callstackEntry.symbolTable) return;
+        if (!callstackEntry.symbolTable) return;
 
         let symbolTablesToShow: BaseSymbolTable[] = [];
         let st1: BaseSymbolTable | undefined = callstackEntry.symbolTable;
-        while(st1){
-            if(!st1.hiddenWhenDebugging){
+        while (st1) {
+            if (!st1.hiddenWhenDebugging) {
                 symbolTablesToShow.unshift(st1);
             }
             st1 = st1.parent;
@@ -276,16 +283,16 @@ export class Debugger {
         let remainingSymbolTableSections: SymbolTableSection[] = [];
 
         let firstNonFittingFound = false;
-        for(let i = 0; i < this.currentlyVisibleSymbolTableSections.length; i++){
+        for (let i = 0; i < this.currentlyVisibleSymbolTableSections.length; i++) {
             let sts = this.currentlyVisibleSymbolTableSections[i];
-            if(i > symbolTablesToShow.length || sts.symbolTable != symbolTablesToShow[i] || firstNonFittingFound){
+            if (i > symbolTablesToShow.length || sts.symbolTable != symbolTablesToShow[i] || firstNonFittingFound) {
                 firstNonFittingFound = true;
             } else {
                 remainingSymbolTableSections.push(sts);
             }
         }
 
-        while(remainingSymbolTableSections.length < symbolTablesToShow.length){
+        while (remainingSymbolTableSections.length < symbolTablesToShow.length) {
             let index = remainingSymbolTableSections.length;
             remainingSymbolTableSections.push(new SymbolTableSection(this.showVariablesTreeview, symbolTablesToShow[index], this));
         }
@@ -299,12 +306,12 @@ export class Debugger {
             column: 0
         }
         let range = callstackEntry.nextStep?.getValidRangeOrUndefined();
-        if(range && range.startLineNumber >= 0){
+        if (range && range.startLineNumber >= 0) {
             position = Range.getStartPosition(range);
         }
 
         this.showVariablesTreeview.detachAllNodes();
-        for(let sts of this.currentlyVisibleSymbolTableSections){
+        for (let sts of this.currentlyVisibleSymbolTableSections) {
             sts.attachNodesToTreeview();
             sts.renewValues(thread.s, programState.stackBase, position);
         }
