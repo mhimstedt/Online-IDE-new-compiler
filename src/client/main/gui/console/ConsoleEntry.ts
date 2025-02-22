@@ -47,7 +47,7 @@ export class ConsoleEntry {
 
     render() {
 
-        this.$consoleEntry = jQuery('<div>');
+        this.$consoleEntry = jQuery('<div></div>');
         this.$consoleEntry.addClass("jo_consoleEntry");
         this.$consoleEntry.css('margin-left', '' + this.getIndent() + 'px');
 
@@ -55,9 +55,9 @@ export class ConsoleEntry {
             this.$consoleEntry.addClass('jo_withBorder');
         }
         
-        let $deFirstLine = jQuery('<div class="jo_ceFirstline"></div>');
+        let $ceFirstLine = jQuery('<div class="jo_ceFirstline"></div>');
         
-        this.$consoleEntry.append($deFirstLine);
+        this.$consoleEntry.append($ceFirstLine);
 
 
         if (ValueTool.hasChildren(this.value)) {
@@ -93,11 +93,12 @@ export class ConsoleEntry {
     onFirstOpening() {
 
         this.children = [];
+        let $childcontainer = this.$consoleEntry.find('.jo_ceChildContainer');
 
         for(let iv of ValueTool.getChildren(this.value)){
             let de = new ConsoleEntry(false, null, iv.value, undefined, iv.identifier + " =", this, false, '#e6e92c');
             de.render();
-            this.$consoleEntry.find('.jo_ceChildContainer').append(de.$consoleEntry);
+            $childcontainer.append(de.$consoleEntry);
         }
 
     }
@@ -134,7 +135,7 @@ export class ConsoleEntry {
             let $span = jQuery('<span class="jo_ceValue"></span>')
             let v: string =  this.valueAsString || ValueTool.renderValue(this.value, 30);
 
-            if (typeof this.value == 'object' && !v.endsWith('-object')) {
+            if (this.value != null && typeof this.value == 'object' && !v.endsWith('-object')) {
                 let type = <NonPrimitiveType>this.value.constructor.type;
                 if(type) v = type.identifier + " " + v;
             }

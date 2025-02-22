@@ -115,7 +115,7 @@ export class ValueTool {
     // TODO: Invoke toString()-Method of objects...
     static renderValue(value: any, maxLength: number = 20, typeHint?: JavaType, repl?: JavaRepl){
         if(value == null) return 'null';
-        if(typeof value == 'object'){
+        if(typeof value == 'object' && !Array.isArray(value)){
             let type = <NonPrimitiveType>value.constructor.type;
 
             if(value instanceof EnumClass){
@@ -128,6 +128,8 @@ export class ValueTool {
 
             return type.toString() + "-object";
 
+        } else if(Array.isArray(value)){
+            return "[" + value.length + "]";
         } else {
             return ValueTool.renderPrimitiveValue(value, typeHint).substring(0, maxLength);
         }
