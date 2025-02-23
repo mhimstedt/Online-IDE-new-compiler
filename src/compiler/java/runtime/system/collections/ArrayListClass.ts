@@ -120,7 +120,7 @@ export class ArrayListClass extends SystemCollection implements BaseListType {
         return iterator;
     }
 
-    getElements(): ObjectClassOrNull[] {
+    getElements(): any[] {
         return this.elements;
     }
 
@@ -438,9 +438,6 @@ export class ArrayListClass extends SystemCollection implements BaseListType {
 
     // }
 
-    getElements(): any[] {
-        return this.elements;
-    }
 
 
 }

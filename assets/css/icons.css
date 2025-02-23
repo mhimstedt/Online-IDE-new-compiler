@@ -13,6 +13,13 @@
       background-image: url('../icons/add-dark.svg');
    }
 
+   .img_copy-dark {
+      width: 16px;
+      height: 16px;
+      background-repeat: no-repeat;
+      background-image: url('../icons/copy-dark.svg');
+   }
+
    .img_add-file-dark {
       width: 16px;
       height: 16px;

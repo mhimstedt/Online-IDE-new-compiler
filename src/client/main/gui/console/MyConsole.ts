@@ -1,6 +1,7 @@
 import { Error } from "../../../../compiler/common/Error.js";
 import { ErrorMarker } from "../../../../compiler/common/monacoproviders/ErrorMarker.js";
 import { ReplReturnValue } from "../../../../compiler/java/parser/repl/ReplReturnValue.js";
+import { copyTextToClipboard } from "../../../../tools/HtmlTools.js";
 import { MainBase } from "../../MainBase.js";
 import { Helper } from "../Helper.js";
 import { ConsoleEntry } from "./ConsoleEntry.js";
@@ -11,6 +12,8 @@ export class MyConsole {
     editor: monaco.editor.IStandaloneCodeEditor;
     history: string[] = [];
     historyPos: number = 0;
+
+    statements: string[] = [];
 
     timerHandle: any;
 
@@ -37,19 +40,27 @@ export class MyConsole {
         let that = this;
 
         let $consoleClear = this.$consoleTabHeading.parent().find('.jo_console-clear');
+        let $consoleCopy = this.$consoleTabHeading.parent().find('.jo_console-copy');
 
         this.$consoleTab.on('myshow', () => {
             $consoleClear.show();
+            $consoleCopy.show();
             that.editor.layout();
         });
 
         this.$consoleTab.on('myhide', () => {
             $consoleClear.hide();
+            $consoleCopy.hide();
         });
 
         $consoleClear.on('mousedown', (e) => {
             e.stopPropagation();
             that.clear();
+        });
+
+        $consoleCopy.on('mousedown', (e) => {
+            e.stopPropagation();
+            that.copyToClipboard();
         });
 
     }
@@ -127,6 +138,7 @@ export class MyConsole {
                     if (!command || command == "") return;
 
                     that.history.push(command);
+                    that.statements.push(command);
                     that.historyPos = 0;
 
                     let returnValue = await that.main.getRepl().executeAsync(command!, false);
@@ -340,6 +352,7 @@ export class MyConsole {
         let consoleTop = this.$consoleTab.find('.jo_console-top');
         consoleTop.children().remove(); // empty();
         this.consoleEntries = [];
+        this.statements = [];
     }
 
     detachValues() {
@@ -353,6 +366,10 @@ export class MyConsole {
         if (this.$bottomDiv == null) return;
         let $consoleTop = this.$consoleTab.find('.jo_console-top');
         $consoleTop.find('.jo_exception').parents('.jo_consoleEntry').remove();
+    }
+
+    copyToClipboard(){
+        copyTextToClipboard(this.statements.join("\n"));
     }
 
 }

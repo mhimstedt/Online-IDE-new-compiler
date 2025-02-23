@@ -152,6 +152,15 @@
 
     .jo_consoleEntry.jo_canOpen>.jo_ceFirstline {
         margin-top: -6px;
+        cursor: pointer;
+    }
+    
+    .jo_consoleEntry.jo_canOpen>.jo_ceFirstline:hover {
+        background-color: #6767fa4e;
+    }
+    
+    .jo_consoleEntry.jo_canOpen>.jo_ceFirstline:active {
+        background-color: #6767fa88;
     }
 
     .jo_ceChildContainer {

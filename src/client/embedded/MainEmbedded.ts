@@ -784,6 +784,9 @@ export class MainEmbedded implements MainBase {
             let $thConsoleClear = jQuery('<div class="img_clear-dark jo_button jo_active jo_console-clear"' +
                 'style="display: none; margin-left: 8px;" title="Console leeren"></div>');
             $thRightSide.append($thConsoleClear);
+            let $thConsoleCopy = jQuery('<div class="img_copy-dark jo_button jo_active jo_console-copy"' +
+                'style="display: none; margin-left: 8px;" title="Anweisungen aus der Console in die Zwischenablage kopieren"></div>');
+            $thRightSide.append($thConsoleCopy);
         }
 
         if (this.config.withErrorList) {
