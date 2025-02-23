@@ -93,19 +93,19 @@ export class NRWQueueClass extends SystemCollection implements BaseListType {
         }
         let element = this.head.contentObject;
         if (typeof element == "object" || Array.isArray(element) || element == null) {
-            t._arrayOfObjectsToString(this.getAllElements(), () => {
+            t._arrayOfObjectsToString(this.getElements(), () => {
                 t.s.push(new StringClass(t.s.pop()));
                 if (callback) callback();
             })
             return;
         } else {
-            t.s.push(new StringClass(t._primitiveElementOrArrayToString(this.getAllElements())));
+            t.s.push(new StringClass(t._primitiveElementOrArrayToString(this.getElements())));
             if (callback) callback();
             return;
         }
     }
 
-    getAllElements(): ObjectClassOrNull[] {
+    getElements(): ObjectClassOrNull[] {
         if (this.head == null) return [];
         const elements: ObjectClassOrNull[] = [];
         let node = this.head;
@@ -119,7 +119,7 @@ export class NRWQueueClass extends SystemCollection implements BaseListType {
 
 
     getElements(): any[] {
-        return this.getAllElements();
+        return this.getElements();
     }
 
 

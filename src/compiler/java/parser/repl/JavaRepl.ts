@@ -93,6 +93,7 @@ export class JavaRepl {
 
         this.state = "none";
         this.main.hideDebugger();
+        this.main.getBottomDiv()?.console?.detachValues();
 
     }
 

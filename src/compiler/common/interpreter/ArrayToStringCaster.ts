@@ -57,7 +57,9 @@ export class ArrayToStringCaster {
                 } else if(typeof element == 'object') {
                     // element is object => call it's toString()-method!
                     element._mj$toString$String$(t, () => {
-                        textContainer.text += t.s.pop().value;
+                        let text: string = t.s.pop().value;
+                        if(element.constructor?.type?.identifier == 'String') text = '"' + text + '"';
+                        textContainer.text += text;
                         if (array.length > 0) {
                             textContainer.text += ", ";
                             t.s.push(array);

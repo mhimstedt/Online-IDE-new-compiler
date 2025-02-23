@@ -243,7 +243,7 @@ export class TypeResolver {
                 if (type) {
                     typeNode.resolvedType = type;
                     if (type.hasGenericParameters() && !isPartOfGenericType) {
-                        if(type.identifier != 'Group') this.pushError(JCM.genericTypeWithNonGenericReference(type.toString()), typeNode.range, module, "warning");
+                        // if(type.identifier != 'Group') this.pushError(JCM.genericTypeWithNonGenericReference(type.toString()), typeNode.range, module, "warning");
                         let baseType: ASTTypeNode = Object.assign({}, typeNode);
 
                         let genericTypeNode: ASTGenericTypeInstantiationNode = <any>typeNode;

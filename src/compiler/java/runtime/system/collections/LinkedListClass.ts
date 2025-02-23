@@ -332,7 +332,7 @@ export class LinkedListClass extends ObjectClass implements BaseListType {
         }
 
         if (collection instanceof SystemCollection) {
-            this.elements = this.elements.concat(collection.getAllElements());
+            this.elements = this.elements.concat(collection.getElements());
             t.s.push(true);
             if (callback) callback();
             return;
@@ -389,7 +389,7 @@ export class LinkedListClass extends ObjectClass implements BaseListType {
         }
 
         if (collection instanceof SystemCollection) {
-            let elementsToCheck = collection.getAllElements().slice();
+            let elementsToCheck = collection.getElements().slice();
             f(t, callback, elementsToCheck);
             return;
         } else {
@@ -470,7 +470,7 @@ export class LinkedListClass extends ObjectClass implements BaseListType {
 
         if (collection instanceof SystemCollection) {
             let oldLength = this.elements.length;
-            let elementsToRemove = collection.getAllElements();
+            let elementsToRemove = collection.getElements();
             this.elements = this.elements.filter(element => elementsToRemove.indexOf(element) < 0);
             t.s.push(this.elements.length != oldLength);
             if (callback) callback();

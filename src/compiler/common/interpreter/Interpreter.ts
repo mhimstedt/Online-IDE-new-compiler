@@ -501,6 +501,8 @@ export class Interpreter {
     #resetRuntime() {
         this.eventManager.fire("resetRuntime");
 
+        this.main?.getBottomDiv()?.console?.detachValues();
+
         // this.printManager.clear();
         // this.worldHelper?.destroyWorld();
         // this.processingHelper?.destroyWorld();

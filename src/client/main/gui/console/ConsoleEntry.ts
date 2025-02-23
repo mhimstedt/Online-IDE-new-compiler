@@ -137,7 +137,7 @@ export class ConsoleEntry {
 
             if (this.value != null && typeof this.value == 'object' && !v.endsWith('-object')) {
                 let type = <NonPrimitiveType>this.value.constructor.type;
-                if(type) v = type.identifier + " " + v;
+                if(type && type.identifier.toLowerCase() != 'string') v = type.identifier + " " + v;
             }
 
             $span.text(v);

@@ -93,7 +93,7 @@ export class HashSetClass extends ObjectClass {
         }
 
         if (collection instanceof SystemCollection) {
-            let elementsToCheck = collection.getAllElements().slice();
+            let elementsToCheck = collection.getElements().slice();
             f(t, callback, elementsToCheck);
             return;
         } else {
@@ -125,7 +125,7 @@ export class HashSetClass extends ObjectClass {
         }
 
         if (collection instanceof SystemCollection) {
-            collection.getAllElements().forEach(element => this._add(element));
+            collection.getElements().forEach(element => this._add(element));
             t.s.push(true);
             if (callback) callback();
             return;
@@ -164,7 +164,7 @@ export class HashSetClass extends ObjectClass {
         }
 
         if (collection instanceof SystemCollection) {
-            collection.getAllElements().forEach(element => this._mj$remove$boolean$E(t, undefined, element));
+            collection.getElements().forEach(element => this._mj$remove$boolean$E(t, undefined, element));
             t.s.push(true);
             if (callback) callback();
             return;

@@ -120,7 +120,7 @@ export class ArrayListClass extends SystemCollection implements BaseListType {
         return iterator;
     }
 
-    getAllElements(): ObjectClassOrNull[] {
+    getElements(): ObjectClassOrNull[] {
         return this.elements;
     }
 
@@ -172,7 +172,7 @@ export class ArrayListClass extends SystemCollection implements BaseListType {
         }
 
         if (collection instanceof SystemCollection) {
-            this.elements = this.elements.concat(collection.getAllElements());
+            this.elements = this.elements.concat(collection.getElements());
             t.s.push(true);
             if (callback) callback();
             return;
@@ -200,7 +200,7 @@ export class ArrayListClass extends SystemCollection implements BaseListType {
         }
 
         if (collection instanceof SystemCollection) {
-            this.elements.splice(index, 0, ...collection.getAllElements())
+            this.elements.splice(index, 0, ...collection.getElements())
             t.s.push(true);
             if (callback) callback();
             return;
@@ -256,7 +256,7 @@ export class ArrayListClass extends SystemCollection implements BaseListType {
         }
 
         if (collection instanceof SystemCollection) {
-            let elementsToCheck = collection.getAllElements().slice();
+            let elementsToCheck = collection.getElements().slice();
             f(t, callback, elementsToCheck);
             return;
         } else {
@@ -316,7 +316,7 @@ export class ArrayListClass extends SystemCollection implements BaseListType {
         }
 
         if (collection instanceof SystemCollection) {
-            let elementsToRemove = collection.getAllElements().slice();
+            let elementsToRemove = collection.getElements().slice();
             f(t, callback, elementsToRemove);
             return;
         } else {

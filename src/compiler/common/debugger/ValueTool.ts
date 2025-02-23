@@ -86,11 +86,11 @@ export class ValueTool {
         } else if(ValueTool.isObject(value)){
             let type = <JavaClass | JavaEnum>value.constructor.type;
 
-            if(value instanceof SystemCollection){
+            if(value["getElements"]){
                 let index = 0;
-                for(let v of value.getAllElements()){
+                for(let v of value.getElements()){
                     children.push({
-                        identifier: "" + index++,
+                        identifier: "[" + index++ + "]",
                         value: v
                     })
                 }

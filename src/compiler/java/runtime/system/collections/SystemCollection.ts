@@ -1,14 +1,15 @@
+import { BaseListType } from "../../../../common/BaseType.ts";
 import { CallbackFunction } from "../../../../common/interpreter/StepFunction.ts";
 import { Thread } from "../../../../common/interpreter/Thread.ts";
 import { ObjectClass, ObjectClassOrNull } from "../javalang/ObjectClassStringClass.ts";
 import { ComparatorInterface } from "./ComparatorInterface.ts";
 
-export abstract class SystemCollection extends ObjectClass {
+export abstract class SystemCollection extends ObjectClass implements BaseListType {
 
-    abstract getAllElements(): ObjectClassOrNull[];
+    abstract getElements(): ObjectClassOrNull[];
 
     static shuffle(list: SystemCollection) {
-        let elements = list.getAllElements();
+        let elements = list.getElements();
         let length = elements.length;
         for (let i = 0; i < length * 2; i++) {
             let index1 = Math.floor(Math.random() * length);
@@ -22,7 +23,7 @@ export abstract class SystemCollection extends ObjectClass {
 
     static sortWithComparator(t: Thread, callback: CallbackFunction, comparator: ComparatorInterface, list: SystemCollection) {
 
-        let elements = list.getAllElements();
+        let elements = list.getElements();
 
         if (elements.length <= 1) {
             if (callback) callback(); // nothing to do
