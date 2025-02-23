@@ -41,20 +41,6 @@
             "webRoot": "${workspaceFolder}"
         },
         {
-            "type": "firefox",
-            "request": "launch",
-            "name": "Debug Firefox",
-            "url": "http://localhost:3000",
-            "webRoot": "${workspaceFolder}"
-        },
-        {
-            "type": "firefox",
-            "request": "launch",
-            "name": "Debug Embedded Firefox",
-            "url": "http://localhost:3000/embedded.html",
-            "webRoot": "${workspaceFolder}"
-        },
-        {
             "name": "Generate Spritesheet",
             "program": "${workspaceFolder}/src/development/spritesheetgenerator.js",
             "request": "launch",

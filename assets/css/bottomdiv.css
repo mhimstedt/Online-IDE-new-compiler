@@ -222,6 +222,7 @@
 
     .jo_ceValue {
         color: var(--fontColorLight);
+        text-overflow: ellipsis;
     }
 
     .jo_ceIdentifier {

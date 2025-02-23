@@ -198,6 +198,7 @@
         flex-direction: row;
         border-top: 1px solid gray;
         overflow: hidden;
+        max-width: 100%;
     }
 
     .joe_bottomDivFiles {

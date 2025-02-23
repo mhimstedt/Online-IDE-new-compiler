@@ -1,7 +1,7 @@
 import { Program } from "../../../common/interpreter/Program.ts";
 import { Helpers } from "../../../common/interpreter/StepFunction.ts";
 import { CodeSnippet, StringCodeSnippet } from "../../codegenerator/CodeSnippet.ts";
-import { CodeSnippetContainer } from "../../codegenerator/CodeSnippetKinds.ts";
+import { CodeSnippetContainer, NextStepMark } from "../../codegenerator/CodeSnippetKinds.ts";
 import { ExceptionTree } from "../../codegenerator/ExceptionTree.ts";
 import { JavaSymbolTable } from "../../codegenerator/JavaSymbolTable.ts";
 import { SnippetLinker } from "../../codegenerator/SnippetLinker.ts";
@@ -64,7 +64,8 @@ export class JavaReplCodeGenerator extends StatementCodeGenerator {
                 snippets.push(snippetWithValueOnStack);
 
                 if(withToStringCall){
-                    let lastSnippet = new StringCodeSnippet(`${Helpers.toString}(__t, undefined, ${Helpers.threadStack}[${Helpers.threadStack}.length - 1]);\n`);
+                    let lastSnippet:CodeSnippet = new StringCodeSnippet(`${Helpers.toString}(__t, undefined, ${Helpers.threadStack}[${Helpers.threadStack}.length - 1]);\n`);
+                    lastSnippet = new CodeSnippetContainer([lastSnippet, new NextStepMark()]);    
                     snippets.push(lastSnippet);
                 }
 
@@ -73,6 +74,7 @@ export class JavaReplCodeGenerator extends StatementCodeGenerator {
             }
         }
 
+    
         snippets.push(new StringCodeSnippet(`${Helpers.returnFromReplProgram}();\n`))
 
         new SnippetLinker().link(snippets, program);

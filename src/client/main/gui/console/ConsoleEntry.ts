@@ -95,8 +95,16 @@ export class ConsoleEntry {
         this.children = [];
         let $childcontainer = this.$consoleEntry.find('.jo_ceChildContainer');
 
-        for(let iv of ValueTool.getChildren(this.value)){
+        let childrenList = ValueTool.getChildren(this.value);
+        for(let i = 0; i < Math.min(childrenList.length, 100); i++){
+            let iv = childrenList[i];
             let de = new ConsoleEntry(false, null, iv.value, undefined, iv.identifier + " =", this, false, '#e6e92c');
+            de.render();
+            $childcontainer.append(de.$consoleEntry);
+        }
+        
+        if(childrenList.length > 100){
+            let de = new ConsoleEntry(false, null, "" + (childrenList.length - 100) + " weitere Elemente...", undefined, null, this, false, '#e6e92c');
             de.render();
             $childcontainer.append(de.$consoleEntry);
         }
@@ -140,7 +148,7 @@ export class ConsoleEntry {
                 if(type && type.identifier.toLowerCase() != 'string') v = type.identifier + " " + v;
             }
 
-            $span.text(v);
+            $span.text(v.substring(0, 100) + (v.length > 100 ? "..." : ""));
             $firstLine.append($span);
         }    }
 
