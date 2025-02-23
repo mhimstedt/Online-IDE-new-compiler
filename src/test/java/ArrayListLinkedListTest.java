@@ -44,7 +44,7 @@ list3.addLast("Charlie");
 list3.add("Dennis");
 list3.add("Emma");
 
-assertEquals("[Anton, Bonny, Charlie, Dennis, Emma]", list3.toString(), "LinkedList.add/addFirst/addLast/toString not working.");
+assertEquals("[\"Anton\", \"Bonny\", \"Charlie\", \"Dennis\", \"Emma\"]", list3.toString(), "LinkedList.add/addFirst/addLast/toString not working.");
 
 list3.remove("Charlie");
 
@@ -53,22 +53,22 @@ assertFalse(list3.contains("Charlie"), "LinkedList.contains");
 
 assertEquals("Anton", list3.peekFirst(), "LinkedList.peekFirst");
 assertEquals("Emma", list3.peekLast(), "LinkedList.peekLast");
-assertEquals("[Anton, Bonny, Dennis, Emma]", list3.toString(), "LinkedList.peekFirst/peekLast not working.");
+assertEquals("[\"Anton\", \"Bonny\", \"Dennis\", \"Emma\"]", list3.toString(), "LinkedList.peekFirst/peekLast not working.");
 
 assertEquals("Anton", list3.removeFirst(), "LinkedList.removeFirst");
 assertEquals("Emma", list3.removeLast(), "LinkedList.removeLast");
-assertEquals("[Bonny, Dennis]", list3.toString(), "LinkedList.removeFirst/removeLast not working.");
+assertEquals("[\"Bonny\", \"Dennis\"]", list3.toString(), "LinkedList.removeFirst/removeLast not working.");
 
 assertEquals("Dennis", list3.pop(), "LinkedList.pop");
-assertEquals("[Bonny]", list3.toString(), "LinkedList.pop not working.");
+assertEquals("[\"Bonny\"]", list3.toString(), "LinkedList.pop not working.");
 
 list3.push("Martin");
 list3.push("Claudia");
 list3.push("Martin");
-assertEquals("[Bonny, Martin, Claudia, Martin]", list3.toString(), "LinkedList.push not working.");
+assertEquals("[\"Bonny\", \"Martin\", \"Claudia\", \"Martin\"]", list3.toString(), "LinkedList.push not working.");
 
 assertTrue(list3.removeFirstOccurrence("Martin"), "LinkedList.removeFirstOccurrence");
-assertEquals("[Bonny, Claudia, Martin]", list3.toString(), "LinkedList.push not working.");
+assertEquals("[\"Bonny\", \"Claudia\", \"Martin\"]", list3.toString(), "LinkedList.push not working.");
 
 assertFalse(list3.removeFirstOccurrence("Edith"), "LinkedList.removeFirstOccurrence");
 
@@ -76,7 +76,7 @@ list3.push("Veronika");
 list3.push("Martin");
 
 assertTrue(list3.removeLastOccurrence("Martin"), "LinkedList.removeLastOccurrence");
-assertEquals("[Bonny, Claudia, Martin, Veronika]", list3.toString(), "LinkedList.removeLastOccurrence not working.");
+assertEquals("[\"Bonny\", \"Claudia\", \"Martin\", \"Veronika\"]", list3.toString(), "LinkedList.removeLastOccurrence not working.");
 
 assertFalse(list3.removeLastOccurrence("Edith"), "LinkedList.removeLastOccurrence");
 

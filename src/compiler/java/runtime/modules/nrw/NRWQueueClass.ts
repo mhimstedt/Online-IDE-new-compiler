@@ -118,9 +118,5 @@ export class NRWQueueClass extends SystemCollection implements BaseListType {
 
 
 
-    getElements(): any[] {
-        return this.getElements();
-    }
-
 
 }

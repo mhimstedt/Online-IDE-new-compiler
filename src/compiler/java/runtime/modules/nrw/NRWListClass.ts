@@ -228,9 +228,4 @@ export class NRWListClass extends SystemCollection implements BaseListType {
 
 
 
-    getElements(): any[] {
-        return this.getElements();
-    }
-
-
 }

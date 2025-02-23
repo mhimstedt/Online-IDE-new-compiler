@@ -106,11 +106,4 @@ export class NRWStackClass extends SystemCollection implements BaseListType {
         return elements;
     }
 
-
-
-    getElements(): any[] {
-        return this.getElements();
-    }
-
-
 }

@@ -40,7 +40,7 @@ list.next();
 assertEquals("D", list.getContent(), "List.next or List.getContent broken");
 
 // Stand jetzt: A, D, B
-assertEquals("[A, D, B]", list.toString(), "List.toString() broken");
+assertEquals("[\"A\", \"D\", \"B\"]", list.toString(), "List.toString() broken");
 
 List<String> list2 = new List<>();
 list2.append("E");
@@ -48,7 +48,7 @@ list2.append("F");
 
 list.concat(list2);
 assertTrue(list2.isEmpty(), "List.append broken");
-assertEquals("[A, D, B, E, F]", list.toString(), "List.toString() broken");
+assertEquals("[\"A\", \"D\", \"B\", \"E\", \"F\"]", list.toString(), "List.toString() broken");
 
 
 /**::
@@ -68,7 +68,7 @@ assertEquals("A", q.front(), "Queue.front broken");
 q.dequeue();
 assertEquals("B", q.front(), "Queue.front broken");
 
-assertEquals("[B, C]", q.toString(), "Queue.toString broken");
+assertEquals("[\"B\", \"C\"]", q.toString(), "Queue.toString broken");
 
 
 /**::
@@ -88,6 +88,6 @@ assertEquals("C", s.top(), "Stack.top broken");
 s.pop();
 assertEquals("B", s.top(), "Stack.top broken");
 
-assertEquals("[B, A]", s.toString(), "Stack.toString broken");
+assertEquals("[\"B\", \"A\"]", s.toString(), "Stack.toString broken");
 
 
