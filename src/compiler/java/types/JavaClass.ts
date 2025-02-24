@@ -811,9 +811,13 @@ export class GenericVariantOfJavaClass extends IJavaClass {
 
                 if (myType?.toString() == othersType?.toString()) continue;
 
-                if (othersType instanceof GenericTypeParameter && othersType.isWildcard) {
-                    for (let ext of othersType.upperBounds) {
-                        if (myType?.canImplicitlyCastTo(ext)) return true;
+                if (othersType instanceof GenericTypeParameter) {
+                    if(othersType.isWildcard){
+                        for (let ext of othersType.upperBounds) {
+                            if (myType?.canImplicitlyCastTo(ext)) return true;
+                        }
+                    } else if(othersType.catches){
+                        othersType.catches.push(myType);
                     }
                 }
 

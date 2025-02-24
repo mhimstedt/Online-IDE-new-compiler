@@ -126,7 +126,7 @@ export class InnerClassCodeGenerator extends StatementCodeGenerator {
     }
 
     compileLambdaFunction(node: ASTLambdaFunctionDeclarationNode, expectedType: JavaType | undefined): CodeSnippet | undefined {
-        if (!node || !expectedType) return undefined;
+         if (!node || !expectedType) return undefined;
 
         if (!this.isFunctionalInterface(expectedType)) {
             this.pushError(JCM.lambdaFunctionHereNotPossible(), "error", node.range);
@@ -167,6 +167,7 @@ export class InnerClassCodeGenerator extends StatementCodeGenerator {
             method.parameters[i].identifier = node.parameters[i].identifier;
             method.parameters[i].type = methodToImplementParameterTypes[i];
             method.parameters[i].identifierRange = node.parameters[i].identifierRange;
+            this.registerUsagePosition(method.parameters[i], node.parameters[i].identifierRange);
         }
         method.takeInternalJavaNameWithGenericParamterIdentifiersFrom(methodToImplement);
 

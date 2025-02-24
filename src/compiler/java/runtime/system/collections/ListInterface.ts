@@ -6,6 +6,7 @@ import { NonPrimitiveType } from "../../../types/NonPrimitiveType.ts";
 import { ObjectClass, ObjectClassOrNull } from "../javalang/ObjectClassStringClass.ts";
 import { CollectionInterface } from "./CollectionInterface.ts";
 import { ComparatorInterface } from "./ComparatorInterface.ts";
+import { Program } from "../../../../common/interpreter/Program.ts";
 
 export class ListInterface extends CollectionInterface {
     static __javaDeclarations: LibraryDeclarations = [
@@ -156,4 +157,208 @@ export class ListInterface extends CollectionInterface {
         }, index1);
     }
 
+    static quicksortProgram: Program;
+    static partitionProgram: Program;
+
+    quicksortIterative(t: Thread, callback: CallbackFunction, comparator: ComparatorInterface, fromIndex: number, toIndex: number) {
+        if(!ListInterface.quicksortProgram){
+            ListInterface.initQuicksortProgram();
+            ListInterface.initPartitionProgram();
+        }
+        t.s.push(this, comparator, fromIndex, toIndex);
+        t.pushProgram(ListInterface.quicksortProgram, callback);
+    }
+
+    static initQuicksortProgram() {
+        /*
+         * method quicksort(this: Object[], comparator, begin, end)
+         */
+
+        ListInterface.quicksortProgram = new Program(ListInterface.type.module, undefined, "ListInterface.quicksort");
+        ListInterface.quicksortProgram.numberOfParameters = 3;
+        ListInterface.quicksortProgram.numberOfThisObjects = 1;
+
+        let index = 0;
+        let thisIndex = index++;
+        // Parameter:
+        let comparatorIndex = index++;
+        let beginIndex = index++;
+        let endIndex = index++;
+        // local variables:
+        let partitionIndexIndex = index++;
+
+        ListInterface.quicksortProgram.numberOfLocalVariables = index - ListInterface.quicksortProgram.numberOfThisObjects - ListInterface.quicksortProgram.numberOfParameters;
+
+        // public void quickSort(this = Object[], comparator, int begin, int end) {
+        //     if (begin < end) {
+        //         int partitionIndex = partition(comparator, begin, end);
+
+        //         quickSort(comparator, begin, partitionIndex-1);
+        //         quickSort(comparator, partitionIndex+1, end);
+        //     }
+        // }
+
+
+        ListInterface.quicksortProgram.addCompiledSteps([
+            (t, s, sb) => {  // 0
+                if (t.s[sb + beginIndex] >= t.s[sb + endIndex]) {
+                    t.return(undefined)
+                    return -1;
+                }
+                t.s.push(t.s[sb + thisIndex], t.s[sb + comparatorIndex], t.s[sb + beginIndex], t.s[sb + endIndex]);
+                t.pushProgram(ListInterface.partitionProgram, undefined);
+                return 1;
+            },
+            (t, s, sb) => {  // 1
+                t.s[sb + partitionIndexIndex] = t.s.pop();
+                t.s.push(t.s[sb + thisIndex], t.s[sb + comparatorIndex], t.s[sb + beginIndex], t.s[sb + partitionIndexIndex] - 1);
+                t.pushProgram(ListInterface.quicksortProgram, undefined);
+                return 2;
+            },
+            (t, s, sb) => {  // 2
+                t.s.push(t.s[sb + thisIndex], t.s[sb + comparatorIndex], t.s[sb + partitionIndexIndex] + 1, t.s[sb + endIndex]);
+                t.pushProgram(ListInterface.quicksortProgram, undefined);
+                t.return(undefined);
+                return -1;
+            },
+        ])
+    }
+
+    static initPartitionProgram() {
+        /*
+         * method partition(this: Object[], comparator, begin, end)
+         */
+
+        ListInterface.partitionProgram = new Program(ListInterface.type.module, undefined, "ListInterface.partition");
+        ListInterface.partitionProgram.numberOfParameters = 3;
+        ListInterface.partitionProgram.numberOfThisObjects = 1;
+
+        let index = 0;
+        let thisIndex = index++;
+        // Parameter:
+        let comparatorIndex = index++;
+        let beginIndex = index++;
+        let endIndex = index++;
+        // local variables:
+        let pivotIndex = index++;
+        let iIndex = index++;
+        let jIndex = index++;
+        let swapTempIndex = index++;
+
+        ListInterface.partitionProgram.numberOfLocalVariables = index - ListInterface.partitionProgram.numberOfThisObjects - ListInterface.partitionProgram.numberOfParameters;
+
+        // private int partition(int arr[], comparator, int begin, int end) {
+        // int pivot = arr[end];
+        // int i = (begin-1);
+
+        // for (int j = begin; j < end; j++) {
+        //     if (arr[j] <= pivot) {
+        //         i++;
+
+        //         int swapTemp = arr[i];
+        //         arr[i] = arr[j];
+        //         arr[j] = swapTemp;
+        //     }
+        // }
+
+        // int swapTemp = arr[i+1];
+        // arr[i+1] = arr[end];
+        // arr[end] = swapTemp;
+
+        // return i+1;
+
+
+
+        ListInterface.partitionProgram.addCompiledSteps([
+            (t, s, sb) => {  // 0
+                t.s[sb + thisIndex]._mj$get$E$int(t, undefined, t.s[sb + endIndex]);
+                return 1;
+            },
+            (t, s, sb) => {  // 1
+                // int pivot = arr[end];
+                t.s[sb + pivotIndex] = t.s.pop();
+                // int i = (begin-1);
+                t.s[sb + iIndex] = t.s[sb + beginIndex] - 1;
+                // for (int j = begin; j < end; j++) {
+                t.s[sb + jIndex] = t.s[sb + beginIndex];
+                return 2;
+            },
+            (t, s, sb) => {  // 2
+                // for (int j = begin; j < end; j++) {
+                if (t.s[sb + jIndex] >= t.s[sb + endIndex]) return 9; // TODO
+                // if (arr[j] <= pivot) {
+                t.s[sb + thisIndex]._mj$get$E$int(t, undefined, t.s[sb + jIndex]);
+                return 3;
+            },
+            (t, s, sb) => {  // 3
+                // if (arr[j] <= pivot) {
+                t.s[sb + comparatorIndex]._mj$compare$int$T$T(t, undefined, t.s.pop(), t.s[sb + pivotIndex]);
+                return 4;
+            },
+            (t, s, sb) => {  // 4
+                // if (arr[j] <= pivot) {
+                if (t.s.pop() > 0) return 8; // TODO!
+                //         i++;
+                t.s[sb + iIndex]++;
+                //         int swapTemp = arr[i];
+                t.s[sb + thisIndex]._mj$get$E$int(t, undefined, t.s[sb + iIndex]);
+                return 5;
+            },
+            (t, s, sb) => {  // 5
+                //         int swapTemp = arr[i];
+                t.s[sb + swapTempIndex] = t.s.pop();
+                //         arr[i] = arr[j];
+                t.s[sb + thisIndex]._mj$get$E$int(t, undefined, t.s[sb + jIndex]);
+                return 6;
+            },
+            (t, s, sb) => {  // 6
+                //         arr[i] = arr[j];
+                t.s[sb + thisIndex]._mj$set$E$int$E(t, undefined, t.s[sb + iIndex], t.s.pop());
+
+                return 7;
+            },
+            (t, s, sb) => {  // 7
+                //         arr[j] = swapTemp;
+                t.s[sb + thisIndex]._mj$set$E$int$E(t, undefined, t.s[sb + jIndex], t.s[sb + swapTempIndex]);
+                return 8;
+            },
+            (t, s, sb) => {  // 8 (after if(){})
+                // for (;; j++) {
+                t.s[sb + jIndex]++;
+                return 2;
+            },
+            (t, s, sb) => {  // 9 (after for-loop)
+                // int swapTemp = arr[i+1];
+                t.s[sb + thisIndex]._mj$get$E$int(t, undefined, t.s[sb + iIndex] + 1);
+                return 10;
+            },
+            (t, s, sb) => {  // 10 (after for-loop)
+                // int swapTemp = arr[i+1];
+                t.s[sb + swapTempIndex] = t.s.pop();
+                // arr[i+1] = arr[end];
+                t.s[sb + thisIndex]._mj$get$E$int(t, undefined, t.s[sb + endIndex]);
+                return 11;
+            },
+            (t, s, sb) => {  // 11
+                // arr[i+1] = arr[end];
+                t.s[sb + thisIndex]._mj$set$E$int$E(t, undefined, t.s[sb + iIndex] + 1, t.s.pop());
+                return 12;
+            },
+            (t, s, sb) => {  // 12
+                // arr[end] = swapTemp;
+                t.s[sb + thisIndex]._mj$set$E$int$E(t, undefined, t.s[sb + endIndex], t.s[sb + swapTempIndex]);
+                return 13;
+            },
+            (t, s, sb) => {  // 13
+                // return i+1;
+                t.return(t.s[sb + iIndex] + 1);
+                return -1;
+            },
+        ])
+
+    }
+
+
+
 }
+
