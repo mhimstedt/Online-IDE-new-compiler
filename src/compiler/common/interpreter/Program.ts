@@ -4,6 +4,7 @@ import { CodePrinter } from "../../java/codegenerator/CodePrinter.ts";
 import chalk from "chalk";
 import { getLine, threeDez } from "../../../tools/StringTools.ts";
 import { Step } from "./Step.ts";
+import { StepFunction } from "./StepFunction.ts";
 
 
 
@@ -108,6 +109,15 @@ export class Program {
         let step = new Step(this.stepsSingle.length, this.module);
         step.codeAsString = statement;
         this.stepsSingle.push(step);
+    }
+
+    addCompiledSteps(f: StepFunction | StepFunction[]){
+        if(!Array.isArray(f)) f = [f];
+        for(let f1 of f){
+            let step = new Step(this.stepsSingle.length, this.module);
+            step.run = f1;
+            this.stepsSingle.push(step);
+        }
     }
 
     #getSourcecode(): string {

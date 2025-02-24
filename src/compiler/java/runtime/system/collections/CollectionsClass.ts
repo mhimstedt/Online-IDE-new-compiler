@@ -8,11 +8,12 @@ import { ComparableInterface } from "./ComparableInterface";
 import { ComparatorInterface } from "./ComparatorInterface";
 import { ListInterface } from "./ListInterface";
 import { SystemCollection } from "./SystemCollection";
+import { Program } from "../../../../common/interpreter/Program.ts";
 
 export class CollectionsClass extends ObjectClass {
     static __javaDeclarations: LibraryDeclarations = [
         { type: "declaration", signature: "class Collections extends Object", comment: JRC.CollectionsClassComment},
-        { type: "method", signature: "static void shuffle(List<?> list)", java: CollectionsClass.shuffle, comment: JRC.CollectionsShuffleComment},
+        { type: "method", signature: "static void shuffle(List<?> list)", java: CollectionsClass.shuffleIterative, comment: JRC.CollectionsShuffleComment},
         { type: "method", signature: "static <T extends Comparable> void sort(List<T> list)", java: CollectionsClass.sortComparableList, comment: JRC.CollectionsSortComparableListComment},
         { type: "method", signature: "static <T> void sort(List<T> list, Comparator<? super T> comparator)", java: CollectionsClass.sortListWithComparator, comment: JRC.CollectionsSortComparableListComment},
     ];
@@ -60,6 +61,76 @@ export class CollectionsClass extends ObjectClass {
             if(size > 1) f();
 
         })
+    }
+
+    static shuffleIterative(t: Thread, list: ListInterface){
+
+        if(list instanceof SystemCollection){
+            SystemCollection.shuffle(list);
+            return;
+        }
+
+        let program: Program = new Program(CollectionsClass.type.module, undefined, "Collections.shuffle");
+        program.numberOfParameters = 1;
+        program.numberOfThisObjects = 0;
+        
+        t.s.push(list);
+        let index = 0;
+        let listIndex = index++;
+        let sizeIndex = index++;
+        let counterIndex = index++;
+        let n1Index = index++;
+        let n2Index = index++;
+        let e1Index = index++;
+        let e2Index = index++;
+
+        program.numberOfLocalVariables = index;
+
+        program.addCompiledSteps([
+            (t, s, sb) => {  // 0
+                t.s[sb + listIndex]._mj$size$int$(t, undefined);
+                return 1;
+            },
+            (t, s, sb) => {  // 1
+                t.s[sb + sizeIndex] = t.s.pop();
+                t.s[sb + counterIndex] = t.s[sb + sizeIndex] * 2;
+                return 2;
+            },
+            (t, s, sb) => {  // 2
+                if(t.s[sb + counterIndex] <= 0){
+                    return 6; 
+                }
+                t.s[sb + n1Index] = Math.floor(Math.random()*t.s[sb + sizeIndex]);
+                t.s[sb + n2Index] = Math.floor(Math.random()*t.s[sb + sizeIndex]);
+                
+                t.s[sb + listIndex]._mj$get$E$int(t, undefined, t.s[sb + n1Index]);
+                return 3;
+            },
+            (t, s, sb) => {  // 3
+                t.s[sb + e1Index] = t.s.pop();
+                t.s[sb + listIndex]._mj$get$E$int(t, undefined, t.s[sb + n2Index]);
+                return 4;
+            },
+            (t, s, sb) => {  // 4
+                t.s[sb + e2Index] = t.s.pop();
+                t.s[sb + listIndex]._mj$set$E$int$E(t, undefined, t.s[sb + n1Index], t.s[sb + e2Index]);
+                return 5;
+            },
+            (t, s, sb) => {  // 5
+                t.s[sb + listIndex]._mj$set$E$int$E(t, undefined, t.s[sb + n2Index], t.s[sb + e1Index]);
+                t.s[sb + counterIndex]--;
+                return 2;
+            },
+            (t, s, sb) => {  // 6
+                t.return(undefined);
+                return 7
+            },
+        ])
+
+        t.pushProgram(program, () => {
+
+        });
+
     }
 
     static sortListWithComparator(t: Thread, list: ListInterface, comparator: ComparatorInterface){
