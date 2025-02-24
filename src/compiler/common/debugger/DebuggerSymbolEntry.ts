@@ -528,7 +528,9 @@ export class ArraySectionDebuggerEntry extends DebuggerSymbolEntry {
 
         }
 
-
+        for(let child of this.children){
+            (<ArraySectionDebuggerEntry | ArrayElementDebuggerEntry>child).fetchValueFromArrayAndRender(a);
+        }
 
 
     }

@@ -155,7 +155,7 @@ export class Debugger {
     showCurrentThreadState() {
         let repl = this.main.getRepl();
         let currentThread = this.main.getInterpreter().scheduler.getCurrentThread();
-        if (currentThread && !currentThread.currentProgramState.program.isReplProgram || repl.state != "standalone") {
+        if (currentThread?.currentProgramState?.program && !currentThread.currentProgramState.program.isReplProgram || repl.state != "standalone") {
             this.showThreadState(this.main.getInterpreter().scheduler.getCurrentThread());
             return;
         }
