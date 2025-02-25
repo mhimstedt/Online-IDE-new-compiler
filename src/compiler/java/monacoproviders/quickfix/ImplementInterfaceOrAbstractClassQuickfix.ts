@@ -1,16 +1,20 @@
 import { editor, languages } from "monaco-editor";
 import { JavaQuickfix } from "./JavaQuickfix.ts";
 import * as monaco from 'monaco-editor';
-import { JavaClass } from "../../types/JavaClass.ts";
+import { IJavaClass, JavaClass } from "../../types/JavaClass.ts";
 import { JavaMethod } from "../../types/JavaMethod.ts";
 import { IJavaInterface } from "../../types/JavaInterface.ts";
 
 
-export class ImplementInterfaceQuickfix extends JavaQuickfix {
+export class ImplementInterfaceOrAbstractClassQuickfix extends JavaQuickfix {
 
-    constructor(private klass: JavaClass, private notImplementedMethods: JavaMethod[], private javaInterface: IJavaInterface) {
+    constructor(private klass: JavaClass, private notImplementedMethods: JavaMethod[], private javaInterfaceOrAbstractClass: IJavaInterface | IJavaClass) {
         super(klass.identifierRange);
-        this.message = "Nicht-implementierte Methoden des Interfaces " + this.javaInterface.identifier;
+        if(javaInterfaceOrAbstractClass instanceof IJavaInterface){
+            this.message = "Nicht-implementierte Methoden des Interfaces " + this.javaInterfaceOrAbstractClass.identifier + " ergänzen";
+        } else {
+            this.message = "Nicht-implementierte Methoden der abstrakten Klasse " + this.javaInterfaceOrAbstractClass.identifier + " ergänzen";
+        }
     }
 
     provideCodeAction(model: editor.ITextModel): monaco.languages.CodeAction | undefined {

@@ -7,7 +7,7 @@ import { ColorHelper } from "../lexer/ColorHelper.ts";
 import { JavaBaseModule } from "../module/JavaBaseModule";
 import { JavaCompiledModule } from "../module/JavaCompiledModule.ts";
 import { JavaTypeStore } from "../module/JavaTypeStore.ts";
-import { ImplementInterfaceQuickfix } from "../monacoproviders/quickfix/ImplementInterfaceQuickfix.ts";
+import { ImplementInterfaceOrAbstractClassQuickfix } from "../monacoproviders/quickfix/ImplementInterfaceOrAbstractClassQuickfix.ts";
 import { ClassClass } from "../runtime/system/ClassClass.ts";
 import { GenericTypeParameter } from "./GenericTypeParameter.ts";
 import { JavaField } from "./JavaField";
@@ -294,6 +294,11 @@ export class JavaClass extends IJavaClass {
                     level: "error",
                     range: this.identifierRange,
                 })
+
+                if (this.module instanceof JavaCompiledModule) {
+                    this.module.quickfixes.push(new ImplementInterfaceOrAbstractClassQuickfix(this, abstractMethodsNotYetImplemented, this.extends))
+                }
+
             }
         }
     }
@@ -384,7 +389,7 @@ export class JavaClass extends IJavaClass {
                 });
 
                 if (this.module instanceof JavaCompiledModule) {
-                    this.module.quickfixes.push(new ImplementInterfaceQuickfix(this, notImplementedMethods, javaInterface))
+                    this.module.quickfixes.push(new ImplementInterfaceOrAbstractClassQuickfix(this, notImplementedMethods, javaInterface))
                 }
             }
         }
