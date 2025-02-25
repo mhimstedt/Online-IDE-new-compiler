@@ -13,6 +13,7 @@ import { JavaReferenceProvider } from "./monacoproviders/JavaReferenceProvider";
 import { JavaRenameProvider } from "./monacoproviders/JavaRenameProvider";
 import { JavaSignatureHelpProvider } from "./monacoproviders/JavaSignatureHelpProvider";
 import { JavaSymbolAndMethodMarker } from "./monacoproviders/JavaSymbolAndMethodMarker";
+import { JavaCodeActionProvider } from "./monacoproviders/quickfix/JavaCodeActionProvider.ts";
 import { JavaRepl as JavaRepl } from "./parser/repl/JavaRepl";
 import * as monaco from 'monaco-editor'
 
@@ -64,7 +65,7 @@ export class JavaLanguage extends Language {
         let formatter = new JavaFormatter();
         monaco.languages.registerDocumentFormattingEditProvider(this.monacoLanguageSelector, formatter);
         monaco.languages.registerOnTypeFormattingEditProvider(this.monacoLanguageSelector, formatter);
-
+        monaco.languages.registerCodeActionProvider(this.monacoLanguageSelector, new JavaCodeActionProvider(this));
     }
 
     private registerLanguageAtMonacoEditor(): void {

@@ -114,28 +114,28 @@ export class ErrorManager {
             this.main.getMainEditor().focus();
         }, 10);
 
-        let className: string = "";
-        switch (error.level) {
-            case "error": className = "jo_revealError"; break;
-            case "warning": className = "jo_revealWarning"; break;
-            case "info": className = "jo_revealInfo"; break;
-        }
+        // let className: string = "";
+        // switch (error.level) {
+        //     case "error": className = "jo_revealError"; break;
+        //     case "warning": className = "jo_revealWarning"; break;
+        //     case "info": className = "jo_revealInfo"; break;
+        // }
 
 
-        this.hideAllErrorDecorations();
+        // this.hideAllErrorDecorations();
 
-        let model = f.getMonacoModel();
-        let oldDecorations: string[] = this.oldDecorations.get(model) || [];
+        // let model = f.getMonacoModel();
+        // let oldDecorations: string[] = this.oldDecorations.get(model) || [];
 
-        oldDecorations = model.deltaDecorations(oldDecorations, [
-            {
-                range: error.range,
-                options: { className: className, isWholeLine: true },
+        // oldDecorations = model.deltaDecorations(oldDecorations, [
+        //     {
+        //         range: error.range,
+        //         options: { className: className, isWholeLine: true },
 
-            }
-        ]);
+        //     }
+        // ]);
 
-        this.oldDecorations.set(model, oldDecorations);
+        // this.oldDecorations.set(model, oldDecorations);
 
     }
 

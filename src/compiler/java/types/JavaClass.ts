@@ -5,7 +5,9 @@ import { TokenType, TokenTypeReadable } from "../TokenType";
 import { JCM } from "../language/JavaCompilerMessages.ts";
 import { ColorHelper } from "../lexer/ColorHelper.ts";
 import { JavaBaseModule } from "../module/JavaBaseModule";
+import { JavaCompiledModule } from "../module/JavaCompiledModule.ts";
 import { JavaTypeStore } from "../module/JavaTypeStore.ts";
+import { ImplementInterfaceQuickfix } from "../monacoproviders/quickfix/ImplementInterfaceQuickfix.ts";
 import { ClassClass } from "../runtime/system/ClassClass.ts";
 import { GenericTypeParameter } from "./GenericTypeParameter.ts";
 import { JavaField } from "./JavaField";
@@ -107,11 +109,11 @@ export abstract class IJavaClass extends JavaTypeWithInstanceInitializer {
                 rangeToReplace, methodContext, onlyStatic));
         }
 
-        if(this.isMainClass){
+        if (this.isMainClass) {
             let identifiers = ['args', '$main', 'fromJson', 'class'];
             itemList = itemList.filter(item => {
-                if(identifiers.indexOf(item.filterText) >= 0) return false;
-                if(identifiers.indexOf(item.insertText) >= 0) return false;
+                if (identifiers.indexOf(item.filterText) >= 0) return false;
+                if (identifiers.indexOf(item.insertText) >= 0) return false;
                 return true;
             });
         }
@@ -214,7 +216,7 @@ export class JavaClass extends IJavaClass {
 
     private classObject: ClassClass;
 
-    constructor(identifier: string, identifierRange: IRange, path: string, module: JavaBaseModule) {
+    constructor(identifier: string, identifierRange: IRange, path: string, module: JavaBaseModule, public range?: IRange) {
         super(identifier, identifierRange, path, module);
         this.genericTypeParameters = [];
         this.classObject = new ClassClass(this);
@@ -321,8 +323,8 @@ export class JavaClass extends IJavaClass {
             baseMethods.forEach(m => overriddenOrImplementedMethodPaths[m.getPathWithMethodIdentifier()] = true);
 
             let overrideAnnotation = m.annotations.find(a => a.identifier == 'Override');
-            if(overrideAnnotation){
-                if(baseMethods.length == 0){
+            if (overrideAnnotation) {
+                if (baseMethods.length == 0) {
                     let jc = JCM.overrideAnnotationNotNecessary(m.getSignature());
                     m.classEnumInterface.module.errors.push({
                         message: jc.message,
@@ -379,7 +381,11 @@ export class JavaClass extends IJavaClass {
                     id: jc.id,
                     level: "error",
                     range: this.identifierRange
-                })
+                });
+
+                if (this.module instanceof JavaCompiledModule) {
+                    this.module.quickfixes.push(new ImplementInterfaceQuickfix(this, notImplementedMethods, javaInterface))
+                }
             }
         }
     }
@@ -402,7 +408,7 @@ export class JavaClass extends IJavaClass {
     }
 
     getCopyWithConcreteType(typeMap: Map<GenericTypeParameter, NonPrimitiveType>): IJavaClass {
-        if(this.genericTypeParameters.length == 0) return this;
+        if (this.genericTypeParameters.length == 0) return this;
         return new GenericVariantOfJavaClass(this, typeMap);
     }
 
@@ -581,20 +587,20 @@ export class JavaClass extends IJavaClass {
 
     getCompletionItems(visibilityUpTo: Visibility, leftBracketAlreadyThere: boolean, identifierAndBracketAfterCursor: string,
         rangeToReplace: monaco.IRange, methodContext: JavaMethod | undefined, onlyStatic?: false): monaco.languages.CompletionItem[] {
-            const items = super.getCompletionItems(visibilityUpTo, leftBracketAlreadyThere, identifierAndBracketAfterCursor, rangeToReplace,
-                methodContext, onlyStatic);
+        const items = super.getCompletionItems(visibilityUpTo, leftBracketAlreadyThere, identifierAndBracketAfterCursor, rangeToReplace,
+            methodContext, onlyStatic);
 
-            for(let gp of this.genericTypeParameters){
-                items.push({
-                    label: gp.identifier,
-                    detail: gp.getDeclaration(),
-                    kind: monaco.languages.CompletionItemKind.TypeParameter,
-                    range: rangeToReplace,
-                    insertText: gp.identifier 
-                })
-            }
+        for (let gp of this.genericTypeParameters) {
+            items.push({
+                label: gp.identifier,
+                detail: gp.getDeclaration(),
+                kind: monaco.languages.CompletionItemKind.TypeParameter,
+                range: rangeToReplace,
+                insertText: gp.identifier
+            })
+        }
 
-            return items;
+        return items;
     }
 
 }
@@ -812,11 +818,11 @@ export class GenericVariantOfJavaClass extends IJavaClass {
                 if (myType?.toString() == othersType?.toString()) continue;
 
                 if (othersType instanceof GenericTypeParameter) {
-                    if(othersType.isWildcard){
+                    if (othersType.isWildcard) {
                         for (let ext of othersType.upperBounds) {
                             if (myType?.canImplicitlyCastTo(ext)) return true;
                         }
-                    } else if(othersType.catches){
+                    } else if (othersType.catches) {
                         othersType.catches.push(myType);
                     }
                 }
@@ -853,7 +859,7 @@ export class GenericVariantOfJavaClass extends IJavaClass {
                     }
                 }
 
-                if(othersType instanceof GenericTypeParameter && othersType.catches){
+                if (othersType instanceof GenericTypeParameter && othersType.catches) {
                     othersType.catches.push(myType);
                 }
             }

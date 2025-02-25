@@ -123,7 +123,7 @@ export class TypeResolver {
 
         for (let klassNode of this.classDeclarationNodes) {
             let module = klassNode.module;
-            let resolvedType = new JavaClass(klassNode.identifier, klassNode.identifierRange, klassNode.path, klassNode.module);
+            let resolvedType = new JavaClass(klassNode.identifier, klassNode.identifierRange, klassNode.path, klassNode.module, klassNode.range);
             this.generateGenericParameters(klassNode, <JavaClass>resolvedType, module);
             klassNode.resolvedType = resolvedType;
             resolvedType.visibility = klassNode.visibility;
