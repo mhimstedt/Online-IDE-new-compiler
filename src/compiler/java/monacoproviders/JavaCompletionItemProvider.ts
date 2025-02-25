@@ -68,11 +68,21 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
         let textUntilPosition = model.getValueInRange({ startLineNumber: 1, startColumn: 1, endLineNumber: position.lineNumber, endColumn: position.column });
         let textAfterPosition = model.getValueInRange({ startLineNumber: position.lineNumber, startColumn: position.column, endLineNumber: position.lineNumber + 5, endColumn: 1 });
 
-        if (context.triggerCharacter == " ") {
-            let newMatch = textUntilPosition.match(/.*(new )$/);
-            if (newMatch != null) {
-                return this.getCompletionItemsAfterNew(main, classContext instanceof NonPrimitiveType ? classContext : undefined, zeroLengthRange);
+        let newMatch = textUntilPosition.match(/.*(new )([\wöäüÖÄÜß]*)$/);
+        if (newMatch != null) {
+            let rangeToReplace: IRange = zeroLengthRange;
+            if(newMatch[2]?.length > 0){
+                rangeToReplace = {
+                    startLineNumber: position.lineNumber,
+                    startColumn: position.column - newMatch[2].length,
+                    endLineNumber: position.lineNumber,
+                    endColumn: position.column
+                }
             }
+            return this.getCompletionItemsAfterNew(main, classContext instanceof NonPrimitiveType ? classContext : undefined, rangeToReplace);
+        }
+
+        if (context.triggerCharacter == " ") {
             let classMatch = textUntilPosition.match(/.*(class )[\wöäüÖÄÜß<> ,]*[\wöäüÖÄÜß<> ] $/);
             if (classMatch != null) {
 
