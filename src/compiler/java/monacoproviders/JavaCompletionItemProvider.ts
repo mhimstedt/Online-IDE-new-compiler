@@ -390,7 +390,7 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
         rangeToReplace = {startLineNumber: rangeToReplace.startLineNumber, startColumn: 0, endLineNumber: rangeToReplace.endLineNumber, endColumn: rangeToReplace.endColumn}
 
         let itemList: monaco.languages.CompletionItem[] = classContext.fields.filter(field => 
-            typeof classContext.getOwnMethods().find(m => m.identifier.toLocaleLowerCase() == 'get' + field.identifier) == 'undefined'
+            typeof classContext.getOwnMethods().find(m => m.identifier == 'get' + field.identifier) == 'undefined'
             && field.identifier != 'class' && field.type 
         ).map(field => {
             let id = `${field.type.toString()} get${this.firstCharacterToUpperCase(field.identifier)}()`;
@@ -411,7 +411,7 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
         rangeToReplace = {startLineNumber: rangeToReplace.startLineNumber, startColumn: 0, endLineNumber: rangeToReplace.endLineNumber, endColumn: rangeToReplace.endColumn}
 
         let itemList: monaco.languages.CompletionItem[] = classContext.fields.filter(field => 
-            typeof classContext.getOwnMethods().find(m => m.identifier.toLocaleLowerCase() == 'set' + field.identifier) == 'undefined'
+            typeof classContext.getOwnMethods().find(m => m.identifier == 'set' + field.identifier) == 'undefined'
             && field.identifier != 'class' && field.type
         ).map(field => {
             let id = `void set${this.firstCharacterToUpperCase(field.identifier)}(${field.type.toString()} ${field.identifier})`;
