@@ -118,7 +118,7 @@ export abstract class StatementParser extends TermParser {
                 break;
             // Only if this.isCodeOutsideClassdeclarations == true:
             case "methoddeclaration":
-                if(this.isCodeOutsideClassdeclarations && this.currentMethod == null){
+                if (this.isCodeOutsideClassdeclarations && this.currentMethod == null) {
                     let modifiers = this.nodeFactory.buildNodeWithModifiers(this.cct.range);
                     modifiers.isStatic = true;
                     this.parseFieldOrMethodDeclaration(this.module.mainClass!, modifiers, undefined);
@@ -457,6 +457,11 @@ export abstract class StatementParser extends TermParser {
             let caseDefaultToken = this.cct;
             this.nextToken(); // skip case or default
             let constant = isCase ? this.parseTermUnary() : undefined;
+
+            if (typeof constant == "undefined" && isCase) {
+                this.pushError(JCM.constantMissingInCaseStatement(), "error", caseDefaultToken.range)
+            }
+
             this.expect(TokenType.colon, true);
 
             let caseNode = this.nodeFactory.buildCaseNode(caseDefaultToken, constant);

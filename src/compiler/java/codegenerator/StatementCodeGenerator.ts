@@ -799,10 +799,12 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
 
         let caseSnippets = node.caseNodes.map((node, i) => this.compileCaseStatement(node, i, labelArray, enumType ? "int" : type.identifier, enumType));
 
-        if (!this.listHasNoUndefined(caseSnippets)){
-            this.popSymbolTable();
-            return undefined;
-        }
+        // if (!this.listHasNoUndefined(caseSnippets)){
+        //     this.popSymbolTable();
+        //     return undefined;
+        // }
+
+        caseSnippets = caseSnippets.filter(cs => typeof cs !== 'undefined');
 
         let switchSnippet = new CodeSnippetContainer([], node.range);
 
