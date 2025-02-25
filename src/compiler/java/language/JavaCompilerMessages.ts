@@ -538,6 +538,11 @@ export class JCM {
         "en": "No method declaration allowed here."
     })
 
+    static constantMissingInCaseStatement = () => le({
+        "de": "In diesem Case-Block fehlt zwischen case und dem Doppelpunkt die Konstante.",
+        "en": `Constant missing between case and colon.`,
+    })
+
     static statementOrBlockExpected = () => le({
         "de": "Hier wird eine Anweisung oder ein Anweisungsblock (in geschweiften Klammern) erwartet.",
         "en": `Statement or block-Statement in curly braces { ... } expected.`,
