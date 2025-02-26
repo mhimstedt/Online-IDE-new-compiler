@@ -628,7 +628,6 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
         }
 
         let elementSnippets: CodeSnippet[] = [];
-        let dimension: number | null = null;
 
         for (let elementNode of node.elements) {
             if (elementNode.kind == TokenType.arrayLiteral) {

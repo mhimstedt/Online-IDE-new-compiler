@@ -133,6 +133,7 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
 
         if (varOrClassMatch != null) {
 
+
             return this.getCompletionItemsInsideIdentifier(main, varOrClassMatch, position, module,
                 identifierAndBracketAfterCursor, classContext, leftBracketAlreadyThere, symbolTable);
 
@@ -376,7 +377,7 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
             }
         }
 
-        completionItems = completionItems.concat(this.getKeywordCompletion(symbolTable, rangeToReplace));
+        completionItems = completionItems.concat(this.getKeywordCompletion(symbolTable, rangeToReplace, module));
         completionItems = this.deleteDoublesWithIdenticalInsertText(completionItems);
 
         // console.log("Complete variable/Class/Keyword " + text);
@@ -592,7 +593,7 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
         return keywordCompletionItems;
     }
 
-    getKeywordCompletion(symbolTable: JavaSymbolTable, range: monaco.IRange): monaco.languages.CompletionItem[] {
+    getKeywordCompletion(symbolTable: JavaSymbolTable, range: monaco.IRange, module: JavaCompiledModule): monaco.languages.CompletionItem[] {
         let keywordCompletionItems: monaco.languages.CompletionItem[] = [];
         if (!this.isConsole && (symbolTable?.classContext == null || symbolTable?.methodContext != null))
             keywordCompletionItems = keywordCompletionItems.concat([
@@ -739,11 +740,19 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
         }
 
         if (!this.isConsole && (symbolTable == null || symbolTable.classContext == null || symbolTable.classContext.isMainClass)) {
+
+            let identifier = MonacoProviderLanguage.identifier();
+            let classIdentifierForLabel: string = "";
+            if(module.file.getText().trim().length < 5){
+                identifier = module.file.name.replace('.java', '');
+                classIdentifierForLabel = " " + identifier;
+            }
+
             keywordCompletionItems = keywordCompletionItems.concat([
                 {
-                    label: "class",
+                    label: "class" + classIdentifierForLabel,
                     filterText: "class",
-                    insertText: "class ${1:" + MonacoProviderLanguage.identifier() + "} {\n\t$0\n}\n",
+                    insertText: "class ${1:" + identifier + "} {\n\t$0\n}\n",
                     detail: MonacoProviderLanguage.classDefinition(),
                     insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
                     kind: monaco.languages.CompletionItemKind.Snippet,

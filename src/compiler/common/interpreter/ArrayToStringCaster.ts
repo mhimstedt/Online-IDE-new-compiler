@@ -14,6 +14,12 @@ export class ArrayToStringCaster {
             return;
         }
 
+        if (array.length == 0) {
+            t.s.push("[]");
+            if (callback) callback();
+            return;
+        }
+
         textContainer.text += "[";
         let array1 = array.slice();
 

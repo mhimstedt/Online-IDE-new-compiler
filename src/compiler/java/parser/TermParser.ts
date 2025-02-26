@@ -547,12 +547,24 @@ export abstract class TermParser extends TokenIterator {
         let newArrayNode = this.nodeFactory.buildNewArrayNode(startToken, type, []);
 
 
-        if (this.comesToken(TokenType.leftSquareBracket, true)) {
+        let dimension: number = 0;
+        if (this.comesToken(TokenType.leftSquareBracket, false)) {
             do {
-                let termNode = this.parseTerm();
-                if (termNode) newArrayNode.dimensions.push(termNode);
-                this.expect(TokenType.rightSquareBracket);
-            } while (this.comesToken(TokenType.leftSquareBracket, true));
+                if(this.comesToken(TokenType.leftRightSquareBracket, false)){
+                    if(dimension == 0){
+                        this.pushError(JCM.firstArrayDimensionMustNotBeZero(), "error");
+                    } else {
+                        newArrayNode.dimensions.push(this.nodeFactory.buildConstantNode({tt: TokenType.integerLiteral, value: 0, range: this.cct.range}));
+                    }
+                    this.nextToken();
+                } else {
+                    this.nextToken();
+                    let termNode = this.parseTerm();
+                    if (termNode) newArrayNode.dimensions.push(termNode);
+                    this.expect(TokenType.rightSquareBracket);
+                }
+                dimension++;
+            } while (this.comesToken([TokenType.leftSquareBracket, TokenType.leftRightSquareBracket], false));
 
 
         } else if ('arrayDimensions' in type && 'arrayOf' in type) {

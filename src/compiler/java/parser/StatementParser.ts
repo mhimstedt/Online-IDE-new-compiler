@@ -330,6 +330,7 @@ export abstract class StatementParser extends TermParser {
 
 
         } else {
+            this.pushError(JCM.expectedOtherTokens("(", this.cct.value + ""));
             this.skipTokensTillEndOfLineOr([TokenType.rightBracket]);
         }
 

@@ -3,7 +3,7 @@ import * as monaco from 'monaco-editor';
 
 export abstract class JavaQuickfix implements monaco.editor.IMarkerData {
     code?: string | { value: string; target: monaco.Uri; };
-    severity: monaco.MarkerSeverity;
+    severity: monaco.MarkerSeverity = monaco.MarkerSeverity.Error;
     message: string;
     source?: string;
     startLineNumber: number;

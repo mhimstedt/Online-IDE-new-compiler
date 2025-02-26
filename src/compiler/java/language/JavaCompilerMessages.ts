@@ -568,6 +568,11 @@ export class JCM {
         "en": `[ or [] expected`,
     })
 
+    static firstArrayDimensionMustNotBeZero = () => le({
+        "de": "Die Länge der ersten Array-Dimension darf nicht 0 sein.",
+        "en": `Length of first array dimension must not be 0.`,
+    })
+
     /**
      * class TokenIterator
      */
