@@ -71,7 +71,7 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
         let newMatch = textUntilPosition.match(/.*(new )([\wöäüÖÄÜß]*)$/);
         if (newMatch != null) {
             let rangeToReplace: IRange = zeroLengthRange;
-            if(newMatch[2]?.length > 0){
+            if (newMatch[2]?.length > 0) {
                 rangeToReplace = {
                     startLineNumber: position.lineNumber,
                     startColumn: position.column - newMatch[2].length,
@@ -266,16 +266,18 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
 
         if (symbolTable.classContext && !symbolTable.methodContext && (symbolTable.classContext instanceof IJavaClass || symbolTable.classContext instanceof JavaEnum)) {
             let range = symbolTable.range;
-            if(range.startLineNumber < range.endLineNumber){
+            if (range.startLineNumber < range.endLineNumber) {
                 completionItems = completionItems.concat(this.getOverridableMethodsCompletion(symbolTable.classContext, rangeToReplace));
                 completionItems = completionItems.concat(this.getConstructorCompletion(symbolTable.classContext, rangeToReplace));
 
-                if(varOrClassMatch[1]?.startsWith('g')){
-                    completionItems = completionItems.concat(this.getGetter(symbolTable.classContext, rangeToReplace));
-                }
-                if(varOrClassMatch[1]?.startsWith('s')){
-                    completionItems = completionItems.concat(this.getSetter(symbolTable.classContext, rangeToReplace));
-                }
+                if (varOrClassMatch[1]?.startsWith('g')) {
+                    completionItems = completionItems.concat(this.getGetter(symbolTable.classContext, rangeToReplace, 'get'));
+                    completionItems = completionItems.concat(this.getGetter(symbolTable.classContext, rangeToReplace, 'gib'));
+                } else
+                if (varOrClassMatch[1]?.startsWith('s')) {
+                    completionItems = completionItems.concat(this.getSetter(symbolTable.classContext, rangeToReplace, 'set'));
+                    completionItems = completionItems.concat(this.getSetter(symbolTable.classContext, rangeToReplace, 'setze'));
+                } 
             }
         }
 
@@ -386,42 +388,44 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
         });
     }
 
-    getGetter(classContext: JavaClass | JavaEnum, rangeToReplace: monaco.IRange): ConcatArray<monaco.languages.CompletionItem> {
-        rangeToReplace = {startLineNumber: rangeToReplace.startLineNumber, startColumn: 0, endLineNumber: rangeToReplace.endLineNumber, endColumn: rangeToReplace.endColumn}
+    getGetter(classContext: JavaClass | JavaEnum, rangeToReplace: monaco.IRange, getPraefix: String): ConcatArray<monaco.languages.CompletionItem> {
+        rangeToReplace = { startLineNumber: rangeToReplace.startLineNumber, startColumn: 0, endLineNumber: rangeToReplace.endLineNumber, endColumn: rangeToReplace.endColumn }
 
-        let itemList: monaco.languages.CompletionItem[] = classContext.fields.filter(field => 
-            typeof classContext.getOwnMethods().find(m => m.identifier == 'get' + field.identifier) == 'undefined'
-            && field.identifier != 'class' && field.type 
+        let itemList: monaco.languages.CompletionItem[] = classContext.fields.filter(field =>
+            typeof classContext.getOwnMethods().find(m => m.identifier == getPraefix + field.identifier) == 'undefined'
+            && field.identifier != 'class' && field.type
         ).map(field => {
-            let id = `${field.type.toString()} get${this.firstCharacterToUpperCase(field.identifier)}()`;
+            let id = `${field.type.toString()} ${getPraefix + this.firstCharacterToUpperCase(field.identifier)}()`;
             return {
                 kind: monaco.languages.CompletionItemKind.Method,
                 insertText: `\t${id}{\n\t\treturn ${field.identifier};\n\t}\n\n\t`,
-                label: `insert ${id}`,
+                label: `${id}`,
+                detail: '-> Getter-Methode ergänzen',
                 range: rangeToReplace,
                 documentation: `${id}{\n\t\treturn ${field.identifier};\n\t}\n`,
-                filterText: `get${this.firstCharacterToUpperCase(field.identifier)}()`
+                filterText: `${getPraefix + this.firstCharacterToUpperCase(field.identifier)}()`
             }
         })
-
+        
         return itemList;
     }
-
-    getSetter(classContext: JavaClass | JavaEnum, rangeToReplace: monaco.IRange): ConcatArray<monaco.languages.CompletionItem> {
-        rangeToReplace = {startLineNumber: rangeToReplace.startLineNumber, startColumn: 0, endLineNumber: rangeToReplace.endLineNumber, endColumn: rangeToReplace.endColumn}
-
-        let itemList: monaco.languages.CompletionItem[] = classContext.fields.filter(field => 
-            typeof classContext.getOwnMethods().find(m => m.identifier == 'set' + field.identifier) == 'undefined'
+    
+    getSetter(classContext: JavaClass | JavaEnum, rangeToReplace: monaco.IRange, setPraefix: string): ConcatArray<monaco.languages.CompletionItem> {
+        rangeToReplace = { startLineNumber: rangeToReplace.startLineNumber, startColumn: 0, endLineNumber: rangeToReplace.endLineNumber, endColumn: rangeToReplace.endColumn }
+        
+        let itemList: monaco.languages.CompletionItem[] = classContext.fields.filter(field =>
+            typeof classContext.getOwnMethods().find(m => m.identifier == setPraefix + field.identifier) == 'undefined'
             && field.identifier != 'class' && field.type
         ).map(field => {
-            let id = `void set${this.firstCharacterToUpperCase(field.identifier)}(${field.type.toString()} ${field.identifier})`;
+            let id = `void ${setPraefix + this.firstCharacterToUpperCase(field.identifier)}(${field.type.toString()} ${field.identifier})`;
             return {
                 kind: monaco.languages.CompletionItemKind.Method,
                 insertText: `\t${id}{\n\t\tthis.${field.identifier} = ${field.identifier};\n\t}\n\n\t`,
-                label: `insert ${id}`,
+                label: `${id}`,
+                detail: '-> Setter-Methode ergänzen',
                 range: rangeToReplace,
                 documentation: `${id}{\n\t\treturn ${field.identifier};\n\t}\n`,
-                filterText: `set${this.firstCharacterToUpperCase(field.identifier)}()`
+                filterText: `${setPraefix + this.firstCharacterToUpperCase(field.identifier)}()`
             }
         })
 
@@ -824,7 +828,7 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
 
     }
 
-    getOverridableMethodsCompletion(classContext: IJavaClass|JavaEnum, range: IRange) {
+    getOverridableMethodsCompletion(classContext: IJavaClass | JavaEnum, range: IRange) {
 
         let keywordCompletionItems: monaco.languages.CompletionItem[] = [];
 
@@ -889,16 +893,16 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
         let constructors = classContext.getOwnMethods().filter(m => m.isConstructor && m.identifier == classContext.identifier && m.identifierRange.startLineNumber !== -1);
         if (constructors.length > 0) return [];
 
-        
+
         let fields = classContext.getFields().filter(f => f.classEnum == classContext && !f.isStatic() && !f.initializedBeforeConstructor && !f.isFinal());
-        
+
         let i: number = 1;
 
-        let attibuteParameters: string = fields.map(f => "${" + i++ + ":" + f.type?.toString() + " " + f.identifier ).join(", }");
-        if(attibuteParameters.length > 0) attibuteParameters += "}";
+        let attibuteParameters: string = fields.map(f => "${" + i++ + ":" + f.type?.toString() + " " + f.identifier).join(", }");
+        if (attibuteParameters.length > 0) attibuteParameters += "}";
 
         let attributeInitialization: string = fields.map(f => "${" + i++ + ":this." + f.identifier + " = " + f.identifier + ";").join("\n\t}");
-        if(attributeInitialization.length > 0) attributeInitialization += "}";
+        if (attributeInitialization.length > 0) attributeInitialization += "}";
 
 
         let insertText = `public ${classContext.identifier}(${attibuteParameters}){\n\t${attributeInitialization}\n\t$0\n}`;
@@ -941,8 +945,8 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
         return s[0] == s[0].toUpperCase();
     }
 
-    firstCharacterToUpperCase(s: string){
-        if(!s || s.length == 0) return "";
+    firstCharacterToUpperCase(s: string) {
+        if (!s || s.length == 0) return "";
         return s.charAt(0).toLocaleUpperCase() + s.substring(1);
     }
 }
