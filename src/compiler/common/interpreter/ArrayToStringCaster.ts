@@ -15,7 +15,7 @@ export class ArrayToStringCaster {
         }
 
         if (array.length == 0) {
-            t.s.push("[]");
+            textContainer.text += "[ ]";
             if (callback) callback();
             return;
         }
