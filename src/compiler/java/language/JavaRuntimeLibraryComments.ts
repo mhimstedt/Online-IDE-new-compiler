@@ -4477,6 +4477,11 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
         "en": "Sets the padding between text and surrounding rectangle.",
     })
 
+    static TextfieldGetTextComment = () => lm({
+        "de": "Gibt den Inhalt des Textfeldes zurück.",
+        "en": "Returns content of this Textfield object.",
+    })
+
     /**
      *  class Sound
      */

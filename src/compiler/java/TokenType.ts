@@ -369,8 +369,9 @@ export var specialCharList: { [keyword: string]: TokenType } = {
 
     // whitespace
     ' ': TokenType.space,
+    '\uc2a0': TokenType.space,
+    '\u00a0': TokenType.space,
     '\t': TokenType.tab,
-
     // newline
     '\n': TokenType.newline,
     '\r': TokenType.linefeed

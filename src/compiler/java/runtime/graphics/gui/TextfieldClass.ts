@@ -16,6 +16,7 @@ export class TextFieldClass extends GuiTextComponentClass {
         { type: "method", signature: "TextField(double x, double y, double width, double fontsize, string caption, string fontFamily)", java: TextFieldClass.prototype._cj$_constructor_$Textfield$double$double$double$double$string$string, comment: JRC.TextfieldConstructorComment },
         { type: "method", signature: "TextField copy()", java: TextFieldClass.prototype._mj$copy$Textfield$, comment: JRC.TextfieldCopyComment },
         { type: "method", signature: "void setPadding(double padding)", native: TextFieldClass.prototype.setPadding, comment: JRC.TextfieldSetPaddingComment },
+        // { type: "method", signature: "string getText()", native: TextFieldClass.prototype.getText, comment: JRC.TextfieldGetTextComment },
     ];
 
     static type: NonPrimitiveType;
@@ -476,4 +477,5 @@ export class TextFieldClass extends GuiTextComponentClass {
     setPadding(padding: number){
         this.padding = padding;
     }
+
 }

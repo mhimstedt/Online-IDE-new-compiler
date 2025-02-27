@@ -13,7 +13,7 @@ export class GuiTextComponentClass extends GuiComponentClass {
 
         {type: "method", signature: "void setFontsize(double fontsize)", native: GuiTextComponentClass.prototype.setFontsize, comment: JRC.GuiTextComponentSetFontsizeComment},
         {type: "method", signature: "void setText(string text)", native: GuiTextComponentClass.prototype.setText, comment: JRC.GuiTextComponentSetTextComment},
-        {type: "method", signature: "string getText()", template: `§1.text`, comment: JRC.GuiTextComponentGetTextComment},
+        {type: "method", signature: "string getText()", native: GuiTextComponentClass.prototype.getText, comment: JRC.GuiTextComponentGetTextComment},
         {type: "method", signature: "double getFontsize()", template: `§1.fontsize`, comment: JRC.GuiTextComponentGetFontsizeComment},
         {type: "method", signature: "void setStyle(boolean isBold, boolean isItalic)", native: GuiTextComponentClass.prototype.setStyle, comment: JRC.GuiTextComponentSetStyleComment},
         {type: "method", signature: "void setTextColor(int color)", native: GuiTextComponentClass.prototype.setTextColor, comment: JRC.GuiTextComponentSetTextColor},
@@ -99,6 +99,10 @@ export class GuiTextComponentClass extends GuiComponentClass {
     setTextColor(color: number) {
         this.textColor = color;
         this.render();
+    }
+
+    getText(): string {
+        return this.text;
     }
 
 
