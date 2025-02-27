@@ -130,6 +130,9 @@ export abstract class StatementParser extends TermParser {
 
         if (!statement || (expectSemicolonAfterStatement && !this.expectSemicolon(true, true))) {
             if (this.cct.range.startLineNumber == line) {
+                if(!this.module.errors.find(error => error.level == "error")){
+                    this.pushError(JCM.unexpectedToken(this.cct.value + ""))
+                }
                 this.skipTillNextTokenAfter([TokenType.semicolon, TokenType.newline, TokenType.rightCurlyBracket]);
             }
         }

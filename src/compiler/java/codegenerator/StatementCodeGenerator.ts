@@ -161,7 +161,7 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
 
     compileReturnStatement(node: ASTReturnNode): CodeSnippet | undefined {
 
-        this.missingStatementManager.onReturnHappened();
+        this. missingStatementManager.onReturnHappened();
 
         let snippet = new CodeSnippetContainer([], node.range);
 
@@ -207,14 +207,14 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
             snippet.addParts(new OneParameterTemplate(`${Helpers.return}(§1);\n`).applyToSnippet(this.voidType, node.range, termSnippet));
 
         } else {
-            if (method.returnParameterType && method.returnParameterType != this.voidType) {
-                this.pushError(JCM.returnValueExpected(method.returnParameterType.identifier), "error", node.range);
-                return undefined;
-            }
-
+            
             if (method.isConstructor) {
                 snippet.addStringPart(`${Helpers.return}(${Helpers.elementRelativeToStackbase(0)});\n`);
             } else {
+                if (method.returnParameterType && method.returnParameterType != this.voidType) {
+                    this.pushError(JCM.returnValueExpected(method.returnParameterType.identifier), "error", node.range);
+                    return undefined;
+                }
                 snippet.addStringPart(`${Helpers.return}();\n`);
             }
         }
