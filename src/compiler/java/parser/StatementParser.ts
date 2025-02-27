@@ -103,7 +103,7 @@ export abstract class StatementParser extends TermParser {
     parseVariableDeclarationOrMethodDeclarationTerm(expectSemicolonAfterStatement: boolean): ASTStatementNode | undefined {
         let type = this.analyzeIfVariableDeclarationOrMethodDeclarationAhead(this.isCodeOutsideClassdeclarations);
         let statement: ASTStatementNode | undefined;
-        let line = this.cct.range.endLineNumber;
+        let pos = this.pos;
         switch (type) {
             case "variabledeclaration":
                 // In main program we convert local variables in uppermost nesting level to fields
@@ -129,7 +129,7 @@ export abstract class StatementParser extends TermParser {
         }
 
         if (!statement || (expectSemicolonAfterStatement && !this.expectSemicolon(true, true))) {
-            if (this.cct.range.startLineNumber == line) {
+            if (pos == this.pos) {
                 if(!this.module.errors.find(error => error.level == "error")){
                     this.pushError(JCM.unexpectedToken(this.cct.value + ""))
                 }
@@ -227,6 +227,7 @@ export abstract class StatementParser extends TermParser {
             }
 
         } while (this.comesToken(TokenType.comma, true))
+
 
         return declarations;
     }
