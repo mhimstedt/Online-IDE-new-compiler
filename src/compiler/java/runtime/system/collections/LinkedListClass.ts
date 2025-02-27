@@ -10,6 +10,8 @@ import { ConsumerInterface } from "../functional/ConsumerInterface.ts";
 import { BaseListType } from "../../../../common/BaseType.ts";
 import { JRC } from "../../../language/JavaRuntimeLibraryComments";
 import { RuntimeExceptionClass } from "../javalang/RuntimeException.ts";
+import { IndexOutOfBoundsExceptionClass } from "../javalang/IndexOutOfBoundsExceptionClass.ts";
+import { ComparatorInterface } from "./ComparatorInterface.ts";
 
 export class LinkedListClass extends ObjectClass implements BaseListType {
     static __javaDeclarations: LibraryDeclarations = [
@@ -54,6 +56,13 @@ export class LinkedListClass extends ObjectClass implements BaseListType {
         { type: "method", signature: "void push(E element)", java: LinkedListClass.prototype._mj$push$void$E, comment: JRC.dequePushComment },
         { type: "method", signature: "Iterator<E> descendingIterator()", java: LinkedListClass.prototype._mj$descendingIterator$Iterator$, comment: JRC.dequeDescendingIteratorComment },
 
+        // from ListInterface
+        { type: "method", signature: "boolean add(int index, E element)", native: LinkedListClass.prototype._addWithIndex, comment: JRC.listAddElementComment },
+        { type: "method", signature: "E get (int index)", native: LinkedListClass.prototype._getWithIndex, comment: JRC.listGetComment },
+        { type: "method", signature: "int indexOf (E Element)", java: LinkedListClass.prototype._mj$indexOf$int$E, comment: JRC.listIndexOfComment },
+        { type: "method", signature: "E remove (int index)", native: LinkedListClass.prototype._removeWithIndex, comment: JRC.listRemoveComment },
+        { type: "method", signature: "E set (int index, E Element)", native: LinkedListClass.prototype._setWithIndex, comment: JRC.listSetComment },
+        { type: "method", signature: "void sort(Comparator<? super E> comparator)", java: LinkedListClass.prototype._mj$sort$void$Comparator, comment: JRC.listSortComment },
 
         // override toString-method
         { type: "method", signature: "String toString()", java: LinkedListClass.prototype._mj$toString$String$, comment: JRC.objectToStringComment },
@@ -493,5 +502,44 @@ export class LinkedListClass extends ObjectClass implements BaseListType {
         return this.elements;
     }
 
+    _addWithIndex(index: number, element: ObjectClassOrNull) {
+        if (index < 0 || index > this.elements.length) {
+            throw new IndexOutOfBoundsExceptionClass(JRC.indexOutOfBoundsException(index, this.elements.length - 1));
+        }
 
+        this.elements.splice(index, 0, element);
+        return true;
+    }
+
+    _removeWithIndex(index: number) {
+        if (index < 0 || index >= this.elements.length) {
+            throw new IndexOutOfBoundsExceptionClass(JRC.indexOutOfBoundsException(index, this.elements.length - 1));
+        }
+
+        return this.elements.splice(index, 1)[0];
+    }
+
+    _setWithIndex(index: number, element: ObjectClassOrNull) {
+        if (index < 0 || index >= this.elements.length) {
+            throw new IndexOutOfBoundsExceptionClass(JRC.indexOutOfBoundsException(index, this.elements.length - 1));
+        }
+
+        let ret = this.elements[index];
+
+        this.elements[index] = element;
+        return ret;
+    }
+
+    _getWithIndex(index: number) {
+        if (index < 0 || index >= this.elements.length) {
+            throw new IndexOutOfBoundsExceptionClass(JRC.indexOutOfBoundsException(index, this.elements.length - 1));
+        }
+
+        return this.elements[index];
+    }
+
+
+    _mj$sort$void$Comparator(t: Thread, callback: CallbackFunction, comparator: ComparatorInterface) {
+        SystemCollection.sortWithComparator(t, callback, comparator, this);
+    }
 }

@@ -89,6 +89,25 @@ for (Iterator<String> iter = list3.descendingIterator(); iter.hasNext(); ) {
 
 assertEquals("Veronika, Martin, Claudia, Bonny, ", text, "LinkedList.descendingIterator not working.");
 
+list3.add(2, "Dennis");
+assertEquals("[\"Bonny\", \"Claudia\", \"Dennis\", \"Martin\", \"Veronika\"]", list3.toString(), "LinkedList.add(index, element) not working.");
+
+assertEquals("Martin", list3.get(3), "LinkedList.get(index) not working.");
+assertEquals("Martin", list3.remove(3), "LinkedList.remove(index) not working.");
+assertEquals("[\"Bonny\", \"Claudia\", \"Dennis\", \"Veronika\"]", list3.toString(), "LinkedList.add(index, element) not working.");
+
+assertEquals(2, list3.indexOf("Dennis"), "LinkedList.indexOf(element) not working.");
+assertEquals("Dennis", list3.set(2, "Klaus"), "LinkedList.set(index, element) not working.");
+assertEquals("[\"Bonny\", \"Claudia\", \"Klaus\", \"Veronika\"]", list3.toString(), "LinkedList.set(index, element) not working.");
+
+list3.sort((a, b) -> {
+      return -a.compareTo(b);
+   });
+
+assertEquals("[\"Veronika\", \"Klaus\", \"Claudia\", \"Bonny\"]", list3.toString(), "LinkedList.sort(comparator) not working.");
+
+
+
 /**::
  * Stack tests
  */
