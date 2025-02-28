@@ -72,7 +72,7 @@ export class PruefungManagerForStudents {
                 if(response.pruefungState != "running"){
                     this.stopPruefung(true);
                 }
-            }, 3000)
+            }, 5000)
 
         }, true, false, false);
 

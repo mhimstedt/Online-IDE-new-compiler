@@ -24,7 +24,7 @@ import { JavaLibraryModule } from "./module/libraries/JavaLibraryModule.ts";
 
 
 
-const compileTimeout = 500
+const compileTimeout = 800
 
 /**
  * The JavaCompiler takes a bundle of files and tries to compile them into
