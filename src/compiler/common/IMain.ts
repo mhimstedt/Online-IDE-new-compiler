@@ -1,5 +1,6 @@
 import { BottomDiv } from "../../client/main/gui/BottomDiv.ts";
-import { File } from "../../client/workspace/File.ts";
+import { GUIFile } from "../../client/workspace/File.ts";
+import { Workspace } from "../../client/workspace/Workspace.ts";
 import { Compiler } from "../common/Compiler.ts";
 import { JavaRepl } from "../java/parser/repl/JavaRepl.ts";
 import { Disassembler } from "./disassembler/Disassembler.ts";
@@ -7,7 +8,6 @@ import { ActionManager } from "./interpreter/ActionManager.ts";
 import { Interpreter } from "./interpreter/Interpreter.ts";
 import { Language } from "./Language.ts";
 import { CompilerFile } from "./module/CompilerFile.ts";
-import { CompilerWorkspace } from "./module/CompilerWorkspace.ts";
 import { IPosition } from "./range/Position.ts";
 import { IRange } from "./range/Range.ts";
 import type * as monaco from 'monaco-editor'
@@ -31,7 +31,7 @@ export interface IMain {
     getReplEditor(): monaco.editor.IStandaloneCodeEditor;
 
 
-    getCurrentWorkspace(): CompilerWorkspace | undefined;
+    getCurrentWorkspace(): Workspace | undefined;
 
     adjustWidthToWorld(): void;
 
@@ -47,9 +47,9 @@ export interface IMain {
 
     getBottomDiv(): BottomDiv;
 
-    markFilesAsStartable(files: File[], active: boolean);
+    markFilesAsStartable(files: GUIFile[], active: boolean);
 
-    onStartFileClicked(file: File);
+    onStartFileClicked(file: GUIFile);
 
     hideDebugger(): void;
     showDebugger(): void;

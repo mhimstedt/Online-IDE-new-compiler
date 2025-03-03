@@ -24,7 +24,7 @@ import { RepositoryCheckoutManager } from "../repository/update/RepositoryChecko
 import { RepositoryCreateManager } from "../repository/update/RepositoryCreateManager.js";
 import { RepositorySettingsManager } from "../repository/update/RepositorySettingsManager.js";
 import { SpriteManager } from "../spritemanager/SpriteManager.js";
-import { File } from '../workspace/File.js';
+import { GUIFile } from '../workspace/File.js';
 import { InconsistencyFixer } from "../workspace/InconsistencyFixer.js";
 import { Workspace } from "../workspace/Workspace.js";
 import { BottomDiv } from "./gui/BottomDiv.js";
@@ -50,7 +50,7 @@ import { Disassembler } from '../../compiler/common/disassembler/Disassembler.js
 import { ExceptionMarker } from '../../compiler/common/interpreter/ExceptionMarker.js';
 import { JUnitTestrunner } from '../../compiler/common/testrunner/JUnitTestrunner.js';
 import { IPosition } from '../../compiler/common/range/Position.js';
-import type * as monaco from 'monaco-editor'
+import * as monaco from 'monaco-editor'
 
 
 export class Main implements MainBase {
@@ -106,8 +106,8 @@ export class Main implements MainBase {
     interpreter: Interpreter;
 
     showFile(file?: CompilerFile): void {
-        if(!file) return;
-        this.projectExplorer.setFileActive(<File>file);
+        if (!file) return;
+        this.projectExplorer.setFileActive(<GUIFile>file);
     }
 
     getDisassembler(): Disassembler | undefined {
@@ -160,7 +160,7 @@ export class Main implements MainBase {
         return this.actionManager;
     }
 
-    setFileActive(file: File) {
+    setFileActive(file: GUIFile) {
         this.projectExplorer.setFileActive(file);
     }
 
@@ -173,7 +173,7 @@ export class Main implements MainBase {
         // let singleUseToken: string | undefined = getCookieValue("singleUseToken");
         let singleUseToken: string | undefined = findGetParameter("singleUseToken");
 
-        if(singleUseToken){
+        if (singleUseToken) {
             this.login.initGUI();
             this.login.loginWithVidis(singleUseToken);
         } else {
@@ -316,6 +316,13 @@ export class Main implements MainBase {
         this.projectExplorer.renderErrorCount(this.currentWorkspace, errors);
         this.drawClassDiagrams(!this.rightDiv.isClassDiagramEnabled());
 
+        for (let module of this.getCompiler().getAllModules()) {
+            if (!(module.file instanceof GUIFile)) return;
+            let model = module.file.getMonacoModel();
+            if (!model) return;
+            monaco.editor.setModelMarkers(model, "myJava", module.quickfixes);
+        }
+
     }
 
 
@@ -395,18 +402,18 @@ export class Main implements MainBase {
 
     showProgramPosition(file?: CompilerFile, positionOrRange?: IPosition | IRange, setCursor: boolean = true) {
         this.showFile(file);
-        if(!positionOrRange) return;
-        if(positionOrRange["startLineNumber"]) positionOrRange = Range.getStartPosition(<IRange>positionOrRange);
-        if(setCursor) this.getMainEditor().setPosition(<IPosition>positionOrRange)
+        if (!positionOrRange) return;
+        if (positionOrRange["startLineNumber"]) positionOrRange = Range.getStartPosition(<IRange>positionOrRange);
+        if (setCursor) this.getMainEditor().setPosition(<IPosition>positionOrRange)
         this.getMainEditor().revealPositionInCenterIfOutsideViewport(<IPosition>positionOrRange);
         this.getMainEditor().focus();
     }
 
-    markFilesAsStartable(files: File[], active: boolean){
+    markFilesAsStartable(files: GUIFile[], active: boolean) {
         this.projectExplorer.markFilesAsStartable(files, active);
     }
 
-    onStartFileClicked(file: File){
+    onStartFileClicked(file: GUIFile) {
         this.interpreter.start(file);
     }
 

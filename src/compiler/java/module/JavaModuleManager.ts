@@ -144,10 +144,6 @@ export class JavaModuleManager {
         return this.modules.find(m => m.file == file);
     }
 
-    findModuleByModel(model: monaco.editor.ITextModel){
-        return this.modules.find(m => m.file.getMonacoModel() == model);
-    }
-
     getTypeCompletionItems(module: JavaCompiledModule, rangeToReplace: monaco.IRange, classContext: NonPrimitiveType | StaticNonPrimitiveType| undefined): monaco.languages.CompletionItem[] {
         return this.typestore.getTypeCompletionItems(classContext, rangeToReplace, false, false);
     }

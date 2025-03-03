@@ -1,9 +1,9 @@
-import * as monaco from 'monaco-editor';
+import type * as monaco from 'monaco-editor';
 
 
-export abstract class JavaQuickfix implements monaco.editor.IMarkerData {
+export abstract class Quickfix implements monaco.editor.IMarkerData {
     code?: string | { value: string; target: monaco.Uri; };
-    severity: monaco.MarkerSeverity = monaco.MarkerSeverity.Error;
+    severity: monaco.MarkerSeverity = 8; // monaco.MarkerSeverity.Error;
     message: string;
     source?: string;
     startLineNumber: number;

@@ -1,3 +1,5 @@
+import { GUIFile } from "../../../client/workspace/File.ts";
+import { Quickfix } from "../../java/monacoproviders/quickfix/Quickfix.ts";
 import { JavaType } from "../../java/types/JavaType.ts";
 import { Error } from "../Error";
 import { UsagePosition, UsageTracker } from "../UsagePosition";
@@ -16,6 +18,8 @@ export abstract class Module {
     errors: Error[] = [];
     bracketError?: string;
     colorInformation: monaco.languages.IColorInformation[] = [];
+
+    quickfixes: Quickfix[] = [];
 
     private lastCompiledMonacoVersion: number = -2;
 
@@ -98,11 +102,11 @@ export abstract class Module {
      * it depends on has changed since last compilation run.
      */
     isDirty(): boolean {
-        return this.file.getMonacoVersion() != this.lastCompiledMonacoVersion;
+        return this.file.getLocalVersion() != this.lastCompiledMonacoVersion;
     }
 
     isMoreThanOneVersionAheadOfLastCompilation(): boolean {
-        return this.file.getMonacoVersion() - this.lastCompiledMonacoVersion > 1;
+        return this.file.getLocalVersion() - this.lastCompiledMonacoVersion > 1;
     }
 
     /**
@@ -110,9 +114,9 @@ export abstract class Module {
      */
     setDirty(dirty: boolean) {
         if(dirty){
-            this.lastCompiledMonacoVersion = this.file.getMonacoVersion() - 1;
+            this.lastCompiledMonacoVersion = this.file.getLocalVersion() - 1;
         } else {
-            this.lastCompiledMonacoVersion = this.file.getMonacoVersion();
+            this.lastCompiledMonacoVersion = this.file.getLocalVersion();
         }
     }
 

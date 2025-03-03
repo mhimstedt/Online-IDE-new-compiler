@@ -1,4 +1,4 @@
-import { File } from "../workspace/File";
+import { GUIFile } from "../workspace/File";
 import { MainEmbedded } from "./MainEmbedded";
 
 interface IDEFileAccess {
@@ -16,7 +16,7 @@ interface OnlineIDEAccess {
 
 
 export class IDEFileAccessImpl implements IDEFileAccess {
-    constructor(private file: File){
+    constructor(private file: GUIFile){
 
     }
 

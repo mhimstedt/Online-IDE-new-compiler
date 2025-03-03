@@ -1,3 +1,4 @@
+import { GUIFile } from "../../client/workspace/File";
 import { IMain } from "./IMain";
 import { Interpreter } from "./interpreter/Interpreter";
 import { Step } from "./interpreter/Step";
@@ -92,19 +93,26 @@ export class BreakpointManager {
             });
         }
 
-        breakpointInfoForModule.breakpointDecorators = breakpointInfoForModule.module.file.getMonacoModel()!
-            .deltaDecorations(breakpointInfoForModule.breakpointDecorators, decorations);
-
-        breakpointInfoForModule.decoratorIdToBreakpointMap = {};
-        for (let i = 0; i < breakpointInfoForModule.breakpointDecorators.length; i++) {
-            breakpointInfoForModule.decoratorIdToBreakpointMap[breakpointInfoForModule.breakpointDecorators[i]] = breakpointInfoForModule.breakpoints[i];
+        let file = breakpointInfoForModule.module.file;
+        if(file instanceof GUIFile){
+            breakpointInfoForModule.breakpointDecorators = file.getMonacoModel()!
+                .deltaDecorations(breakpointInfoForModule.breakpointDecorators, decorations);
+    
+            breakpointInfoForModule.decoratorIdToBreakpointMap = {};
+            for (let i = 0; i < breakpointInfoForModule.breakpointDecorators.length; i++) {
+                breakpointInfoForModule.decoratorIdToBreakpointMap[breakpointInfoForModule.breakpointDecorators[i]] = breakpointInfoForModule.breakpoints[i];
+            }
         }
+
 
 
     }
 
     #getBreakpointPositionsFromEditor(breakpointInfoForModule: BreakpointInfoForModule) {
-        let monacoEditorModel = breakpointInfoForModule.module.file.getMonacoModel();
+        let file = breakpointInfoForModule.module.file;
+        if(!(file instanceof GUIFile)) return;
+
+        let monacoEditorModel = file.getMonacoModel();
         if (!monacoEditorModel) return;
         for (let decoration of monacoEditorModel.getAllDecorations()) {
             let marginClassName = decoration.options.marginClassName;

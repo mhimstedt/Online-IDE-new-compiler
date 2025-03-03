@@ -7,7 +7,7 @@ import { JavaTypeStore } from "./JavaTypeStore";
 
 export abstract class JavaBaseModule extends Module {
 
-    types: JavaType[] = [];
+    types: JavaType[] = []; 
     codeReachedAssertions: CodeReachedAssertions = new CodeReachedAssertions();
 
     registerTypesAtTypestore(typestore: JavaTypeStore) {

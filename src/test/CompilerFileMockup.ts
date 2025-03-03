@@ -1,4 +1,3 @@
-import { FileTypeManager } from "../compiler/common/module/FileTypeManager";
 
 export type FileContentChangedListener = (changedfile: CompilerFileMockup) => void;
 

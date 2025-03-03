@@ -1,3 +1,4 @@
+import { GUIFile } from "../../../client/workspace/File.ts";
 import { IMain } from "../../common/IMain.ts";
 import { BaseMonacoProvider } from "../../common/monacoproviders/BaseMonacoProvider.ts";
 import { UsagePosition } from "../../common/UsagePosition.ts";
@@ -38,11 +39,13 @@ export class JavaReferenceProvider extends BaseMonacoProvider implements monaco.
 
 
             for(let up of allUsagePositions){
-                if(!up.file.getMonacoModel()?.uri) continue;
-                locations.push({
-                    range: up.range,
-                    uri: up.file.getMonacoModel()?.uri!
-                })
+                if(up.file instanceof GUIFile){
+                    if(!up.file.getMonacoModel()?.uri) continue;
+                    locations.push({
+                        range: up.range,
+                        uri: up.file.getMonacoModel()?.uri!
+                    })
+                }
             }
         }
 

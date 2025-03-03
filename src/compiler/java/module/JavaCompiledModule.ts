@@ -1,4 +1,3 @@
-import { CompilerFileMockup } from "../../../test/CompilerFileMockup.ts";
 import { BaseSymbol } from "../../common/BaseSymbolTable.ts";
 import { Error } from "../../common/Error";
 import { UsagePosition } from "../../common/UsagePosition.ts";
@@ -15,7 +14,7 @@ import { JavaSymbolTable } from "../codegenerator/JavaSymbolTable.ts";
 import { JavaCompiledModuleMessages } from "../language/JavaCompiledModuleMessages.ts";
 import { LexerOutput } from "../lexer/Lexer.ts";
 import { TokenList } from "../lexer/Token";
-import { JavaQuickfix } from "../monacoproviders/quickfix/JavaQuickfix.ts";
+import { Quickfix } from "../monacoproviders/quickfix/Quickfix.ts";
 import { ASTBlockNode, ASTClassDefinitionNode, ASTGlobalNode } from "../parser/AST";
 import { JavaArrayType } from "../types/JavaArrayType.ts";
 import { JavaClass } from "../types/JavaClass.ts";
@@ -56,8 +55,6 @@ export class JavaCompiledModule extends JavaBaseModule {
     methodCallPositions: { [line: number]: JavaMethodCallPosition[] } = {};
 
     methodDeclarationRanges: IRange[] = [];
-
-    quickfixes: JavaQuickfix[] = [];
 
     constructor(file: CompilerFile, public moduleManager?: JavaModuleManager) {
         super(file, false);
@@ -308,10 +305,4 @@ export class JavaCompiledModule extends JavaBaseModule {
 
     }
 
-    registerQuickfixes(){
-        if(this.file instanceof CompilerFileMockup) return;
-        let model = this.file.getMonacoModel();
-        if(!model) return;
-        monaco.editor.setModelMarkers(model, "myJava", this.quickfixes);
-    }
 }

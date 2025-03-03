@@ -8,6 +8,7 @@ import { IPrintManager } from "../compiler/common/interpreter/IPrintManager";
 import { ViteTestAssertions } from "./ViteTestAssertions";
 import { CompilerFileMockup } from "./CompilerFileMockup";
 import { JavaLibraryManager } from "../compiler/java/runtime/JavaLibraryManager";
+import { CompilerFile } from "../compiler/common/module/CompilerFile";
 
 class StoreOutputPrintManager implements IPrintManager {
 
@@ -116,7 +117,7 @@ function compileAndTest(name: string, program: string, lineOffset: number,
     libraries: string[]) {
 
     test(name, async (context) => {
-        let file = new CompilerFileMockup();
+        let file = new CompilerFile();
 
         file.setText(program);
 

@@ -1,7 +1,7 @@
 import { ajax } from "../../communication/AjaxHelper.js";
 import { CommitFilesRequest, CommitFilesResponse, Repository, RepositoryFileEntry, RepositoryHistoryEntry } from "../../communication/Data.js";
 import { Main } from "../../main/Main.js";
-import { File } from "../../workspace/File.js";
+import { GUIFile } from "../../workspace/File.js";
 import { Workspace } from "../../workspace/Workspace.js";
 import { HistoryElement } from "./HistoryElement.js";
 import { SynchronizationManager } from "./RepositorySynchronizationManager.js";
@@ -14,7 +14,7 @@ export type SynchroFileState = "original" | "changed" | "new" | "deleted";
 export type SynchroFile = {
     idInsideRepository: number,
     idInsideWorkspace?: number,
-    workspaceFile: File,
+    workspaceFile: GUIFile,
     committedFromFile?: SynchroFile,
     name: string,
     repository_file_version: number,
@@ -288,7 +288,7 @@ export class SynchroWorkspace {
 
     writeChangesToWorkspace() {
         let workspace = this.copiedFromWorkspace;
-        let oldIdToFileMap: { [id: number]: File } = {};
+        let oldIdToFileMap: { [id: number]: GUIFile } = {};
         let newIdToFileMap: { [id: number]: SynchroFile } = {};
 
         workspace.getFiles().forEach(file => {
@@ -338,7 +338,7 @@ export class SynchroWorkspace {
         for (let synchroFile of this.files) {
             if (synchroFile.idInsideRepository != null && oldIdToFileMap[synchroFile.idInsideRepository] == null) {
 
-                let f = new File(this.manager.main, synchroFile.name, synchroFile.text);
+                let f = new GUIFile(this.manager.main, synchroFile.name, synchroFile.text);
                 f.is_copy_of_id = synchroFile.idInsideRepository;
                 f.repository_file_version = synchroFile.repository_file_version;
                 f.identical_to_repository_version = synchroFile.identical_to_repository_version;

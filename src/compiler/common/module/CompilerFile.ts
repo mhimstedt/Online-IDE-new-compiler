@@ -10,11 +10,7 @@ export class CompilerFile {
      */
     public name: string;
 
-    private monacoModel?: monaco.editor.ITextModel;
-
-    private lastSavedMonacoVersion: number = -1;
-
-    private static uriMap: { [name: string]: number } = {};
+    private lastSavedVersion: number = -1;
 
     private fileContentChangedListeners: FileContentChangedListener[] = [];
 
@@ -27,7 +23,7 @@ export class CompilerFile {
      * when switching to another workspace. Meanwhile we store file text here:
      */
     private __textWhenMonacoModelAbsent: string = "";
-    private storedMonacoModelVersion: number = 0;
+    protected localVersion: number = 0;
 
 
     constructor(name?: string) {
@@ -35,82 +31,29 @@ export class CompilerFile {
     }
 
     getText() {
-        if (this.monacoModel) {
-            return this.monacoModel.getValue(monaco.editor.EndOfLinePreference.LF);
-        } else {
-            return this.__textWhenMonacoModelAbsent;
-        }
+        return this.__textWhenMonacoModelAbsent;
     }
 
     setText(text: string) {
-        if (this.monacoModel) {
-            this.monacoModel.setValue(text);
-        } else {
-            this.__textWhenMonacoModelAbsent = text;
-        }
+        this.__textWhenMonacoModelAbsent = text;
 
         this.notifyListeners();
     }
 
-    getMonacoModel(): monaco.editor.ITextModel | undefined {
-        if (!this.monacoModel) {
-            this.createMonacolModel();
-        }
 
-        return this.monacoModel;
-    }
-
-    disposeMonacoModel() {
-        if (this.monacoModel) {
-            this.storedMonacoModelVersion = this.getMonacoVersion();
-            this.__textWhenMonacoModelAbsent = this.monacoModel.getValue();
-            this.monacoModel?.dispose();
-            this.monacoModel = undefined;
-        }
-    }
-
-    private createMonacolModel() {
-        let path = this.name;
-
-        // a few lines later there's
-        // monaco.Uri.from({ path: path, scheme: 'inmemory' });
-        // this method throws an exception if path contains '//'
-        path = path.replaceAll('//', '_');
-
-        let uriCounter = CompilerFile.uriMap[path];
-        if (uriCounter == null) {
-            uriCounter = 0;
-        } else {
-            uriCounter++;
-        }
-        CompilerFile.uriMap[path] = uriCounter;
-
-        if (uriCounter > 0) path += " (" + uriCounter + ")";
-        let uri = monaco.Uri.from({ path: path, scheme: 'inmemory' });
-        let language = FileTypeManager.filenameToFileType(this.name).language;
-        this.monacoModel = monaco.editor.createModel(this.__textWhenMonacoModelAbsent, language, uri);
-        this.monacoModel.updateOptions({ tabSize: 3, bracketColorizationOptions: { enabled: true, independentColorPoolPerBracketType: false } });
-
-        this.monacoModel.onDidChangeContent(() => { this.notifyListeners() });
-    }
-
-    getMonacoVersion(): number {
-        if (this.monacoModel) {
-            return this.monacoModel.getAlternativeVersionId();
-        } else {
-            return this.storedMonacoModelVersion;
-        }
+    getLocalVersion(): number {
+        return this.localVersion;
     }
 
     isSaved(): boolean {
-        return this.lastSavedMonacoVersion == this.getMonacoVersion();
+        return this.lastSavedVersion == this.getLocalVersion();
     }
 
     setSaved(isSaved: boolean) {
         if (isSaved) {
-            this.lastSavedMonacoVersion = this.getMonacoVersion();
+            this.lastSavedVersion = this.getLocalVersion();
         } else {
-            this.lastSavedMonacoVersion = -1;
+            this.lastSavedVersion = -1;
         }
     }
 
@@ -118,7 +61,7 @@ export class CompilerFile {
         this.fileContentChangedListeners.push(listener);
     }
 
-    private notifyListeners() {
+    protected notifyListeners() {
         for (let listener of this.fileContentChangedListeners) {
             listener(this);
         }
@@ -130,17 +73,13 @@ export class CompilerFile {
 
     restoreViewState(editor: monaco.editor.IStandaloneCodeEditor) {
         if (this.editorState) {
-            try{
+            try {
                 editor.restoreViewState(this.editorState)
-            }catch(e){
-                
+            } catch (e) {
+
             }
         };
         this.editorState = null;
-    }
-
-    hasMonacoModel(): boolean {
-        return typeof this.monacoModel !== "undefined";
     }
 
 

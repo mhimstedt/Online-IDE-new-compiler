@@ -1,12 +1,12 @@
 import { editor, languages } from "monaco-editor";
-import { JavaQuickfix } from "./JavaQuickfix.ts";
+import { Quickfix } from "./Quickfix.ts";
 import * as monaco from 'monaco-editor';
 import { IJavaClass, JavaClass } from "../../types/JavaClass.ts";
 import { JavaMethod } from "../../types/JavaMethod.ts";
 import { IJavaInterface } from "../../types/JavaInterface.ts";
 
 
-export class ImplementInterfaceOrAbstractClassQuickfix extends JavaQuickfix {
+export class ImplementInterfaceOrAbstractClassQuickfix extends Quickfix {
 
     constructor(private klass: JavaClass, private notImplementedMethods: JavaMethod[], private javaInterfaceOrAbstractClass: IJavaInterface | IJavaClass) {
         super(klass.identifierRange);

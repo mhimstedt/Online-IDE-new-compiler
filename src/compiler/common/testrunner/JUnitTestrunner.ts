@@ -16,6 +16,7 @@ import * as monaco from 'monaco-editor';
 
 // see https://vite.dev/guide/assets
 import compileGifUrl from '/assets/graphics/compile.gif'
+import { GUIFile } from "../../../client/workspace/File";
 
 
 
@@ -157,7 +158,9 @@ export class JUnitTestrunner {
             testClassToTestMethodMap.forEach((methods, klass) => {
 
                 let decorations: monaco.editor.IModelDeltaDecoration[] = [];
-                let model = klass.module.file.getMonacoModel();
+                let file = klass.module.file;
+                if(!(file instanceof GUIFile)) return;
+                let model = file.getMonacoModel();
                 if (!model) return;
 
                 let annotation = klass.getAnnotation("Test");

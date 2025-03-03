@@ -1,7 +1,7 @@
 import { IMain } from "../../compiler/common/IMain";
 import { WorkspaceSettings } from "../communication/Data";
 import { MainBase } from "../main/MainBase";
-import { File } from "./File";
+import { GUIFile } from "./File";
 import { Workspace } from "./Workspace";
 
 export type ExportedWorkspace = {
@@ -31,7 +31,7 @@ export class WorkspaceImporterExporter {
         }
     }
 
-    private static exportFile(file: File): ExportedFile {
+    private static exportFile(file: GUIFile): ExportedFile {
         return {
             name: file.name,
             text: file.getText(),
@@ -56,8 +56,8 @@ export class WorkspaceImporterExporter {
         return ws;
     }
 
-    private static importFile(main: IMain, ef: ExportedFile): File {
-        let file = new File(main, ef.name);
+    private static importFile(main: IMain, ef: ExportedFile): GUIFile {
+        let file = new GUIFile(main, ef.name);
 
         file.setText(ef.text);
         file.identical_to_repository_version = ef.identical_to_repository_version;

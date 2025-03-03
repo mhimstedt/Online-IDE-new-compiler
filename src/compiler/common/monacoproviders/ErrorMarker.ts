@@ -1,3 +1,4 @@
+import { GUIFile } from "../../../client/workspace/File.ts";
 import { Error, ErrorLevel } from "../Error.ts";
 import { Module } from "../module/Module.ts";
 import * as monaco from 'monaco-editor'
@@ -40,8 +41,9 @@ export class ErrorMarker {
     }
 
     markErrorsOfModule(module: Module) {
-
-        this.markErrors(module.errors, module.file.getMonacoModel()!);
+        if(module.file instanceof GUIFile){
+            this.markErrors(module.errors, module.file.getMonacoModel()!);
+        }
 
     }
 

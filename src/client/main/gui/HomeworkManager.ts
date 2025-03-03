@@ -3,12 +3,12 @@ import { makeDiv } from "../../../tools/HtmlTools.js";
 import { dateToStringWithoutTime, stringToDate } from "../../../tools/StringTools.js";
 import { Workspace } from "../../workspace/Workspace.js";
 import { Main } from "../Main.js";
-import { File } from '../../workspace/File.js';
+import { GUIFile } from '../../workspace/File.js';
 import * as monaco from 'monaco-editor'
 
 
 type FileWithWorkspace = {
-    file: File,
+    file: GUIFile,
     workspace: Workspace
 }
 
@@ -59,7 +59,7 @@ export class HomeworkManager {
         this.$showRevisionButton.hide();
     }
 
-    showRevision(file: File) {
+    showRevision(file: GUIFile) {
 
         jQuery('#editor').hide();
         jQuery('#diffEditor').show();

@@ -13,7 +13,7 @@ import { FileTypeManager } from '../../../compiler/common/module/FileTypeManager
 import { Helper } from "./Helper.js";
 import { TeacherExplorer } from './TeacherExplorer.js';
 import { WorkspaceSettingsDialog } from "./WorkspaceSettingsDialog.js";
-import { File } from '../../workspace/File.js';
+import { GUIFile } from '../../workspace/File.js';
 import { WorkspaceImporterExporter } from '../../workspace/WorkspaceImporterExporter.js';
 import { SchedulerState } from "../../../compiler/common/interpreter/SchedulerState.js";
 import { GuiMessages } from './GuiMessages.js';
@@ -60,7 +60,7 @@ export class ProjectExplorer {
                     return null;
                 }
 
-                let f = new File(this.main, accordionElement.name);
+                let f = new GUIFile(this.main, accordionElement.name);
                 f.panelElement = accordionElement;
                 accordionElement.externalElement = f;
 
@@ -85,7 +85,7 @@ export class ProjectExplorer {
             };
 
         this.fileListPanel.renameCallback =
-            (file: File, newName: string, ae: AccordionElement) => {
+            (file: GUIFile, newName: string, ae: AccordionElement) => {
                 newName = newName.substring(0, 80);
 
                 file.name = newName;
@@ -100,7 +100,7 @@ export class ProjectExplorer {
             }
 
         this.fileListPanel.deleteCallback =
-            (file: File, callbackIfSuccessful: () => void) => {
+            (file: GUIFile, callbackIfSuccessful: () => void) => {
                 that.main.networkManager.sendDeleteWorkspaceOrFile("file", file.id, (error: string) => {
                     if (error == null) {
                         that.main.getCurrentWorkspace().removeFile(file);
@@ -126,9 +126,9 @@ export class ProjectExplorer {
                 caption: "Duplizieren",
                 callback: (element: AccordionElement) => {
 
-                    let oldFile: File = element.externalElement;
-                    let newFile: File = new File(this.main, oldFile.name + " - Kopie", oldFile.getText());
-                    newFile.version = oldFile.version;
+                    let oldFile: GUIFile = element.externalElement;
+                    let newFile: GUIFile = new GUIFile(this.main, oldFile.name + " - Kopie", oldFile.getText());
+                    newFile.remote_version = oldFile.remote_version;
 
                     let workspace = that.main.getCurrentWorkspace();
                     workspace.addFile(newFile);
@@ -160,14 +160,14 @@ export class ProjectExplorer {
 
 
             if (!(that.main.user.is_teacher || that.main.user.is_admin || that.main.user.is_schooladmin)) {
-                let file = <File>accordionElement.externalElement;
+                let file = <GUIFile>accordionElement.externalElement;
 
                 if (file.submitted_date == null) {
                     cmiList.push({
                         caption: "Als Hausaufgabe markieren",
                         callback: (element: AccordionElement) => {
 
-                            let file = <File>element.externalElement;
+                            let file = <GUIFile>element.externalElement;
                             file.submitted_date = dateToString(new Date());
                             file.setSaved(false);
                             that.main.networkManager.sendUpdatesAsync(true);
@@ -179,7 +179,7 @@ export class ProjectExplorer {
                         caption: "Hausaufgabenmarkierung entfernen",
                         callback: (element: AccordionElement) => {
 
-                            let file = <File>element.externalElement;
+                            let file = <GUIFile>element.externalElement;
                             file.submitted_date = null;
                             file.setSaved(false);
                             that.main.networkManager.sendUpdatesAsync(true);
@@ -197,7 +197,7 @@ export class ProjectExplorer {
 
 
         this.fileListPanel.selectCallback =
-            (file: File) => {
+            (file: GUIFile) => {
                 that.setFileActive(file);
             }
 
@@ -220,7 +220,7 @@ export class ProjectExplorer {
 
     }
 
-    renderHomeworkButton(file: File) {
+    renderHomeworkButton(file: GUIFile) {
         let $buttonDiv = file?.panelElement?.$htmlFirstLine?.find('.jo_additionalButtonHomework');
         if ($buttonDiv == null) return;
 
@@ -362,12 +362,12 @@ export class ProjectExplorer {
 
         this.workspaceListPanel.dropElementCallback = (dest: AccordionElement, droppedElement: AccordionElement, dropEffekt: "copy" | "move") => {
             let workspace: Workspace = dest.externalElement;
-            let file: File = droppedElement.externalElement;
+            let file: GUIFile = droppedElement.externalElement;
 
             if (workspace.getFiles().indexOf(file) >= 0) return; // module is already in destination workspace
 
-            let newFile: File = new File(this.main, file.name, file.getText());
-            newFile.version = file.version;
+            let newFile: GUIFile = new GUIFile(this.main, file.name, file.getText());
+            newFile.remote_version = file.remote_version;
 
             if (dropEffekt == "move") {
                 // move file
@@ -583,7 +583,7 @@ export class ProjectExplorer {
         }
 
         if (workspace != null) {
-            let files: File[] = workspace.getFiles().slice();
+            let files: GUIFile[] = workspace.getFiles().slice();
 
             files.sort((a, b) => { return a.name > b.name ? 1 : a.name < b.name ? -1 : 0 });
 
@@ -639,7 +639,7 @@ export class ProjectExplorer {
 
     }
 
-    renderErrorCount(workspace: Workspace, errorCountMap: Map<File, number>) {
+    renderErrorCount(workspace: Workspace, errorCountMap: Map<GUIFile, number>) {
         if (errorCountMap == null) return;
         for (let f of workspace.getFiles()) {
             let errorCount: number = errorCountMap.get(f);
@@ -729,8 +729,8 @@ export class ProjectExplorer {
 
     }
 
-    lastOpenFile: File = null;
-    setFileActive(file: File) {
+    lastOpenFile: GUIFile = null;
+    setFileActive(file: GUIFile) {
 
         this.main.bottomDiv.homeworkManager.hideRevision();
 
@@ -758,7 +758,7 @@ export class ProjectExplorer {
 
     }
 
-    setActiveAfterExternalModelSet(f: File) {   // MP Aug. 24: Ändern zu file: File!
+    setActiveAfterExternalModelSet(f: GUIFile) {   // MP Aug. 24: Ändern zu file: File!
         this.fileListPanel.select(f, false);
 
         this.lastOpenFile = f;
@@ -780,7 +780,7 @@ export class ProjectExplorer {
 
     }
 
-    private setCurrentlyEditedFile(f: File) {
+    private setCurrentlyEditedFile(f: GUIFile) {
         if (f == null) return;
         let ws = this.main.currentWorkspace;
         if (ws.currentlyOpenFile != f) {
@@ -805,8 +805,8 @@ export class ProjectExplorer {
         this.workspaceListPanel.setCaption(caption);
     }
 
-    getNewFile(fileData: FileData): File {
-        return File.restoreFromData(this.main, fileData);
+    getNewFile(fileData: FileData): GUIFile {
+        return GUIFile.restoreFromData(this.main, fileData);
     }
 
     async fetchAndRenderOwnWorkspaces() {
@@ -871,8 +871,8 @@ export class ProjectExplorer {
 
     }
 
-    markFilesAsStartable(files: File[], active: boolean) {
-        this.fileListPanel.markElementsAsStartable(files, active, (file: File) => {
+    markFilesAsStartable(files: GUIFile[], active: boolean) {
+        this.fileListPanel.markElementsAsStartable(files, active, (file: GUIFile) => {
             this.main.getInterpreter().start(file);
         });
     }

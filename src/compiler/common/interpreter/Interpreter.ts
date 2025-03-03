@@ -23,7 +23,7 @@ import { SchedulerState } from "./SchedulerState.ts";
 import { Thread } from "./Thread.ts";
 import { ThreadState } from "./ThreadState.ts";
 import { InterpreterMessages } from './InterpreterMessages.ts';
-import { File } from "../../../client/workspace/File.ts";
+import { GUIFile } from "../../../client/workspace/File.ts";
 
 
 type InterpreterEvents = "stop" | "done" | "resetRuntime" | "stateChanged" |
@@ -282,7 +282,7 @@ export class Interpreter {
 
     }
 
-    start(fileToStart?: File) {
+    start(fileToStart?: GUIFile) {
         // this.main.getBottomDiv()?.console?.clearErrors();
 
         this.main?.getBottomDiv()?.errorManager?.hideAllErrorDecorations();
@@ -489,10 +489,10 @@ export class Interpreter {
 
         }
 
-        let startableFiles: File[] = [];
+        let startableFiles: GUIFile[] = [];
         if(this.executable){
             for(let module of this.executable.moduleManager.modules){
-                if(module.isStartable()) startableFiles.push(<File>module.file);
+                if(module.isStartable()) startableFiles.push(<GUIFile>module.file);
             }
         }
         this.main?.markFilesAsStartable(startableFiles, state >= 3);
@@ -510,7 +510,7 @@ export class Interpreter {
         // this.gngEreignisbehandlungHelper = null;
     }
 
-    #init(executable: Executable, fileToStart?: File) {
+    #init(executable: Executable, fileToStart?: GUIFile) {
         // this.main.getBottomDiv()?.console?.clearErrors();
         // this.main.getBottomDiv()?.console?.clearExceptions();
 

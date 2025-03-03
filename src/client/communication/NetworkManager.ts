@@ -7,7 +7,7 @@ import { Workspace } from "../workspace/Workspace.js";
 import { ajax, ajaxAsync, csrfToken, PerformanceCollector } from "./AjaxHelper.js";
 import { ClassData, CreateOrDeleteFileOrWorkspaceRequest, CRUDResponse, DatabaseData, DistributeWorkspaceRequest, DistributeWorkspaceResponse, DuplicateWorkspaceRequest, DuplicateWorkspaceResponse, FileData, GetDatabaseRequest, getDatabaseResponse, GetTemplateRequest, JAddStatementRequest, JAddStatementResponse, JRollbackStatementRequest, JRollbackStatementResponse, ObtainSqlTokenRequest, ObtainSqlTokenResponse, SendUpdatesRequest, SendUpdatesResponse, SetRepositorySecretRequest, SetRepositorySecretResponse, UpdateUserSettingsRequest, UpdateUserSettingsResponse, WorkspaceData } from "./Data.js";
 import { PushClientManager } from "./pushclient/PushClientManager.js";
-import { File } from '../workspace/File.js';
+import { GUIFile } from '../workspace/File.js';
 import pako from 'pako'
 
 
@@ -205,7 +205,7 @@ export class NetworkManager {
 
     }
 
-    sendCreateFile(f: File, ws: Workspace, owner_id: number, callback: (error: string) => void) {
+    sendCreateFile(f: GUIFile, ws: Workspace, owner_id: number, callback: (error: string) => void) {
 
         if (this.main.user.is_testuser) {
             f.id = Math.round(Math.random() * 10000000);
@@ -396,7 +396,7 @@ export class NetworkManager {
                 let idToRemoteFileDataMap: Map<number, FileData> = new Map();
                 remoteWorkspace.files.forEach(fd => idToRemoteFileDataMap.set(fd.id, fd));
 
-                let idToFileMap: Map<number, File> = new Map();
+                let idToFileMap: Map<number, GUIFile> = new Map();
                 // update/delete files if necessary
                 for (let file of workspace.getFiles()) {
                     let fileId = file.id;
@@ -410,7 +410,7 @@ export class NetworkManager {
                             file.setText(remoteFileData.text);
                             file.setSaved(true);
                         }
-                        file.version = remoteFileData.version;
+                        file.remote_version = remoteFileData.version;
                     }
                 }
 
@@ -436,7 +436,7 @@ export class NetworkManager {
     }
 
     private updateFiles(filesFromServer: FileData[]) {
-        let fileIdToLocalFileMap: Map<number, File> = new Map();
+        let fileIdToLocalFileMap: Map<number, GUIFile> = new Map();
 
         for (let workspace of this.main.workspaceList) {
             for (let file of workspace.getFiles()) {
@@ -449,7 +449,7 @@ export class NetworkManager {
             if (file != null && file.getText() != remoteFile.text) {
                 file.setText(remoteFile.text);
                 file.setSaved(true);
-                file.version = remoteFile.version;
+                file.remote_version = remoteFile.version;
             }
         }
     }

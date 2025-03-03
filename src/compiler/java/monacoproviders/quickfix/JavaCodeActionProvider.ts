@@ -2,8 +2,10 @@
 import * as monaco from 'monaco-editor'
 import { BaseMonacoProvider } from '../../../common/monacoproviders/BaseMonacoProvider.ts';
 import { Language } from '../../../common/Language.ts';
-import { JavaQuickfix } from './JavaQuickfix.ts';
+import { Quickfix } from './Quickfix.ts';
 import { JavaCompiler } from '../../JavaCompiler.ts';
+import { GUIFile } from '../../../../client/workspace/File.ts';
+import { JavaCompiledModule } from '../../module/JavaCompiledModule.ts';
 
 
 
@@ -19,12 +21,24 @@ export class JavaCodeActionProvider extends BaseMonacoProvider implements monaco
         let compiler = (<JavaCompiler>this.findMainForModel(model)?.getCompiler());
         if(!compiler) return undefined;
         
-        let module = compiler.moduleManager?.findModuleByModel(model);
 
-        if(!module) return undefined;
+
+        let _module: JavaCompiledModule | undefined;
+        for(let m of compiler.moduleManager?.modules){
+            if(!(m.file instanceof GUIFile)) continue;
+            if(m.file.getMonacoModel() == model){
+                _module = m;
+                break;
+            }
+
+        }
+        if(typeof _module == 'undefined') return {
+            actions: [],
+            dispose: () => {}
+        };
 
         for(let marker of context.markers){
-            let javaMarkerData: JavaQuickfix = module.quickfixes.find(
+            let javaMarkerData: Quickfix = _module.quickfixes.find(
                 qf => qf.startLineNumber == marker.startLineNumber && qf.endLineNumber == marker.endLineNumber && qf.startColumn == marker.startColumn && qf.endColumn == marker.endColumn && qf.message == marker.message);
             if(!javaMarkerData) continue;
             let ca = javaMarkerData.provideCodeAction(model);

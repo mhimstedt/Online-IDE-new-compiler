@@ -1,14 +1,15 @@
 import { IMain } from "../../compiler/common/IMain";
 import { CompilerFile } from "../../compiler/common/module/CompilerFile";
+import { FileTypeManager } from "../../compiler/common/module/FileTypeManager";
 import { FileData } from "../communication/Data";
 import { AccordionElement } from "../main/gui/Accordion";
 import { Main } from "../main/Main";
 import { Patcher } from "./Patcher";
 import { Workspace } from "./Workspace";
-import type * as monaco from 'monaco-editor'
+import * as monaco from 'monaco-editor'
 
 
-export class File extends CompilerFile {
+export class GUIFile extends CompilerFile {
 
     id?: number;        // database-id in Online-IDE
 
@@ -20,13 +21,17 @@ export class File extends CompilerFile {
     repository_file_version?: number | null = null;
     identical_to_repository_version: boolean = true;
 
-    version: number = 1;
+    remote_version: number = 1;             // is this field used anywhere in a meaningful manner?
+
+    // GUI references:
     panelElement?: AccordionElement;
+    private monacoModel?: monaco.editor.ITextModel;
+    private static uriMap: { [name: string]: number } = {};
 
 
     constructor(private main: IMain, filename?: string, text?: string) {
         super(filename);
-        if(text) this.setText(text);
+        if (text) this.setText(text);
     }
 
     getFileData(workspace: Workspace): FileData {
@@ -37,7 +42,7 @@ export class File extends CompilerFile {
             text_before_revision: this.text_before_revision,
             submitted_date: this.submitted_date,
             student_edited_after_revision: this.student_edited_after_revision,
-            version: this.version,
+            version: this.remote_version,
             is_copy_of_id: this.is_copy_of_id,
             repository_file_version: this.repository_file_version,
             identical_to_repository_version: this.identical_to_repository_version,
@@ -48,15 +53,15 @@ export class File extends CompilerFile {
         return fd;
     }
 
-    static restoreFromData(main: IMain, f: FileData): File {
+    static restoreFromData(main: IMain, f: FileData): GUIFile {
         let patched = Patcher.patch(f.text);
 
-        let file = new File(main, f.name);
+        let file = new GUIFile(main, f.name);
         file.setText(patched.patchedText);
         file.text_before_revision = f.text_before_revision;
         file.submitted_date = f.submitted_date;
         file.student_edited_after_revision = false;
-        file.version = f.version;
+        file.remote_version = f.version;
         file.id = f.id;
         file.is_copy_of_id = f.is_copy_of_id;
         file.repository_file_version = f.repository_file_version;
@@ -68,13 +73,15 @@ export class File extends CompilerFile {
 
     getMonacoModel(): monaco.editor.ITextModel | undefined {
         let hadMonacoModel: boolean = this.hasMonacoModel();
-        let model = super.getMonacoModel();
+        if (!this.monacoModel) {
+            this.createMonacolModel();
+        }
 
-        if(!hadMonacoModel && !this.main.isEmbedded()){
-            model.onDidChangeContent(() => {
+        if (!hadMonacoModel && !this.main.isEmbedded()) {
+            this.monacoModel.onDidChangeContent(() => {
                 let main1: Main = <Main>this.main;
-                if(main1.workspacesOwnerId != main1.user.id){
-                    if(this.text_before_revision == null || this.student_edited_after_revision){
+                if (main1.workspacesOwnerId != main1.user.id) {
+                    if (this.text_before_revision == null || this.student_edited_after_revision) {
                         this.student_edited_after_revision = false;
                         this.text_before_revision = this.getText();
 
@@ -91,7 +98,72 @@ export class File extends CompilerFile {
             })
         }
 
-        return model;
+        return this.monacoModel;
+    }
+
+    getText() {
+        if (this.monacoModel) {
+            return this.monacoModel.getValue(monaco.editor.EndOfLinePreference.LF);
+        } else {
+            return super.getText();
+        }
+    }
+
+    setText(text: string) {
+        if (this.monacoModel) {
+            this.monacoModel.setValue(text);
+            this.notifyListeners();
+        } else {
+            super.setText(text);
+        }
+
+    }
+
+
+    private createMonacolModel() {
+        let path = this.name;
+
+        // a few lines later there's
+        // monaco.Uri.from({ path: path, scheme: 'inmemory' });
+        // this method throws an exception if path contains '//'
+        path = path.replaceAll('//', '_');
+
+        let uriCounter = GUIFile.uriMap[path];
+        if (uriCounter == null) {
+            uriCounter = 0;
+        } else {
+            uriCounter++;
+        }
+        GUIFile.uriMap[path] = uriCounter;
+
+        if (uriCounter > 0) path += " (" + uriCounter + ")";
+        let uri = monaco.Uri.from({ path: path, scheme: 'inmemory' });
+        let language = FileTypeManager.filenameToFileType(this.name).language;
+        this.monacoModel = monaco.editor.createModel(super.getText(), language, uri);
+        this.monacoModel.updateOptions({ tabSize: 3, bracketColorizationOptions: { enabled: true, independentColorPoolPerBracketType: false } });
+
+        this.monacoModel.onDidChangeContent(() => { this.notifyListeners() });
+    }
+
+    disposeMonacoModel() {
+        if (this.monacoModel) {
+            this.localVersion = this.monacoModel.getAlternativeVersionId();
+            super.setText(this.monacoModel.getValue());
+            this.monacoModel?.dispose();
+            this.monacoModel = undefined;
+        }
+    }
+
+    getLocalVersion(): number {
+        if (this.monacoModel) {
+            return this.monacoModel.getAlternativeVersionId();
+        } else {
+            return this.localVersion;
+        }
+    }
+
+    hasMonacoModel(): boolean {
+        return typeof this.monacoModel !== "undefined";
     }
 
 }

@@ -1,7 +1,7 @@
 import jQuery from 'jquery';
 import { SchedulerState } from "../../../compiler/common/interpreter/SchedulerState.ts";
 import { JavaAddEditorShortcuts } from '../../../compiler/java/monacoproviders/JavaAddEditorShortcuts.ts';
-import { File } from '../../workspace/File.js';
+import { GUIFile } from '../../workspace/File.js';
 import { Workspace } from "../../workspace/Workspace.ts";
 import { Main } from "../Main.ts";
 import { MainBase } from "../MainBase.ts";
@@ -146,7 +146,7 @@ export class Editor {
                 if (event.state == null) return;
                 let workspace: Workspace = _main.workspaceList.find((ws) => ws.id == historyEntry.workspace_id);
                 if (workspace == null) return;
-                let file: File = workspace.findFileById(historyEntry.file_id);
+                let file: GUIFile = workspace.findFileById(historyEntry.file_id);
                 if (file == null) return;
 
                 // console.log("Processing pop state event, returning to module " + historyEntry.module_id);
@@ -179,7 +179,7 @@ export class Editor {
 
         this.editor.onDidChangeCursorPosition((event) => {
 
-            let currentModelId = (<File | undefined>this.main.getCurrentWorkspace()?.getCurrentlyEditedFile())?.id;
+            let currentModelId = (<GUIFile | undefined>this.main.getCurrentWorkspace()?.getCurrentlyEditedFile())?.id;
             if (currentModelId == null) return;
             let pushNeeded = this.lastPosition == null
                 || event.source == "api"
@@ -208,7 +208,7 @@ export class Editor {
 
             if (this.main.getCurrentWorkspace() == null) return;
 
-            let currentlyEditedFile = <File | undefined>this.main.getCurrentWorkspace().getCurrentlyEditedFile();
+            let currentlyEditedFile = <GUIFile | undefined>this.main.getCurrentWorkspace().getCurrentlyEditedFile();
             if (this.main instanceof Main && currentlyEditedFile != null) {
 
                 this.main.projectExplorer.setActiveAfterExternalModelSet(currentlyEditedFile);
@@ -246,7 +246,7 @@ export class Editor {
     }
 
     getPositionForHistory(): HistoryEntry {
-        let file = <File | undefined>this.main.getCurrentWorkspace()?.getCurrentlyEditedFile();
+        let file = <GUIFile | undefined>this.main.getCurrentWorkspace()?.getCurrentlyEditedFile();
         if (file == null) return;
 
         return {

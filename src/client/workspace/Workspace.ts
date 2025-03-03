@@ -3,21 +3,19 @@ import { WorkspaceData, WorkspaceSettings } from "../communication/Data.js";
 import { AccordionElement } from "../main/gui/Accordion.js";
 import { Main } from "../main/Main.js";
 import { MainBase } from "../main/MainBase.js";
-import { File } from "./File.js";
+import { GUIFile } from "./File.js";
 
 import * as PIXI from 'pixi.js';
 import { CompilerWorkspace } from '../../compiler/common/module/CompilerWorkspace.js';
-import { JavaCompiler } from '../../compiler/java/JavaCompiler.js';
-import { JavaLibraryModule } from '../../compiler/java/module/libraries/JavaLibraryModule.js';
-import { DatabaseModule } from '../libraries/java/database/DatabaseModule.js';
-import { GNGModule } from '../../compiler/java/runtime/graphics/gng/GNGModule.js';
 import { Compiler } from '../../compiler/common/Compiler.js';
-import { NRWModule } from '../../compiler/java/runtime/modules/nrw/NRWModule.js';
 import { JavaLibraryManager } from '../../compiler/java/runtime/JavaLibraryManager.js';
+
+import type * as monaco from 'monaco-editor'
+import { Module } from '../../compiler/common/module/Module.js';
+
 
 export class Workspace extends CompilerWorkspace {
 
-    name: string;
     path: string;
     isFolder: boolean;
     readonly: boolean;
@@ -38,10 +36,10 @@ export class Workspace extends CompilerWorkspace {
     comment?: string;
     attended_exam?: boolean;
 
-    private files: File[] = [];
+    private files: GUIFile[] = [];
 
     panelElement: AccordionElement;
-    currentlyOpenFile: File;
+    currentlyOpenFile: GUIFile;
     saved: boolean = true;
 
     pruefung_id: number;
@@ -53,8 +51,7 @@ export class Workspace extends CompilerWorkspace {
     };
 
     constructor(name: string, private main: MainBase, owner_id: number) {
-        super(main);
-        this.name = name;
+        super(name);
         this.owner_id = owner_id;
         this.path = "";
     }
@@ -68,7 +65,7 @@ export class Workspace extends CompilerWorkspace {
     }
 
 
-    getFiles(): File[] {
+    getFiles(): GUIFile[] {
         return this.files;
     }
 
@@ -79,11 +76,11 @@ export class Workspace extends CompilerWorkspace {
         this.files = [];
     }
 
-    addFile(file: File) {
+    addFile(file: GUIFile) {
         this.files.push(file);
     }
 
-    removeFile(file: File) {
+    removeFile(file: GUIFile) {
         let index = this.files.indexOf(file);
         if (index >= 0) this.files.splice(index, 1);
     }
@@ -195,7 +192,7 @@ export class Workspace extends CompilerWorkspace {
 
         for (let f of wd.files) {
 
-            let file = File.restoreFromData(main, f);
+            let file = GUIFile.restoreFromData(main, f);
             w.files.push(file);
 
             if (f.id == wd.current_file_id) {
@@ -208,15 +205,11 @@ export class Workspace extends CompilerWorkspace {
 
     }
 
-    findFileById(id: number): File {
+    findFileById(id: number): GUIFile {
         return this.files.find(f => f.id == id);
     }
 
-    getCurrentlyEditedFile(): File | undefined {
-        return <File | undefined>(super.getCurrentlyEditedFile());
-    }
-
-    getFirstFile(): File | undefined {
+    getFirstFile(): GUIFile | undefined {
         if (this.files.length > 0) return this.files[0];
         return undefined;
     }
@@ -224,5 +217,76 @@ export class Workspace extends CompilerWorkspace {
     getIdentifier(): string {
         return this.name;
     }
+
+    getModuleForMonacoModel(model: monaco.editor.ITextModel | null): Module | undefined {
+        if (model == null) return undefined;
+
+        let compiler = this.main?.getCompiler();
+        if (!compiler) return undefined;
+
+        for (let file of this.getFiles()) {
+            if (file.getMonacoModel() == model) {
+                return this.main.getCompiler().findModuleByFile(file);
+            }
+        }
+
+        let replModule = this.main.getRepl().getCurrentModule();
+        if (replModule && replModule.file instanceof GUIFile) {
+            if (replModule.file.getMonacoModel() == model) {
+                return replModule;
+            }
+        }
+
+        return undefined;
+    }
+
+    ensureModuleIsCompiled(module: Module): void {
+        if (module.isReplModule()) {
+            this.main.getRepl().compile(module.file.getText(), false);
+        } else {
+            this.main.getCompiler().updateSingleModuleForCodeCompletion(module);
+        }
+    }
+
+    getCurrentlyEditedModule(): Module | undefined {
+        let model = this.main.getMainEditor().getModel();
+        if (!model) return;
+        return this.getModuleForMonacoModel(model);
+    }
+
+    getFileForMonacoModel(model: monaco.editor.ITextModel | null): GUIFile | undefined {
+        if (model == null) return undefined;
+
+        for (let file of this.getFiles()) {
+            if (file.getMonacoModel() == model) {
+                return file;
+            }
+        }
+
+        return undefined;
+    }
+
+    getCurrentlyEditedFile(): GUIFile | undefined {
+        let model = this.main.getMainEditor().getModel();
+        if (!model) return;
+        return this.getFileForMonacoModel(model);
+    }
+
+    /*
+     * monaco editor counts LanguageChangedListeners and issues ugly warnings in console if more than
+     * 200, 300, ... are created. Unfortunately it creates one each time a monaco.editor.ITextModel is created.
+     * To keep monaco.editor.ITextModel instance count low we instantiate it only when needed and dispose of it
+     * when switching to another workspace.
+     */
+
+    disposeMonacoModels() {
+        this.getFiles().forEach(file => file.disposeMonacoModel());
+    }
+
+    createMonacoModels() {
+        this.getFiles().forEach(file => file.getMonacoModel());
+    }
+
+
 }
 

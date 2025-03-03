@@ -1,3 +1,4 @@
+import { GUIFile } from "../../../client/workspace/File.ts";
 import { IMain } from "../../common/IMain.ts";
 import { BaseMonacoProvider } from "../../common/monacoproviders/BaseMonacoProvider.ts";
 import { Position } from "../../common/range/Position.ts";
@@ -26,7 +27,10 @@ export class JavaDefinitionProvider extends BaseMonacoProvider implements monaco
 
         let usagePosition = this.getUsagePosition(main, position, editor);
 
-        let targetModel = usagePosition?.symbol.module.file.getMonacoModel();
+        let file = usagePosition?.symbol.module.file;
+        if(!(file instanceof GUIFile)) return;
+
+        let targetModel = file.getMonacoModel();
         let uri = targetModel?.uri;
 
         if(!uri) return;

@@ -26,22 +26,20 @@ import { ProgramControlButtons } from "../main/gui/ProgramControlButtons.js";
 import { RightDiv } from "../main/gui/RightDiv.js";
 import { MainBase } from "../main/MainBase.js";
 import { SpritesheetData } from "../spritemanager/SpritesheetData.js";
-import { File } from "../workspace/File.js";
+import { GUIFile } from "../workspace/File.js";
 import { Workspace } from "../workspace/Workspace.js";
 import { ExportedWorkspace, WorkspaceImporterExporter } from "../workspace/WorkspaceImporterExporter.js";
 import { EmbeddedFileExplorer } from "./EmbeddedFileExplorer.js";
 import { EmbeddedIndexedDB } from "./EmbeddedIndexedDB.js";
 import { EmbeddedSlider } from "../../tools/components/EmbeddedSlider.js";
 import { JOScript } from "./EmbeddedStarter.js";
-import { SchedulerState } from "../../compiler/common/interpreter/SchedulerState.js";
 import { CompilerFile } from "../../compiler/common/module/CompilerFile.js";
 import { Disassembler } from "../../compiler/common/disassembler/Disassembler.js";
 import { ExceptionMarker } from "../../compiler/common/interpreter/ExceptionMarker.js";
 import { IPosition } from "../../compiler/common/range/Position.js";
 import { JUnitTestrunner } from "../../compiler/common/testrunner/JUnitTestrunner.js";
-import type * as monaco from 'monaco-editor'
+import * as monaco from 'monaco-editor'
 import { OnlineIDEAccessImpl } from "./EmbeddedInterface.js";
-import { Lexer } from "../../compiler/java/lexer/Lexer.js";
 
 
 type JavaOnlineConfig = {
@@ -158,10 +156,18 @@ export class MainEmbedded implements MainBase {
     onCompilationFinished(executable: Executable | undefined): void {
         this.interpreter.setExecutable(executable);
 
-        if(this.bottomDiv && this.fileExplorer){
+        if (this.bottomDiv && this.fileExplorer) {
             let errors = this.bottomDiv?.errorManager?.showErrors(this.currentWorkspace);
             this.fileExplorer.renderErrorCount(this.currentWorkspace, errors);
         }
+
+        for (let module of this.getCompiler().getAllModules()) {
+            if (!(module.file instanceof GUIFile)) return;
+            let model = module.file.getMonacoModel();
+            if (!model) return;
+            monaco.editor.setModelMarkers(model, "myJava", module.quickfixes);
+        }
+
     }
 
     adjustWidthToWorld(): void {
@@ -188,16 +194,16 @@ export class MainEmbedded implements MainBase {
 
                 if (this.config.id != null) {
                     this.readScripts(async () => {
-                        if(this.fileExplorer){
+                        if (this.fileExplorer) {
                             this.getCompiler().setFiles(this.fileExplorer.getFiles());
                             this.fileExplorer.setFirstFileActive();
                         }
                         if (this.fileExplorer == null) {
                             let files = this.currentWorkspace.getFiles();
                             this.getCompiler().setFiles(files);
-                            if (files.length > 0){
+                            if (files.length > 0) {
                                 this.setFileActive(files[0]);
-                            } 
+                            }
                         }
                         this.getCompiler().triggerCompile();
 
@@ -269,7 +275,7 @@ export class MainEmbedded implements MainBase {
 
     }
 
-    setFileActive(file: File) {
+    setFileActive(file: GUIFile) {
 
         if (!file) return;
 
@@ -342,7 +348,7 @@ export class MainEmbedded implements MainBase {
 
                             script = this.eraseDokuwikiSearchMarkup(script);
 
-                            let file = new File(this, name, script);
+                            let file = new GUIFile(this, name, script);
                             file.getMonacoModel();
                             file.setSaved(true);
 
@@ -429,10 +435,10 @@ export class MainEmbedded implements MainBase {
 
     }
 
-    addFile(script: JOScript): File {
+    addFile(script: JOScript): GUIFile {
         let fileType = FileTypeManager.filenameToFileType(script.title);
 
-        let file = new File(this, script.title, script.text);
+        let file = new GUIFile(this, script.title, script.text);
         file.id = this.currentWorkspace.getFiles().length;
 
         this.currentWorkspace.addFile(file);
@@ -446,7 +452,7 @@ export class MainEmbedded implements MainBase {
         return file;
     }
 
-    removeFile(file: File) {
+    removeFile(file: GUIFile) {
         this.currentWorkspace.removeFile(file);
         this.getCompiler()?.triggerCompile();
     }
@@ -657,15 +663,15 @@ export class MainEmbedded implements MainBase {
         //         this.$alternativeDebuggerDiv.show();
         //     }
         // })
-        
+
     }
-    
-    hideDebugger(){
+
+    hideDebugger() {
         this.$debuggerDiv.hide();
         this.$alternativeDebuggerDiv.show();
     }
-    
-    showDebugger(){
+
+    showDebugger() {
         this.$debuggerDiv.show();
         this.$alternativeDebuggerDiv.hide();
     }
@@ -869,7 +875,7 @@ export class MainEmbedded implements MainBase {
             ws.settings = ew.settings;
 
             for (let mo of ew.modules) {
-                let f = new File(this, mo.name, mo.text);
+                let f = new GUIFile(this, mo.name, mo.text);
                 ws.addFile(f);
             }
 
@@ -973,7 +979,7 @@ export class MainEmbedded implements MainBase {
 
     showFile(file?: CompilerFile): void {
         if (!file) return;
-        this.fileExplorer?.selectFile(<File>file, false);
+        this.fileExplorer?.selectFile(<GUIFile>file, false);
     }
 
     getDisassembler(): Disassembler | undefined {
@@ -993,12 +999,12 @@ export class MainEmbedded implements MainBase {
         this.getMainEditor().focus();
     }
 
-    
-    markFilesAsStartable(files: File[], active: boolean){
+
+    markFilesAsStartable(files: GUIFile[], active: boolean) {
         this.fileExplorer?.markFilesAsStartable(files, active);
     }
 
-    onStartFileClicked(file: File){
+    onStartFileClicked(file: GUIFile) {
         this.interpreter.start(file);
     }
 

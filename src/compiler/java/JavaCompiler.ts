@@ -48,7 +48,7 @@ export class JavaCompiler implements Compiler {
 
     #progressManager = new CompilingProgressManager();
 
-    #compileTimer: NodeJS.Timeout;
+    #compileTimer: number;
     lastTimeCompilationStarted: number = 0;
 
     constructor(public main?: IMain, private errorMarker?: ErrorMarker) {
@@ -169,10 +169,6 @@ export class JavaCompiler implements Compiler {
 
         this.#lastCompiledExecutable = executable;
 
-        for(let module of this.moduleManager.modules){
-            module.registerQuickfixes();
-        }
-
         this.eventManager.fire("compilationFinishedWithNewExecutable", this.#lastCompiledExecutable);
 
         for (const module of this.#lastCompiledExecutable.moduleManager.modules) {
@@ -243,7 +239,7 @@ export class JavaCompiler implements Compiler {
 
 
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        this.#compileTimer = setTimeout(async () => {
+        this.#compileTimer = window.setTimeout(async () => {
             do {
                 try {
                     this.lastTimeCompilationStarted = performance.now();

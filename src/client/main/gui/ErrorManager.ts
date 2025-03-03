@@ -2,7 +2,7 @@ import { Workspace } from "../../workspace/Workspace.js";
 import { Main } from "../Main.js";
 import { MainBase } from "../MainBase.js";
 import jQuery from 'jquery';
-import { File } from "../../workspace/File.js";
+import { GUIFile } from "../../workspace/File.js";
 import { Error } from "../../../compiler/common/Error.js";
 import { MainEmbedded } from "../../embedded/MainEmbedded.js";
 import type * as monaco from 'monaco-editor'
@@ -28,9 +28,9 @@ export class ErrorManager {
         }).attr('title', 'Undo');
     }
 
-    showErrors(workspace: Workspace): Map<File, number> {
+    showErrors(workspace: Workspace): Map<GUIFile, number> {
 
-        let errorCountMap: Map<File, number> = new Map();
+        let errorCountMap: Map<GUIFile, number> = new Map();
 
         this.$errorDiv = this.$bottomDiv.find('.jo_tabs>.jo_errorsTab');
         this.$errorDiv.empty();
@@ -70,7 +70,7 @@ export class ErrorManager {
 
     }
 
-    processError(error: Error, f: File, $errorDivs: JQuery<HTMLElement>[]) {
+    processError(error: Error, f: GUIFile, $errorDivs: JQuery<HTMLElement>[]) {
 
         let $div = jQuery('<div class="jo_error-line"></div>');
         let $lineColumn = jQuery('<span class="jo_error-position">[Z&nbsp;<span class="jo_linecolumn">' + error.range.startLineNumber + '</span>' +
@@ -95,7 +95,7 @@ export class ErrorManager {
         $errorDivs.push($div);
     }
 
-    showError(f: File, error: Error) {
+    showError(f: GUIFile, error: Error) {
 
         if (this.main instanceof Main) {
             if (f != this.main.getCurrentWorkspace()?.getCurrentlyEditedFile()) {

@@ -3,7 +3,7 @@ import { openContextMenu, makeEditable } from "../../tools/HtmlTools.js";
 import { JOScript } from "./EmbeddedStarter.js";
 import jQuery from "jquery";
 import { FileTypeManager } from "../../compiler/common/module/FileTypeManager.js";
-import { File } from "../workspace/File.js";
+import { GUIFile } from "../workspace/File.js";
 import { Workspace } from "../workspace/Workspace.js";
 import { EmbeddedMessages } from "./EmbeddedMessages.js";
 import markdownit from 'markdown-it';
@@ -11,7 +11,7 @@ import * as monaco from 'monaco-editor'
 
 type FileData = {
     type?: string,
-    file?: File,
+    file?: GUIFile,
     hint?: string,
     $fileDiv: JQuery<HTMLElement>
 }
@@ -92,7 +92,7 @@ export class EmbeddedFileExplorer {
     }
 
 
-    addFile(file: File): FileData {
+    addFile(file: GUIFile): FileData {
         let that = this;
         let cssClass = "jo_" + FileTypeManager.filenameToFileType(file.name).iconclass;
         let $fileDiv = jQuery(`<div class="jo_file ${cssClass}" >
@@ -168,7 +168,7 @@ export class EmbeddedFileExplorer {
     }
 
 
-    removeFile(file: File, focusFirstFileSubsequently: boolean = true){
+    removeFile(file: GUIFile, focusFirstFileSubsequently: boolean = true){
         this.removeFileData(this.getFileDataFromFile(file), focusFirstFileSubsequently);
     }
 
@@ -215,12 +215,12 @@ export class EmbeddedFileExplorer {
         }
     }
 
-    getFileDataFromFile(file: File): FileData | undefined {
+    getFileDataFromFile(file: GUIFile): FileData | undefined {
         let fileData = this.fileDataList.find(fd => fd.file == file);
         return fileData;
     }
 
-    selectFile(file: File, focusEditorSubsequently: boolean = true) {
+    selectFile(file: GUIFile, focusEditorSubsequently: boolean = true) {
         this.selectFileData(this.getFileDataFromFile(file), focusEditorSubsequently);
     }
 
@@ -302,7 +302,7 @@ export class EmbeddedFileExplorer {
     }
 
 
-    markFile(file: File) {
+    markFile(file: GUIFile) {
         if (this.$fileListDiv == null) return;
         this.$fileListDiv.find('.jo_file').removeClass('jo_active');
 
@@ -316,7 +316,7 @@ export class EmbeddedFileExplorer {
         return this.fileDataList.map(f => f.file);
     }
 
-    markFilesAsStartable(files: File[], active: boolean){
+    markFilesAsStartable(files: GUIFile[], active: boolean){
 
         for(let fd of this.fileDataList){
             let buttonDiv = fd.$fileDiv.find('.jo_additionalButtonStart');
@@ -343,7 +343,7 @@ export class EmbeddedFileExplorer {
         this.main.onStartFileClicked(fd.file);
     }
 
-    renderErrorCount(currentWorkspace: Workspace, errorCountMap: Map<File, number>) {
+    renderErrorCount(currentWorkspace: Workspace, errorCountMap: Map<GUIFile, number>) {
         if (errorCountMap == null) return;
         for (let f of currentWorkspace.getFiles()) {
             let errorCount: number = errorCountMap.get(f);
@@ -354,7 +354,7 @@ export class EmbeddedFileExplorer {
 
     }
 
-    setTextAfterFilename(f: File, text: string, cssClass: string) {
+    setTextAfterFilename(f: GUIFile, text: string, cssClass: string) {
         let fd = this.fileDataList.find(fd1 => fd1.file == f);
         if(!fd) return;
         let $div = fd.$fileDiv.find('.jo_textAfterName');

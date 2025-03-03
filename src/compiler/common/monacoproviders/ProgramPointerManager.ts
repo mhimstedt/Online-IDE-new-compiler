@@ -1,3 +1,4 @@
+import { GUIFile } from "../../../client/workspace/File"
 import { IMain } from "../IMain"
 import { Program } from "../interpreter/Program"
 import { CompilerFile } from "../module/CompilerFile"
@@ -55,10 +56,12 @@ export class ProgramPointerManager {
             file = position.programOrmoduleOrFile;
         }
 
-        let model: monaco.editor.ITextModel | undefined = file.getMonacoModel();
-
-        if(model){
-            this.main.showProgramPosition(file, position.range, false);
+        if(file instanceof GUIFile){
+            let model: monaco.editor.ITextModel | undefined = file.getMonacoModel();
+    
+            if(model){
+                this.main.showProgramPosition(file, position.range, false);
+            }
         }
 
         let oldDecorations = this.keyToDecorationsMap.get(style.key);
