@@ -49,7 +49,7 @@ export class ProjectExplorer {
 
         this.fileListPanel = new AccordionPanel(this.accordion, "Kein Workspace gewählt", "3",
             "img_add-file-dark", "Neue Datei...", "emptyFile", true, false, "file", true, [],
-        GuiMessages.NewFileName(), ".java");
+            GuiMessages.NewFileName(), ".java");
 
         this.fileListPanel.newElementCallback =
 
@@ -95,7 +95,7 @@ export class ProjectExplorer {
 
                 monaco.editor.setModelLanguage(file.getMonacoModel(), fileType.language);
 
-                that.main.networkManager.sendUpdates();
+                that.main.networkManager.sendUpdatesAsync();
                 return newName;
             }
 
@@ -170,7 +170,7 @@ export class ProjectExplorer {
                             let file = <File>element.externalElement;
                             file.submitted_date = dateToString(new Date());
                             file.setSaved(false);
-                            that.main.networkManager.sendUpdates(null, true);
+                            that.main.networkManager.sendUpdatesAsync(true);
                             that.renderHomeworkButton(file);
                         }
                     });
@@ -182,7 +182,7 @@ export class ProjectExplorer {
                             let file = <File>element.externalElement;
                             file.submitted_date = null;
                             file.setSaved(false);
-                            that.main.networkManager.sendUpdates(null, true);
+                            that.main.networkManager.sendUpdatesAsync(true);
                             that.renderHomeworkButton(file);
 
                         }
@@ -259,7 +259,7 @@ export class ProjectExplorer {
 
         this.workspaceListPanel = new AccordionPanel(this.accordion, "WORKSPACES", "4",
             "img_add-workspace-dark", "Neuer Workspace...", "workspace", true, true, "workspace", false, ["file"],
-        GuiMessages.NewWorkspaceName(), "");
+            GuiMessages.NewWorkspaceName(), "");
 
         this.workspaceListPanel.newElementCallback =
 
@@ -293,7 +293,7 @@ export class ProjectExplorer {
                 newName = newName.substr(0, 80);
                 workspace.name = newName;
                 workspace.saved = false;
-                that.main.networkManager.sendUpdates();
+                that.main.networkManager.sendUpdatesAsync();
                 return newName;
             }
 
@@ -318,7 +318,7 @@ export class ProjectExplorer {
         this.workspaceListPanel.selectCallback =
             (workspace: Workspace) => {
                 if (workspace != null && !workspace.isFolder) {
-                    that.main.networkManager.sendUpdates(() => {
+                    that.main.networkManager.sendUpdatesAsync().then(() => {
                         that.setWorkspaceActive(workspace);
                     });
                 }
@@ -357,7 +357,7 @@ export class ProjectExplorer {
                 ws.path = a.path.join("/");
                 ws.saved = false;
             }
-            this.main.networkManager.sendUpdates();
+            this.main.networkManager.sendUpdatesAsync();
         }
 
         this.workspaceListPanel.dropElementCallback = (dest: AccordionElement, droppedElement: AccordionElement, dropEffekt: "copy" | "move") => {
@@ -395,7 +395,7 @@ export class ProjectExplorer {
             e.stopPropagation();
             e.preventDefault();
 
-            that.main.networkManager.sendUpdates(() => {
+            that.main.networkManager.sendUpdatesAsync().then(() => {
                 that.onHomeButtonClicked();
             });
 
@@ -537,10 +537,10 @@ export class ProjectExplorer {
                             let workspace: Workspace = element.externalElement;
                             workspace.repository_id = null;
                             workspace.saved = false;
-                            this.main.networkManager.sendUpdates(() => {
+                            this.main.networkManager.sendUpdatesAsync(true).then(() => {
                                 that.workspaceListPanel.setElementClass(element, "workspace");
                                 workspace.renderSynchronizeButton(element);
-                            }, true);
+                            });
                         }
                     });
                 }
@@ -816,7 +816,7 @@ export class ProjectExplorer {
     async fetchAndRenderWorkspaces(ae: UserData, teacherExplorer?: TeacherExplorer, pruefung: Pruefung = null) {
 
 
-        await this.main.networkManager.sendUpdates();
+        await this.main.networkManager.sendUpdatesAsync();
 
         let request: GetWorkspacesRequest = {
             ws_userId: ae.id,
@@ -871,7 +871,7 @@ export class ProjectExplorer {
 
     }
 
-    markFilesAsStartable(files: File[], active: boolean){
+    markFilesAsStartable(files: File[], active: boolean) {
         this.fileListPanel.markElementsAsStartable(files, active, (file: File) => {
             this.main.getInterpreter().start(file);
         });

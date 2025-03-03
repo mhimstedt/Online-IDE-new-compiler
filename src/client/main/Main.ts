@@ -294,11 +294,11 @@ export class Main implements MainBase {
             that.getMainEditor().layout();
         }, 200);
 
-        jQuery(window).on('unload', function () {
+        jQuery(window).on('unload', async function () {
 
             if (navigator.sendBeacon && that.user != null) {
-                that.networkManager.sendUpdates(null, false, true);
-                that.networkManager.sendUpdateUserSettings(() => { });
+                await that.networkManager.sendUpdatesAsync(false, true);
+                await that.networkManager.sendUpdateUserSettings();
                 that.interpreter.eventManager.fire("resetRuntime");
 
                 DatabaseNewLongPollingListener.close();

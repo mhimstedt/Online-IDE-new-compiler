@@ -16,7 +16,12 @@ export class JavaCodeActionProvider extends BaseMonacoProvider implements monaco
     provideCodeActions(model: monaco.editor.ITextModel, range: monaco.Range, context: monaco.languages.CodeActionContext, token: monaco.CancellationToken): monaco.languages.ProviderResult<monaco.languages.CodeActionList> {
         let codeActions: monaco.languages.CodeAction[] = [];
 
-        let module = (<JavaCompiler>this.findMainForModel(model).getCompiler()).moduleManager.findModuleByModel(model);
+        let compiler = (<JavaCompiler>this.findMainForModel(model)?.getCompiler());
+        if(!compiler) return undefined;
+        
+        let module = compiler.moduleManager?.findModuleByModel(model);
+
+        if(!module) return undefined;
 
         for(let marker of context.markers){
             let javaMarkerData: JavaQuickfix = module.quickfixes.find(

@@ -79,9 +79,10 @@ export class File extends CompilerFile {
                         this.text_before_revision = this.getText();
 
                         this.setSaved(false);
-                        main1.networkManager.sendUpdates(null, false);
-                        main1.bottomDiv.homeworkManager.showHomeWorkRevisionButton();
-                        main1.projectExplorer.renderHomeworkButton(this);
+                        main1.networkManager.sendUpdatesAsync(false).then(() => {
+                            main1.bottomDiv.homeworkManager.showHomeWorkRevisionButton();
+                            main1.projectExplorer.renderHomeworkButton(this);
+                        })
                     }
                 } else {
                     this.student_edited_after_revision = true;

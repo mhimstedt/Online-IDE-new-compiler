@@ -142,6 +142,7 @@ export async function ajaxAsync(url: string, data: any): Promise<any>{
         headers.push(["x-token-pm", csrfToken]);
     }
 
+    showNetworkBusy(true);
     try {
         let response = await fetch(url, {
             method: "POST",
@@ -161,9 +162,10 @@ export async function ajaxAsync(url: string, data: any): Promise<any>{
         } else if(obj.success != true){
             alert("Fehler beim Übertragen der Daten:\n" + obj.message);
         }
-
+        showNetworkBusy(false);
         return obj;
     } catch (exception){
+        showNetworkBusy(false);
         return {
             status: "Error",
             message: "Es ist ein Fehler aufgetreten: " + exception

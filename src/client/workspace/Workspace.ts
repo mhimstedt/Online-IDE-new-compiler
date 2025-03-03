@@ -52,14 +52,14 @@ export class Workspace extends CompilerWorkspace {
         libraries: []
     };
 
-    constructor(name: string, private main: MainBase, owner_id: number){
+    constructor(name: string, private main: MainBase, owner_id: number) {
         super(main);
         this.name = name;
         this.owner_id = owner_id;
         this.path = "";
     }
 
-    setLibraries(compiler: Compiler){
+    setLibraries(compiler: Compiler) {
 
         let libManager = new JavaLibraryManager();
         libManager.addLibraries(...this.settings.libraries);
@@ -72,20 +72,20 @@ export class Workspace extends CompilerWorkspace {
         return this.files;
     }
 
-    removeAllFiles(){
-        for(let file of this.files.filter(f => f.hasMonacoModel())){
+    removeAllFiles() {
+        for (let file of this.files.filter(f => f.hasMonacoModel())) {
             file.getMonacoModel().dispose();
         }
         this.files = [];
     }
 
-    addFile(file: File){
+    addFile(file: File) {
         this.files.push(file);
     }
 
-    removeFile(file: File){
+    removeFile(file: File) {
         let index = this.files.indexOf(file);
-        if(index >= 0) this.files.splice(index, 1);
+        if (index >= 0) this.files.splice(index, 1);
     }
 
 
@@ -111,8 +111,8 @@ export class Workspace extends CompilerWorkspace {
             attended_exam: this.attended_exam
         }
 
-        if(withFiles){
-            for(let file of this.files){
+        if (withFiles) {
+            for (let file of this.files) {
                 wd.files.push(file.getFileData(this));
             }
         }
@@ -151,21 +151,21 @@ export class Workspace extends CompilerWorkspace {
         }
     }
 
-    synchronizeWithRepository(){
+    synchronizeWithRepository() {
         let myMain: Main = <Main><any>this.main;
-        if(this.repository_id != null && this.owner_id == myMain.user.id){
-            myMain.networkManager.sendUpdates(() => {
+        if (this.repository_id != null && this.owner_id == myMain.user.id) {
+            myMain.networkManager.sendUpdatesAsync(true).then(() => {
                 myMain.synchronizationManager.synchronizeWithWorkspace(this);
-            }, true);
+            });
         }
     }
 
     static restoreFromData(wd: WorkspaceData, main: MainBase): Workspace {
 
-        let settings: WorkspaceSettings = (wd.settings != null && wd.settings.startsWith("{")) ? JSON.parse(wd.settings) : {libraries: []};
+        let settings: WorkspaceSettings = (wd.settings != null && wd.settings.startsWith("{")) ? JSON.parse(wd.settings) : { libraries: [] };
 
         //@ts-ignore
-        if(settings.libaries){
+        if (settings.libaries) {
             //@ts-ignore
             settings.libraries = settings.libaries;
         }
@@ -189,16 +189,16 @@ export class Workspace extends CompilerWorkspace {
         w.comment = wd.comment;
         w.attended_exam = wd.attended_exam;
 
-        if(w.settings.libraries == null){
+        if (w.settings.libraries == null) {
             w.settings.libraries = [];
         }
 
-        for(let f of wd.files){
+        for (let f of wd.files) {
 
             let file = File.restoreFromData(main, f);
             w.files.push(file);
 
-            if(f.id == wd.current_file_id){
+            if (f.id == wd.current_file_id) {
                 w.currentlyOpenFile = file;
             }
 
@@ -217,7 +217,7 @@ export class Workspace extends CompilerWorkspace {
     }
 
     getFirstFile(): File | undefined {
-        if(this.files.length > 0) return this.files[0];
+        if (this.files.length > 0) return this.files[0];
         return undefined;
     }
 

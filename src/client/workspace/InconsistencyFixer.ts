@@ -75,7 +75,7 @@ export class InconsistencyFixer {
 
 
         if(updateNeeded){
-            networkManager.sendUpdates(()=> {}, true);
+            networkManager.sendUpdatesAsync(true);
         }
 
     }

@@ -115,7 +115,7 @@ export class Login {
             this.main.projectExplorer.onHomeButtonClicked();
         }
 
-        this.main.networkManager.sendUpdates(() => {
+        this.main.networkManager.sendUpdatesAsync().then(() => {
 
             this.main.pruefungManagerForStudents?.stopPruefung(false);
 
@@ -129,7 +129,7 @@ export class Login {
             ajax('logout', logoutRequest, () => {
                 // window.location.href = 'index.html';
 
-                if(this.loggedInWithVidis){
+                if (this.loggedInWithVidis) {
                     window.location.assign("https://aai-test.vidis.schule/auth/realms/vidis/protocol/openid-connect/logout?ID_TOKEN_HINT=" + this.main.user.vidis_sub + "&post_logout_redirect_uri=https%3A%2F%2Fwww.online-ide.de");
 
                 } else {

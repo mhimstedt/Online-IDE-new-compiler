@@ -86,7 +86,7 @@ export class Helper {
 
         if (helperHistory != null && (helperHistory[flag] == null || !helperHistory[flag])) {
             helperHistory[flag] = true;
-            main.networkManager.sendUpdateUserSettings(() => { });
+            main.networkManager.sendUpdateUserSettings();
 
             let text: string = "";
             let direction: HelperDirection = "left";

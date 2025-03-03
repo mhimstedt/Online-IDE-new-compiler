@@ -110,7 +110,7 @@ export class TeacherExplorer {
 
         this.classPanel.selectCallback = (ea) => {
 
-            that.main.networkManager.sendUpdates(() => {
+            that.main.networkManager.sendUpdatesAsync().then(() => {
 
                 if (this.classPanelMode == "classes") {
 
@@ -129,7 +129,7 @@ export class TeacherExplorer {
         toggleButtonTest.onChange(async (checked) => {
             $buttonPruefungAdministration.toggle(200);
             that.classPanelMode = checked ? "tests" : "classes";
-            that.main.networkManager.sendUpdates(() => {
+            that.main.networkManager.sendUpdatesAsync().then(() => {
                 if (checked) {
                     if (that.main.workspacesOwnerId == that.main.user.id) {
                         that.ownWorkspaces = that.main.workspaceList.slice();

@@ -43,18 +43,18 @@ export class SynchroWorkspace {
     }
 
     hasChanges(): boolean {
-        for(let file of this.files){
-            if(file.state != "original") return true;
+        for (let file of this.files) {
+            if (file.state != "original") return true;
         }
         return false;
     }
 
 
     isWritable(): boolean {
-        return this.copiedFromWorkspace != null || (this.isCurrentRepositoryVersion && this.manager.repositoryIsWritable );
+        return this.copiedFromWorkspace != null || (this.isCurrentRepositoryVersion && this.manager.repositoryIsWritable);
     }
 
-    copyFromWorkspace(workspace: Workspace):SynchroWorkspace {
+    copyFromWorkspace(workspace: Workspace): SynchroWorkspace {
 
         this.files = [];
         workspace.getFiles().forEach(file => {
@@ -143,7 +143,7 @@ export class SynchroWorkspace {
         }
 
         for (let file of this.files) {
-            if(file.state == "deleted") continue;
+            if (file.state == "deleted") continue;
 
             let oldFile = oldIdToFileMap[file.idInsideRepository];
             if (oldFile == null) {
@@ -186,7 +186,7 @@ export class SynchroWorkspace {
                 }
 
                 let cff = file.committedFromFile;
-                if(cff != null){
+                if (cff != null) {
                     cff.repository_file_version = oldFile.version;
                     cff.workspaceFile.repository_file_version = oldFile.version;
                     cff.workspaceFile.setSaved(false);
@@ -244,22 +244,22 @@ export class SynchroWorkspace {
             });
             that.manager.currentUserSynchroWorkspace.files.forEach(synchroFile => {
                 let workspaceFile = synchroFile.workspaceFile;
-                if(workspaceFile != null){
-                    if(synchroFile.text == workspaceFile.getText() &&
-                        (synchroFile.repository_file_version != workspaceFile.repository_file_version  || synchroFile.identical_to_repository_version != workspaceFile.identical_to_repository_version)){
-                            workspaceFile.identical_to_repository_version = synchroFile.identical_to_repository_version;
-                            workspaceFile.repository_file_version = synchroFile.repository_file_version;
-                            workspaceFile.setSaved(false);
+                if (workspaceFile != null) {
+                    if (synchroFile.text == workspaceFile.getText() &&
+                        (synchroFile.repository_file_version != workspaceFile.repository_file_version || synchroFile.identical_to_repository_version != workspaceFile.identical_to_repository_version)) {
+                        workspaceFile.identical_to_repository_version = synchroFile.identical_to_repository_version;
+                        workspaceFile.repository_file_version = synchroFile.repository_file_version;
+                        workspaceFile.setSaved(false);
                     }
                 }
-                if(workspaceFile.is_copy_of_id != null){
+                if (workspaceFile.is_copy_of_id != null) {
                     synchroFile.idInsideRepository = workspaceFile.is_copy_of_id;
                 }
             });
-            that.manager.main.networkManager.sendUpdates(() => {
+            that.manager.main.networkManager.sendUpdatesAsync(true).then(() => {
                 callback(cfr.repository, null);
-            }, true);
-        }, (error: string) => { callback( null, error) })
+            });
+        }, (error: string) => { callback(null, error) })
 
     }
 
@@ -312,7 +312,7 @@ export class SynchroWorkspace {
                 file.setSaved(false);
                 this.manager.main.getCompiler().setFileDirty(file);
                 file.name = synchroFile.name;
-                if(file.panelElement != null){
+                if (file.panelElement != null) {
                     file.panelElement.$htmlFirstLine.find('.jo_filename');
                 }
             } else {
@@ -357,21 +357,22 @@ export class SynchroWorkspace {
             }
         }
 
-        main.networkManager.sendUpdates(null, true);
+        main.networkManager.sendUpdatesAsync(true).then(() => {
+            if (main.currentWorkspace == workspace) {
+                let currentlyEditedFile = main.getCurrentWorkspace()?.getCurrentlyEditedFile();
+                main.projectExplorer.setWorkspaceActive(workspace, true);
 
-        if (main.currentWorkspace == workspace) {
-            let currentlyEditedFile = main.getCurrentWorkspace()?.getCurrentlyEditedFile();
-            main.projectExplorer.setWorkspaceActive(workspace, true);
+                // if module hadn't been deleted while synchronizing:
+                if (workspace.getFiles().indexOf(currentlyEditedFile) >= 0) {
+                    main.projectExplorer.setFileActive(currentlyEditedFile);
+                    main.projectExplorer.fileListPanel.select(currentlyEditedFile, false);
+                }
 
-            // if module hadn't been deleted while synchronizing:
-            if(workspace.getFiles().indexOf(currentlyEditedFile) >= 0){
-                main.projectExplorer.setFileActive(currentlyEditedFile);
-                main.projectExplorer.fileListPanel.select(currentlyEditedFile, false);
             }
 
-        }
+            workspace.getFiles().forEach(f => main.getCompiler().setFileDirty(f));
+        })
 
-        workspace.getFiles().forEach(f => main.getCompiler().setFileDirty(f));
 
     }
 

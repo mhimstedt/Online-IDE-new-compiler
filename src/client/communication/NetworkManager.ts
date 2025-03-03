@@ -4,7 +4,7 @@ import { Main } from "../main/Main.js";
 import { SqlIdeUrlHolder } from "../main/SqlIdeUrlHolder.js";
 import { CacheManager } from "../../tools/database/CacheManager.js";
 import { Workspace } from "../workspace/Workspace.js";
-import { ajax, csrfToken, PerformanceCollector } from "./AjaxHelper.js";
+import { ajax, ajaxAsync, csrfToken, PerformanceCollector } from "./AjaxHelper.js";
 import { ClassData, CreateOrDeleteFileOrWorkspaceRequest, CRUDResponse, DatabaseData, DistributeWorkspaceRequest, DistributeWorkspaceResponse, DuplicateWorkspaceRequest, DuplicateWorkspaceResponse, FileData, GetDatabaseRequest, getDatabaseResponse, GetTemplateRequest, JAddStatementRequest, JAddStatementResponse, JRollbackStatementRequest, JRollbackStatementResponse, ObtainSqlTokenRequest, ObtainSqlTokenResponse, SendUpdatesRequest, SendUpdatesResponse, SetRepositorySecretRequest, SetRepositorySecretResponse, UpdateUserSettingsRequest, UpdateUserSettingsResponse, WorkspaceData } from "./Data.js";
 import { PushClientManager } from "./pushclient/PushClientManager.js";
 import { File } from '../workspace/File.js';
@@ -37,7 +37,7 @@ export class NetworkManager {
 
     }
 
-    initializeTimer() {
+    async initializeTimer() {
 
         let that = this;
         this.$updateTimerDiv.find('svg').attr('width', that.updateFrequencyInSeconds);
@@ -65,7 +65,7 @@ export class NetworkManager {
                 }
 
 
-                that.sendUpdates(() => { }, doForceUpdate, false);
+                that.sendUpdatesAsync(doForceUpdate, false);
 
             }
 
@@ -89,23 +89,15 @@ export class NetworkManager {
 
     initializeSSE() {
         PushClientManager.getInstance().subscribe("doFileUpdate", (data) => {
-            this.sendUpdates(() => {}, true, false, true);
+            this.sendUpdatesAsync(true, false, true);
         })
 
 
     }
 
-    sendUpdatesAsync(sendIfNothingIsDirty: boolean = false, sendBeacon: boolean = false):Promise<void> {
-        let p = new Promise<void>((resolve, reject) => {
-            this.sendUpdates(resolve, sendIfNothingIsDirty, sendBeacon);
-        })
-        return p;
-    }
-
-    sendUpdates(callback?: () => void, sendIfNothingIsDirty: boolean = false, sendBeacon: boolean = false, alertIfNewWorkspacesFound: boolean = false) {
+    async sendUpdatesAsync(sendIfNothingIsDirty: boolean = false, sendBeacon: boolean = false, alertIfNewWorkspacesFound: boolean = false) {
 
         if (this.main.user == null || this.main.user.is_testuser) {
-            if (callback != null) callback();
             return;
         }
 
@@ -116,7 +108,7 @@ export class NetworkManager {
 
             this.main.userDataDirty = false;
             userSettings.classDiagram = classDiagram?.serialize();
-            this.sendUpdateUserSettings(() => { }, sendBeacon);
+            await this.sendUpdateUserSettings(sendBeacon);
             this.forcedUpdatesInARow = 0;
         }
 
@@ -160,42 +152,33 @@ export class NetworkManager {
                 navigator.sendBeacon("sendUpdates", JSON.stringify(request));
             } else {
 
-                ajax('sendUpdates', request, (response: SendUpdatesResponse) => {
+                try {
+                    let response: SendUpdatesResponse = await ajaxAsync('servlet/sendUpdates', request);
                     that.errorHappened = !response.success;
                     if (!that.errorHappened) {
 
-                        // if (this.main.workspacesOwnerId == this.main.user.id) {
-                            if (response.workspaces != null) {
-                                that.updateWorkspaces(request, response, alertIfNewWorkspacesFound);
-                            }
-                            if (response.filesToForceUpdate != null) {
-                                that.updateFiles(response.filesToForceUpdate);
-                            }
+                        if (response.workspaces != null) {
+                            that.updateWorkspaces(request, response, alertIfNewWorkspacesFound);
+                        }
+                        if (response.filesToForceUpdate != null) {
+                            that.updateFiles(response.filesToForceUpdate);
+                        }
 
-                            if (callback != null) {
-                                callback();
-                                return;
-                            }
-                        // }
+                        return;
+
                     } else {
                         let message: string = "Fehler beim Senden der Daten: ";
-                        if(response["message"]) message += response["message"];
+                        if (response["message"]) message += response["message"];
                         console.log(message);
+                        return;
                     }
-                }, (message: string) => {
+                } catch (message) {
                     that.errorHappened = true;
                     console.log("Fehler beim Ajax-call: " + message)
-                });
-
-            }
-
-        } else {
-            if (callback != null) {
-                callback();
-                return;
+                    return;
+                }
             }
         }
-
     }
 
     sendCreateWorkspace(w: Workspace, owner_id: number, callback: (error: string) => void) {
@@ -274,8 +257,7 @@ export class NetworkManager {
         }
 
 
-        this.sendUpdates(() => {
-
+        this.sendUpdatesAsync(false).then(() => {
             let request: DistributeWorkspaceRequest = {
                 workspace_id: ws.id,
                 class_id: klasse?.id,
@@ -285,17 +267,16 @@ export class NetworkManager {
             ajax("distributeWorkspace", request, (response: DistributeWorkspaceResponse) => {
                 callback(response.message)
             }, callback);
-
-        }, false);
+        });
 
     }
 
-    sendSetSecret(repositoryId: number, read: boolean, write: boolean, callback: (response: SetRepositorySecretResponse) => void){
-        let request: SetRepositorySecretRequest = {repository_id: repositoryId, newSecretRead: read, newSecretWrite: write};
+    sendSetSecret(repositoryId: number, read: boolean, write: boolean, callback: (response: SetRepositorySecretResponse) => void) {
+        let request: SetRepositorySecretRequest = { repository_id: repositoryId, newSecretRead: read, newSecretWrite: write };
 
         ajax("setRepositorySecret", request, (response: SetRepositorySecretResponse) => {
             callback(response)
-        }, (message) => {alert(message)});
+        }, (message) => { alert(message) });
 
     }
 
@@ -307,7 +288,7 @@ export class NetworkManager {
         }
 
 
-        this.sendUpdates(() => {
+        this.sendUpdatesAsync(true).then(() => {
 
             let request = {
                 workspace_id: ws.id,
@@ -326,7 +307,7 @@ export class NetworkManager {
                 callback(response.message, response.repository_id)
             }, callback);
 
-        }, true);
+        });
 
 
     }
@@ -356,10 +337,9 @@ export class NetworkManager {
 
     }
 
-    sendUpdateUserSettings(callback: (error: string) => void, sendBeacon: boolean = false) {
+    async sendUpdateUserSettings(sendBeacon: boolean = false): Promise<string> {
 
         if (this.main.user.is_testuser) {
-            callback(null);
             return;
         }
 
@@ -371,15 +351,14 @@ export class NetworkManager {
         if (sendBeacon) {
             navigator.sendBeacon("updateUserSettings", JSON.stringify(request));
         } else {
-            ajax("updateUserSettings", request, (response: UpdateUserSettingsResponse) => {
-                if (response.success) {
-                    callback(null);
-                } else {
-                    callback("Netzwerkfehler!");
-                }
-            }, callback);
-        }
+            let response: UpdateUserSettingsResponse = await ajaxAsync("servlet/updateUserSettings", request);
+            if (response.success) {
+                return null;
+            } else {
+                return "Netzwerkfehler!";
+            }
 
+        }
 
     }
 
@@ -401,7 +380,7 @@ export class NetworkManager {
 
             // Did student get a workspace from his/her teacher?
             if (localWorkspaces.length == 0) {
-                if(remoteWorkspace.pruefung_id == null){
+                if (remoteWorkspace.pruefung_id == null) {
                     newWorkspaceNames.push(remoteWorkspace.name);
                 }
                 this.createNewWorkspaceFromWorkspaceData(remoteWorkspace);
@@ -496,7 +475,7 @@ export class NetworkManager {
         this.main.projectExplorer.workspaceListPanel.addElement(panelElement, true);
         w.panelElement = panelElement;
 
-        if(w.repository_id != null){
+        if (w.repository_id != null) {
             w.renderSynchronizeButton(panelElement);
         }
 
@@ -525,8 +504,8 @@ export class NetworkManager {
 
     }
 
-    fetchDatabaseAndToken(code: string, callback:(database: DatabaseData, token: string, error: string) => void){
-        let request: ObtainSqlTokenRequest = {code: code};
+    fetchDatabaseAndToken(code: string, callback: (database: DatabaseData, token: string, error: string) => void) {
+        let request: ObtainSqlTokenRequest = { code: code };
 
         ajax("obtainSqlToken", request, (response: ObtainSqlTokenResponse) => {
             if (response.success) {
@@ -549,7 +528,7 @@ export class NetworkManager {
             token: token
         }
 
-        ajax(SqlIdeUrlHolder.sqlIdeURL +  "jGetDatabase", request, (response: getDatabaseResponse) => {
+        ajax(SqlIdeUrlHolder.sqlIdeURL + "jGetDatabase", request, (response: getDatabaseResponse) => {
             if (response.success) {
 
                 let database = response.database;
@@ -594,8 +573,8 @@ export class NetworkManager {
             token: token
         }
 
-        let headers: {[key: string]: string;} = {};
-        if(csrfToken != null) headers = {"x-token-pm": csrfToken};
+        let headers: { [key: string]: string; } = {};
+        if (csrfToken != null) headers = { "x-token-pm": csrfToken };
 
         jQuery.ajax({
             type: 'POST',
@@ -617,7 +596,7 @@ export class NetworkManager {
     }
 
     public addDatabaseStatement(token: string, version_before: number, statements: string[],
-        callback: (statementsBefore: string[], new_version: number, message: string) => void){
+        callback: (statementsBefore: string[], new_version: number, message: string) => void) {
 
         let request: JAddStatementRequest = {
             token: token,
@@ -625,22 +604,22 @@ export class NetworkManager {
             statements: statements
         }
 
-        ajax(SqlIdeUrlHolder.sqlIdeURL +  "jAddDatabaseStatement", request, (response: JAddStatementResponse) => {
+        ajax(SqlIdeUrlHolder.sqlIdeURL + "jAddDatabaseStatement", request, (response: JAddStatementResponse) => {
             callback(response.statements_before, response.new_version, response.message);
-        }, (message) => {callback([], 0, message)})
+        }, (message) => { callback([], 0, message) })
 
 
     }
 
     public rollbackDatabaseStatement(token: string, current_version: number,
-        callback: (message: string) => void){
+        callback: (message: string) => void) {
 
         let request: JRollbackStatementRequest = {
             token: token,
             current_version: current_version
         }
 
-        ajax(SqlIdeUrlHolder.sqlIdeURL +  "jRollbackDatabaseStatement", request, (response: JRollbackStatementResponse) => {
+        ajax(SqlIdeUrlHolder.sqlIdeURL + "jRollbackDatabaseStatement", request, (response: JRollbackStatementResponse) => {
             callback(response.message);
         })
 

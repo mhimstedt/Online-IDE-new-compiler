@@ -13,25 +13,25 @@ export class PruefungManagerForStudents {
 
     timer: any;
 
-    constructor(private main: Main){
-        PushClientManager.subscribe("startPruefung", (message: MessagePruefungStart ) => {
+    constructor(private main: Main) {
+        PushClientManager.subscribe("startPruefung", (message: MessagePruefungStart) => {
             this.startPruefung(message.pruefung);
         })
-        PushClientManager.subscribe("stopPruefung", (message: MessagePruefungStart ) => {
+        PushClientManager.subscribe("stopPruefung", (message: MessagePruefungStart) => {
             this.stopPruefung(true);
         })
     }
 
-    close(){
-        if(this.pruefung != null){
+    close() {
+        if (this.pruefung != null) {
             PushClientManager.unsubscribe("startPruefung");
             PushClientManager.unsubscribe("stopPruefung");
-            if(this.timer != null) clearInterval(this.timer);
-            this.main.networkManager.sendUpdates(() => {
+            if (this.timer != null) clearInterval(this.timer);
+            this.main.networkManager.sendUpdatesAsync(true, false, false).then(() => {
                 let projectExplorer = this.main.projectExplorer;
                 projectExplorer.workspaceListPanel.show();
                 projectExplorer.fetchAndRenderOwnWorkspaces();
-            }, true, false, false)
+            })
             this.pruefung = null;
         }
 
@@ -39,14 +39,14 @@ export class PruefungManagerForStudents {
 
     startPruefung(pruefung: Pruefung) {
 
-        if(this.pruefung != null) return;
+        if (this.pruefung != null) return;
 
         this.pruefung = pruefung;
 
-        this.main.networkManager.sendUpdates(() => {
+        this.main.networkManager.sendUpdatesAsync(true, false, false).then(() => {
 
             let wss = this.main.workspaceList.filter(ws => ws.pruefung_id == pruefung.id);
-            if(wss.length == 0) alert('Es fehlt der Prüfungsworkspace.');
+            if (wss.length == 0) alert('Es fehlt der Prüfungsworkspace.');
 
             let pruefungWorkspace = wss[0];
             this.main.workspaceList = [pruefungWorkspace];
@@ -61,32 +61,32 @@ export class PruefungManagerForStudents {
             // this.pruefung = pruefung;
 
             jQuery('#pruefunglaeuft').css('display', 'block');
-            if(this.timer != null){
+            if (this.timer != null) {
                 clearInterval(this.timer);
                 this.timer = null;
             }
 
             this.timer = setInterval(async () => {
-                let request: ReportPruefungStudentStateRequest = {pruefungId: this.pruefung.id, clientState: "", running: true}
-                let response: ReportPruefungStudentStateResponse = await ajaxAsync('/servlet/reportPruefungState',  request)
-                if(response.pruefungState != "running"){
+                let request: ReportPruefungStudentStateRequest = { pruefungId: this.pruefung.id, clientState: "", running: true }
+                let response: ReportPruefungStudentStateResponse = await ajaxAsync('/servlet/reportPruefungState', request)
+                if (response.pruefungState != "running") {
                     this.stopPruefung(true);
                 }
             }, 5000)
 
-        }, true, false, false);
+        });
 
     }
 
-    async stopPruefung(renderWorkspaces: boolean){
+    async stopPruefung(renderWorkspaces: boolean) {
         // await this.main.networkManager.sendUpdatesAsync();  // is done by fetchAndRenderOwnWorkspaces later on
 
         console.log("Stopping pruefung...");
 
-        if(this.timer != null) clearInterval(this.timer);
+        if (this.timer != null) clearInterval(this.timer);
         this.timer = null;
 
-        if(this.pruefung == null){
+        if (this.pruefung == null) {
             return;
         }
 
@@ -94,7 +94,7 @@ export class PruefungManagerForStudents {
 
         this.main.projectExplorer.workspaceListPanel.show();
 
-        if(renderWorkspaces){
+        if (renderWorkspaces) {
             await this.main.projectExplorer.fetchAndRenderOwnWorkspaces();
         }
 
