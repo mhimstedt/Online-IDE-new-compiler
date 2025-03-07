@@ -34,15 +34,15 @@ export class Sprite3dClass extends Object3dClass {
         { type: "method", signature: "void rotateZ(double angleDeg)",native: Sprite3dClass.prototype.rotate },
         { type: "method", signature: "void rotate(double angleDeg)",native: Sprite3dClass.prototype.rotate },
 
-        // { type: "method", signature: "final void move(Vector3 v)", native: Sprite3dClass.prototype.vmove },
-        // { type: "method", signature: "void moveTo(double x,double y,double z)", native: Sprite3dClass.prototype.moveTo },
-        // { type: "method", signature: "final void moveTo(Vector3 p)", native: Sprite3dClass.prototype.vmoveTo },
+        { type: "method", signature: "final void move(Vector3 v)", native: Sprite3dClass.prototype.vmove },
+        { type: "method", signature: "void moveTo(double x,double y,double z)", native: Sprite3dClass.prototype.moveTo },
+        { type: "method", signature: "final void moveTo(Vector3 p)", native: Sprite3dClass.prototype.vmoveTo },
 
-        // { type: "method", signature: "final void scale(double d)", native: Sprite3dClass.prototype.scaleDouble },
+        { type: "method", signature: "final void scale(double d)", native: Sprite3dClass.prototype.scaleDouble },
 
         // { type: "method", signature: "final void applyMatrix4(Matrix4 matrix)", native: Sprite3dClass.prototype.applyMatrix4 },
 
-        // { type: "method", signature: "void destroy()", java: Sprite3dClass.prototype.destroy },
+        { type: "method", signature: "void destroy()", java: Sprite3dClass.prototype.destroy }
 
 
     ];
