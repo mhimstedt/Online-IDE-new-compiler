@@ -4359,6 +4359,11 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
         "en": "Creates a copy of this button and returns it.",
     })
 
+    static ButtonIsDownComment = () => lm({
+    "de": `Gibt genau dann true zurück, wenn der Button gerade heruntergedrückt ist.`,
+    "en": `Returns true if and only if button currently is pressed down.`,
+    })
+
     /**
      * class CheckBox
      */

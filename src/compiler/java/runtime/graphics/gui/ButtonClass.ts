@@ -1,7 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { LibraryDeclarations } from "../../../module/libraries/DeclareType.ts";
 import { NonPrimitiveType } from "../../../types/NonPrimitiveType.ts";
-import { GuiComponentClass } from "./GuiComponentClass.ts";
 import { Thread } from '../../../../common/interpreter/Thread.ts';
 import { CallbackFunction } from '../../../../common/interpreter/StepFunction.ts';
 import { GuiTextComponentClass } from './GuiTextComponentClass.ts';
@@ -15,6 +14,7 @@ export class ButtonClass extends GuiTextComponentClass {
         {type: "method", signature: "Button(double x, double y, double fontsize, string text)", java: ButtonClass.prototype._cj$_constructor_$Button$double$double$double$string, comment: JRC.ButtonConstructorComment},
         {type: "method", signature: "Button(double x, double y, double fontsize, string text, string fontFamily)", java: ButtonClass.prototype._cj$_constructor_$Button$double$double$double$string, comment: JRC.ButtonConstructorComment},
         {type: "method", signature: "Button copy()", java: ButtonClass.prototype._mj$copy$Button$, comment: JRC.ButtonCopyComment},
+        {type: "method", signature: "boolean isDown()", native: ButtonClass.prototype._isDown, comment: JRC.ButtonIsDownComment},
 
     ];
 
@@ -196,6 +196,9 @@ export class ButtonClass extends GuiTextComponentClass {
 
     }
 
+    _isDown(): boolean {
+        return this.mouseIsDown;
+    }
 
 
 
