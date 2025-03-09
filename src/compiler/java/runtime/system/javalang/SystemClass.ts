@@ -112,7 +112,7 @@ export class SystemClass extends ObjectClass {
     }
 
     static _currentTimeNano(){
-        return Math.round(performance.now() * 1000) + SystemClass.deltaTimeMillis * 1000;
+        return Math.round(performance.now() * 1e6) + SystemClass.deltaTimeMillis * 1e6;
     }
 
     static synchronizeToServerTimeMillis(serverTimeMillis: number){

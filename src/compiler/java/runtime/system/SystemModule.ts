@@ -158,6 +158,7 @@ import { ShortClass } from "./primitiveTypes/wrappers/ShortClass.ts";
 import { Sprite3dClass } from "../graphics/3d/FastSprite/Sprite3dClass.ts";
 import { ClassClass } from "./ClassClass.ts";
 import { Icosahedron3dClass } from "../graphics/3d/Icosahedron3dClass.ts";
+import { CopyOnWriteArrayListClass } from "./collections/CopyOnWriteArrayListClass.ts";
 
 export class SystemModule extends JavaLibraryModule {
 
@@ -205,7 +206,7 @@ export class SystemModule extends JavaLibraryModule {
             EmptyStackExceptionClass,
 
             // Collections
-            IteratorInterface, IterableInterface, CollectionInterface, ListInterface, ArrayListClass,
+            IteratorInterface, IterableInterface, CollectionInterface, ListInterface, ArrayListClass, CopyOnWriteArrayListClass,
 
             CollectionsClass,
             QueueInterface, DequeInterface, LinkedListClass,

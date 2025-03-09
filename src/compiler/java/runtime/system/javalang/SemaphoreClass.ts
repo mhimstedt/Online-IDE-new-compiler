@@ -48,21 +48,22 @@ export class SemaphoreClass extends ObjectClass {
         if(this.permitsAvailable > 0){
             this.permitsAvailable--;
         } else {
-            t.state = ThreadState.runnable;
+            t.state = ThreadState.waiting;
             t.scheduler.suspendThread(t);
             this.waitingThreads1.push(t);
         }
-
+        
         if(callback) callback();
     }
-
+    
     _mj$release$void(t: Thread, callback: CallbackFunction){
         this.permitsAvailable++;
-
+        
         let threadToUnblock = this.waitingThreads1.shift();
-
+        
         if(threadToUnblock){
             t.scheduler.restoreThread(threadToUnblock);
+            this.permitsAvailable--;
         }
     }
 

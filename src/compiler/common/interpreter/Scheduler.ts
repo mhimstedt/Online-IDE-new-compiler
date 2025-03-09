@@ -337,7 +337,7 @@ export class Scheduler {
         let index = this.runningThreads.indexOf(thread);
         if (index >= 0) {
             this.runningThreads.splice(index, 1);
-            if (this.#currentThreadIndex >= index) {
+            if (this.#currentThreadIndex > index) {
                 this.#currentThreadIndex--;
             }
         }
@@ -345,13 +345,14 @@ export class Scheduler {
     }
 
     restoreThread(thread: Thread) {
+        if (thread.state >= ThreadState.terminated) return;
+
         thread.state = ThreadState.running;
+        
         let index = this.#suspendedThreads.indexOf(thread);
         if (index >= 0) {
             this.#suspendedThreads.splice(index, 1);
         }
-
-        if (thread.state >= ThreadState.terminated) return;
 
         this.runningThreads.push(thread);
     }
