@@ -275,10 +275,10 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
                     completionItems = completionItems.concat(this.getGetter(symbolTable.classContext, rangeToReplace, 'get'));
                     completionItems = completionItems.concat(this.getGetter(symbolTable.classContext, rangeToReplace, 'gib'));
                 } else
-                if (varOrClassMatch[1]?.startsWith('s')) {
-                    completionItems = completionItems.concat(this.getSetter(symbolTable.classContext, rangeToReplace, 'set'));
-                    completionItems = completionItems.concat(this.getSetter(symbolTable.classContext, rangeToReplace, 'setze'));
-                } 
+                    if (varOrClassMatch[1]?.startsWith('s')) {
+                        completionItems = completionItems.concat(this.getSetter(symbolTable.classContext, rangeToReplace, 'set'));
+                        completionItems = completionItems.concat(this.getSetter(symbolTable.classContext, rangeToReplace, 'setze'));
+                    }
             }
         }
 
@@ -350,32 +350,33 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
                     )
                 }
             }
-        } else {
-            if (classContext == null) {
-                // Use filename to generate completion-item for class ... ?
-                let name = module.file?.name;
-                if (name != null) {
-                    if (name.endsWith(".java")) name = name.substring(0, name.indexOf(".java"));
-                    let m = name.match(/([\wöäüÖÄÜß]*)$/);
-                    if (module.types.find(t => t.identifier == name) == null && m != null && m.length > 0 && m[0] == name && name.length > 0) {
-                        name = name.charAt(0).toUpperCase() + name.substring(1);
-                        completionItems.push({
-                            label: "class " + name,
-                            filterText: "class",
-                            insertText: "class ${1:" + name + "} {\n\t$0\n}\n",
-                            detail: MonacoProviderLanguage.definitionOfClass(name),
-                            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                            kind: monaco.languages.CompletionItemKind.Snippet,
-                            range: rangeToReplace
-                        },
-                        )
-                    }
-                }
-            } else {
-                // TODO: only if inside initial value of field definition...
-                // completionItems = completionItems.concat(classContext.getCompletionItems(TokenType.keywordPrivate, leftBracketAlreadyThere, identifierAndBracketAfterCursor, rangeToReplace, undefined, false));
-            }
-        }
+        } 
+        // else {
+        //     if (classContext == null) {
+        //         // Use filename to generate completion-item for class ... ?
+        //         let name = module.file?.name;
+        //         if (name != null) {
+        //             if (name.endsWith(".java")) name = name.substring(0, name.indexOf(".java"));
+        //             let m = name.match(/([\wöäüÖÄÜß]*)$/);
+        //             if (module.types.find(t => t.identifier == name) == null && m != null && m.length > 0 && m[0] == name && name.length > 0) {
+        //                 name = name.charAt(0).toUpperCase() + name.substring(1);
+        //                 completionItems.push({
+        //                     label: "class " + name,
+        //                     filterText: "class",
+        //                     insertText: "class ${1:" + name + "} {\n\t$0\n}\n",
+        //                     detail: MonacoProviderLanguage.definitionOfClass(name),
+        //                     insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+        //                     kind: monaco.languages.CompletionItemKind.Snippet,
+        //                     range: rangeToReplace
+        //                 },
+        //                 )
+        //             }
+        //         }
+        //     } else {
+        //         // TODO: only if inside initial value of field definition...
+        //         // completionItems = completionItems.concat(classContext.getCompletionItems(TokenType.keywordPrivate, leftBracketAlreadyThere, identifierAndBracketAfterCursor, rangeToReplace, undefined, false));
+        //     }
+        // }
 
         completionItems = completionItems.concat(this.getKeywordCompletion(symbolTable, rangeToReplace, module));
         completionItems = this.deleteDoublesWithIdenticalInsertText(completionItems);
@@ -407,13 +408,13 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
                 filterText: `${getPraefix + this.firstCharacterToUpperCase(field.identifier)}()`
             }
         })
-        
+
         return itemList;
     }
-    
+
     getSetter(classContext: JavaClass | JavaEnum, rangeToReplace: monaco.IRange, setPraefix: string): ConcatArray<monaco.languages.CompletionItem> {
         rangeToReplace = { startLineNumber: rangeToReplace.startLineNumber, startColumn: 0, endLineNumber: rangeToReplace.endLineNumber, endColumn: rangeToReplace.endColumn }
-        
+
         let itemList: monaco.languages.CompletionItem[] = classContext.fields.filter(field =>
             typeof classContext.getOwnMethods().find(m => m.identifier == setPraefix + field.identifier) == 'undefined'
             && field.identifier != 'class' && field.type
@@ -743,7 +744,7 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
 
             let identifier = MonacoProviderLanguage.identifier();
             let classIdentifierForLabel: string = "";
-            if(module.file.getText().trim().length < 5){
+            if (module.file.getText().trim().length < 5) {
                 identifier = module.file.name.replace('.java', '');
                 classIdentifierForLabel = " " + identifier;
             }
@@ -766,7 +767,34 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
                     insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
                     kind: monaco.languages.CompletionItemKind.Snippet,
                     range: range
-                }
+                },
+                {
+                    label: "abstract class",
+                    filterText: "abstract class",
+                    insertText: "abstract class ${1:" + MonacoProviderLanguage.identifier() + "} {\n\t$0\n}\n",
+                    detail: MonacoProviderLanguage.classDefinition(),
+                    insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                    kind: monaco.languages.CompletionItemKind.Snippet,
+                    range: range
+                },
+                {
+                    label: "interface",
+                    filterText: "interface",
+                    insertText: "interface ${1:" + MonacoProviderLanguage.identifier() + "} {\n\t$0\n}\n",
+                    detail: MonacoProviderLanguage.classDefinition(),
+                    insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                    kind: monaco.languages.CompletionItemKind.Snippet,
+                    range: range
+                },
+                {
+                    label: "enum",
+                    filterText: "enum",
+                    insertText: "enum ${1:" + MonacoProviderLanguage.identifier() + "} {\n\t$0\n}\n",
+                    detail: MonacoProviderLanguage.classDefinition(),
+                    insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                    kind: monaco.languages.CompletionItemKind.Snippet,
+                    range: range
+                },
 
             ]);
         } else if (!this.isConsole && symbolTable?.methodContext == null) {
@@ -895,8 +923,8 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
 
     }
 
-    getConstructorCompletion(classContext: IJavaClass | JavaEnum, range: IRange) {
-
+    getConstructorCompletion(classContext: IJavaClass | JavaEnum, prange: IRange) {
+        
         let keywordCompletionItems: monaco.languages.CompletionItem[] = [];
 
         let constructors = classContext.getOwnMethods().filter(m => m.isConstructor && m.identifier == classContext.identifier && m.identifierRange.startLineNumber !== -1);
@@ -914,19 +942,27 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
         if (attributeInitialization.length > 0) attributeInitialization += "}";
 
 
-        let insertText = `public ${classContext.identifier}(${attibuteParameters}){\n\t${attributeInitialization}\n\t$0\n}`;
+        let insertText = `${classContext.identifier}(${attibuteParameters}){\n\t${attributeInitialization}\n\t$0\n}`;
 
-        keywordCompletionItems.push(
-            {
-                label: { label: classContext.identifier + "(){...}", detail: " -> insert constructor" },
-                filterText: classContext.identifier,
-                insertText: insertText,
-                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                kind: monaco.languages.CompletionItemKind.Snippet,
-                range: range,
-                sortText: "_aaa"
-            }
-        );
+        let ci: monaco.languages.CompletionItem = {
+            label: { label: classContext.identifier + "(){...}", detail: " -> insert constructor" },
+            filterText: classContext.identifier,
+            insertText: insertText,
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            range: prange,
+            sortText: "_aaa"
+        }
+
+        let ci1 = Object.assign({}, ci);
+        ci1.filterText = "public";
+        ci1.insertText = "public " + ci.insertText;
+        //@ts-ignore
+        ci1.label.label = "public " + ci.label.label;
+        ci1.sortText = '_aab'
+
+
+        keywordCompletionItems.push(ci, ci1);
 
         return keywordCompletionItems;
 
