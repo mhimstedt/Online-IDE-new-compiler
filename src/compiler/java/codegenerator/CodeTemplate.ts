@@ -406,13 +406,18 @@ export class BinaryOperatorTemplate extends CodeTemplate {
 
         }
 
-        let resultAsCode = typeof result == "string" ? `"${result}"` : result + "";
+        let resultAsCode = typeof result == "string" ? `"${this.escapeString(result)}"` : result + "";
 
         return new StringCodeSnippet(resultAsCode, range, resultType, result);
 
     }
 
-
+    escapeString(s: string): string {
+        s = s.replaceAll("\n", "\\n");
+        s = s.replaceAll("\t", "\\t");
+        s = s.replaceAll("\r", "\\r");
+        return s;
+    }
 
 }
 
