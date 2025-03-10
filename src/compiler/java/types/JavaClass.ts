@@ -229,7 +229,7 @@ export class JavaClass extends IJavaClass {
     getAbstractMethodsNotYetImplemented(): JavaMethod[] {
 
         let abstractMethods: JavaMethod[] = [];
-        let concreteMethodSignatures: Map<string, JavaMethod> = new Map();
+        let concreteMethodSignatures: Map<string, JavaMethod[]> = new Map();
 
         let klass: IJavaClass | undefined = this;
 
@@ -238,14 +238,29 @@ export class JavaClass extends IJavaClass {
                 if (m.isAbstract) {
                     abstractMethods.push(m);
                 } else {
-                    concreteMethodSignatures.set(m.getSignatureWithoutReturnParameter(), m);
+                    let signature = m.getSignatureWithoutReturnParameter();
+                    let list = concreteMethodSignatures.get(signature);
+                    if(!list){
+                        list = [];
+                        concreteMethodSignatures.set(signature, list);
+                    }
+                    list.push(m);
                 }
             }
             klass = klass.getExtends();
         }
 
-        let abstractMethodsNotYetImplemented = abstractMethods.filter(m => !concreteMethodSignatures.get(m.getSignatureWithoutReturnParameter()));
-
+        let abstractMethodsNotYetImplemented: JavaMethod[] = [];
+        
+        for(let abstractMethod of abstractMethods){
+            let concreteMethods = concreteMethodSignatures.get(abstractMethod.getSignatureWithoutReturnParameter());
+            if(!concreteMethods){
+                abstractMethodsNotYetImplemented.push(abstractMethod);
+            } else {
+                concreteMethods.forEach(m => m.implementedMethod = abstractMethod);
+            }
+        }
+        
         return abstractMethodsNotYetImplemented;
 
     }
@@ -375,6 +390,7 @@ export class JavaClass extends IJavaClass {
                     }
                 } else {
                     classesMethod.takeInternalJavaNameWithGenericParamterIdentifiersFrom(method);
+                    classesMethod.implementedMethod = method;
                 }
 
             }

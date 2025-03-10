@@ -1,4 +1,4 @@
-import { JavaCompiledModule } from "../java/module/JavaCompiledModule";
+import { JavaMethod } from "../java/types/JavaMethod.ts";
 import { BaseSymbol } from "./BaseSymbolTable";
 import { CompilerFile } from "./module/CompilerFile";
 import { Module } from "./module/Module";
@@ -35,6 +35,20 @@ export class UsageTracker {
 
     registerUsagePosition(symbol: BaseSymbol, file: CompilerFile, range: IRange) {
         if (!range) return;
+
+        if (symbol instanceof JavaMethod) {
+
+            if (symbol.implementedMethod) {
+                if (symbol.implementedMethod.module["prepareSystemModule"]) {
+                    this.module.systemSymbolsUsageTracker.registerUsagePosition(symbol.implementedMethod, this.module.file, range);
+                } else {
+                    this.module.compiledSymbolsUsageTracker.registerUsagePosition(symbol.implementedMethod, this.module.file, range);
+                }
+                return;
+            }
+        }
+
+
         let up = new UsagePosition(symbol, file, range);
 
         for (let line = range.startLineNumber; line <= range.endLineNumber; line++) {
@@ -130,7 +144,7 @@ export class UsageTracker {
         for (let entry of this.dependsOnModules.entries()) {
             // TODO: analyze if used signatures are available
 
-            if ( entry[0].dependsOnModuleWithErrorsFlag) {
+            if (entry[0].dependsOnModuleWithErrorsFlag) {
                 return true;
             }
         }
@@ -138,7 +152,7 @@ export class UsageTracker {
         return false;
     }
 
-    existsDependencyToModule(module: Module){
+    existsDependencyToModule(module: Module) {
         return this.dependsOnModules.get(module) == true;
     }
 

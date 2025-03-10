@@ -46,7 +46,7 @@ export class JavaMethod extends BaseSymbol {
      */
     returnParameterType?: JavaType;
 
-    implementsInterfaceOrAbstractMethod: boolean = false;
+    implementedMethod?: JavaMethod;
 
     declare module: JavaCompiledModule;
 

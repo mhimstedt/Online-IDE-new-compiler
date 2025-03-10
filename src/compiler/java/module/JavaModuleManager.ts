@@ -148,4 +148,10 @@ export class JavaModuleManager {
         return this.typestore.getTypeCompletionItems(classContext, rangeToReplace, false, false);
     }
 
+    correctUsagePositionsOfAbstractAndInterfaceMethods(){
+        for(let m of this.modules){
+            m.getUsagePositionsForSymbol
+        }
+    }
+
 }
