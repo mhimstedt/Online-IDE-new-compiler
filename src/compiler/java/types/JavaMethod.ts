@@ -260,7 +260,7 @@ export class JavaMethod extends BaseSymbol {
         return this.annotations.find(a => a.identifier == identifier) != null;
     }
 
-    getAnnotation(identifier: string){
+    getAnnotation(identifier: string) {
         return this.annotations.find(a => a.identifier == identifier);
     }
 
@@ -310,18 +310,42 @@ export class GenericMethod extends JavaMethod {
 
         for (let gp of this.genericTypeParameters) {
             let catchedParameterType = gp.catches![0];
-            if(!catchedParameterType){
+            if (!catchedParameterType) {
                 theresAtLeastOneUncatchedTypeParameter = true;
             } else {
                 typeMap.set(gp, gp.catches![0]);
             }
         }
 
-        if(theresAtLeastOneUncatchedTypeParameter){
+        if (theresAtLeastOneUncatchedTypeParameter) {
             return this.getCopyWithConcreteType(typeMap, this.classEnumInterface);
         } else {
             return super.getCopyWithConcreteType(typeMap, this.classEnumInterface);
         }
+
+    }
+
+    getNonGenericCopyOfReturnParameterType(): JavaType | undefined {
+        if (!this.returnParameterType) return undefined;
+
+        if (this.returnParameterType.isPrimitive) return this.returnParameterType;
+
+        let typeMap: Map<GenericTypeParameter, NonPrimitiveType> = new Map();
+
+        let theresAtLeastOneUncatchedTypeParameter: boolean = false;
+
+        for (let gp of this.genericTypeParameters) {
+            let catchedParameterType = gp.catches![0];
+            if (!catchedParameterType) {
+                theresAtLeastOneUncatchedTypeParameter = true;
+            } else {
+                typeMap.set(gp, gp.catches![0]);
+            }
+        }
+
+
+
+        return (<NonPrimitiveType>this.returnParameterType).getCopyWithConcreteType(typeMap);
 
     }
 

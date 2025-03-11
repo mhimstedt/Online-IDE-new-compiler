@@ -1214,16 +1214,18 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
         }
 
         parameterValueSnippet = this.castParameterValuesAndPackEllipsis(parameterValueSnippet, method);
+        let returnParameterType = method.returnParameterType || this.voidType;
         
         if (method instanceof GenericMethod) {
             method.checkCatches(node.range);
-            method = method.getNonGenericCopyWithConcreteTypes();
+            returnParameterType = method.getNonGenericCopyOfReturnParameterType();
         }
-
+        
+        returnParameterType = returnParameterType || this.voidType;
+        
         // if(node.identifier == "addBlockSquareWithTiles") debugger;
         // cast parameter values
 
-        let returnParameterType = method.returnParameterType || this.voidType;
 
 
         if (method.constantFoldingFunction) {
