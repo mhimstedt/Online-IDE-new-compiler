@@ -1,5 +1,6 @@
 import { Klass } from "../../../common/interpreter/StepFunction";
 import { SystemModule } from "../../runtime/system/SystemModule";
+import { TokenType } from "../../TokenType.ts";
 import { GenericTypeParameter } from "../../types/GenericTypeParameter";
 import { JavaType } from "../../types/JavaType";
 import { JavaTypeStore } from "../JavaTypeStore";
@@ -48,7 +49,9 @@ export class JavaLibraryModuleManager {
         for(let module of this.libraryModules){
             for (let klass of module.classesInterfacesEnums) {
                 let npt = ldp.parseClassOrEnumOrInterfaceDeclarationWithoutGenerics(klass, module);
-                this.typestore.addType(npt);
+                if(npt.visibility != TokenType.keywordPrivate){
+                    this.typestore.addType(npt);
+                }
                 this.javaTypes.push(npt);
             }
 

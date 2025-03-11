@@ -1834,6 +1834,11 @@ export class JRC {
         "en": "Returns an array containing all of the elements in this list in proper sequence (from first to last element); the runtime type of the returned array is that of the specified array.",
     })
 
+    static collectionStreamComment = () => lm({
+        "de": "Gibt einen Stream zurück, der diese Collection als Quelle hat.",
+        "en": "Returns a stream with this collection as source.",
+    })
+
     static collectionAddElementComment = () => lm({
         "de": "Fügt das übergebene Element ans Ende der Liste an.",
         "en": "Appends the specified element to the end of this list.",

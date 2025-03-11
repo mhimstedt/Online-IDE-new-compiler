@@ -159,6 +159,9 @@ import { Sprite3dClass } from "../graphics/3d/FastSprite/Sprite3dClass.ts";
 import { ClassClass } from "./ClassClass.ts";
 import { Icosahedron3dClass } from "../graphics/3d/Icosahedron3dClass.ts";
 import { CopyOnWriteArrayListClass } from "./collections/CopyOnWriteArrayListClass.ts";
+import { StreamInterface } from "./collections/StreamInterface.ts";
+import { SystemStreamClass } from "./collections/SystemStreamClass.ts";
+import { PredicateInterface } from "./functional/PredicateInterface.ts";
 
 export class SystemModule extends JavaLibraryModule {
 
@@ -194,7 +197,7 @@ export class SystemModule extends JavaLibraryModule {
             GamepadClass, KeyListenerInterface, SystemToolsClass, InputClass, SoundClass, FilesClass,
 
             // Functional
-            ConsumerInterface, BiConsumerInterface, FunctionInterface,
+            ConsumerInterface, BiConsumerInterface, FunctionInterface, PredicateInterface,
 
             NumberClass, IntegerClass, LongClass, FloatClass, DoubleClass, ShortClass, BooleanClass, CharacterClass,  // boxed primitive types
 
@@ -212,6 +215,7 @@ export class SystemModule extends JavaLibraryModule {
             QueueInterface, DequeInterface, LinkedListClass,
             SetInterface, MapInterface, HashMapClass, HashSetClass,
             VectorClass, StackClass,
+            StreamInterface, SystemStreamClass,
 
             // Thread
             RunnableInterface, ThreadClass, ThreadStateEnum, SemaphoreClass,

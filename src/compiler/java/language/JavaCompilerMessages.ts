@@ -442,7 +442,7 @@ export class JCM {
     })
 
     static fieldUnknown = (identifier: string) => le({
-        "de": `Das Objek hat kein Attribut mit dem Bezeichner ${identifier}.`,
+        "de": `Das Objekt hat kein Attribut mit dem Bezeichner ${identifier}.`,
         "en": `Object has no field ${identifier}.`,
     })
 

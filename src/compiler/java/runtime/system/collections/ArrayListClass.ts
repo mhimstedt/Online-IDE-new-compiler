@@ -11,6 +11,7 @@ import { ObjectClass, ObjectClassOrNull, StringClass } from "../javalang/ObjectC
 import { CollectionInterface } from "./CollectionInterface.ts";
 import { ComparatorInterface } from "./ComparatorInterface.ts";
 import { SystemCollection } from "./SystemCollection.ts";
+import { SystemStreamClass } from "./SystemStreamClass.ts";
 
 export class ArrayListClass extends SystemCollection implements BaseListType {
     static __javaDeclarations: LibraryDeclarations = [
@@ -34,7 +35,8 @@ export class ArrayListClass extends SystemCollection implements BaseListType {
         { type: "method", signature: "boolean remove(E element)", java: ArrayListClass.prototype._mj$remove$boolean$E, comment: JRC.collectionRemoveObjectComment },
         { type: "method", signature: "boolean removeAll(Collection<?> c)", java: ArrayListClass.prototype._removeAll, comment: JRC.collectionRemoveAllComment },
         { type: "method", signature: "int size()", native: ArrayListClass.prototype._size, template: "§1.elements.length", comment: JRC.collectionSizeComment },
-
+        { type: "method", signature: "Stream<E> stream()", java: ArrayListClass.prototype._mj$stream$Stream$, comment: JRC.collectionStreamComment },
+        
         // from ListInterface
         { type: "method", signature: "boolean add(int index, E element)", native: ArrayListClass.prototype._addWithIndex, comment: JRC.listAddElementComment },
         { type: "method", signature: "boolean addAll(int index, Collection<? extends E> c)", java: ArrayListClass.prototype._addAllWithIndex, comment: JRC.listAddAllElementsComment },
@@ -361,6 +363,10 @@ export class ArrayListClass extends SystemCollection implements BaseListType {
 
     }
 
+    _mj$stream$Stream$(t: Thread, callback: CallbackFunction){
+        t.s.push(new SystemStreamClass(this.elements));
+        if(callback) callback();
+    }
     _mj$sort$void$Comparator(t: Thread, callback: CallbackFunction, comparator: ComparatorInterface) {
         SystemCollection.sortWithComparator(t, callback, comparator, this);
     }

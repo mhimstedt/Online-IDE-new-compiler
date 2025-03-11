@@ -93,19 +93,21 @@ export class LibraryDeclarationParser extends LibraryDeclarationLexer {
                 npt1.isFinal = modifiersAndType.final;
                 npt1._isAbstract = modifiersAndType.abstract;
                 npt1.pathAndIdentifier = pathAndIdentifier;
+                npt1.visibility = modifiersAndType.visibility;
                 if(klass["isPrimitiveTypeWrapper"]) npt.isPrimitiveTypeWrapper = true;
                 break;
-            case TokenType.keywordInterface:
-                npt = new JavaInterface(identifier, LibraryDeclarationParser.nullRange, "", module);
-                npt.isLibraryType = true;
-                npt.pathAndIdentifier = pathAndIdentifier;
-                npt.runtimeClass = klass;
-                break;
+                case TokenType.keywordInterface:
+                    npt = new JavaInterface(identifier, LibraryDeclarationParser.nullRange, "", module);
+                    npt.isLibraryType = true;
+                    npt.pathAndIdentifier = pathAndIdentifier;
+                    npt.runtimeClass = klass;
+                    break;
             case TokenType.keywordEnum:
                 npt = new JavaEnum(identifier, LibraryDeclarationParser.nullRange, "", module, Object.getPrototypeOf(Object.getPrototypeOf(klass)).type);
                 npt.isLibraryType = true;
                 let npt2 = <JavaEnum>npt;
                 npt2.runtimeClass = klass;
+                npt2.visibility = modifiersAndType.visibility;
                 npt2.pathAndIdentifier = pathAndIdentifier;
                 npt2.baseEnumClass = <any>this.findType("Enum");
                 this.initEnumValues(npt2, klass, module);

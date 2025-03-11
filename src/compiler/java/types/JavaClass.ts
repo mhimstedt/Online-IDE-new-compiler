@@ -98,6 +98,7 @@ export abstract class IJavaClass extends JavaTypeWithInstanceInitializer {
                 documentation: method.documentation == null ? undefined : {
                     value: typeof method.documentation == "string" ? method.documentation : method.documentation()
                 },
+                sortText: method.identifier,
                 //@ts-ignore
                 signature: method.getSignature()
             });

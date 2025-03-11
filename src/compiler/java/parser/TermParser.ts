@@ -407,6 +407,8 @@ export abstract class TermParser extends TokenIterator {
                     keywordReturnRange: expression.range
                 }
                 lambdaNode.statement = statement;
+            } else {
+                this.pushError(JCM.cantGetTypeOfExpression())
             }
         }
 

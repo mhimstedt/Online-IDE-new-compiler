@@ -1213,15 +1213,18 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
             }
         }
 
+        parameterValueSnippet = this.castParameterValuesAndPackEllipsis(parameterValueSnippet, method);
+        
         if (method instanceof GenericMethod) {
             method.checkCatches(node.range);
+            method = method.getNonGenericCopyWithConcreteTypes();
         }
 
         // if(node.identifier == "addBlockSquareWithTiles") debugger;
         // cast parameter values
-        parameterValueSnippet = this.castParameterValuesAndPackEllipsis(parameterValueSnippet, method);
 
-        let returnParameter = method.returnParameterType || this.voidType;
+        let returnParameterType = method.returnParameterType || this.voidType;
+
 
         if (method.constantFoldingFunction) {
             let allParametersConstant: boolean = !parameterValueSnippet.some(v => !v!.isConstant())
@@ -1241,7 +1244,7 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
                     resultAsString = typeof result == "string" ? `"${result}"` : "" + result;
                 }
 
-                return new StringCodeSnippet(resultAsString, node.range, returnParameter, result);
+                return new StringCodeSnippet(resultAsString, node.range, returnParameterType, result);
             }
         }
 
@@ -1260,9 +1263,9 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
         // For library functions like Math.sin, Math.abs, ... we use templates to compile to nativ javascript functions:
         if (method.template) {
             if (method.isStatic) {
-                return new SeveralParameterTemplate(method.template).applyToSnippet(returnParameter, node.range, ...(<CodeSnippet[]>parameterValueSnippet));
+                return new SeveralParameterTemplate(method.template).applyToSnippet(returnParameterType, node.range, ...(<CodeSnippet[]>parameterValueSnippet));
             } else if (callingConvention == "native") {
-                return new SeveralParameterTemplate(method.template).applyToSnippet(returnParameter, node.range, objectSnippet, ...(<CodeSnippet[]>parameterValueSnippet));
+                return new SeveralParameterTemplate(method.template).applyToSnippet(returnParameterType, node.range, objectSnippet, ...(<CodeSnippet[]>parameterValueSnippet));
             }
         }
 
@@ -1299,13 +1302,13 @@ export abstract class TermCodeGenerator extends BinopCastCodeGenerator {
         parameterValueSnippet.unshift(objectSnippet);
 
 
-        let snippet = new SeveralParameterTemplate(objectTemplate).applyToSnippet(returnParameter, node.range, ...(<CodeSnippet[]>parameterValueSnippet));
+        let snippet = new SeveralParameterTemplate(objectTemplate).applyToSnippet(returnParameterType, node.range, ...(<CodeSnippet[]>parameterValueSnippet));
         snippet.finalValueIsOnStack = false;
 
         if (callingConvention == "java") {
             if (!snippet.endsWith(";\n")) snippet = new CodeSnippetContainer(SnippetFramer.frame(snippet, '§1;\n'));
             (<CodeSnippetContainer>snippet).addNextStepMark();
-            if (returnParameter != this.voidType) snippet.finalValueIsOnStack = true;
+            if (returnParameterType != this.voidType) snippet.finalValueIsOnStack = true;
         }
 
         return snippet;

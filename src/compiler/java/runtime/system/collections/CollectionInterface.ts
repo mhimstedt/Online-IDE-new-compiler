@@ -21,6 +21,7 @@ export class CollectionInterface extends IterableInterface {
         { type: "method", signature: "int size()", java: CollectionInterface.prototype._mj$size$int$, comment: JRC.collectionSizeComment },
         { type: "method", signature: "Object[] toArray()", java: CollectionInterface.prototype._mj$toArray$Object_I$, comment: JRC.collectionToArrayComment },
         { type: "method", signature: "<T> T[] toArray(T[] a)", java: CollectionInterface.prototype._mj$toArray$T_I$T_I, comment: JRC.collectionToArrayComment2 },
+        { type: "method", signature: "Stream<E> stream()", java: CollectionInterface.prototype._mj$stream$Stream$, comment: JRC.collectionStreamComment },
 
         // TODO: toArray, ...
     ]
@@ -48,4 +49,6 @@ export class CollectionInterface extends IterableInterface {
     _mj$toArray$Object_I$(t: Thread, callback: CallbackFunction) { };
 
     _mj$toArray$T_I$T_I(t: Thread, callback: CallbackFunction, arrayTemplate: ObjectClassOrNull[]) { };
+
+    _mj$stream$Stream$(t: Thread, callback: CallbackFunction){ }
 }
