@@ -108,7 +108,7 @@ export class SystemClass extends ObjectClass {
     }
 
     static _currentTimeMillis(){
-        return Math.round(performance.now()) + SystemClass.deltaTimeMillis;
+        return Math.round(Date.now()) + SystemClass.deltaTimeMillis;
     }
 
     static _currentTimeNano(){
