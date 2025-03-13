@@ -246,7 +246,7 @@ export class JCM {
     })
 
     static wrongReturnValueType = (expected: string, actual: string) => le({
-        "de": "Die Methode erwartet einen Rückgabewert vom Typ " + expected + ", der Wert des Terms hat aber den Datentyp " + expected + ".",
+        "de": "Die Methode erwartet einen Rückgabewert vom Typ " + expected + ", der Wert des Terms hat aber den Datentyp " + actual + ".",
         "en": `Expression of type ${actual} found, but return value of type ${expected} expected.`,
     })
 
