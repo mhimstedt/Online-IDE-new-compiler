@@ -70,8 +70,13 @@ export class JavaSyntaxAPIPrinter extends APIPrinter {
         if(field.type.identifier == 'Class') return "";
         let s = this.toJavaDocComment(field.documentation, this.indentation);
         s += this.indentation + this.getVisibility(field.visibility) + " ";
-        if(field.isStatic()) s += "static ";
-        s = field.type.toString() + " " + field.identifier + ";\n"
+        if(field.isStatic()){
+            s += "static ";
+        } 
+        if(field.isFinal()){
+            s += "final ";
+        }
+        s += field.type.toString() + " " + field.identifier + ";\n"
         return s;
     }
 
@@ -79,6 +84,7 @@ export class JavaSyntaxAPIPrinter extends APIPrinter {
         let s = this.toJavaDocComment(method.documentation, this.indentation);
         s += this.indentation + this.getVisibility(method.visibility) + " ";
         if(method.isStatic) s += "static ";
+        if(method.isFinal) s += "final ";
         if(method instanceof GenericMethod){
             s += "<" + method.genericTypeParameters.map(tp => this.genericTypeParameterToString(tp)).join(", ") + "> ";           
         }
