@@ -131,4 +131,32 @@ body.joeCssFence {
     .jo_menu-class:active {
         color: white;
     }
+
+    .jo_button {
+        padding: 5px;
+        border: 1px solid gray;
+        border-radius: 3px;
+        user-select: none;
+    }
+
+    .jo_button:hover {
+        filter: brightness(150%);
+        cursor: pointer;
+    }
+
+    .jo_button.jo_active:active {
+        transform: scale(1.2);
+    }
+
+    .jo_button:not(.jo_active) {
+        filter: grayscale();
+    }
+
+    .aiDownloadButton {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        font-size: 14px;
+    }
+
 }

@@ -1,5 +1,3 @@
-import '/assets/css/button.css';
-
 export class Button {
 
     buttonDiv: HTMLDivElement;

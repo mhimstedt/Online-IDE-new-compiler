@@ -20,6 +20,9 @@ import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 
 import "/assets/fonts/fonts.css";
 import "/assets/css/apidoc.css";
+import { Button } from '../../tools/Button.js';
+import { downloadFile } from '../../tools/HtmlTools.js';
+import { JavaSyntaxAPIPrinter } from './JavaSyntaxAPIPrinter.js';
 
 
 export class ApiDoc {
@@ -63,6 +66,27 @@ export class ApiDoc {
 
     }
 
+    getClassDocumentationForAI(): string {
+        let mm = new JavaLibraryModuleManager();
+
+        let typeList = mm.javaTypes
+        .sort(
+            (a, b) => a.identifier.localeCompare(b.identifier));
+        
+        let printer = new JavaSyntaxAPIPrinter();
+        
+        let s: string = "";
+
+        for(let type of typeList){
+            if(type instanceof JavaClass || type instanceof JavaEnum || type instanceof JavaInterface){
+                s += printer.printClassEnumInterface(type);
+            }
+        }
+
+        return s;
+        
+    }
+
     initClassDocumentation() {
 
         let mm = new JavaLibraryModuleManager();
@@ -100,6 +124,11 @@ export class ApiDoc {
         jQuery('#interfacesHeading').text(HelpMessages.apiDocInterfaces());
         jQuery('#enumsHeading').text(HelpMessages.apiDocEnums());
         jQuery('#mainHeading').text(HelpMessages.apiDocMainHeading());
+
+        let button = new Button(jQuery('#mainHeading')[0], "Download (für AI-Prompt)", "#303030", () => {
+            downloadFile(this.getClassDocumentationForAI(), "Online-IDE API-Documentation.txt", false);
+        })
+        button.buttonDiv.classList.add('aiDownloadButton');
 
     }
 

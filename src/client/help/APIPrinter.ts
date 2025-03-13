@@ -10,4 +10,19 @@ export abstract class APIPrinter {
     abstract printField(field: JavaField): string;
     abstract printMethod(method: JavaMethod): string;
 
+    wrap(s: string): string {
+        if(typeof s == 'undefined') return "";
+        return s.replace(
+            /(?![^\n]{1,128}$)([^\n]{1,128})\s/g, '$1\n'
+        );
+    }
+
+    toJavaDocComment(comment: string | (() => string), indent: string){
+        if(!comment) return "";
+        if(typeof comment == "function") comment = comment();
+        let s = indent + "/**\n"
+        s += indent + " * " + this.wrap(comment).replaceAll(/\n/g, "\n" + indent + " * ")
+        s += "\n" + indent + " **/\n"
+        return s;
+    }
 }
