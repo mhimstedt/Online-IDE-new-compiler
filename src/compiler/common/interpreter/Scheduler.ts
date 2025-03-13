@@ -316,9 +316,13 @@ export class Scheduler {
         if (thread) thread.unmarkStep();
     }
 
-    createThread(name: string, initialStack: any[] = []): Thread {
+    createThread(name: string, initialStack: any[] = [], randomPriority: boolean = false): Thread {
         let thread = new Thread(this, name, initialStack);
-        this.runningThreads.push(thread);
+        if(randomPriority){
+            this.runningThreads.splice(Math.floor(Math.random()*this.runningThreads.length + 1), 0, thread);
+        } else {
+            this.runningThreads.push(thread);
+        }
 
         if (thread.name != "act method-thread") {
             if (!this.interpreter.isMaxSpeed) {
