@@ -935,7 +935,7 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
             }
 
             if (secondParameter) {
-                return new TwoParameterTemplate(`${statement}(§1, §2);\n`)
+                return new TwoParameterTemplate(`${statement}(§1, §2${secondParameter.type == this.stringNonPrimitiveType ? '.value' : ''});\n`)
                     .applyToSnippet(this.voidType, node.range, firstParameter, secondParameter)
             }
             return new OneParameterTemplate(`${statement}(§1, undefined);\n`)
