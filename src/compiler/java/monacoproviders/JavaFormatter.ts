@@ -144,7 +144,7 @@ export class JavaFormatter implements monaco.languages.DocumentFormattingEditPro
                     }
                     break;
                 case TokenType.rightCurlyBracket:
-                    if (indentLevelAtSwitchStatements[indentLevelAtSwitchStatements.length - 1] == indentLevel) {
+                    if (indentLevelAtSwitchStatements && indentLevelAtSwitchStatements[indentLevelAtSwitchStatements.length - 1] == indentLevel) {
                         indentLevelAtSwitchStatements.pop();
                         indentLevel--;
                         // if(t.range.startColumn >= 3){
@@ -155,7 +155,7 @@ export class JavaFormatter implements monaco.languages.DocumentFormattingEditPro
                     let openedAtLine = curlyBracesOpenAtLines.pop();
                     if (openedAtLine != null && openedAtLine != t.range.startLineNumber) {
                         if (lastNonSpaceToken != null && lastNonSpaceToken.range.startLineNumber == t.range.startLineNumber) {
-                            this.replace(edits, t.range, t.range, "\n" + " ".repeat(indentLevel * tabSize));
+                            this.replace(edits, lastNonSpaceToken.range, t.range, "\n" + " ".repeat(indentLevel * tabSize));
                         }
                     } else {
                         if (i > 0) {
