@@ -151,12 +151,12 @@ export class JavaFormatter implements monaco.languages.DocumentFormattingEditPro
                         this.deleteSpaces(edits, t.range.startLineNumber, 1, 3);
                         // }
                     }
-                    indentLevel--;
                     let openedAtLine = curlyBracesOpenAtLines.pop();
                     if (openedAtLine != null && openedAtLine != t.range.startLineNumber) {
                         if (lastNonSpaceToken != null && lastNonSpaceToken.range.startLineNumber == t.range.startLineNumber) {
                             this.replace(edits, lastNonSpaceToken.range, t.range, "\n" + " ".repeat(indentLevel * tabSize));
                         }
+                        indentLevel--;
                     } else {
                         if (i > 0) {
                             let token1 = tokenlist[i - 1];
