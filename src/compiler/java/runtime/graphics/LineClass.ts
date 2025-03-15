@@ -38,7 +38,7 @@ export class LineClass extends FilledShapeClass {
            this.centerYInitial = (y1 + y2)/2;
            
             this.borderColor = 0xffffff;
-            this.borderWidth = 1;
+            this.borderWidth = 10;
             this.render();
         });   // call base class constructor
 
