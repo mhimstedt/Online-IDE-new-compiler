@@ -34,6 +34,9 @@ export class LineClass extends FilledShapeClass {
     ) {
         this._cj$_constructor_$FilledShape$(t, () => {
            this.hitPolygonInitial = [{x: x1, y: y1}, {x: x2, y: y2}]
+           this.centerXInitial = (x1 + x2)/2;
+           this.centerYInitial = (y1 + y2)/2;
+           
             this.borderColor = 0xffffff;
             this.borderWidth = 1;
             this.render();
