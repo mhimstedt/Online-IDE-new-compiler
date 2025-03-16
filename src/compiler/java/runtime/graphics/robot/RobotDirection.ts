@@ -33,4 +33,7 @@ export class RobotDirection {
         return this.deltas[this.index];
     }
 
+    getName(): string {
+        return this.names[this.index];
+    }
 }

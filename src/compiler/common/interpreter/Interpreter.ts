@@ -174,6 +174,7 @@ export class Interpreter {
             this.setState(SchedulerState.paused);
             return;
         }
+        this.setState(SchedulerState.running);
         this.scheduler.runSingleStepKeepingThread(stepInto, () => {
             this.pause();
             this.showProgramPointer(this.scheduler.getNextStepPosition());

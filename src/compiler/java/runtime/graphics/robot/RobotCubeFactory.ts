@@ -107,7 +107,7 @@ export class RobotCubeFactory {
         return brick;
     }
 
-    getMarker(farbe, x: number, y: number, z: number){
+    getMarker(farbe, x: number, y: number, z: number): THREE.Mesh{
         let geometry = new THREE.BoxGeometry(1, 0.1, 1);
         let marker = new THREE.Mesh(geometry, this.farbeToMarkerMaterialMap.get(farbe));
         marker.translateX(-this.robotWorld.maxX/2 + x - 1);

@@ -6,7 +6,7 @@ import { ThreadState } from "../../../../common/interpreter/ThreadState";
 import { JRC } from "../../../language/JavaRuntimeLibraryComments";
 import { LibraryDeclarations } from "../../../module/libraries/DeclareType";
 import { NonPrimitiveType } from "../../../types/NonPrimitiveType";
-import { ObjectClass } from "../../system/javalang/ObjectClassStringClass";
+import { ObjectClass, StringClass } from "../../system/javalang/ObjectClassStringClass";
 import { RobotCubeFactory } from "./RobotCubeFactory";
 import { RobotWorldClass } from './RobotWorldClass';
 import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -14,6 +14,7 @@ import { RobotDirection } from './RobotDirection';
 import { RuntimeExceptionClass } from '../../system/javalang/RuntimeException';
 import { ExceptionClass } from '../../system/javalang/ExceptionClass';
 import spritesheetpng from '/assets/graphics/spritesheet.png';
+import { CallbackFunction } from '../../../../common/interpreter/StepFunction';
 
 
 
@@ -39,6 +40,7 @@ export class RobotClass extends ObjectClass {
 
         { type: "method", signature: "void markeSetzen()", native: RobotClass.prototype._markeSetzen, comment: JRC.robotMarkeSetzen },
         { type: "method", signature: "void markeSetzen(string farbe)", native: RobotClass.prototype._markeSetzen, comment: JRC.robotMarkeSetzenFarbe },
+        { type: "method", signature: "void markeLöschen()", native: RobotClass.prototype._markeLöschen, comment: JRC.robotMarkeLöschen },
 
         { type: "method", signature: "void aufheben()", native: RobotClass.prototype._aufheben, comment: JRC.robotAufheben },
         { type: "method", signature: "void aufheben(int n)", native: RobotClass.prototype._aufheben, comment: JRC.robotAufheben },
@@ -126,6 +128,7 @@ export class RobotClass extends ObjectClass {
                 if (callback) callback();
                 return;
             }, worldX, worldY);
+            return;
         } else {
             t.state = ThreadState.waiting;
             this.init(startX, startY).then(() => {
@@ -391,7 +394,7 @@ export class RobotClass extends ObjectClass {
         this.maxSteine = groesse;
     }
 
-
-
-
+    _debugOutput(){
+        return `{x = ${this.x}, y = ${this.y}, direction = ${this.direction.getName()}}`;
+    }
 }

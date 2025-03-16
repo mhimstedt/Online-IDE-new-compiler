@@ -39,13 +39,15 @@ export class RobotWorldClass extends ObjectClass {
     robots: RobotClass[] = [];
 
     _cj$_constructor_$RobotWorld$int$int(t: Thread, callback: CallbackParameter, worldX: number | string, worldY?: number) {
-
+        
+        t.s.push(this);
         let existingWorld: RobotWorldClass = t.scheduler.interpreter.retrieveObject("robotWorldClass");
         if (existingWorld) {
             existingWorld.clear();
+            if(callback) callback();
+            return;
         }
 
-        t.s.push(this);
         t.scheduler.interpreter.storeObject("robotWorldClass", this);
 
         new World3dClass()._cj$_constructor_$World3d$(t, async () => {
@@ -182,7 +184,7 @@ export class RobotWorldClass extends ObjectClass {
         let marker = this.markers[x-1][y-1];
         if (marker != null) {
             let height = this.bricks[x-1][y-1].length
-            marker.translateY(height - marker.userData["z"]);
+            marker.translateY((height - marker.userData["z"])/2);
             marker.userData["z"] = height;
         }
     }
@@ -315,6 +317,7 @@ export class RobotWorldClass extends ObjectClass {
 
 
     removeMesh(mesh: THREE.Mesh) {
+        this.world3d.scene.remove(mesh);
         mesh.geometry.dispose();
         (<THREE.Material>mesh.material).dispose();
     }
