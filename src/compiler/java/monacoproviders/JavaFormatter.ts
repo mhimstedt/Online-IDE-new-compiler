@@ -156,7 +156,6 @@ export class JavaFormatter implements monaco.languages.DocumentFormattingEditPro
                         if (lastNonSpaceToken != null && lastNonSpaceToken.range.startLineNumber == t.range.startLineNumber) {
                             this.replace(edits, lastNonSpaceToken.range, t.range, "\n" + " ".repeat(indentLevel * tabSize));
                         }
-                        indentLevel--;
                     } else {
                         if (i > 0) {
                             let token1 = tokenlist[i - 1];
@@ -165,6 +164,7 @@ export class JavaFormatter implements monaco.languages.DocumentFormattingEditPro
                             }
                         }
                     }
+                    indentLevel--;
                     break;
                 case TokenType.leftBracket:
                     roundBracketsOpen++;
