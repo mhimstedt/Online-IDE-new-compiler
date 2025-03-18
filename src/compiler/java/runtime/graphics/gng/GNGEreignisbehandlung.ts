@@ -68,20 +68,15 @@ export class GNGEreignisbehandlung extends ObjectClass implements IGNGEventListe
 
     // Eventlistener-dummies:
     _mj$AktionAusführen$void$(t: Thread, callback: () => void | undefined): void {
-        throw new Error("Method not implemented.");
     }
     _mj$TasteGedrückt$void$char(t: Thread, callback: () => void | undefined, key: string): void {
-        throw new Error("Method not implemented.");
     }
     _mj$SonderTasteGedrückt$void$int(t: Thread, callback: () => void | undefined, key: number): void {
-        throw new Error("Method not implemented.");
     }
     _mj$MausGeklickt$void$int$int$int(t: Thread, callback: () => void | undefined, x: number, y: number, anzahl: number): void {
-        throw new Error("Method not implemented.");
     }
 
     _mj$TaktImpulsAusführen$void$(t: Thread, callback: (() => void) | undefined): void {
-        throw new Error("Method not implemented.");
     }
 
     _Starten(){
