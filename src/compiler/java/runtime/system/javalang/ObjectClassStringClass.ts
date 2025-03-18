@@ -58,11 +58,15 @@ export class ObjectClass {
         let that = this;
 
         if (milliseconds) {
+            t.state = ThreadState.timedWaiting;
+
             setTimeout(() => {
                 if (t.state == ThreadState.timedWaiting) t.state = ThreadState.runnable;
+                if(!this.threadHoldingLockToThisObject){
+                    this.restoreOneRunnalbeThreadToRunning()
+                }
             }, milliseconds);
 
-            t.state = ThreadState.timedWaiting;
         } else {
             t.state = ThreadState.waiting;
         }
