@@ -10,6 +10,8 @@ import { CallbackParameter } from '../../../common/interpreter/CallbackParameter
 import { CollisionPairClass } from './CollisionPairClass';
 import { BaseListType } from '../../../common/BaseType';
 import { SpriteClass } from './SpriteClass';
+import { ColorClass } from './ColorClass.ts';
+import { ColorHelper } from '../../lexer/ColorHelper.ts';
 
 export class GroupClass extends ShapeClass implements BaseListType {
     static __javaDeclarations: LibraryDeclarations = [
@@ -31,9 +33,16 @@ export class GroupClass extends ShapeClass implements BaseListType {
 
         { type: "method", signature: "final Group<T> copy()", java: GroupClass.prototype._mj$copy$Group$, comment: JRC.groupCopyComment },
 
-        { type: "method", signature: "final boolean collidesWith(Shape otherShape)", native: GroupClass.prototype._collidesWith, comment: JRC.shapeCollidesWithComment },
         { type: "method", signature: "final T[] getCollidingShapes(Shape otherShape)", native: GroupClass.prototype._getCollidingShapesGroup, comment: JRC.groupGetCollidingShapesComment },
         { type: "method", signature: "final <V extends Shape> CollisionPair<T, V>[] getCollisionPairs(Group<V> otherGroup, boolean maxOneCollisionPerShape)", native: GroupClass.prototype._getCollisionPairs, comment: JRC.groupGetCollisionPairsComment },
+
+
+        { type: "method", signature: "final boolean collidesWith(Shape otherShape)", native: GroupClass.prototype._collidesWith, comment: JRC.shapeCollidesWithComment },
+        { type: "method", signature: "final boolean collidesWithAnyShape()", native: ShapeClass.prototype._collidesWithAnyShape, comment: JRC.shapeCollidesWithAnyShapeComment },
+        { type: "method", signature: "final boolean collidesWithFillColor(int color)", native: ShapeClass.prototype._collidesWithAnyShape, comment: JRC.shapeCollidesWithFillColorComment },
+        { type: "method", signature: "final boolean collidesWithFillColor(string color)", native: ShapeClass.prototype._collidesWithAnyShape, comment: JRC.shapeCollidesWithFillColorComment },
+        { type: "method", signature: "final boolean collidesWithFillColor(Color color)", native: ShapeClass.prototype._collidesWithAnyShape, comment: JRC.shapeCollidesWithFillColorComment },
+        { type: "method", signature: "final Sprite getFirstCollidingSprite(int imageIndex)", native: ShapeClass.prototype._getFirstCollidingSprite, comment: JRC.shapeGetFirstCollidingSpriteComment },
 
     ]
 
@@ -67,20 +76,20 @@ export class GroupClass extends ShapeClass implements BaseListType {
         return this.shapes;
     }
 
-    _mj$copy$Shape$(t: Thread, callback: CallbackParameter){
+    _mj$copy$Shape$(t: Thread, callback: CallbackParameter) {
         this._mj$copy$Group$(t, callback);
     }
 
-    _mj$copy$Group$(t: Thread, callback: CallbackParameter){
+    _mj$copy$Group$(t: Thread, callback: CallbackParameter) {
 
         let g = new GroupClass();
         g._cj$_constructor_$Group$(t, () => {
             let index = 0;
 
             let f = () => {
-                if(index >= this.shapes.length){
+                if (index >= this.shapes.length) {
                     t.s.push(g);
-                    if(callback) callback();
+                    if (callback) callback();
                     return;
                 }
                 let shape = this.shapes[index];
@@ -99,8 +108,8 @@ export class GroupClass extends ShapeClass implements BaseListType {
     _containsPoint(x: number, y: number) {
         if (!this.container.getBounds().containsPoint(x, y)) return false;
 
-        for(let shape of this.shapes){
-            if(shape._containsPoint(x, y)) return true;
+        for (let shape of this.shapes) {
+            if (shape._containsPoint(x, y)) return true;
         }
 
         return false;
@@ -109,10 +118,10 @@ export class GroupClass extends ShapeClass implements BaseListType {
 
 
     _collidesWith(otherShape: ShapeClass): boolean {
-        if(!this.hasOverlappingBoundingBoxWith(otherShape)) return false;
+        if (!this.hasOverlappingBoundingBoxWith(otherShape)) return false;
 
-        for(let shape of this.shapes){
-            if(shape._collidesWith(otherShape)) return true;
+        for (let shape of this.shapes) {
+            if (shape._collidesWith(otherShape)) return true;
         }
 
         return false;
@@ -161,7 +170,7 @@ export class GroupClass extends ShapeClass implements BaseListType {
             shape.belongsToGroup.remove(shape);
         } else {
             let index = this.world.shapesWhichBelongToNoGroup.indexOf(shape);
-            if(index >= 0){
+            if (index >= 0) {
                 this.world.shapesWhichBelongToNoGroup.splice(index, 1);
             }
         }
@@ -282,24 +291,24 @@ export class GroupClass extends ShapeClass implements BaseListType {
         for (let shape of this.shapes) shape.setWorldTransformAndHitPolygonDirty();
     }
 
-    _getCollidingShapesGroup(shape: ShapeClass): ShapeClass[]{
-        if(shape == null || !this.hasOverlappingBoundingBoxWith(shape)) return [];
+    _getCollidingShapesGroup(shape: ShapeClass): ShapeClass[] {
+        if (shape == null || !this.hasOverlappingBoundingBoxWith(shape)) return [];
 
         return this.shapes.filter(s => s != shape && shape._collidesWith(s));
     }
 
-    _getCollisionPairs(otherGroup: GroupClass, onePairPerShape: boolean = false): CollisionPairClass[]{
-        if(otherGroup == null || !this.hasOverlappingBoundingBoxWith(otherGroup)) return [];
+    _getCollisionPairs(otherGroup: GroupClass, onePairPerShape: boolean = false): CollisionPairClass[] {
+        if (otherGroup == null || !this.hasOverlappingBoundingBoxWith(otherGroup)) return [];
         let pairs: CollisionPairClass[] = [];
 
         let collidingShapesB: Set<ShapeClass> = new Set();
 
-        for(let shapeA of this.shapes){
-            for(let shapeB of otherGroup.shapes){
-                if(collidingShapesB.has(shapeB)) continue;
-                if(shapeA._collidesWith(shapeB)){
+        for (let shapeA of this.shapes) {
+            for (let shapeB of otherGroup.shapes) {
+                if (collidingShapesB.has(shapeB)) continue;
+                if (shapeA._collidesWith(shapeB)) {
                     pairs.push(new CollisionPairClass(shapeA, shapeB));
-                    if(onePairPerShape){
+                    if (onePairPerShape) {
                         collidingShapesB.add(shapeB);
                         break;
                     }
@@ -310,7 +319,7 @@ export class GroupClass extends ShapeClass implements BaseListType {
         return pairs;
     }
 
-    _mj$renderAsStaticBitmap$void$(t: Thread, callback: CallbackParameter){
+    _mj$renderAsStaticBitmap$void$(t: Thread, callback: CallbackParameter) {
         new SpriteClass()._cj$_constructor_$Sprite$double$double$SpriteLibrary$int$ScaleMode(
             t, () => {
                 this.destroyAllChildren();
@@ -327,7 +336,7 @@ export class GroupClass extends ShapeClass implements BaseListType {
                 this.add(sprite);
                 this._defineCenter(centerXOld, centerYOld);
 
-                if(callback) callback();
+                if (callback) callback();
             }, 0, 0, "", 0, undefined, this
         );
     }

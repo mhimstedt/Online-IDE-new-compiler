@@ -660,25 +660,45 @@ export class ShapeClass extends ActorClass {
 
             if (otherShape.isDestroyed) continue;
 
-            if (otherShape.shapes) {
+            if (color != null && !otherShape.shapes) {
+                if (otherShape.fillColor != color) continue;
+            }
+            
+            if (!this.hasOverlappingBoundingBoxWith(otherShape, bounds)) continue;
+            
+            if (otherShape.shapes && !this.shapes) {
                 if (this.collidesWithAnyShapeHelper(color, otherShape.shapes, bounds)) {
                     collisionDetected = true;
                     break;
                 }
             }
 
-            if (color != null) {
-                if (otherShape.fillColor != color) continue;
+            if (this.shapes) {
+                let cd: boolean = false;
+                for(let shape of this.shapes){
+                    if (shape.collidesWithAnyShapeHelper(color, [otherShape], bounds)) {
+                        cd = true;
+                        break;
+                    }
+                }
+                if(cd){
+                    collisionDetected = true;
+                    break;
+                }
             }
-
-            if (!this.hasOverlappingBoundingBoxWith(otherShape, bounds)) continue;
 
             if (this.hitPolygonInitial == null || otherShape.hitPolygonInitial == null) {
                 collisionDetected = false;
                 break;
             }
 
+            if(this.hitPolygonTransformed.length == 0){
+                collisionDetected = true;
+                break;
+            }
+
             if (otherShape.hitPolygonDirty) otherShape.transformHitPolygon();
+
 
             if (polygonBerührtPolygonExakt(this.hitPolygonTransformed, otherShape.hitPolygonTransformed, true, true)) {
                 collisionDetected = true;
