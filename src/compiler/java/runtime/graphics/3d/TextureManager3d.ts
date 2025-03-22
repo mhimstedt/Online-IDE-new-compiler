@@ -39,9 +39,10 @@ export class TextureManager3d {
         if (graphicsManager && graphicsManager.pixiSpritesheetData) {
             this.userSpritesheetData = graphicsManager.pixiSpritesheetData;
             this.userTexture = new THREE.DataTexture(graphicsManager.pngImageData, this.userSpritesheetData.meta.size.w, this.userSpritesheetData.meta.size.h,
-                THREE.RGBAFormat, THREE.ByteType, undefined, undefined, undefined, THREE.NearestFilter, THREE.NearestFilter, undefined, THREE.SRGBColorSpace,
+                THREE.RGBAFormat, THREE.UnsignedByteType, undefined, undefined, undefined, THREE.NearestFilter, THREE.NearestFilter, undefined, THREE.SRGBColorSpace,
             )
             this.userTexture.needsUpdate = true;
+            // this.userTexture.type = THREE.UnsignedByteType;
         }
 
 
@@ -50,14 +51,14 @@ export class TextureManager3d {
     getFrame(spritesheet: string, index: number) {
         let key: string = spritesheet + "#" + index;
         let frame = this.systemSpritesheetData.frames[key];
-        
+
         if (frame) {
             frame.isSystemSpritesheet = true;
         } else {
             frame = this.userSpritesheetData?.frames[key];
-            if(frame) frame.isSystemSpritesheet = false;
+            if (frame) frame.isSystemSpritesheet = false;
         }
-        
+
         return frame;
 
     }
@@ -66,6 +67,8 @@ export class TextureManager3d {
         let key: string = spritesheet + "#" + index;
         let frame = this.systemSpritesheetData.frames[key];
         let t: THREE.Texture;
+        let isUserTexture: boolean = false;
+
         if (frame) {
             t = this.systemTexture.clone();
         } else {
@@ -74,6 +77,7 @@ export class TextureManager3d {
                 throw new RuntimeExceptionClass(JRC.textureNotFoundError(spritesheet, index));
             }
             t = this.userTexture.clone();
+            isUserTexture = true;
         }
 
         let data = frame.frame;
@@ -83,9 +87,16 @@ export class TextureManager3d {
         t.userData["height"] = data.h;
         t.userData["key"] = key;
 
-        t.repeat.set(data.w / this.systemTexture.image.width, data.h / this.systemTexture.image.height);
-        t.offset.x = data.x / this.systemTexture.image.width;
-        t.offset.y = 1 - data.h / this.systemTexture.image.height - data.y / this.systemTexture.image.height;
+        if (isUserTexture) {
+            t.repeat.set(data.w / this.userTexture.image.width, data.h / this.userTexture.image.height);
+            t.offset.x = data.x / this.userTexture.image.width;
+            t.offset.y = 1 - data.h / this.userTexture.image.height - data.y / this.userTexture.image.height;
+        } else {
+            t.repeat.set(data.w / this.systemTexture.image.width, data.h / this.systemTexture.image.height);
+            t.offset.x = data.x / this.systemTexture.image.width;
+            t.offset.y = 1 - data.h / this.systemTexture.image.height - data.y / this.systemTexture.image.height;
+        }
+
 
         t.colorSpace = THREE.SRGBColorSpace;
         t.magFilter = THREE.NearestFilter;
