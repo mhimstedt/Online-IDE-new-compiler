@@ -3,7 +3,7 @@ import { ActorType, IActor } from "./IActor";
 import { GroupClass } from './GroupClass';
 import { ShapeClass } from './ShapeClass';
 import { Interpreter } from '../../../common/interpreter/Interpreter';
-import { MouseManager } from './MouseManager';
+import { MouseManager } from './MouseManager2D.ts';
 import { GNGEventListenerType, IGNGEventListener } from './gng/IGNGEventListener.ts';
 import { GNGEventlistenerManager } from './gng/GNGEventlistenerManager.ts';
 

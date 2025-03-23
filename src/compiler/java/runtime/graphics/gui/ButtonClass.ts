@@ -5,7 +5,7 @@ import { Thread } from '../../../../common/interpreter/Thread.ts';
 import { CallbackFunction } from '../../../../common/interpreter/StepFunction.ts';
 import { GuiTextComponentClass } from './GuiTextComponentClass.ts';
 import { lightenDarkenIntColor } from '../../../../../tools/HtmlTools.ts';
-import { MouseEventKind } from '../MouseManager.ts';
+import { MouseEventKind } from '../MouseManager2D.ts';
 import { JRC } from '../../../language/JavaRuntimeLibraryComments.ts';
 
 export class ButtonClass extends GuiTextComponentClass {

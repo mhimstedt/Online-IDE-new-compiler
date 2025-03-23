@@ -4,7 +4,7 @@ import { Thread } from "../../../../common/interpreter/Thread.ts";
 import { ThreadState } from "../../../../common/interpreter/ThreadState.ts";
 import { StringClass } from "../../system/javalang/ObjectClassStringClass.ts";
 import { IActor } from "../IActor.ts";
-import { InternalMouseListener, MouseEventKind } from "../MouseManager.ts";
+import { InternalMouseListener, MouseEventKind } from "../MouseManager2D.ts";
 import { WorldClass } from "../WorldClass.ts";
 import { GNGEventListenerType, GNGEventListenerTypes, IGNGEventListener } from "./IGNGEventListener.ts";
 
