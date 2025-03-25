@@ -156,7 +156,7 @@ export class Scheduler {
                             this.keepThread = false;
                         }
 
-                        if (this.runningThreads.length == 0 && !this.interpreter.hasActorsOrPApplet()
+                        if (!this.hasRunningOrWaitingThreads() && !this.interpreter.hasActorsOrPApplet()
                             || threadState.state == ThreadState.terminatedWithException) {
 
                             if (currentThread.maxStepsPerSecond) {
@@ -209,6 +209,14 @@ export class Scheduler {
         this.stepCountSinceStartOfProgram += numberOfStepsInThisRun;
 
         return SchedulerExitState.giveMeAdditionalTime;
+    }
+
+    hasRunningOrWaitingThreads(): boolean {
+        if(this.runningThreads.length > 0) return true;
+        for(let t of this.#suspendedThreads){
+            if(t.state == ThreadState.timedWaiting) return true;
+        }
+        return false;
     }
 
     setState(newState: SchedulerState) {
