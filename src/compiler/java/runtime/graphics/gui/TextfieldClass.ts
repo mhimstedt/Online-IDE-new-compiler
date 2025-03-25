@@ -4,7 +4,7 @@ import { CallbackFunction } from '../../../../common/interpreter/StepFunction';
 import { Thread } from '../../../../common/interpreter/Thread';
 import { LibraryDeclarations } from "../../../module/libraries/DeclareType";
 import { NonPrimitiveType } from "../../../types/NonPrimitiveType";
-import { MouseEventKind } from '../MouseManager';
+import { MouseEventKind } from '../MouseManager2D';
 import { GuiTextComponentClass } from "./GuiTextComponentClass";
 import { JRC } from '../../../language/JavaRuntimeLibraryComments';
 

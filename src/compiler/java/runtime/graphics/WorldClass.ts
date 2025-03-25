@@ -12,7 +12,7 @@ import { ActorManager } from './ActorManager.ts';
 import { GroupClass } from './GroupClass.ts';
 import { ActorType, IActor } from './IActor.ts';
 import { IWorld } from './IWorld.ts';
-import { MouseManager } from './MouseManager.ts';
+import { MouseManager } from './MouseManager2D.ts';
 import { ShapeClass } from './ShapeClass.ts';
 import { GNGEventListenerType, IGNGEventListener } from './gng/IGNGEventListener.ts';
 import { GNGEventlistenerManager } from './gng/GNGEventlistenerManager.ts';

@@ -201,7 +201,7 @@ export class PrintManager implements IPrintManager {
         this.printCommands = [];
     }
 
-    print(text: string | null, withNewline: boolean, color: string|number|ColorClass) {
+    print(text: string | null, withNewline: boolean, color: string|number|ColorClass|undefined) {
         if (text == null) text = "";
 
         if(withNewline) text += "\n";

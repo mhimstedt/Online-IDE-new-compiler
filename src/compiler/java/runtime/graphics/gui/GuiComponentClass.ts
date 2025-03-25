@@ -8,7 +8,7 @@ import { LibraryDeclarations } from "../../../module/libraries/DeclareType.ts";
 import { NonPrimitiveType } from "../../../types/NonPrimitiveType.ts";
 import { StringClass } from "../../system/javalang/ObjectClassStringClass.ts";
 import { FilledShapeClass } from "../FilledShapeClass.ts";
-import { InternalMouseListener, MouseEventKind, MouseManager } from "../MouseManager.ts";
+import { InternalMouseListener, MouseEventKind, MouseManager } from "../MouseManager2D.ts";
 import { ChangeListenerInterface } from "./ChangeListenerInterface.ts";
 
 export class GuiComponentClass extends FilledShapeClass implements InternalMouseListener, InternalKeyboardListener {

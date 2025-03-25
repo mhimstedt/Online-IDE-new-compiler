@@ -13,7 +13,7 @@ import { NonPrimitiveType } from '../../../types/NonPrimitiveType';
 import { ObjectClass } from '../../system/javalang/ObjectClassStringClass';
 import { ActorManager } from '../ActorManager';
 import { ActorType, IActor } from '../IActor';
-import { MouseManager } from '../MouseManager';
+import { MouseManager } from '../MouseManager2D';
 import { IWorld3d } from './IWorld3d';
 import { GraphicSystem } from '../../../../common/interpreter/GraphicsManager';
 import { ColorHelper } from '../../../lexer/ColorHelper';

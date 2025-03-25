@@ -57,7 +57,7 @@ export class InputManager implements IInputManager {
 
         if (message != null && message != "") {
             printManager.beginOfLineState = true;
-            printManager.print("\n" + message, true, 0xffffff);
+            printManager.print("\n" + message, true, undefined);
             printManager.flush();
         }
 
