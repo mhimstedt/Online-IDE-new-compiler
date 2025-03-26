@@ -385,7 +385,7 @@ export class Parser extends StatementParser {
         let isFinal = this.comesToken(TokenType.keywordFinal, true);
 
         let type = this.parseType(replaceStringByPrimitiveString);
-
+        
         let isEllipsis = this.comesToken(TokenType.ellipsis, true);
 
         let identifier = this.expectAndSkipIdentifierAsToken();

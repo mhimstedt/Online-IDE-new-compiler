@@ -445,6 +445,8 @@ export abstract class TermParser extends TokenIterator {
                 let range: IRange = this.cct.range;
                 let identifier = this.expectAndSkipIdentifierAsString();
 
+                if(this.comesToken(TokenType.ellipsis, false)) replaceStringByPrimitiveString = true;
+
                 if (replaceStringByPrimitiveString && identifier == "String") {
                     identifier = "string";
                 }
