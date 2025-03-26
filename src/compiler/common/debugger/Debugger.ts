@@ -148,6 +148,10 @@ export class Debugger {
                 if (!t) return;
                 this.showCallstack(t);
                 this.showVariablesOfProgramState(t);
+                let topCallstackEntry = this.callstackTreeview.nodes[0];
+                if(topCallstackEntry){
+                    topCallstackEntry.select();
+                }
             }
         }
     }

@@ -25,6 +25,7 @@ export class TreeviewNode<E> {
     public get isSelected(): boolean {
         return this._isSelected;
     }
+    
     public setSelected(value: boolean) {
         this._isSelected = value;
         if (this.nodeLineDiv) {
@@ -301,6 +302,15 @@ export class TreeviewNode<E> {
         if (this.treeview.config.withDragAndDrop) this.initDragAndDrop();
         this.initContextMenu();
 
+    }
+
+    select(){
+        this.treeview.unselectAllNodes();
+        this.setSelected(true);
+        this.treeview.addToSelection(this);
+
+        if (this._onClickHandler) this._onClickHandler(this._externalObject!);
+        if (this.treeview.onNodeClickedHandler) this.treeview.onNodeClickedHandler(this._externalObject!);
     }
 
     initContextMenu() {
