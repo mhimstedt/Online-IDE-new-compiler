@@ -169,12 +169,21 @@ export class Interpreter {
             this.printManager.clear();
             this.#init(this.executable!);
             this.#resetRuntime();
-            this.showProgramPointer(this.scheduler.getNextStepPosition());
-            this.updateDebugger();
-            this.setState(SchedulerState.paused);
-            return;
+
+            // for java (and maybe other languages) the first step pushes the main object
+            // onto the stack. We want to execute it immediately...
+            if (this.scheduler.getNextStepPosition()?.range?.startLineNumber !== -1) {
+                // don't execute first step immediately:
+                this.showProgramPointer(this.scheduler.getNextStepPosition());
+                this.updateDebugger();
+                this.setState(SchedulerState.paused);
+                return;
+            } else {
+                // execute first step immediately...
+                stepInto = false;
+            }
         }
-        // this.setState(SchedulerState.running);
+        // this.setState(SchedulerState.running);    // MaPa 26.03.2025: This broke step into...
         this.scheduler.runSingleStepKeepingThread(stepInto, () => {
             this.pause();
             this.showProgramPointer(this.scheduler.getNextStepPosition());
@@ -350,14 +359,14 @@ export class Interpreter {
                 if (this.actionManager!.isActive("interpreter.start")) {
                     this.start();
                 } else {
-                    this.pause(); 
+                    this.pause();
                 }
 
             });
 
         this.actionManager.registerAction("interpreter.stop", [], "Programm anhalten",
             () => {
-                if(this.main?.getRepl().state == "standalone"){
+                if (this.main?.getRepl().state == "standalone") {
                     this.main?.getRepl().init(this.executable);
                     this.setState(SchedulerState.stopped);
                 } else {
@@ -404,7 +413,7 @@ export class Interpreter {
         return this.executable?.findStartableModule(this.main?.getCurrentWorkspace()?.getCurrentlyEditedModule())
     }
 
-    onFileSelected(){
+    onFileSelected() {
         this.#enableButtonsAccordingToState(this.scheduler.state);
     }
 
@@ -436,7 +445,7 @@ export class Interpreter {
         let runningStates: SchedulerState[] = [SchedulerState.paused, SchedulerState.running];
         if (runningStates.indexOf(this.scheduler.state) >= 0 && runningStates.indexOf(state) < 0) {
             this.keyboardManager?.unsubscribeAllListeners();
-            if(this.main?.getRepl().state != "standalone"){
+            if (this.main?.getRepl().state != "standalone") {
                 this.main?.hideDebugger();
             }
         }
@@ -456,7 +465,7 @@ export class Interpreter {
                 this.actionManager.setActive("interpreter." + actionId, this.#buttonActiveMatrix[actionId][state]);
             }
 
-            if(this.main?.getRepl()?.state == "standalone"){
+            if (this.main?.getRepl()?.state == "standalone") {
                 this.actionManager.setActive("interpreter.stop", true);
             }
 
@@ -491,9 +500,9 @@ export class Interpreter {
         }
 
         let startableFiles: GUIFile[] = [];
-        if(this.executable){
-            for(let module of this.executable.moduleManager.modules){
-                if(module.isStartable()) startableFiles.push(<GUIFile>module.file);
+        if (this.executable) {
+            for (let module of this.executable.moduleManager.modules) {
+                if (module.isStartable()) startableFiles.push(<GUIFile>module.file);
             }
         }
         this.main?.markFilesAsStartable(startableFiles, state >= 3);
@@ -525,9 +534,9 @@ export class Interpreter {
         // }
 
         let mainModule = this.#findStartableModule();
-        if(fileToStart){
-            for(let module of executable.moduleManager.modules){
-                if(module.file == fileToStart) mainModule = module;                
+        if (fileToStart) {
+            for (let module of executable.moduleManager.modules) {
+                if (module.file == fileToStart) mainModule = module;
             }
         }
 
