@@ -567,7 +567,6 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
             }
         }
 
-
         for (let statementNode of node.statements) {
             let statementSnippet = this.compileStatementOrTerm(statementNode);
             if (statementSnippet) snippet.addParts(statementSnippet);
@@ -884,7 +883,7 @@ export abstract class StatementCodeGenerator extends TermCodeGenerator {
 
         let ifSnippet = new CodeSnippetContainer([], node.range);
 
-        let sn1 = SnippetFramer.frame(condition, negationResult.negationHappened ? "if(§1){\n" : "if(!(§1)){\n", this.voidType);
+        let sn1 = SnippetFramer.frame(condition, negationResult.negationHappened ? "if(§1){\n" : "if(!(§1)){\n", this.voidType, node.range);
         let label1 = new LabelCodeSnippet();
         ifSnippet.addParts(sn1);
         let jumpToLabel1 = new JumpToLabelCodeSnippet(label1);
