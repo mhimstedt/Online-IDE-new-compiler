@@ -10,6 +10,7 @@ import { JavaMethod } from '../../../../../compiler/java/types/JavaMethod.js';
 import { JavaField } from '../../../../../compiler/java/types/JavaField.js';
 import { Visibility } from '../../../../../compiler/java/types/Visibility.js';
 import { TokenType } from '../../../../../compiler/java/TokenType.js';
+import { ClassClass } from '../../../../../compiler/java/runtime/system/ClassClass.js';
 
 export type SerializedClassBox = {
     className: string,
@@ -147,7 +148,7 @@ export class ClassBox extends DiagramElement {
                 type: "line",
                 thicknessCm: 0.05
             });
-            for (let field of this.klass.getFields()) {
+            for (let field of this.klass.getFields().filter(field => field.type instanceof ClassClass)) {
 
                 let text: string = this.getVisibilityText(field.visibility) + field.type?.toString() + " " +  field.identifier;
 
@@ -166,7 +167,9 @@ export class ClassBox extends DiagramElement {
                 type: "line",
                 thicknessCm: 0.05
             });
-            this.klass.getOwnMethods().filter(m => m.getSignature() != "toJson()").forEach(m => {
+            this.klass.getOwnMethods().filter(m => m.getSignature() != "toJson()")
+            .filter(m => !m.isConstructor || m.identifier == this.klass.identifier)
+            .forEach(m => {
                 let text: string = this.getVisibilityText(m.visibility) + m.identifier + "()";
 
                 if (parametersWithTypes) {
