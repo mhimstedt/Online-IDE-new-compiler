@@ -38,6 +38,9 @@ export function makeEditable(elementWithText: JQuery<HTMLElement> | HTMLElement,
     });
     $input.val(elementWithText.text());
     $input.on(mousePointer + "down", (e) => { e.stopPropagation(); })
+    $input.on("click", (e) => { 
+        e.stopPropagation(); 
+    })
 
     if (selectionRange != null) {
         (<HTMLInputElement>$input[0]).setSelectionRange(selectionRange.start, selectionRange.end);
@@ -100,8 +103,9 @@ export function openContextMenu(items: ContextMenuItem[], x: number, y: number):
         if (mi.link != null) {
             caption = `<a href="${mi.link}" target="_blank" class="jo_menulink">${mi.caption}</a>`;
         }
-        let $item: JQuery<HTMLElement> = jQuery('<div>' + caption + (mi.subMenu != null ? '<span style="float: right"> &nbsp; &nbsp; &gt;</span>' : "") + '</div>');
+        let $item: JQuery<HTMLElement> = jQuery('<div>' + caption + (mi.subMenu != null ? '<span style="float: right; "> &nbsp; &nbsp; &gt;</span>' : "") + '</div>');
         $item.find('a').attr('style', 'color: ' + fontColorNormal + " !important");
+        $item.attr('style', 'color: ' + fontColorNormal + " !important");
         if (mi.color != null) {
             $item.css('color', mi.color);
         }
