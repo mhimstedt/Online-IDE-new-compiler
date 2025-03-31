@@ -22,7 +22,7 @@ export class MouseManager {
 
     listeners: Map<string, any> = new Map();
 
-    constructor(private world: IWorld) {
+    constructor(private world: IWorld, private coordinateDiv: HTMLDivElement) {
     }
 
     unregisterListeners(){
@@ -35,6 +35,8 @@ export class MouseManager {
         this.javaMouseListeners = [];
         this.shapesWithImplementedMouseMethods = [];
         this.listeners = new Map();
+
+        if(this.coordinateDiv) this.coordinateDiv.style.display = 'none';
 
     }
 
@@ -84,6 +86,10 @@ export class MouseManager {
                     t.startIfNotEmptyOrDestroy();
                 }
 
+
+                if(this.coordinateDiv  && mouseEventKind == "mousemove") this.coordinateDiv.textContent = '(' + Math.round(x) + "/" + Math.round(y) + ")";
+                if(this.coordinateDiv  && mouseEventKind == "mouseleave") this.coordinateDiv.textContent = '';
+
                 // if (listenerType == "mousedown") {
                 //     let gngEreignisbehandlung = this.interpreter.gngEreignisbehandlungHelper;
                 //     if (gngEreignisbehandlung != null) {
@@ -96,6 +102,8 @@ export class MouseManager {
 
         }
 
+        if(this.coordinateDiv) this.coordinateDiv.style.display = 'block';
+
     }
 
     addJavaMouseListener(mouseListener: MouseListenerInterface) {
@@ -104,6 +112,13 @@ export class MouseManager {
 
     removeJavaMouseListener(mouseListener: MouseListenerInterface) {
         this.javaMouseListeners.splice(this.javaMouseListeners.indexOf(mouseListener));
+    }
+
+    removeAllListeners(){
+        this.javaMouseListeners = [];
+        this.shapesWithImplementedMouseMethods = [];
+        this.internalMouseListeners = [];
+        this.listeners = new Map();
     }
 
     addShapeWithImplementedMouseMethods(shape: ShapeClass) {

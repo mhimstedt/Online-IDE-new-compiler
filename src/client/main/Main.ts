@@ -231,7 +231,7 @@ export class Main implements MainBase {
         let inputManager = new InputManager(jQuery('#rightdiv-inner .jo_run'), this);
         let printManager = new PrintManager(jQuery('#rightdiv-inner .jo_run'), this);
         let fileManager = new FileManager(this);
-        let graphicsManager = new GraphicsManager(jQuery('#rightdiv-inner .jo_graphics')[0]);
+        let graphicsManager = new GraphicsManager(jQuery('#rightdiv-inner .jo_graphics')[0], <HTMLDivElement>jQuery('#rightdiv-inner .jo_coordinates')[0]);
         let keyboardManager = new KeyboardManager(jQuery(window), this);
         let programPointerManager = new ProgramPointerManager(this);
         let exceptionMarker = new ExceptionMarker(this);

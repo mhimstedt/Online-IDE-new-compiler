@@ -158,7 +158,7 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
 
             interpreter.isExternalTimer = true;
 
-            this.mouseManager = new MouseManager(this);
+            this.mouseManager = new MouseManager(this, interpreter.graphicsManager?.coordinatesDiv);
             this.mouseManager.registerListeners();
 
             this.gngEventlistenerManager = new GNGEventlistenerManager(interpreter, this);
@@ -190,7 +190,7 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
             if(this.interpreter.getMain().getRepl().state == "standalone") return;
             this.onProgramStopped();
             interpreter.eventManager.off(onProgramStoppedCallback);
-            this.mouseManager.unregisterListeners();
+            this.mouseManager.removeAllListeners();
         }
 
         interpreter.eventManager.on("resetRuntime", onResetRuntimeCallback)
@@ -200,6 +200,7 @@ export class WorldClass extends ObjectClass implements IWorld, GraphicSystem {
 
     destroyWorld(interpreter: Interpreter) {
 
+        this.mouseManager.unregisterListeners();
         this.interpreter.actorManager.clear();
         this.gngEventlistenerManager.clear();
 

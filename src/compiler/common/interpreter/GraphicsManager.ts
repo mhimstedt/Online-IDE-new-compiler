@@ -23,7 +23,7 @@ export class GraphicsManager {
 
     interpreter?: Interpreter;
 
-    constructor(public graphicsDiv: HTMLElement | null) {
+    constructor(public graphicsDiv: HTMLElement | null, public coordinatesDiv: HTMLDivElement | undefined) {
 
     }
 

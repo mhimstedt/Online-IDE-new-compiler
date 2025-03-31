@@ -571,11 +571,12 @@ export class MainEmbedded implements MainBase {
         this.rightDiv.initGUI();
 
         let $rightSideContainer = jQuery('<div class="jo_rightdiv-rightside-container">');
-        let $coordinates = jQuery('<div class="jo_coordinates">(0/0)</div>');
+        let $coordinates = jQuery('<div class="jo_coordinates"></div>');
         this.$rightDivInner.append($rightSideContainer);
         $rightSideContainer.append($coordinates);
 
         let graphicsDiv = this.$runDiv.find('.jo_graphics')[0]!;
+        let coordinatesDiv = <HTMLDivElement>$coordinates[0]!;
 
 
 
@@ -590,7 +591,7 @@ export class MainEmbedded implements MainBase {
 
         this.interpreter = new Interpreter(
             printManager, this.actionManager,
-            new GraphicsManager(graphicsDiv), keyboardManager,
+            new GraphicsManager(graphicsDiv, coordinatesDiv), keyboardManager,
             breakpointManager, this.debugger,
             programPointerManager, inputManager,
             fileManager, new ExceptionMarker(this), this);
