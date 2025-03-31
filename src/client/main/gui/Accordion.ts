@@ -336,15 +336,16 @@ export class AccordionPanel {
 
                 $element[0].scrollIntoView();
 
-                that.renameElement(ae, () => {
 
-                    that.newElementCallback(ae, (externalElement: any) => {
+                that.newElementCallback(ae, (externalElement: any) => {
 
-                        ae.externalElement = externalElement;
+                    ae.externalElement = externalElement;
 
-                        if (ae.$htmlSecondLine != null) {
-                            ae.$htmlSecondLine.insertAfter($element);
-                        }
+                    if (ae.$htmlSecondLine != null) {
+                        ae.$htmlSecondLine.insertAfter($element);
+                    }
+
+                    that.renameElement(ae, () => {
 
                         if (that.selectCallback != null) that.select(ae.externalElement);
 
@@ -486,7 +487,7 @@ export class AccordionPanel {
         <div class="jo_additionalButtonRepository"></div>
         ${!jo_mouseDetected ? '<div class="jo_settings_button img_ellipsis-dark jo_button jo_active"></div>' : ""}
         </div>`);
-        
+
         let name = escapeHtml(element.name);
         let $filenameElement = element.$htmlFirstLine.find('.jo_filename');
         if (name == '_Prüfungen' && element.isFolder) {
@@ -991,31 +992,31 @@ export class AccordionPanel {
         return null;
     }
 
-        markElementsAsStartable(element: any[], active: boolean, onElementClicked: (element: any) => void){
-            let event = (window.PointerEvent ? "pointer" : "mouse") + "down";
+    markElementsAsStartable(element: any[], active: boolean, onElementClicked: (element: any) => void) {
+        let event = (window.PointerEvent ? "pointer" : "mouse") + "down";
 
-            for(let fd of this.elements){
-                let buttonDiv = fd.$htmlFirstLine.find('.jo_additionalButtonStart');
-                if(fd.externalElement && element.indexOf(fd.externalElement) >= 0){
-                    buttonDiv.addClass('img_start-dark jo_button');
-                    buttonDiv.off(event + '.fileList');
-                    if(active){
-                        buttonDiv.addClass('jo_active');
-                        buttonDiv.on(event + '.fileList', (ev) => {
-                            onElementClicked(fd.externalElement);
-                            ev.stopPropagation();
-                        })
-                    } else {
-                        buttonDiv.removeClass('jo_active');
-                    }
+        for (let fd of this.elements) {
+            let buttonDiv = fd.$htmlFirstLine.find('.jo_additionalButtonStart');
+            if (fd.externalElement && element.indexOf(fd.externalElement) >= 0) {
+                buttonDiv.addClass('img_start-dark jo_button');
+                buttonDiv.off(event + '.fileList');
+                if (active) {
+                    buttonDiv.addClass('jo_active');
+                    buttonDiv.on(event + '.fileList', (ev) => {
+                        onElementClicked(fd.externalElement);
+                        ev.stopPropagation();
+                    })
                 } else {
-                    buttonDiv.removeClass('img_start-dark jo_button jo_active');
-                    buttonDiv.off(event + '.fileList');
+                    buttonDiv.removeClass('jo_active');
                 }
+            } else {
+                buttonDiv.removeClass('img_start-dark jo_button jo_active');
+                buttonDiv.off(event + '.fileList');
             }
         }
-    
-    
+    }
+
+
 
 }
 

@@ -745,6 +745,9 @@ export class ProjectExplorer {
         } else {
             editor.updateOptions({ readOnly: this.main.getCurrentWorkspace()?.readonly && !this.main.user.is_teacher });
             editor.setModel(file.getMonacoModel());
+            setTimeout(() => {
+                editor.focus();
+            }, 100);
 
             if (file.text_before_revision != null) {
                 this.main.bottomDiv.homeworkManager.showHomeWorkRevisionButton();
