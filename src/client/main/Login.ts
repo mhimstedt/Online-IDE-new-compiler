@@ -101,7 +101,7 @@ export class Login {
     }
 
     logout() {
-        if (this.main.user.is_testuser) {
+        if (!this.main.user || this.main.user.is_testuser) {
             this.showLoginForm();
             return;
         }
