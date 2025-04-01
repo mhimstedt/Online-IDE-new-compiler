@@ -408,6 +408,7 @@ export class Scheduler {
     init(executable: Executable, mainModule: Module): Thread | undefined {
 
         this.#initIntern(executable);
+        executable.initializeClassObjects();
 
         const mainThread = this.createThread("main thread");
 

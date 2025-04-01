@@ -4,6 +4,7 @@ import { JavaModuleManager } from "../java/module/JavaModuleManager";
 import { JavaLibraryModuleManager } from "../java/module/libraries/JavaLibraryModuleManager.ts";
 import { JavaClass } from "../java/types/JavaClass.ts";
 import { JavaMethod } from "../java/types/JavaMethod.ts";
+import { JavaTypeWithInstanceInitializer } from "../java/types/JavaTypeWithInstanceInitializer.ts";
 import { NonPrimitiveType } from "../java/types/NonPrimitiveType";
 import { Error } from "./Error";
 import { Program } from "./interpreter/Program";
@@ -38,6 +39,15 @@ export class Executable {
         if (!this.isCompiledToJavascript) {
             if (this.moduleManager.compileModulesToJavascript()) {
                 this.isCompiledToJavascript = true;
+            }
+        }
+    }
+
+    initializeClassObjects(){
+        for(const [name, object] of Object.entries(this.classObjectRegistry)){
+            let type = object.type;
+            if(type instanceof JavaTypeWithInstanceInitializer){
+                type.initClassObject();
             }
         }
     }

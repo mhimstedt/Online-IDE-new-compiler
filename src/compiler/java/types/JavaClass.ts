@@ -215,18 +215,12 @@ export class JavaClass extends IJavaClass {
     private extends?: IJavaClass;
     private implements: IJavaInterface[] = [];
 
-    private classObject: ClassClass;
 
     constructor(identifier: string, identifierRange: IRange, path: string, module: JavaBaseModule, public range?: IRange) {
         super(identifier, identifierRange, path, module);
         this.genericTypeParameters = [];
-        this.classObject = new ClassClass(this);
     }
-
-    getClassObject(): ClassClass {
-        return this.classObject;
-    }
-
+    
     getAbstractMethodsNotYetImplemented(): JavaMethod[] {
 
         let abstractMethods: JavaMethod[] = [];
@@ -645,7 +639,7 @@ export class GenericVariantOfJavaClass extends IJavaClass {
     get runtimeClass(): Klass | undefined {
         return this.isGenericVariantOf?.runtimeClass;
     }
-
+ 
     getClassObject(): ClassClass {
         return this.isGenericVariantOf.getClassObject();
     }
