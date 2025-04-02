@@ -35,10 +35,6 @@ export abstract class NonPrimitiveType extends JavaType implements BaseObjectTyp
 
     private _isMainClass?: boolean;
 
-    abstract getClassObject(): ClassClass;
-
-    abstract initClassObject(): void;
-
     set isMainClass(isMainClass: boolean){
         this._isMainClass = true;
     }

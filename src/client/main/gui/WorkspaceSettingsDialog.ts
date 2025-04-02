@@ -47,6 +47,9 @@ export class WorkspaceSettingsDialog{
                     if(changed){
                         this.workspace.settings.libraries = newLibs;
                         this.workspace.saved = false;
+                        this.workspace.getFiles().forEach(f => this.main.getCompiler().setFileDirty(f));   
+                        this.main.getCompiler().triggerCompile();
+                                             
                         this.workspace.setLibraries(this.main.getCompiler());
                         this.main.networkManager.sendUpdatesAsync(true);
                     }

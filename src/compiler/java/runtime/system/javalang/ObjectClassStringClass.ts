@@ -8,6 +8,7 @@ import { NonPrimitiveType } from "../../../types/NonPrimitiveType";
 import { JCM } from "../../../language/JavaCompilerMessages.ts";
 import { IPrimitiveTypeWrapper } from "../primitiveTypes/wrappers/IPrimitiveTypeWrapper.ts";
 import type { ClassClass } from "../ClassClass.ts";
+import { JavaTypeWithInstanceInitializer } from "../../../types/JavaTypeWithInstanceInitializer.ts";
 
 export type ObjectClassOrNull = ObjectClass | null;
 
@@ -141,7 +142,7 @@ export class ObjectClass {
         return this;
     }
 
-    getType(): NonPrimitiveType {
+    getType(): JavaTypeWithInstanceInitializer {
         //@ts-ignore
         return this.constructor.type;
     }

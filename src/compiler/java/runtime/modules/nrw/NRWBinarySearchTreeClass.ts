@@ -104,6 +104,8 @@ export class NRWBinarySearchTreeClass extends ObjectClass {
 
         }
 
+        if(callback) callback();
+
     }
 
     _mj$remove$void$ContentType(t: Thread, callback: CallbackParameter, pContent: NRWComparableContentInterface) {
@@ -163,7 +165,8 @@ export class NRWBinarySearchTreeClass extends ObjectClass {
 
         if (this._isEmpty() || pContent == null) {
             // Abbrechen, da es kein Element zu suchen gibt.
-            return null;
+            t.s.push(null);
+            return;
         } else {
             pContent._mj$isLess$boolean$ContentType(t, () => {
 
