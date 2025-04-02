@@ -249,11 +249,11 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
         classContext: NonPrimitiveType | StaticNonPrimitiveType | undefined,
         leftBracketAlreadyThere: boolean, symbolTable: JavaSymbolTable | undefined): monaco.languages.ProviderResult<monaco.languages.CompletionList> {
 
-        if (!symbolTable) {
-            return Promise.resolve({
-                suggestions: []
-            });
-        }
+        // if (!symbolTable) {
+        //     return Promise.resolve({
+        //         suggestions: []
+        //     });
+        // }
 
         let text = varOrClassMatch[1];
 
@@ -265,7 +265,7 @@ export class JavaCompletionItemProvider extends BaseMonacoProvider implements mo
 
         let completionItems: monaco.languages.CompletionItem[] = [];
 
-        if (symbolTable.classContext && !symbolTable.methodContext && (symbolTable.classContext instanceof IJavaClass || symbolTable.classContext instanceof JavaEnum)) {
+        if (symbolTable && symbolTable.classContext && !symbolTable.methodContext && (symbolTable.classContext instanceof IJavaClass || symbolTable.classContext instanceof JavaEnum)) {
             let range = symbolTable.range;
             if (range.startLineNumber < range.endLineNumber) {
                 completionItems = completionItems.concat(this.getOverridableMethodsCompletion(symbolTable.classContext, rangeToReplace));
