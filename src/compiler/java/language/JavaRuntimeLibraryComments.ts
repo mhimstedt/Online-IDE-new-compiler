@@ -244,6 +244,11 @@ export class JRC {
         "en": "Converts given String to char[].",
     })
 
+    static stringValueOfComment = () => lm({
+        "de": "Wandelt den Parameterwert in eine Zeichenkette um.",
+        "en": "Returns the string representation of given value.",
+    })
+
     /**
      * Class World
      */

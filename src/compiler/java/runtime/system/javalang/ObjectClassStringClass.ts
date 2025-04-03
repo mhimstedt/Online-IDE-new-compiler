@@ -3,7 +3,7 @@ import { ValueRenderer } from "../../../../common/debugger/ValueRenderer.ts";
 import { CallbackFunction } from "../../../../common/interpreter/StepFunction.ts";
 import { Thread } from "../../../../common/interpreter/Thread";
 import { ThreadState } from "../../../../common/interpreter/ThreadState.ts";
-import { LibraryDeclarations } from "../../../module/libraries/DeclareType.ts";
+import { LibraryDeclarations, LibraryMethodDeclaration } from "../../../module/libraries/DeclareType.ts";
 import { NonPrimitiveType } from "../../../types/NonPrimitiveType";
 import { JCM } from "../../../language/JavaCompilerMessages.ts";
 import { IPrimitiveTypeWrapper } from "../primitiveTypes/wrappers/IPrimitiveTypeWrapper.ts";
@@ -63,7 +63,7 @@ export class ObjectClass {
 
             setTimeout(() => {
                 if (t.state == ThreadState.timedWaiting) t.state = ThreadState.runnable;
-                if(!this.threadHoldingLockToThisObject){
+                if (!this.threadHoldingLockToThisObject) {
                     this.restoreOneRunnalbeThreadToRunning()
                 }
             }, milliseconds);
@@ -122,7 +122,7 @@ export class ObjectClass {
                 if (t.state == ThreadState.runnable) {
                     this.runnableOrWaitingThreads.splice(i, 1);
                     t.scheduler.restoreThread(t);
-                    
+
                     this.threadHoldingLockToThisObject = t;
                     this.reentranceCounter = t.lastReentrenceCounter || 1;
 
@@ -187,7 +187,7 @@ export class ObjectClass {
 
         this.threadHoldingLockToThisObject = t;
         this.reentranceCounter = this.reentranceCounter || 0;
-        if(this.reentranceCounter > 0){
+        if (this.reentranceCounter > 0) {
             // console.error("Thread " + t.name + " entered with reentranceCounter = " + this.reentranceCounter);
         }
         this.reentranceCounter++;
@@ -214,7 +214,7 @@ export class ObjectClass {
         this.reentranceCounter!--;
         if (this.reentranceCounter == 0) {
             // console.log("Thread " + t.name + " leaves synchronized block.")
-            if(registerLeaving) t.registerLeavingSynchronizedBlock();
+            if (registerLeaving) t.registerLeavingSynchronizedBlock();
             // this._mj$notifyAll$void$(t, undefined);
             this.threadHoldingLockToThisObject = undefined;
             this.reentranceCounter = undefined;
@@ -275,7 +275,15 @@ export class StringClass extends ObjectClass implements IPrimitiveTypeWrapper {
         { type: "method", signature: "public final string[] split(string regex)", native: StringClass.prototype._nSplit, comment: JRC.stringSplitComment },
         { type: "method", signature: "public final int hashCode()", native: StringClass.prototype._nHashCode, template: `Array.from(§1.value).reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0)`, comment: JRC.hashCodeComment },
         { type: "method", signature: "public final char[] toCharArray()", native: StringClass.prototype._nToCharArray, template: `Array.from(§1.value)`, comment: JRC.stringToCharArrayComment },
-    ]
+        { type: "method", signature: `public static string valueOf(boolean b)`, native: StringClass.prototype._valueOf, template: `("" + §1)`, comment: JRC.stringValueOfComment },
+        { type: "method", signature: `public static string valueOf(char c)`, native: StringClass.prototype._valueOf, template: `("" + §1)`, comment: JRC.stringValueOfComment },
+        { type: "method", signature: `public static string valueOf(int i)`, native: StringClass.prototype._valueOf, template: `("" + §1)`, comment: JRC.stringValueOfComment },
+        { type: "method", signature: `public static string valueOf(long l)`, native: StringClass.prototype._valueOf, template: `("" + §1)`, comment: JRC.stringValueOfComment },
+        { type: "method", signature: `public static string valueOf(float f)`, native: StringClass.prototype._valueOf, template: `("" + §1)`, comment: JRC.stringValueOfComment },
+        { type: "method", signature: `public static string valueOf(double d)`, native: StringClass.prototype._valueOf, template: `("" + §1)`, comment: JRC.stringValueOfComment },
+        { type: "method", signature: `public static string valueOf(char[] data)`, native: StringClass.prototype._valueOfCharArray, comment: JRC.stringValueOfComment },
+        { type: "method", signature: `public static String valueOf(Object o)`, java: StringClass.prototype._mj$valueOfObject$String$Object, comment: JRC.stringValueOfComment },
+    ];
 
     public value: string;
 
@@ -443,5 +451,20 @@ export class StringClass extends ObjectClass implements IPrimitiveTypeWrapper {
 
     _nToCharArray() {
         return Array.from(this.value);
+    }
+
+    _valueOf(v: any){
+        return "" + v;
+    }
+
+    _valueOfCharArray(v: string[]){
+        if(v == null) return "";
+        return v.join('');
+    }
+
+    _mj$valueOfObject$String$Object(t: Thread, o: ObjectClassOrNull){
+        if(o == null) return 'null';
+        o._mj$toString$String$(t, () => {
+        });
     }
 }
