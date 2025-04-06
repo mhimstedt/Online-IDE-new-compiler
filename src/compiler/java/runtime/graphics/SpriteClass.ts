@@ -31,6 +31,7 @@ export class SpriteClass extends ShapeClass {
         { type: "method", signature: "void stopAnimation()", native: SpriteClass.prototype._stopAnimation, comment: JRC.spriteStopAnimationComment },
         { type: "method", signature: "void pauseAnimation()", native: SpriteClass.prototype._pauseAnimation, comment: JRC.spritePauseAnimationComment },
         { type: "method", signature: "void resumeAnimation()", native: SpriteClass.prototype._resumeAnimation, comment: JRC.spriteResumeAnimationComment },
+        { type: "method", signature: "void setAsBackgroundImage()", native: SpriteClass.prototype._setAsBackgroundImage, comment: JRC.spriteSetAsBackgroundImageComment },
         { type: "method", signature: "void setAlpha(double alphaValue)", native: SpriteClass.prototype._setAlpha, comment: JRC.spriteSetAlphaComment },
         { type: "method", signature: "Sprite copy()", java: SpriteClass.prototype._mj$copy$Sprite$, comment: JRC.spriteCopyComment },
         { type: "method", signature: "double getWidth()", native: SpriteClass.prototype._getWidth, comment: JRC.spriteGetWidthComment },
@@ -264,6 +265,16 @@ export class SpriteClass extends ShapeClass {
             return points.concat(shape.hitPolygonTransformed.map(function (punkt) { return { x: punkt.x, y: punkt.y } }));
 
         }
+    }
+
+    _setAsBackgroundImage(){
+        let sprite = <PIXI.Sprite>this.container;
+        let ownRatio = sprite.width/sprite.height;
+        let worldRatio = this.world.currentWidth/this.world.currentHeight;
+        let factor = (ownRatio > worldRatio) ? this.world.height/sprite.height : this.world.width/sprite.width;
+        this._setScale(factor);
+        this._moveTo(this.world.currentLeft + this.world.currentWidth/2, this.world.currentTop + this.world.currentHeight/2);
+        this._sendToBack();
     }
 
     _getWidth(): number {
