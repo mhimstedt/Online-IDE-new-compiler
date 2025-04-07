@@ -10,6 +10,7 @@ export class TriangleClass extends PolygonClass {
     static __javaDeclarations: LibraryDeclarations = [
         { type: "declaration", signature: "class Triangle extends Polygon", comment: JRC.TriangleClassComment },
 
+        { type: "method", signature: "Triangle()", java: TriangleClass.prototype._cj$_constructor_$Triangle$, comment: JRC.TriangleConstructorComment1 },
         { type: "method", signature: "Triangle(double x1, double y1, double x2, double y2, double x3, double y3)", java: TriangleClass.prototype._cj$_constructor_$Triangle$double$double$double$double$double$double, comment: JRC.TriangleConstructorComment },
         { type: "method", signature: "final Triangle copy()", java: TriangleClass.prototype._mj$copy$Triangle$, comment: JRC.TriangleCopyComment },
 
@@ -22,7 +23,7 @@ export class TriangleClass extends PolygonClass {
     height!: number;
 
     _cj$_constructor_$Triangle$(t: Thread, callback: CallbackFunction) {
-        this._cj$_constructor_$Polygon$boolean$double_I(t, callback, true, [0, 100, 100, 100, 50, 0]);
+        this._cj$_constructor_$Polygon$boolean$double_I(t, callback, true, [0, 0, 100, 0, 0, 100]);
 
     }
 

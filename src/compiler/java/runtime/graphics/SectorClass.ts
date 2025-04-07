@@ -13,6 +13,10 @@ export class SectorClass extends FilledShapeClass {
         { type: "declaration", signature: "class Sector extends FilledShape", comment: JRC.SectorClassComment },
 
         {
+            type: "method", signature: "Sector()",
+            java: SectorClass.prototype._cj$_constructor_$Sector$, comment: JRC.SectorConstructorComment1
+        },
+        {
             type: "method", signature: "Sector(double mx, double my, double radius, double startAngle, double endAngle)",
             java: SectorClass.prototype._cj$_constructor_$Sector$double$double$double$double$double, comment: JRC.SectorConstructorComment
         },
@@ -45,6 +49,10 @@ export class SectorClass extends FilledShapeClass {
     endAngleRad!: number;
     drawRadii: boolean = true;
 
+
+    _cj$_constructor_$Sector$(t: Thread, callback: CallbackFunction){
+        this._cj$_constructor_$Sector$double$double$double$double$double(t, callback, 200, 200, 200, 0, 180);
+    }
 
     _cj$_constructor_$Sector$double$double$double$double$double(t: Thread, callback: CallbackFunction,
         mx: number, my: number, innerRadius: number, startAngle: number, endAngle: number

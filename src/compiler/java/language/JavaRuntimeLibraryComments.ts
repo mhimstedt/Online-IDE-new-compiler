@@ -923,6 +923,11 @@ export class JRC {
         "en": "Arc (filled/not filled)",
     })
 
+    static ArcConstructorComment1 = () => lm({
+        "de": "Instanziert einen neuen Kreisbogen.",
+        "en": "Creates a new Arc.",
+    })
+
     static ArcConstructorComment = () => lm({
         "de": "Instanziert einen neuen Kreisbogen. (mx, my) ist der Mittelpunt, ri sein Innenradius, ra sein Außenradius. Der Kreisbogen wird von startAngle bis endAngle (beides in Grad) gegen den Uhrzeigersinn gezogen.",
         "en": "Creates a new Arc. (mx, my) is it's center, ri it's inner radius, ra it's outer radius. The arc will be drawn from startAngle up to endAngle (both in degrees) counterclockwise.",
@@ -1169,6 +1174,11 @@ export class JRC {
     static SectorClassComment = () => lm({
         "de": "Kreisbogen/Kreissektor",
         "en": "Sector",
+    })
+
+    static SectorConstructorComment1 = () => lm({
+        "de": "Instanziert einen neuen Kreisbogen.",
+        "en": "Creates a new Sector. (mx, my) is it's center, ri it's inner radius, ra it's outer radius. The sector will be drawn from startAngle up to endAngle (both in degrees) counterclockwise.",
     })
 
     static SectorConstructorComment = () => lm({
@@ -1574,6 +1584,11 @@ export class JRC {
 
     static TriangleConstructorComment = () => lm({
         "de": "Erstellt ein Dreieck mit den gegebenen drei Eckpunkten.",
+        "en": "Creates a triangle from given points.",
+    })
+
+    static TriangleConstructorComment1 = () => lm({
+        "de": "Erstellt ein Dreieck mit den Eckpunkten (0,0), (100, 0) und (0, 100).",
         "en": "Creates a triangle from given points.",
     })
 

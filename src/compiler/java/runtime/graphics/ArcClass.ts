@@ -17,6 +17,11 @@ export class ArcClass extends FilledShapeClass {
             java: ArcClass.prototype._cj$_constructor_$Arc$double$double$double$double$double$double, comment: JRC.ArcConstructorComment
         },
 
+        {
+            type: "method", signature: "Arc()",
+            java: ArcClass.prototype._cj$_constructor_$Arc$, comment: JRC.ArcConstructorComment1
+        },
+
         { type: "method", signature: "final void setInnerRadius(double innerRadius)", native: ArcClass.prototype._setInnerRadius, comment: JRC.ArcSetInnerRadiusComment },
         { type: "method", signature: "final double getInnerRadiusX()", template: '(§1.innerRadius*§1.scaleFactor)', comment: JRC.ArcGetInnerRadiusComment },
 
@@ -46,6 +51,10 @@ export class ArcClass extends FilledShapeClass {
     startAngleRad!: number;
     endAngleRad!: number;
 
+
+    _cj$_constructor_$Arc$(t: Thread, callback: CallbackFunction){
+        this._cj$_constructor_$Arc$double$double$double$double$double$double(t, callback, 200, 200, 100, 200, 0, 180)
+    }
 
     _cj$_constructor_$Arc$double$double$double$double$double$double(t: Thread, callback: CallbackFunction,
         mx: number, my: number, innerRadius: number, outerRadius: number, startAngle: number, endAngle: number
