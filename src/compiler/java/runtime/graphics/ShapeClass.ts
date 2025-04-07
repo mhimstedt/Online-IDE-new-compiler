@@ -31,6 +31,7 @@ export class ShapeClass extends ActorClass {
         { type: "method", signature: "final void rotate(double angleInDeg, double centerX, double centerY)", native: ShapeClass.prototype._rotate, comment: JRC.shapeRotateComment1 },
         { type: "method", signature: "final void rotate(double angleInDeg)", native: ShapeClass.prototype._rotate, comment: JRC.shapeRotateComment2 },
         { type: "method", signature: "final void scale(double factor, double centerX, double centerY)", native: ShapeClass.prototype._scale, comment: JRC.shapeScaleComment1 },
+        { type: "method", signature: "final void setScale(double newScale)", native: ShapeClass.prototype._setScale, comment: JRC.shapeSetScaleComment },
         { type: "method", signature: "final void scale(double factor)", native: ShapeClass.prototype._scale, comment: JRC.shapeScaleComment2 },
         { type: "method", signature: "final void mirrorX()", template: "§1._mirrorXY(-1, 1)", comment: JRC.shapeMirrorXComment },
         { type: "method", signature: "final void mirrorY()", template: "§1._mirrorXY(1, -1)", comment: JRC.shapeMirrorYComment },
@@ -298,6 +299,10 @@ export class ShapeClass extends ActorClass {
         this.angle += angleInDeg;
         this.directionRad += angleInDeg / 180 * Math.PI;
 
+    }
+
+    _setScale(factor: number){
+        this._scale(factor/this.scaleFactor);
     }
 
     _scale(factor: number, cX?: number, cY?: number) {

@@ -274,23 +274,23 @@ export class JRC {
     })
 
     static worldGetLightsComment = () => lm({
-    "de": `Gibt ein Array mit allen Light3d-Objekten zurück.`,
-    "en": `Returns an array containing all Light3d objects`,
+        "de": `Gibt ein Array mit allen Light3d-Objekten zurück.`,
+        "en": `Returns an array containing all Light3d objects`,
     })
 
     static worldRemoveAllLightsComment = () => lm({
-    "de": `Entfernt alle Light3d-Objekte.`,
-    "en": `Removes all Light3d objects.`,
+        "de": `Entfernt alle Light3d-Objekte.`,
+        "en": `Removes all Light3d objects.`,
     })
 
     static worldRemoveLightComment = () => lm({
-    "de": `Entfernt das Light3d-Objekt. Die Lichtquelle ist dann nicht mehr aktiv.`,
-    "en": `Removes given Light3d object.`,
+        "de": `Entfernt das Light3d-Objekt. Die Lichtquelle ist dann nicht mehr aktiv.`,
+        "en": `Removes given Light3d object.`,
     })
 
     static worldAddLightComment = () => lm({
-    "de": `Fügt der Szene die gegebene Lichtquelle hinzu.`,
-    "en": `Adds given Light3d object.`,
+        "de": `Fügt der Szene die gegebene Lichtquelle hinzu.`,
+        "en": `Adds given Light3d object.`,
     })
 
     static worldMoveComment = () => lm({
@@ -523,6 +523,11 @@ export class JRC {
     static shapeScaleComment1 = () => lm({
         "de": "Streckt das Grafikobjekt um den angegebenen Faktor. Das Zentrum der Streckung ist der Punkt (centerX, centerY)",
         "en": "Scales object by given factor. Center of scaling is at (centerX, centerY).",
+    })
+
+    static shapeSetScaleComment = () => lm({
+        "de": "Streckt das Grafikobjekt auf den angegebenen Faktor. Das Zentrum der Streckung ist die 'Mitte' des Objekts (abhängig von seiner Form).",
+        "en": "Scales object to given factor. Center of scaling is 'center' of object (depends on it's shape).",
     })
 
     static shapeScaleComment2 = () => lm({
@@ -1439,8 +1444,8 @@ export class JRC {
     })
 
     static TurtleGetTurtleAngleComment = () => lm({
-    "de": `Gibt den Blickwinkel der Turtle in Grad zurück.`,
-    "en": `Returns turtle's viewing angle in degrees.`,
+        "de": `Gibt den Blickwinkel der Turtle in Grad zurück.`,
+        "en": `Returns turtle's viewing angle in degrees.`,
     })
 
 
@@ -1617,8 +1622,8 @@ export class JRC {
     })
 
     static LineSetPointsComment = () => lm({
-    "de": `Ändert Start- und Endpunkt der Linie.`,
-    "en": `Sets start- and endpoint of this line.`,
+        "de": `Ändert Start- und Endpunkt der Linie.`,
+        "en": `Sets start- and endpoint of this line.`,
     })
 
     static LineCopyComment = () => lm({
@@ -1769,6 +1774,11 @@ export class JRC {
     static spriteResumeAnimationComment = () => lm({
         "de": "Fährt mit einer pausierten Animation wieder fort.",
         "en": "resumes currently paused animation",
+    })
+
+    static spriteSetAsBackgroundImageComment = () => lm({
+        "de": "Streckt und verschiebt das Sprite so, dass es die gesamte Zeichenfläche überdeckt.",
+        "en": "Scale and move sprite to cover whole canvas.",
     })
 
     static spriteSetAlphaComment = () => lm({
@@ -2396,13 +2406,13 @@ export class JRC {
     })
 
     static threadCurrentThreadComment = () => lm({
-    "de": `Gibt das Thread-Objekt für den gerade ausgeführten Thread zurück.`,
-    "en": `Returns the Thread object for the current thread.`,
+        "de": `Gibt das Thread-Objekt für den gerade ausgeführten Thread zurück.`,
+        "en": `Returns the Thread object for the current thread.`,
     })
 
     static millisecondsNotPositiveError = () => lm({
-    "de": `Die angegebene Zeit in Millisekunden muss größer als 0 sein.`,
-    "en": `Given time in milliseconds has to be positive.`,
+        "de": `Die angegebene Zeit in Millisekunden muss größer als 0 sein.`,
+        "en": `Given time in milliseconds has to be positive.`,
     })
 
     /**
@@ -3780,88 +3790,88 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
      * Matrix4
      */
     static Matrix4ClassComment = () => lm({
-    "de": `Eine 4x4-Matrix, die insbesondere verwendet werden kann, um eine affine Abbildung im R³ zu beschreiben und räumliche Körper zu transformieren.`,
-    "en": `Matrix4 represents a 4x4-Matrix. It may be used to describe affine mappings in R³ and to transform bodys in 3d.`,
+        "de": `Eine 4x4-Matrix, die insbesondere verwendet werden kann, um eine affine Abbildung im R³ zu beschreiben und räumliche Körper zu transformieren.`,
+        "en": `Matrix4 represents a 4x4-Matrix. It may be used to describe affine mappings in R³ and to transform bodys in 3d.`,
     })
 
     static Matrix4ConstructorIdentityComment = () => lm({
-    "de": `Erstellt eine 4x4-Einheitsmatrix, d.h. eine Matrix mit 1-sen in der Diagonalen und ansonsten 0-en.`,
-    "en": `Creates a 4x4 identity matrix.`,
+        "de": `Erstellt eine 4x4-Einheitsmatrix, d.h. eine Matrix mit 1-sen in der Diagonalen und ansonsten 0-en.`,
+        "en": `Creates a 4x4 identity matrix.`,
     })
 
     static Matrix4ConstructorTupleComment = () => lm({
-    "de": `Erstellt eine 4x4-Matrix mit den gegebenen Komponenten (zeilenweise).`,
-    "en": `Creates a 4x4 matrix with the given arguments in row-major order.`,
+        "de": `Erstellt eine 4x4-Matrix mit den gegebenen Komponenten (zeilenweise).`,
+        "en": `Creates a 4x4 matrix with the given arguments in row-major order.`,
     })
 
     static Matrix4ConstructorOtherMatrixComment = () => lm({
-    "de": `Erstellt eine Kopie der übergebenen Matrix.`,
-    "en": `Creates a copy of given Matrix.`,
+        "de": `Erstellt eine Kopie der übergebenen Matrix.`,
+        "en": `Creates a copy of given Matrix.`,
     })
 
     static Matrix4MakeRotationXComment = () => lm({
-    "de": `Ersetzt diese Matrix durch eine, die eine Rotation um die X-Achse mit gegebenem Winkel (in Grad) repräsentiert.`,
-    "en": `Sets this matrix as a rotational transformation around the X axis by angle degrees.`,
+        "de": `Ersetzt diese Matrix durch eine, die eine Rotation um die X-Achse mit gegebenem Winkel (in Grad) repräsentiert.`,
+        "en": `Sets this matrix as a rotational transformation around the X axis by angle degrees.`,
     })
 
     static Matrix4MakeRotationYComment = () => lm({
-    "de": `Ersetzt diese Matrix durch eine, die eine Rotation um die Y-Achse mit gegebenem Winkel (in Grad) repräsentiert.`,
-    "en": `Sets this matrix as a rotational transformation around the Y axis by angle degrees.`,
+        "de": `Ersetzt diese Matrix durch eine, die eine Rotation um die Y-Achse mit gegebenem Winkel (in Grad) repräsentiert.`,
+        "en": `Sets this matrix as a rotational transformation around the Y axis by angle degrees.`,
     })
 
     static Matrix4MakeRotationZComment = () => lm({
-    "de": `Ersetzt diese Matrix durch eine, die eine Rotation um die Z-Achse mit gegebenem Winkel (in Grad) repräsentiert.`,
-    "en": `Sets this matrix as a rotational transformation around the Z axis by angle degrees.`,
+        "de": `Ersetzt diese Matrix durch eine, die eine Rotation um die Z-Achse mit gegebenem Winkel (in Grad) repräsentiert.`,
+        "en": `Sets this matrix as a rotational transformation around the Z axis by angle degrees.`,
     })
 
     static Matrix4MakeRotationAxisComment = () => lm({
-    "de": `Ersetzt diese Matrix durch eine, die eine Rotation um die gegebene mit gegebenem Winkel (in Grad) repräsentiert.`,
-    "en": `Sets this matrix as a rotational transformation around the given axis by angle degrees.`,
+        "de": `Ersetzt diese Matrix durch eine, die eine Rotation um die gegebene mit gegebenem Winkel (in Grad) repräsentiert.`,
+        "en": `Sets this matrix as a rotational transformation around the given axis by angle degrees.`,
     })
 
     static Matrix4MakeScaleComment = () => lm({
-    "de": `Ersetzt diese Matrix durch eine, die die Streckung um die gegebenen Faktoren in x-, y- und z-Richtung repräsentiert.`,
-    "en": `Sets this matrix as scale transform with given factors in x-, y- and z-diretion.`,
+        "de": `Ersetzt diese Matrix durch eine, die die Streckung um die gegebenen Faktoren in x-, y- und z-Richtung repräsentiert.`,
+        "en": `Sets this matrix as scale transform with given factors in x-, y- and z-diretion.`,
     })
 
     static Matrix4MakeTranslationComment = () => lm({
-    "de": `Ersetzt diese Matrix durch eine, die die Verschiebung um den gegebenen Vektor repräsentiert.`,
-    "en": `Sets this matrix as scale transform with given vector.`,
+        "de": `Ersetzt diese Matrix durch eine, die die Verschiebung um den gegebenen Vektor repräsentiert.`,
+        "en": `Sets this matrix as scale transform with given vector.`,
     })
 
     static Matrix4MultiplyScalarComment = () => lm({
-    "de": `Multipliziert die Matrix mit dem gegebenen Faktor (Skalarmultiplikation).`,
-    "en": `Multiplies every component of the matrix by given scalar value.`,
+        "de": `Multipliziert die Matrix mit dem gegebenen Faktor (Skalarmultiplikation).`,
+        "en": `Multiplies every component of the matrix by given scalar value.`,
     })
 
     static Matrix4InvertComment = () => lm({
-    "de": `Invertiert diese Matrix. Is sie nicht invertierbar, so wird sie auf die Nullmatrix gesetzt.`,
-    "en": `Inverts this matrix, using the analytic method. You can not invert with a determinant of zero. If you attempt this, the method produces a zero matrix instead.`,
+        "de": `Invertiert diese Matrix. Is sie nicht invertierbar, so wird sie auf die Nullmatrix gesetzt.`,
+        "en": `Inverts this matrix, using the analytic method. You can not invert with a determinant of zero. If you attempt this, the method produces a zero matrix instead.`,
     })
 
     static Matrix4DeterminantComment = () => lm({
-    "de": `Berechnet die Determinante dieser Matrix.`,
-    "en": `Computes and returns the determinant of this matrix.`,
+        "de": `Berechnet die Determinante dieser Matrix.`,
+        "en": `Computes and returns the determinant of this matrix.`,
     })
 
     static Matrix4CloneComment = () => lm({
-    "de": `Erzeugt eine Kopie dieser Matrix.`,
-    "en": `Creates a clone of this matrix.`,
+        "de": `Erzeugt eine Kopie dieser Matrix.`,
+        "en": `Creates a clone of this matrix.`,
     })
 
     static Matrix4CopyFromComment = () => lm({
-    "de": `Kopiert die gegebene Matrix in diese hinein.`,
-    "en": `Copies the elements of matrix m into this matrix.`,
+        "de": `Kopiert die gegebene Matrix in diese hinein.`,
+        "en": `Copies the elements of matrix m into this matrix.`,
     })
 
     static Matrix4MultiplyComment = () => lm({
-    "de": `Multipliziert diese Matrix von rechts mit der gegebene Matrix und schreibt das Ergebnis in diese Matrix.`,
-    "en": `Post-multiplies this matrix by m.`,
+        "de": `Multipliziert diese Matrix von rechts mit der gegebene Matrix und schreibt das Ergebnis in diese Matrix.`,
+        "en": `Post-multiplies this matrix by m.`,
     })
 
     static Matrix4preMultiplyComment = () => lm({
-    "de": `Multipliziert diese Matrix von links mit der gegebene Matrix und schreibt das Ergebnis in diese Matrix.`,
-    "en": `Pre-multiplies this matrix by m.`,
+        "de": `Multipliziert diese Matrix von links mit der gegebene Matrix und schreibt das Ergebnis in diese Matrix.`,
+        "en": `Pre-multiplies this matrix by m.`,
     })
 
     /**
@@ -3978,8 +3988,8 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
     })
 
     static Vector3ApplyMatrix4Comment = () => lm({
-    "de": `Multipliziert diesen Vektor (von links) mit der gegebenen Matrix (mit ergänzter 1 in der 4. Dimension) und teilt durch den perspektivischen Faktor.`,
-    "en": `Multiplies this vector (with an implicit 1 in the 4th dimension) by m, and divides by perspective.`,
+        "de": `Multipliziert diesen Vektor (von links) mit der gegebenen Matrix (mit ergänzter 1 in der 4. Dimension) und teilt durch den perspektivischen Faktor.`,
+        "en": `Multiplies this vector (with an implicit 1 in the 4th dimension) by m, and divides by perspective.`,
     })
 
     static Vector3xyNullPointerComment = (direction: string) => lm({
@@ -3988,23 +3998,23 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
     })
 
     static Group3dAddComment = () => lm({
-    "de": `Fügt der Gruppe ein 3d-Objekt hinzu.`,
-    "en": `Adds a 3d-object to this group.`,
+        "de": `Fügt der Gruppe ein 3d-Objekt hinzu.`,
+        "en": `Adds a 3d-object to this group.`,
     })
 
     static Group3dRemoveComment = () => lm({
-    "de": `Entfernt ein 3d-Objekt aus dieser Gruppe.`,
-    "en": `Removes a 3d-object from this group.`,
+        "de": `Entfernt ein 3d-Objekt aus dieser Gruppe.`,
+        "en": `Removes a 3d-object from this group.`,
     })
 
     static Group3dSizeComment = () => lm({
-    "de": `Gibt die Anzahl der 3d-Objekte in dieser Gruppe zurück.`,
-    "en": `Returns the size of this group.`,
+        "de": `Gibt die Anzahl der 3d-Objekte in dieser Gruppe zurück.`,
+        "en": `Returns the size of this group.`,
     })
 
     static Group3dGetComment = () => lm({
-    "de": `Gibt das Element mit dem gegebenen Index zurück. Das erste Element hat Index 0.`,
-    "en": `Returns element with given index. First element has index 0.`,
+        "de": `Gibt das Element mit dem gegebenen Index zurück. Das erste Element hat Index 0.`,
+        "en": `Returns element with given index. First element has index 0.`,
     })
 
     /**
@@ -4012,13 +4022,13 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
      */
 
     static Group3dClassComment = () => lm({
-    "de": `Ein Group3d-Objekt gruppiert mehrere 3d-Objekte zusammen, so dass sie miteinander gedreht verschoben, ... werden können.`,
-    "en": `A Group of 3d objects.`,
+        "de": `Ein Group3d-Objekt gruppiert mehrere 3d-Objekte zusammen, so dass sie miteinander gedreht verschoben, ... werden können.`,
+        "en": `A Group of 3d objects.`,
     })
 
     static Comment = () => lm({
-    "de": ``,
-    "en": ``,
+        "de": ``,
+        "en": ``,
     })
 
     /**
@@ -4228,18 +4238,18 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
     })
 
     static InputWaitForKeyComment = () => lm({
-    "de": `Wartet, bis die Benutzerin/der Benutzer eine der angegebenen Tasten gedrückt hat.`,
-    "en": `Waits until the user presses one of given keys.`,
+        "de": `Wartet, bis die Benutzerin/der Benutzer eine der angegebenen Tasten gedrückt hat.`,
+        "en": `Waits until the user presses one of given keys.`,
     })
 
     static InputWaitForAnyKeyComment = () => lm({
-    "de": `Wartet, bis die Benutzerin/der Benutzer eine beliebige Taste gedrückt hat.`,
-    "en": `Waits until the user presses any key.`,
+        "de": `Wartet, bis die Benutzerin/der Benutzer eine beliebige Taste gedrückt hat.`,
+        "en": `Waits until the user presses any key.`,
     })
 
     static InputIsKeyDownComment = () => lm({
-    "de": `Gibt genau dann true zurück, wenn die angegebene Taste gerade heruntergedrückt ist. N.B.: Für Sondertasten gibt es die vordefinierten statische Konstanten der Klasse Key, z.B. prüft Input.isKeyDown(Key.ArrowLeft), ob gerade die Pfeil-nach-links-Taste heruntergedrückt ist. `,
-    "en": `Returns true if and only if given key is pressed down currently. N.B.: There are predefined static constants in Klass Key for special key, e.g.  Input.isKeyDown(Key.ArrowLeft)`,
+        "de": `Gibt genau dann true zurück, wenn die angegebene Taste gerade heruntergedrückt ist. N.B.: Für Sondertasten gibt es die vordefinierten statische Konstanten der Klasse Key, z.B. prüft Input.isKeyDown(Key.ArrowLeft), ob gerade die Pfeil-nach-links-Taste heruntergedrückt ist. `,
+        "en": `Returns true if and only if given key is pressed down currently. N.B.: There are predefined static constants in Klass Key for special key, e.g.  Input.isKeyDown(Key.ArrowLeft)`,
     })
 
     static InputClassReadIntComment = () => lm({
@@ -4385,8 +4395,8 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
     })
 
     static ButtonIsDownComment = () => lm({
-    "de": `Gibt genau dann true zurück, wenn der Button gerade heruntergedrückt ist.`,
-    "en": `Returns true if and only if button currently is pressed down.`,
+        "de": `Gibt genau dann true zurück, wenn der Button gerade heruntergedrückt ist.`,
+        "en": `Returns true if and only if button currently is pressed down.`,
     })
 
     /**
@@ -5665,54 +5675,54 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
     })
 
     static box3dYouNeedSixTexturesError = () => lm({
-    "de": `Es ist ein Array mit exakt sechs Indices für diese Art von Methodenaufruf nötig.`,
-    "en": `You need an array with exactly six indices for this method call.`,
+        "de": `Es ist ein Array mit exakt sechs Indices für diese Art von Methodenaufruf nötig.`,
+        "en": `You need an array with exactly six indices for this method call.`,
     })
 
     /**
      * World3d
      */
     static textureNotFoundError = (textureIdentifier: string, index: number) => lm({
-    "de": `Die Textur mit Identifier ${textureIdentifier} und Index ${index} konnte nicht gefunden werden.`,
-    "en": `Can't find texture with identifier ${textureIdentifier} and index ${index}.`,
+        "de": `Die Textur mit Identifier ${textureIdentifier} und Index ${index} konnte nicht gefunden werden.`,
+        "en": `Can't find texture with identifier ${textureIdentifier} and index ${index}.`,
     })
 
     /**
      * Material3d
      */
     static material3dClassComment = () => lm({
-    "de": `Oberklasse aller Material3d-Klassen`,
-    "en": `Base class of all Material3d classes`,
+        "de": `Oberklasse aller Material3d-Klassen`,
+        "en": `Base class of all Material3d classes`,
     })
 
     static material3dSetColorComment = () => lm({
-    "de": `Setzt die Farbe des Materials. Zum Setzen der Durchsichtigkeit (Alpha-Value) benutze setAlpha.`,
-    "en": `Set material color. To set alpha-value (transparency) use setAlpha.`,
+        "de": `Setzt die Farbe des Materials. Zum Setzen der Durchsichtigkeit (Alpha-Value) benutze setAlpha.`,
+        "en": `Set material color. To set alpha-value (transparency) use setAlpha.`,
     })
 
     static material3dGetColorComment = () => lm({
-    "de": `Gibt die Farbe als int-Wert zurück.`,
-    "en": `Returns the color of this material as int-value.`,
+        "de": `Gibt die Farbe als int-Wert zurück.`,
+        "en": `Returns the color of this material as int-value.`,
     })
 
     static material3dIsTransparentComment = () => lm({
-    "de": `Gibt true zurück, falls transparente Teile des Körpers auch transparent gezeichnet werden sollen.`,
-    "en": `Returns true if transparent parts of the 3d-object get rendered transparent.`,
+        "de": `Gibt true zurück, falls transparente Teile des Körpers auch transparent gezeichnet werden sollen.`,
+        "en": `Returns true if transparent parts of the 3d-object get rendered transparent.`,
     })
 
     static material3dSetTransparentComment = () => lm({
-    "de": `Falls der Wert true ist, werden transparente Teile des 3d-Körpers auch transparent gezeichnet. Nachteil ist eine etwas geringere Performance.`,
-    "en": `If this value is true, then transparent parts of the 3d object get rendered transparent. Setting 'true' is less performant than setting 'false'.`,
+        "de": `Falls der Wert true ist, werden transparente Teile des 3d-Körpers auch transparent gezeichnet. Nachteil ist eine etwas geringere Performance.`,
+        "en": `If this value is true, then transparent parts of the 3d object get rendered transparent. Setting 'true' is less performant than setting 'false'.`,
     })
 
     static material3dAlphaComment = () => lm({
-    "de": `Der Alphawert (0 ... 1) bestimmt die Durchsichtigkeit des Objekts. Tipp: Damit die Durchsichtigkeit sichtbar wird, musst Du noch setTransparent(true) aufrufen.`,
-    "en": `The alpha value (0 ... 1) determines the transparency of the object. Hint: To make the transparency visible, you have to call setTransparent(true).`,
+        "de": `Der Alphawert (0 ... 1) bestimmt die Durchsichtigkeit des Objekts. Tipp: Damit die Durchsichtigkeit sichtbar wird, musst Du noch setTransparent(true) aufrufen.`,
+        "en": `The alpha value (0 ... 1) determines the transparency of the object. Hint: To make the transparency visible, you have to call setTransparent(true).`,
     })
 
     static material3dFlatShadingComment = () => lm({
-    "de": `Wenn flatShading == true ist, wird der Farbwert nur jeweils pro gerendertem Dreieck berechnet, nicht per Fragment (Pixel). Das hat eine etwas höhere Performance zur Folge.`,
-    "en": `If flatShading == true then color is calculated for each triangle, not for each fragment (pixel). This leads to increased performance.`,
+        "de": `Wenn flatShading == true ist, wird der Farbwert nur jeweils pro gerendertem Dreieck berechnet, nicht per Fragment (Pixel). Das hat eine etwas höhere Performance zur Folge.`,
+        "en": `If flatShading == true then color is calculated for each triangle, not for each fragment (pixel). This leads to increased performance.`,
     })
 
 
@@ -5720,76 +5730,76 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
      * BasicMaterial3d
      */
     static basicMaterial3dClassComment = () => lm({
-    "de": `Ein Material, das keine Lichtquelle berücksichtigt, sondern jede Fläche einfach nur mit ihrer Farbe füllt. Geeignet vor allem für Wireframe-Darstellung. Im Vergleich zu den anderen Materialien bietet es die beste Performance.`,
-    "en": `This material doesn't take light into account but fills every surface with it's given color. Usesful for drawing wireframes. Compared to all other materials this one has best performance.`,
+        "de": `Ein Material, das keine Lichtquelle berücksichtigt, sondern jede Fläche einfach nur mit ihrer Farbe füllt. Geeignet vor allem für Wireframe-Darstellung. Im Vergleich zu den anderen Materialien bietet es die beste Performance.`,
+        "en": `This material doesn't take light into account but fills every surface with it's given color. Usesful for drawing wireframes. Compared to all other materials this one has best performance.`,
     })
 
     static basicMaterial3dConstructorComment = () => lm({
-    "de": `Erzeugt ein BasicMaterial-Objekt. Wireframe == true bewirkt, dass nur die Kanten gezeichnet werden.`,
-    "en": `Creates a BasicMaterial object. Wireframe == true leads to surfaces not being filled.`,
+        "de": `Erzeugt ein BasicMaterial-Objekt. Wireframe == true bewirkt, dass nur die Kanten gezeichnet werden.`,
+        "en": `Creates a BasicMaterial object. Wireframe == true leads to surfaces not being filled.`,
     })
 
     static basicMaterial3dConstructorTextureComment = () => lm({
-    "de": `Erzeugt ein BasicMaterial-Objekt mit einer Textur, z.B. new BasicMaterial(Texture.earth2k).`,
-    "en": `Creates a BasicMaterial object with a texture, e.g. new BasicMaterial(Texture.earth2k).`,
+        "de": `Erzeugt ein BasicMaterial-Objekt mit einer Textur, z.B. new BasicMaterial(Texture.earth2k).`,
+        "en": `Creates a BasicMaterial object with a texture, e.g. new BasicMaterial(Texture.earth2k).`,
     })
 
     static basicMaterial3dConstructorSpriteLibraryComment = () => lm({
-    "de": `Erzeugt ein BasicMaterial-Objekt mit einer Textur, z.B. new BasicMaterial(SpriteLibrary.plattforms, 20).`,
-    "en": `Creates a BasicMaterial object with a texture, e.g. new BasicMaterial(SpriteLibrary.plattforms, 20).`,
+        "de": `Erzeugt ein BasicMaterial-Objekt mit einer Textur, z.B. new BasicMaterial(SpriteLibrary.plattforms, 20).`,
+        "en": `Creates a BasicMaterial object with a texture, e.g. new BasicMaterial(SpriteLibrary.plattforms, 20).`,
     })
 
     static lambertMaterial3dConstructorTextureComment = () => lm({
-    "de": `Erzeugt ein LambertMaterial-Objekt mit einer Textur, z.B. new LambertMaterial(Texture.earth2k).`,
-    "en": `Creates a LambertMaterial object with a texture, e.g. new LambertMaterial(Texture.earth2k).`,
+        "de": `Erzeugt ein LambertMaterial-Objekt mit einer Textur, z.B. new LambertMaterial(Texture.earth2k).`,
+        "en": `Creates a LambertMaterial object with a texture, e.g. new LambertMaterial(Texture.earth2k).`,
     })
 
     static lambertMaterial3dConstructorSpriteLibraryComment = () => lm({
-    "de": `Erzeugt ein LambertMaterial-Objekt mit einer Textur, z.B. new LambertMaterial(SpriteLibrary.plattforms, 20).`,
-    "en": `Creates a LambertMaterial object with a texture, e.g. new LambertMaterial(SpriteLibrary.plattforms, 20).`,
+        "de": `Erzeugt ein LambertMaterial-Objekt mit einer Textur, z.B. new LambertMaterial(SpriteLibrary.plattforms, 20).`,
+        "en": `Creates a LambertMaterial object with a texture, e.g. new LambertMaterial(SpriteLibrary.plattforms, 20).`,
     })
 
     static phongMaterial3dConstructorTextureComment = () => lm({
-    "de": `Erzeugt ein PhongMaterial-Objekt mit einer Textur, z.B. new PhongMaterial(Texture.earth2k).`,
-    "en": `Creates a PhongMaterial object with a texture, e.g. new PhongMaterial(Texture.earth2k).`,
+        "de": `Erzeugt ein PhongMaterial-Objekt mit einer Textur, z.B. new PhongMaterial(Texture.earth2k).`,
+        "en": `Creates a PhongMaterial object with a texture, e.g. new PhongMaterial(Texture.earth2k).`,
     })
 
     static phongMaterial3dConstructorSpriteLibraryComment = () => lm({
-    "de": `Erzeugt ein PhongMaterial-Objekt mit einer Textur, z.B. new PhongMaterial(SpriteLibrary.plattforms, 20).`,
-    "en": `Creates a PhongMaterial object with a texture, e.g. new PhongMaterial(SpriteLibrary.plattforms, 20).`,
+        "de": `Erzeugt ein PhongMaterial-Objekt mit einer Textur, z.B. new PhongMaterial(SpriteLibrary.plattforms, 20).`,
+        "en": `Creates a PhongMaterial object with a texture, e.g. new PhongMaterial(SpriteLibrary.plattforms, 20).`,
     })
 
     static physicallyBasedMaterial3dConstructorTextureComment = () => lm({
-    "de": `Erzeugt ein PhysicallyBasedMaterial-Objekt mit einer Textur, z.B. new PhysicallyBasedMaterial(Texture.earth2k).`,
-    "en": `Creates a PhysicallyBasedMaterial object with a texture, e.g. new PhysicallyBasedMaterial(Texture.earth2k).`,
+        "de": `Erzeugt ein PhysicallyBasedMaterial-Objekt mit einer Textur, z.B. new PhysicallyBasedMaterial(Texture.earth2k).`,
+        "en": `Creates a PhysicallyBasedMaterial object with a texture, e.g. new PhysicallyBasedMaterial(Texture.earth2k).`,
     })
 
     static physicallyBasedMaterial3dConstructorSpriteLibraryComment = () => lm({
-    "de": `Erzeugt ein PhysicallyBasedMaterial-Objekt mit einer Textur, z.B. new PhysicallyBasedMaterial(SpriteLibrary.plattforms, 20).`,
-    "en": `Creates a PhysicallyBasedMaterial object with a texture, e.g. new PhysicallyBasedMaterial(SpriteLibrary.plattforms, 20).`,
+        "de": `Erzeugt ein PhysicallyBasedMaterial-Objekt mit einer Textur, z.B. new PhysicallyBasedMaterial(SpriteLibrary.plattforms, 20).`,
+        "en": `Creates a PhysicallyBasedMaterial object with a texture, e.g. new PhysicallyBasedMaterial(SpriteLibrary.plattforms, 20).`,
     })
 
     static colorMustNotBeNull = () => lm({
-    "de": `Der Wert null ist als Farbe hier nicht möglich.`,
-    "en": `color must not be null.`,
+        "de": `Der Wert null ist als Farbe hier nicht möglich.`,
+        "en": `color must not be null.`,
     })
 
     /**
      * SpriteMaterial3d
      */
     static spriteMaterial3dClassComment = () => lm({
-    "de": `Ein Material, das mit Hilfe eines Sprite dargestellt werden kann.`,
-    "en": `A material used for sprites.`,
+        "de": `Ein Material, das mit Hilfe eines Sprite dargestellt werden kann.`,
+        "en": `A material used for sprites.`,
     })
 
     static spriteMaterial3dConstructorSpriteLibraryComment = () => lm({
-    "de": `Erzeugt ein Sprite3dMaterial-Objekt mithilfe einer Grafik aus der Sprite Library, z.B. new SpriteMaterial3d(SpriteLibrary.plattforms, 20)`,
-    "en": `Creates a Sprite3dMaterial using a texture from sprite libary, e.g. new SpriteMaterial3d(SpriteLibrary.plattforms, 20)`,
+        "de": `Erzeugt ein Sprite3dMaterial-Objekt mithilfe einer Grafik aus der Sprite Library, z.B. new SpriteMaterial3d(SpriteLibrary.plattforms, 20)`,
+        "en": `Creates a Sprite3dMaterial using a texture from sprite libary, e.g. new SpriteMaterial3d(SpriteLibrary.plattforms, 20)`,
     })
 
     static spriteMaterial3dConstructorTextureComment = () => lm({
-    "de": `Erzeugt ein Sprite3dMaterial-Objekt mithilfe einer Textur-Grafik, z.B. new SpriteMaterial3d(Texture.2kmoon)`,
-    "en": `Creates a Sprite3dMaterial using a texture, e.g. new SpriteMaterial3d(Texture.2kmoon)`,
+        "de": `Erzeugt ein Sprite3dMaterial-Objekt mithilfe einer Textur-Grafik, z.B. new SpriteMaterial3d(Texture.2kmoon)`,
+        "en": `Creates a Sprite3dMaterial using a texture, e.g. new SpriteMaterial3d(Texture.2kmoon)`,
     })
 
 
@@ -5798,33 +5808,33 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
      * PhongMaterial
      */
     static phongMaterial3dClassComment = () => lm({
-    "de": `Dieses Material verwendet ein nichtphysikalisches Blinn-Phong-Modell zur Berechnung des Reflexionsgrads. kann glänzende Oberflächen mit spiegelnden Glanzlichtern simulieren (z. B. lackiertes Holz). MeshPhongMaterial berechnet die Schattierung je Fragment (entspricht ca. einem Bildschirmpixel). Der Parameter Shininess (0...1000) definiert die Intensität dieser Glanzlichter.`,
-    "en": `This material uses a non-physically based Blinn-Phong model for calculating reflectance. can simulate shiny surfaces with specular highlights (such as varnished wood). MeshPhongMaterial uses per-fragment shading. Parameter shininess (0...1000) defines the intensity of these specular highlights.`,
+        "de": `Dieses Material verwendet ein nichtphysikalisches Blinn-Phong-Modell zur Berechnung des Reflexionsgrads. kann glänzende Oberflächen mit spiegelnden Glanzlichtern simulieren (z. B. lackiertes Holz). MeshPhongMaterial berechnet die Schattierung je Fragment (entspricht ca. einem Bildschirmpixel). Der Parameter Shininess (0...1000) definiert die Intensität dieser Glanzlichter.`,
+        "en": `This material uses a non-physically based Blinn-Phong model for calculating reflectance. can simulate shiny surfaces with specular highlights (such as varnished wood). MeshPhongMaterial uses per-fragment shading. Parameter shininess (0...1000) defines the intensity of these specular highlights.`,
     })
 
     static phongMaterial3dConstructorComment = () => lm({
-    "de": `Erzeugt ein PhongMaterial-Objekt. Der Parameter Shininess (0...1000) definiert die Intensität der Glanzlichter.`,
-    "en": `Creates a PhongMaterial object. The Shininess parameter (0...1000) defines the intensity of the highlights.`,
+        "de": `Erzeugt ein PhongMaterial-Objekt. Der Parameter Shininess (0...1000) definiert die Intensität der Glanzlichter.`,
+        "en": `Creates a PhongMaterial object. The Shininess parameter (0...1000) defines the intensity of the highlights.`,
     })
 
     static phongMaterial3dShininessComment = () => lm({
-    "de": `Die Shininess (0...1000) des Materials definiert die Intensität der Glanzlichter.`,
-    "en": `The shininess value (0...1000) defines the intensity of the highlights.`,
+        "de": `Die Shininess (0...1000) des Materials definiert die Intensität der Glanzlichter.`,
+        "en": `The shininess value (0...1000) defines the intensity of the highlights.`,
     })
 
     static phongMaterial3dSpecularComment = () => lm({
-    "de": `Farbe der Glanzlichter`,
-    "en": `Color of specular highlights`,
+        "de": `Farbe der Glanzlichter`,
+        "en": `Color of specular highlights`,
     })
 
     static material3dEmissiveComment = () => lm({
-    "de": `Farbe, mit der das Objekt selbst leuchtet.`,
-    "en": `Color with which the object itself emits light.`,
+        "de": `Farbe, mit der das Objekt selbst leuchtet.`,
+        "en": `Color with which the object itself emits light.`,
     })
 
     static materialWireframeComment = () => lm({
-    "de": `Legt fest, ob das Objekt ungefüllt (nur als Gitter) gezeichnet werden soll.`,
-    "en": `If true, then the object is renderd as wireframe (without filling).`,
+        "de": `Legt fest, ob das Objekt ungefüllt (nur als Gitter) gezeichnet werden soll.`,
+        "en": `If true, then the object is renderd as wireframe (without filling).`,
     })
 
     /**
@@ -5832,31 +5842,31 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
      * Toon Material
      */
     static toonMaterialClassComment = () => lm({
-    "de": `Comic-ähnliches Material`,
-    "en": `A material implementing toon shading.`,
+        "de": `Comic-ähnliches Material`,
+        "en": `A material implementing toon shading.`,
     })
 
     static toonMaterialConstructorComment = () => lm({
-    "de": ``,
-    "en": ``,
+        "de": ``,
+        "en": ``,
     })
 
     /**
      * Lambert Material
      */
     static lambertMaterial3dClassComment = () => lm({
-    "de": `Das Material verwendet ein nichtphysikalisches Lambertmodell zur Berechnung des Reflexionsgrads. Dadurch können einige Oberflächen (z. B. unbehandeltes Holz oder Stein) gut simuliert werden.
+        "de": `Das Material verwendet ein nichtphysikalisches Lambertmodell zur Berechnung des Reflexionsgrads. Dadurch können einige Oberflächen (z. B. unbehandeltes Holz oder Stein) gut simuliert werden.
     Glänzende Oberflächen mit Glanzlichtern (z. B. lackiertes Holz) können jedoch nicht simuliert werden. MeshLambertMaterial berechnet die Schattierung je Fragment (d.h. ca. je Bildschirmpixel).
     Aufgrund der Einfachheit der Reflexions- und Beleuchtungsmodelle ist die Performance bei Verwendung dieses Materials höher als bei PhongMaterial oder StandardMaterial, allerdings auf Kosten einer gewissen grafischen Genauigkeit.
     `,
-    "en": `The material uses a non-physically based Lambertian model for calculating reflectance. This can simulate some surfaces (such as untreated wood or stone) well,
+        "en": `The material uses a non-physically based Lambertian model for calculating reflectance. This can simulate some surfaces (such as untreated wood or stone) well,
     but cannot simulate shiny surfaces with specular highlights (such as varnished wood). MeshLambertMaterial uses per-fragment shading.
     Due to the simplicity of the reflectance and illumination models, performance will be greater when using this material over the PhongMaterial or StandardMaterial, at the cost of some graphical accuracy.`,
     })
 
     static lambertMaterial3dConstructorComment = () => lm({
-    "de": `Erzeugt ein neues LambertMaterial-Objekt`,
-    "en": `Creates a new LambertMaterial object.`,
+        "de": `Erzeugt ein neues LambertMaterial-Objekt`,
+        "en": `Creates a new LambertMaterial object.`,
     })
 
     /**
@@ -5864,35 +5874,35 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
      */
 
     static physicallyBasedMaterial3dClassComment = () => lm({
-    "de": `in Standardmaterial auf physikalischer Basis. Physically Based Rendering (PBR) ist in vielen 3D-Anwendungen wie Unity, Unreal und 3D Studio Max in letzter Zeit zum Standard geworden.
+        "de": `in Standardmaterial auf physikalischer Basis. Physically Based Rendering (PBR) ist in vielen 3D-Anwendungen wie Unity, Unreal und 3D Studio Max in letzter Zeit zum Standard geworden.
     Dieser Ansatz unterscheidet sich von älteren Ansätzen dadurch, dass statt Näherungen für die Art und Weise, wie Licht mit einer Oberfläche interagiert, ein physikalisch korrektes Modell verwendet wird.
     In der Praxis liefert dies ein genaueres und realistischeres Ergebnis als LambertMaterial oder PhongMaterial, allerdings ist der Rechenaufwand etwas höher.`,
-    "en": `A standard physically based material, using Metallic-Roughness workflow. Physically based rendering (PBR) has recently become the standard in many 3D applications, such as Unity, Unreal and 3D Studio Max.
+        "en": `A standard physically based material, using Metallic-Roughness workflow. Physically based rendering (PBR) has recently become the standard in many 3D applications, such as Unity, Unreal and 3D Studio Max.
     This approach differs from older approaches in that instead of using approximations for the way in which light interacts with a surface, a physically correct model is used.
     In practice this gives a more accurate and realistic looking result than the LambertMaterial or PhongMaterial, at the cost of being somewhat more computationally expensive.`,
     })
 
     static physicallyBasedMaterial3dConstructorComment = () => lm({
-    "de": `Erzeugt ein neues PhysicallyBasedMaterial-Objekt`,
-    "en": `Creates a new PhysicallyBasedMaterial object.`,
+        "de": `Erzeugt ein neues PhysicallyBasedMaterial-Objekt`,
+        "en": `Creates a new PhysicallyBasedMaterial object.`,
     })
 
     static physicallyBasedMaterial3dRoughnessComment = () => lm({
-    "de": `Rauheit des Materials (Wert zwischen 0 und 1)`,
-    "en": `Roughness value between 0 and 1`,
+        "de": `Rauheit des Materials (Wert zwischen 0 und 1)`,
+        "en": `Roughness value between 0 and 1`,
     })
 
     static physicallyBasedMaterial3dMetalnessComment = () => lm({
-    "de": `Metallisches Reflektieren des Materials (Wert zwischen 0 und 1)`,
-    "en": `Metalness value between 0 and 1`,
+        "de": `Metallisches Reflektieren des Materials (Wert zwischen 0 und 1)`,
+        "en": `Metalness value between 0 and 1`,
     })
 
     /**
      * TexturesEnum
      */
     static TexturesEnumComment = () => lm({
-    "de": `Texturen, die mit den 3d-Klassen (z.B. Sphere3d, Box3d) genutzt werden können, z.B. new Spere3d().setTexture(Textures.earth)`,
-    "en": `You may use these textures with 3d classes (Sphere3d, Box3d, ...), e.g. new Spere3d().setTexture(Textures.earth)`,
+        "de": `Texturen, die mit den 3d-Klassen (z.B. Sphere3d, Box3d) genutzt werden können, z.B. new Spere3d().setTexture(Textures.earth)`,
+        "en": `You may use these textures with 3d classes (Sphere3d, Box3d, ...), e.g. new Spere3d().setTexture(Textures.earth)`,
     })
 
 
@@ -5901,13 +5911,13 @@ rectMode(RADIUS) also uses the first two parameters as the x- and y-coordinates 
      */
 
     static Sprite3dClassComment = () => lm({
-    "de": `Ein 3d-Sprite ist ein Rechteck mit Textur, das immer automatisch zur Kamera hingewandt ist.`,
-    "en": `A sprite is a plane that always faces towards the camera, generally with a partially transparent texture applied.`,
+        "de": `Ein 3d-Sprite ist ein Rechteck mit Textur, das immer automatisch zur Kamera hingewandt ist.`,
+        "en": `A sprite is a plane that always faces towards the camera, generally with a partially transparent texture applied.`,
     })
 
     static Sprite3dConstructorComment = () => lm({
-    "de": `Erzeugt ein neues 3d-Sprite am gegebenen Ort mit der gegebenen Textur.`,
-    "en": `Creates a new 3d sprite at given position with given texture.`,
+        "de": `Erzeugt ein neues 3d-Sprite am gegebenen Ort mit der gegebenen Textur.`,
+        "en": `Creates a new 3d sprite at given position with given texture.`,
     })
 
 }

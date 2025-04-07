@@ -127,6 +127,8 @@ export class GenericTypeParameter extends NonPrimitiveType {
             copy.upperBounds.push(ub.getCopyWithConcreteType(typeMap) as IJavaClass | IJavaInterface);
         }
 
+        typeMap.delete(this);
+
         return copy;
     }
 
