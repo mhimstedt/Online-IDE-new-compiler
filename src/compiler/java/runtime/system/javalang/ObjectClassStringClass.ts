@@ -22,7 +22,7 @@ export class ObjectClass {
         { type: "method", signature: "public String toString()", java: ObjectClass.prototype._mj$toString$String$, comment: JRC.objectToStringComment },
         { type: "method", signature: "public boolean equals(Object otherObject)", java: ObjectClass.prototype._mj$equals$boolean$Object, comment: JRC.objectEqualsComment },
         { type: "method", signature: "public final void wait()", java: ObjectClass.prototype._mj$wait$void$, comment: JRC.objectWaitComment },
-        { type: "method", signature: "public final void wait(int milliseconds)", java: ObjectClass.prototype._mj$wait$void$, comment: JRC.objectWaitWithTimeoutComment },
+        { type: "method", signature: "public final void wait(long milliseconds)", java: ObjectClass.prototype._mj$wait$void$, comment: JRC.objectWaitWithTimeoutComment },
         { type: "method", signature: "public final void notify()", java: ObjectClass.prototype._mj$notify$void$, comment: JRC.objectNotifyComment },
         { type: "method", signature: "public final void notifyAll()", java: ObjectClass.prototype._mj$notifyAll$void$, comment: JRC.objectNotifyAllComment },
         { type: "method", signature: "public final Class<?> getClass()", native: ObjectClass.prototype._getClass, comment: JRC.objectGetClassComment },
