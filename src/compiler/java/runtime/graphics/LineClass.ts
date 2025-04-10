@@ -94,7 +94,7 @@ export class LineClass extends FilledShapeClass {
         let p1 = new PIXI.Point(x2, y2);
         this.getWorldTransform().applyInverse(p1, p1);
         this.hitPolygonInitial[1].x = p1.x;
-        this.hitPolygonInitial[2].y = p1.y;
+        this.hitPolygonInitial[1].y = p1.y;
 
         this.render();
     }
