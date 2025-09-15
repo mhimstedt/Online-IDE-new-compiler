@@ -510,6 +510,71 @@ export class MainEmbedded implements MainBase {
 
         $controlsDiv.append($buttonOpen, $buttonSave);
 
+        // Vollbild-Button hinzufügen
+        const $fullscreenButton = jQuery('<div class="img_whole-window jo_button jo_active"\
+            title="Vollbild umschalten" style="margin-right: 8px;"></div>');
+        $controlsDiv.append($fullscreenButton);
+
+        const fullscreenTarget: HTMLElement = $div[0];
+
+        async function enterFullscreen(target: HTMLElement) {
+            try {
+                // @ts-ignore
+                if (target.requestFullscreen) return await target.requestFullscreen();
+                // @ts-ignore
+                if (target.webkitRequestFullscreen) return await target.webkitRequestFullscreen();
+                // @ts-ignore
+                if (target.msRequestFullscreen) return await target.msRequestFullscreen();
+            } catch (e) { console.warn('Fullscreen failed', e); }
+        }
+
+        async function exitFullscreen() {
+            try {
+                if (document.exitFullscreen) return await document.exitFullscreen();
+                // @ts-ignore
+                if (document.webkitExitFullscreen) return await document.webkitExitFullscreen();
+                // @ts-ignore
+                if (document.msExitFullscreen) return await document.msExitFullscreen();
+            } catch (e) { console.warn('Exit fullscreen failed', e); }
+        }
+
+        function syncFullscreenButton() {
+            const isFullscreen = !!document.fullscreenElement
+                // @ts-ignore
+                || !!document.webkitFullscreenElement
+                // @ts-ignore
+                || !!document.msFullscreenElement;
+            if (isFullscreen) {
+                $fullscreenButton.removeClass('img_whole-window')
+                    .addClass('img_whole-window-back')
+                    .attr('title', 'Vollbild verlassen');
+            } else {
+                $fullscreenButton.removeClass('img_whole-window-back')
+                    .addClass('img_whole-window')
+                    .attr('title', 'Vollbild umschalten');
+            }
+        }
+
+        $fullscreenButton.on('click', async () => {
+            const isFullscreen = !!document.fullscreenElement
+                // @ts-ignore
+                || !!document.webkitFullscreenElement
+                // @ts-ignore
+                || !!document.msFullscreenElement;
+            if (!isFullscreen) {
+                await enterFullscreen(fullscreenTarget);
+            } else {
+                await exitFullscreen();
+            }
+            syncFullscreenButton();
+        });
+
+        document.addEventListener('fullscreenchange', syncFullscreenButton);
+        // @ts-ignore
+        document.addEventListener('webkitfullscreenchange', syncFullscreenButton);
+        // @ts-ignore
+        document.addEventListener('MSFullscreenChange', syncFullscreenButton);
+
 
 
         if (this.config.withBottomPanel) {
