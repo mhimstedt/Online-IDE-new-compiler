@@ -3,20 +3,20 @@ import { LibraryDeclarations } from "../../../../module/libraries/DeclareType";
 import { NonPrimitiveType } from "../../../../types/NonPrimitiveType";
 import { EnumClass } from "../../../system/javalang/EnumClass";
 
-import earth2k from "/assets/graphics/textures/celestial/2k_earth_daymap.jpg";
-import jupiter2k from "/assets/graphics/textures/celestial/2k_jupiter.jpg";
-import mars2k from "/assets/graphics/textures/celestial/2k_mars.jpg";
-import mercury2k from "/assets/graphics/textures/celestial/2k_mercury.jpg";
-import moon2k from "/assets/graphics/textures/celestial/2k_moon.jpg";
-import neptune2k from "/assets/graphics/textures/celestial/2k_neptune.jpg";
-import saturn2k from "/assets/graphics/textures/celestial/2k_saturn.jpg";
-import stars2k from "/assets/graphics/textures/celestial/2k_stars.jpg";
-import stars8k from "/assets/graphics/textures/celestial/8k_stars.jpg";
-import stars_milky_way2k from "/assets/graphics/textures/celestial/2k_stars_milky_way.jpg";
-import stars_milky_way8k from "/assets/graphics/textures/celestial/8k_stars_milky_way.jpg";
-import sun2k from "/assets/graphics/textures/celestial/2k_sun.jpg";
-import uranus2k from "/assets/graphics/textures/celestial/2k_uranus.jpg";
-import venus_atmosphere2k from "/assets/graphics/textures/celestial/2k_venus_atmosphere.jpg";
+const earth2k: string = "/assets/graphics/textures/celestial/2k_earth_daymap.jpg";
+const jupiter2k: string = "/assets/graphics/textures/celestial/2k_jupiter.jpg";
+const mars2k: string = "/assets/graphics/textures/celestial/2k_mars.jpg";
+const mercury2k: string = "/assets/graphics/textures/celestial/2k_mercury.jpg";
+const moon2k: string = "/assets/graphics/textures/celestial/2k_moon.jpg";
+const neptune2k: string = "/assets/graphics/textures/celestial/2k_neptune.jpg";
+const saturn2k: string = "/assets/graphics/textures/celestial/2k_saturn.jpg";
+const stars2k: string = "/assets/graphics/textures/celestial/2k_stars.jpg";
+const stars8k: string = "/assets/graphics/textures/celestial/8k_stars.jpg";
+const stars_milky_way2k: string = "/assets/graphics/textures/celestial/2k_stars_milky_way.jpg";
+const stars_milky_way8k: string = "/assets/graphics/textures/celestial/8k_stars_milky_way.jpg";
+const sun2k: string = "/assets/graphics/textures/celestial/2k_sun.jpg";
+const uranus2k: string = "/assets/graphics/textures/celestial/2k_uranus.jpg";
+const venus_atmosphere2k: string = "/assets/graphics/textures/celestial/2k_venus_atmosphere.jpg";
 
 export class TextureEnum extends EnumClass {
     static __javaDeclarations: LibraryDeclarations = [

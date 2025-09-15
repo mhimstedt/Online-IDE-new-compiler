@@ -200,7 +200,7 @@ export class EditableSpritesheet {
 
         }
 
-        let pngFileBuffer = UPNG.encode([this.spritesheet.pngImageData.buffer], sheetDimensions.w, sheetDimensions.h, 0);
+        let pngFileBuffer = UPNG.encode([this.spritesheet.pngImageData.buffer as ArrayBuffer], sheetDimensions.w, sheetDimensions.h, 0);
         this.spritesheet.pngFile = new Uint8Array(pngFileBuffer);
         await this.spritesheet.makeZip(filename);
     }

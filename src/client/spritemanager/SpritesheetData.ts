@@ -75,7 +75,7 @@ export class SpritesheetData {
     }
 
     public unpackPngFile() {
-        let img = UPNG.decode(this.pngFile.buffer);
+        let img = UPNG.decode(this.pngFile.buffer as ArrayBuffer);
         let rgba8 = UPNG.toRGBA8(img)[0];
         this.pngImageData = new Uint8Array(rgba8);
         this.pixiSpritesheetData.meta.size.w = img.width;
